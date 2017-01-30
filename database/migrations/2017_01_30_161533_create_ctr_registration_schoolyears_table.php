@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePrevSchoolRecsTable extends Migration
+class CreateCtrRegistrationSchoolyearsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,16 +12,11 @@ class CreatePrevSchoolRecsTable extends Migration
      */
     public function up()
     {
-        Schema::create('prev_school_recs', function (Blueprint $table) {
+        Schema::create('ctr_registration_schoolyears', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('idno');
+            $table->string('department');
             $table->string('schoolyear');
-            $table->string('dateEntered');
-            $table->string('dateLeft');
-            $table->string('level');
-            $table->float('dayp',7,4);
-            $table->float('finalrate',7,4);
-            $table->string('status');
+            $table->string('period');
             $table->timestamps();
         });
     }
@@ -33,6 +28,6 @@ class CreatePrevSchoolRecsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('prev_school_recs');
+        Schema::drop('ctr_registration_schoolyears');
     }
 }
