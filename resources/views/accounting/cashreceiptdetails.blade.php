@@ -49,10 +49,15 @@
     #header{
         display: none;
     }
+    .hidden-row{
+        display:none;
+    }
 </style>
 <style media="print">
-    
-    .btn,.text-muted{
+    .hidden-row{
+        display:table-row;
+    }
+    .btn,.text-muted,.no-print{
         display: none;
     }
     #header{
@@ -192,7 +197,9 @@
         $tempdiscount=$tempdiscount + $allcollection[13];            
         }
         ?>
-            <tr><td class="receipt">{{$allcollection[0]}}</td>
+            <tr @if($allcollection[12]=="1")
+                 class="no-print"
+                 @endif><td class="receipt">{{$allcollection[0]}}</td>
         <td class="name">{{$allcollection[1]}}</td>
         <td class="dcc" align="right">{{number_format($allcollection[2],2)}}</td>
         <td class="ddiscount" align="right">{{number_format($allcollection[13],2)}}</td>
@@ -211,8 +218,12 @@
             Cancelled
             @endif
             </td>
-            </tr>
-
+        </tr>
+        @if($allcollection[12]=="1")
+            <tr class="hidden-row"><td class="receipt">{{$allcollection[0]}}</td>
+                <td colspan="14" style="text-align: center"><b>Cancelled</b></td>
+        </tr>
+        @endif
         @if($rows == 30 | $allcollection[0] == $lastreceipt | $firstpagerows == 30)
             <tr 
             @if($rows == 30 |$firstpagerows == 30)
@@ -253,7 +264,7 @@
 
 
          @endforeach   
-            <tr style="border-bottom: none;border-top: none;"><td colspan="14"><br></td></tr>
+            <tr style="border-bottom: none;border-top: none;"><td colspan="15"><br></td></tr>
             <tr style="border-bottom: none;border-top: none;"><td colspan="2" width="210px">Total</td>
 
         <td align="right" class="dcc">{{number_format($cashtotal,2)}}</td>
@@ -267,12 +278,12 @@
         <td align="right" class="tuition">{{number_format($tuition,2)}}</td>
         <td align="right" class="reserv">{{number_format($creditreservation,2)}}</td>
         <td align="right" class="others">{{number_format($other,2)}}</td>
-        <td class="stat">
-            </td>
+        <td class="stat"></td>
+        <td></td>
         </tr>
         @endif
-            <tr style="border-bottom: none;border-top: none;"><td colspan="14"><br></td></tr>
-            <tr style="border-bottom: none;border-top: none;"><td colspan="14"><br></td></tr>
+            <tr style="border-bottom: none;border-top: none;"><td colspan="15"><br></td></tr>
+            <tr style="border-bottom: none;border-top: none;"><td colspan="15"><br></td></tr>
             <tr style="border-bottom: none;border-top: none;text-align: right;"><td colspan="2" width="210px" style="text-align: left">Current Balance</td>
             <td class="dcc">{{number_format($totalcash+$cashtotal,2)}}</td>
             <td class="ddiscount">{{number_format($totaldiscount+$discount,2)}}</td>
@@ -286,6 +297,7 @@
             <td class="reserv">{{number_format($crreservation+$creditreservation,2)}}</td>
             <td class="others">{{number_format($crothers+$other,2)}}</td>
             <td class="stat"></td>
+            <td></td>
         </tr>
         </table>
                     </td>
