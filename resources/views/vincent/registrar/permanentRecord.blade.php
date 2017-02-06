@@ -25,7 +25,7 @@
             width:48%;
         }
         .block:nth-child(even){
-            margin-left: 26 px;
+            margin-left: 26px;
         }
     </style>
 </head>
