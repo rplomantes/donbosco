@@ -225,7 +225,7 @@
                             {{--*/$third = $third + round($academics->third_grading,2)/*--}}
                         </td>
                         <td>
-                            @if(round($academics->third_grading,2) != 0)
+                            @if(round($academics->fourth_grading,2) != 0)
                                 {{round($academics->fourth_grading,2)}}
                             @endif
                             {{--*/$fourth = $fourth + round($academics->fourth_grading,2)/*--}}

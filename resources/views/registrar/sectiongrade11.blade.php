@@ -246,10 +246,10 @@
                                 @endif
                                 {{--*/$first = $first + round($spec->first_grading,2)/*--}}
                             @else
-                                @if(round($spec->first_grading,2) != 0)
-                                {{round($spec->first_grading,2)}}
+                                @if(round($spec->third_grading,2) != 0)
+                                {{round($spec->third_grading,2)}}
                                 @endif
-                                {{--*/$first = $first + round($spec->first_grading,2)/*--}}
+                                {{--*/$first = $first + round($spec->third_grading,2)/*--}}
                             @endif
                         </td>
                         <td>@if($sem ==1)
@@ -258,10 +258,10 @@
                                 @endif
                                 {{--*/$second = $second + round($spec->second_grading,2)/*--}}
                             @else
-                                @if(round($spec->second_grading,2) != 0)
-                                {{round($spec->second_grading,2)}}
+                                @if(round($spec->fourth_grading,2) != 0)
+                                {{round($spec->fourth_grading,2)}}
                                 @endif
-                                {{--*/$second = $second + round($spec->second_grading,2)/*--}}
+                                {{--*/$second = $second + round($spec->fourth_grading,2)/*--}}
                             @endif
                         </td >
                         <td>
