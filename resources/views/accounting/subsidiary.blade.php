@@ -19,7 +19,7 @@
         <h5>Account Title :</h5>
         <select name="accountname" id="accountname" class="form-control">
             @foreach($acctcodes as $acctcode)
-            <option value="{{$acctcode->receipt_details}}">{{$acctcode->receipt_details}}</option>
+            <option value="{{$acctcode->description}}">{{$acctcode->description}}</option>
             @endforeach
         </select>    
     </div>  

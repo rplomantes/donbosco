@@ -1060,7 +1060,7 @@ function addpenalties($idnumber,$plan){
         
 function subsidiary(){
             if(\Auth::user()->accesslevel==env('USER_ACCOUNTING')|| \Auth::user()->accesslevel==env('USER_ACCOUNTING_HEAD')){
-            $acctcodes = DB::Select("select distinct receipt_details from credits order by receipt_details");
+            $acctcodes = DB::Select("select distinct description from credits order by description");
             $depts = DB::Select("select distinct sub_department from credits order by sub_department");    
             return view('accounting.subsidiary',compact('acctcodes','depts'));
                 
@@ -1071,11 +1071,11 @@ function subsidiary(){
             
             if($request->all=="1"){
                 if($request->deptname =="none"){
-                    $dblist = DB::Select("select users.idno, users.lastname, users.firstname, users.middlename, credits.transactiondate, credits.receiptno, credits.amount, credits.receipt_details, credits.postedby "
-                     . "from users, credits where users.idno = credits.idno and credits.receipt_details = '".$request->accountname ."' and credits.isreverse='0' order by users.lastname, users.firstname");
+                    $dblist = DB::Select("select users.idno, users.lastname, users.firstname, users.middlename, credits.transactiondate, credits.receiptno, credits.amount, credits.description, credits.postedby "
+                     . "from users, credits where users.idno = credits.idno and credits.description = '".$request->accountname ."' and credits.isreverse='0' order by users.lastname, users.firstname");
                     }else{
-                        $dblist = DB::Select("select users.idno, users.lastname, users.firstname, users.middlename, credits.transactiondate, credits.receiptno, credits.amount, credits.receipt_details, credits.postedby "
-                        . "from users, credits where users.idno = credits.idno and credits.receipt_details = '".$request->accountname ."' and credits.isreverse='0' and credits.sub_department = '". $request->deptname."' order by users.lastname, users.firstname");
+                        $dblist = DB::Select("select users.idno, users.lastname, users.firstname, users.middlename, credits.transactiondate, credits.receiptno, credits.amount, credits.description, credits.postedby "
+                        . "from users, credits where users.idno = credits.idno and credits.description = '".$request->accountname ."' and credits.isreverse='0' and credits.sub_department = '". $request->deptname."' order by users.lastname, users.firstname");
             }
             }
            else{ 
