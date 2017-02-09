@@ -44,7 +44,7 @@ class AssessmentController extends Controller
             $mydiscount=  \App\Discount::where($matchfields)->first();
             $ledgers =  DB::Select("select sum(amount) as amount, sum(plandiscount) as plandiscount,  sum(otherdiscount) as otherdiscount,receipt_details  from ledgers
                              where idno = '$id' and schoolyear = '".$currentschoolyear->schoolyear."'  and period = '". $currentschoolyear->period."' Group by receipt_details ");
-              }
+        }
         $programs = DB::Select("select distinct department from ctr_levels");
         $k_levels = \App\CtrLevel::where('department','Kindergarten')->get();
         $elem_levels = \App\CtrLevel::where('department','Elementary')->get();
