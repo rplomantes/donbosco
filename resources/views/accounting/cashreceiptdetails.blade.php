@@ -221,7 +221,7 @@
         </tr>
         @if($allcollection[12]=="1")
             <tr class="hidden-row"><td class="receipt">{{$allcollection[0]}}</td>
-                <td colspan="14" style="text-align: center"><b>Cancelled</b></td>
+                <td colspan="14" style="text-align: left"><b>Cancelled</b></td>
         </tr>
         @endif
         @if($rows == 30 | $allcollection[0] == $lastreceipt | $firstpagerows == 30)
