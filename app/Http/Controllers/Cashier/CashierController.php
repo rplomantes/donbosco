@@ -7,6 +7,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Input;
 
 
 class CashierController extends Controller
@@ -1219,6 +1220,7 @@ function otherpayment($idno){
         $newledger->duetype="0";
         $newledger->duedate=Carbon::now();
         $newledger->amount=$request->amount;
+        $newledger->remark=$request->remark;
         $newledger->save();
         return $this->addtoaccount($request->idno);
         //return redirect(url('addtoaccount',$request->idno));
@@ -1226,7 +1228,29 @@ function otherpayment($idno){
     function addtoaccountdelete($id){
         $account = \App\Ledger::where('id',$id)->first();
         if($account->payment+$account->debitmemo==0){
-        $account->delete();    
+            
+            $deleteAccount = new \App\DeletedAccount;
+            $deleteAccount->level=$account->level;
+            $deleteAccount->course=$account->course;
+            $deleteAccount->strand=$account->strand;
+            $deleteAccount->department = $account->department;
+            $deleteAccount->schoolyear=$account->schoolyear;
+            $deleteAccount->period=$account->period;
+            $deleteAccount->idno = $account->idno;
+            $deleteAccount->categoryswitch = $account->categoryswitch;
+            $deleteAccount->transactiondate = $account->transactiondate;
+            $deleteAccount->acctcode=$account->acctcode;
+            $deleteAccount->description=$account->description;
+            $deleteAccount->postedby=$account->postedby;
+            $deleteAccount->receipt_details=$account->receipt_details;
+            $deleteAccount->duetype=$account->duetype;
+            $deleteAccount->duedate=$account->duedate;
+            $deleteAccount->amount=$account->amount;
+            $deleteAccount->remark=$account->remark;
+            $deleteAccount->deleted=Input::get('remark');
+            $deleteAccount->save();
+            
+            $account->delete();  
         }
         return $this->addtoaccount($account->idno);
         //return redirect(url('addtoaccount',$account->idno));

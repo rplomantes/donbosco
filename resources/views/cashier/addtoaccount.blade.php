@@ -1,6 +1,13 @@
 @extends('appcashier')
 @section('content')
-
+<style>
+    .slidable{
+        display:none;
+        width:60%;
+        float:right;
+        margin-left:10px;
+    }
+</style>
 <div class="container">
     
     
@@ -23,9 +30,13 @@
         <div class="form-group">
             <label>Amount</label>
             <input type="text" class="form form-control" id="amount" name="amount" onkeypress ="validate(event)" style="text-align: right">
-        </div>    
+        </div>
+        <div class="form-group">
+            <label>Particular:</label>
+            <input type="text" class="form form-control" id="remark" name="remark" style="text-align: right">
+        </div>
          <div class="form-group">
-            <input type="submit" class="form form-control btn btn-primary" name="submit"  id="submit" value="Add to account">
+             <input type="submit" class="form form-control btn btn-primary" name="submit"  id="submit" value="Add to account">
         </div> 
     </form>    
         <div class="form-group">
@@ -38,7 +49,7 @@
             <table class="table table-striped">
                 <tr><td>Description</td><td>Amount</td><td></td></tr>
                 @foreach($ledgers as $ledger)
-                <tr><td>{{$ledger->receipt_details}}</td><td align="right">{{number_format($ledger->amount,2)}}</td><td><a href="{{url('addtoaccountdelete',$ledger->id)}}" >Delete</a></td></tr>
+                <tr><td>{{$ledger->receipt_details}}</td><td align="right">{{number_format($ledger->amount,2)}}</td><td style="text-align: right"><a href="#" onclick="deleteAccount({{$ledger->id}})" >Delete</a><input type="text" class="form-control slidable" id="remark_{{$ledger->id}}" onkeypress="submitDelete({{$ledger->id}})"></td></tr>
                 @endforeach
             </table>    
             @endif
@@ -61,5 +72,27 @@ function validate(evt) {
             return false;
             
         }
-    }  
+    }
+    
+    function deleteAccount(id){
+        $("#remark_"+id).slideToggle();
+    }
+    
+    function submitDelete(id){
+        var theEvent = window.event;
+        var key = theEvent.keyCode;
+        if(key == 13){
+            arrays ={} ;
+            arrays['remark'] = $("#remark_"+id).val();
+            $.ajax({
+                   type: "GET", 
+                   url: "/addtoaccountdelete/"+id,
+                   data : arrays,
+                   success:function(data){
+                       location.reload();
+                       }
+                   });            
+        }
+
+    }
 </script>  
