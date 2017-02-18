@@ -158,6 +158,9 @@
     Route::get('/enrollmentreport','Vincent\TvetController@enrollmentreport');
     Route::get('/download/{batch}','Vincent\TvetController@download');
     
+    //TOOLS
+    Route::get('/addoldstudent','DBFixer@addOldStudent');
+    
 });
 
 //Ajax route
