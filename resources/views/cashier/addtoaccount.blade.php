@@ -49,7 +49,7 @@
             <table class="table table-striped">
                 <tr><td>Description</td><td>Amount</td><td></td></tr>
                 @foreach($ledgers as $ledger)
-                <tr><td>{{$ledger->receipt_details}}</td><td align="right">{{number_format($ledger->amount,2)}}</td><td style="text-align: right"><a href="#" onclick="deleteAccount({{$ledger->id}})" >Delete</a><input type="text" class="form-control slidable" id="remark_{{$ledger->id}}" onkeypress="submitDelete({{$ledger->id}})"></td></tr>
+                <tr><td>{{$ledger->receipt_details}}</td><td align="right">{{number_format($ledger->amount,2)}}</td><td style="text-align: right"><a href="#" onclick="deleteAccount({{$ledger->id}})" >Delete</a><input type="text" class="form-control slidable" id="remark_{{$ledger->id}}" onkeypress="submitDelete({{$ledger->id}},event)"></td></tr>
                 @endforeach
             </table>    
             @endif
@@ -78,9 +78,9 @@ function validate(evt) {
         $("#remark_"+id).slideToggle();
     }
     
-    function submitDelete(id){
-        var theEvent = window.event;
-        var key = theEvent.keyCode;
+    function submitDelete(id,evt){
+        var theEvent = evt || window.event;
+        var key = theEvent.keyCode || theEvent.which;
         if(key == 13){
             arrays ={} ;
             arrays['remark'] = $("#remark_"+id).val();
