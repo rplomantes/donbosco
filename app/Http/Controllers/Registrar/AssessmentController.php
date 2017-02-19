@@ -46,12 +46,12 @@ class AssessmentController extends Controller
                              where idno = '$id' and schoolyear = '".$currentschoolyear->schoolyear."'  and period = '". $currentschoolyear->period."' Group by receipt_details ");
         }
         $programs = DB::Select("select distinct department from ctr_levels");
-        $k_levels = \App\CtrLevel::where('department','Kindergarten')->get();
-        $elem_levels = \App\CtrLevel::where('department','Elementary')->get();
-        $jhs_levels = \App\CtrLevel::where('department','Junior High School')->get();
-        $shs_levels = \App\CtrLevel::where('department','Senior High School')->get();
-        $k11_tracks = \App\CtrTrack::where('level', 'Grade 11')->get();
-        $k12_tracks = \App\CtrTrack::where('level', 'Grade 12')->get();
+        //$k_levels = \App\CtrLevel::where('department','Kindergarten')->get();
+        //$elem_levels = \App\CtrLevel::where('department','Elementary')->get();
+        //$jhs_levels = \App\CtrLevel::where('department','Junior High School')->get();
+        //$shs_levels = \App\CtrLevel::where('department','Senior High School')->get();
+        //$k11_tracks = \App\CtrTrack::where('level', 'Grade 11')->get();
+        //$k12_tracks = \App\CtrTrack::where('level', 'Grade 12')->get();
         $courses = DB::Select("select distinct coursecode from ctr_tvet_subjects");
         $balances = DB::Select("select sum(amount) as amount, sum(plandiscount) as plandiscount, sum(otherdiscount) as otherdiscount, sum(debitmemo) as debitmemo, sum(payment) as payment from ledgers where idno = ?",array($id));
         if(count($balances) > 0 ){

@@ -1080,14 +1080,14 @@ function subsidiary(){
             }
            else{ 
               if($request->deptname =="none"){
-                   $dblist = DB::Select("select users.idno, users.lastname, users.firstname, users.middlename, credits.transactiondate, credits.receiptno, credits.receipt_details, credits.amount, credits.postedby "
-                     . "from users, credits where users.idno = credits.idno and credits.receipt_details = '".$request->accountname ."' and credits.transactiondate  between '".$request->from ."' AND '" . $request->to ."'"
+                   $dblist = DB::Select("select users.idno, users.lastname, users.firstname, users.middlename, credits.transactiondate, credits.receiptno, credits.description, credits.amount, credits.postedby "
+                     . "from users, credits where users.idno = credits.idno and credits.description = '".$request->accountname ."' and credits.isreverse= '0' and credits.transactiondate  between '".$request->from ."' AND '" . $request->to ."'"
                      . "order by users.lastname, users.firstname");
                   
               }
               else{
-             $dblist = DB::Select("select users.idno, users.lastname, users.firstname, users.middlename, credits.transactiondate, credits.receiptno, credits.receipt_details, credits.amount, credits.postedby "
-                     . "from users, credits where users.idno = credits.idno and credits.isreverse = '0' and credits.receipt_details = '".$request->accountname ."' and credits.sub_department = '". $request->deptname. "' and (credits.transactiondate  between '".$request->from ."' AND '" . $request->to ."')"
+             $dblist = DB::Select("select users.idno, users.lastname, users.firstname, users.middlename, credits.transactiondate, credits.receiptno, credits.description, credits.amount, credits.postedby "
+                     . "from users, credits where users.idno = credits.idno and credits.isreverse = '0' and credits.description = '".$request->accountname ."' and credits.sub_department = '". $request->deptname. "' and (credits.transactiondate  between '".$request->from ."' AND '" . $request->to ."')"
                      . "order by users.lastname, users.firstname");
               }
            }

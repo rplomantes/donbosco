@@ -84,3 +84,14 @@ function computetvet(){
     
    //alert()
 }
+
+function select_all(){
+    $('.books').prop('checked', 'checked');
+    $('#check_uncheck').html("<p style=\"cursor:pointer\" onclick=\"unselect_all()\">Uncheck All</p>")
+}
+
+function unselect_all(){
+    //alert("hello")
+    $('.books').attr('checked',false);
+    $('#check_uncheck').html("<p style=\"cursor:pointer\" onclick=\"select_all()\">Select All</p>");
+}

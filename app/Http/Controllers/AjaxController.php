@@ -352,14 +352,14 @@ class AjaxController extends Controller
                     //$   
                     }else{
                     $schedules = DB::Select("select sum(amount) as amount, sum(discount) as discount, receipt_details, plan, level  from ctr_payment_schedules
-                             where level = '$level' and plan = '$plan' Group by receipt_details, plan, level");
+                             where  level = '$level' and plan = '$plan' Group by receipt_details, plan, level");
                     //$schedules = \App\CtrPaymentSchedule::where($matchfields)->get();
                     }  }
                      $total=0;
                     $discount = 0;
                     $otherdiscount = 0;
                     
-                    $request = "<table class = \"table table-bordered\"><tr><td>Description</td><td>Amount</td><tr>";
+                    $request = "<h5>Main Fees</h5><table class = \"table table-bordered\"><tr><td>Description</td><td>Amount</td><tr>";
                     foreach($schedules as $schedule){
                     if(stristr($schedule->receipt_details, "Tuition")){
                     $otherdiscount = $otherdiscount + (($schedule->amount-$schedule->discount) * $otherdiscountrate);     
@@ -367,17 +367,30 @@ class AjaxController extends Controller
                     $discount = $discount + $schedule->discount;
                     $total = $total + $schedule->amount; 
                     
-                    $request = $request ."<tr><td>". $schedule->receipt_details."</td><td align=\"right\">" . number_format($schedule->amount,2)."</td></tr>";    
+                    //$request = $request ."<tr><td>". $schedule->receipt_details."</td><td align=\"right\">" . number_format($schedule->amount,2)."</td></tr>";    
                     }
-                    $request = $request . "<tr><td> Sub Total</td><td align=\"right\"><strong style=\"color:black\">". number_format($total,2)."</strong></td></tr>";
+                    $request = $request . "<tr><td>Total Fee</td><td align=\"right\"><strong style=\"color:black\">". number_format($total,2)."</strong></td></tr>";
                     $request = $request . "<tr><td> Less: Plan Discount</td><td align=\"right\"><strong style=\"color:red\">(". number_format($discount,2).")</strong></td></tr>";
                     $request = $request . "<tr><td>Other Discount: $otherdiscountname</td><td align=\"right\"><strong style=\"color:red\">(". number_format($otherdiscount,2).")</strong></td></tr>";
                     $request = $request . "<tr><td>Advance Payment</td><td align=\"right\"><strong style=\"color:red\">(". number_format($advance,2).")</strong></td></tr>";
-                    $request = $request . "<tr><td> Total</td><td align=\"right\"><strong style=\"color:black\">". number_format($total-$discount-$otherdiscount-$advance,2)."</strong></td></tr>";
-                    $request = $request . "</table><div class=\"col-md-12\"><input id=\"submit_button\" type=\"submit\" value=\"Process Assessment\" class=\"form-control btn btn-warning\">";
-                  
-                
-                
+                    $request = $request . "<tr><td> Total </td><td align=\"right\"><strong style=\"color:black\">". number_format($total-$discount-$otherdiscount-$advance,2)."</strong></td></tr>";
+                    $request = $request . "</table>";
+                    if($strand=""){
+                    $books = \App\CtrBook::where('level',$level)->get();    
+                    }else{
+                    $books = \App\CtrBook::where('level',$level)->where('strand',$strand)->get();
+                    }
+                    if(count($books)>0){
+                        $request = $request . "<h5>Books</h5><table class=\"table table-bordered\"><tr><td><div id=\"check_uncheck\"><p  style=\"cursor:pointer\"id=\"select_all\" onclick=\"unselect_all()\">Uncheck All</></div></td><td>Amount</td>";
+                            foreach($books as $book){
+                            $request = $request . "<tr><td><input type=\"checkbox\" class=\"books\" name=\"books[]\" value=\"".$book->id."\" checked=\"checked\"> ".$book->subsidiary."</td>";
+                            $request = $request . "<td align=\"right\">".number_format($book->amount,2)."</td></tr>";        
+                            }
+                        $request = $request . "</table>";
+                    }
+                        
+                     $request = $request."<div class=\"col-md-12\"><input id=\"submit_button\" type=\"submit\" value=\"Process Assessment\" class=\"form-control btn btn-warning\">";
+                    
                  return $request;
                   
                 }

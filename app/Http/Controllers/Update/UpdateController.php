@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Update;
 
 use Illuminate\Http\Request;
-use App\Http\Requests;
+//use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -434,5 +434,87 @@ class UpdateController extends Controller
             }
             
             return $newlevel;
+        }
+        function makepaymentschedule(Request $request){
+            //return $request->level;
+        
+            $departments = \App\CtrFee::where('level',$request->level)->first();
+            $department = $departments->department;
+            $schoolyear = \App\ctrSchoolYear::where('department',$department)->first();
+            $schedules = \App\CtrRefSchedule::where('plan',$request->plan)->get();
+            $firstsched =true;
+            foreach($schedules as $schedule){
+               if($schedule->duetype == "1"){
+                    $installments= \App\CtrRefInstallment::where('plan', $request->plan)->get();
+                     
+                    foreach($installments as $installment){
+                      
+                      if($request->strand != null){  
+                      $paymentschedules = \App\CtrFee::where('level',$request->level)->where('acctcode',$schedule->acctcode)->where('strand',$request->strand)->get();
+                      }else{
+                        
+                      $paymentschedules = \App\CtrFee::where('level',$request->level)->where('acctcode',$schedule->acctcode)->get();
+                          
+                      }
+                       
+                        foreach($paymentschedules as $paymentschedule){
+                        $newsched = new \App\CtrPaymentSchedule;
+                        $newsched->plan = $schedule->plan;
+                        $newsched->department = $paymentschedule->department;
+                        $newsched->level = $paymentschedule->level;
+                        $newsched->strand = $paymentschedule->strand;
+                        $newsched->course = $paymentschedule->course;
+                        $newsched->categoryswitch = $paymentschedule->categoryswitch;
+                        $newsched->accountingcode = $paymentschedule->acctcode;
+                        $newsched->acctcode = $paymentschedule->acctname;
+                        $newsched->description = $paymentschedule->subsidiary;
+                        $newsched->receipt_details = $paymentschedule->acctname;
+                        $newsched->amount= round($paymentschedule->amount/count($installments),2);
+                        if($request->plan == "Semi Annual" && $paymentschedule->acctcode =="110100"){
+                            if($firstsched){
+                                $newsched->discount = round(($paymentschedule->amount/count($installments)) * .015 ,2);
+                                $firstsched=false;
+                            }
+                        }
+                        $newsched->schoolyear = $schoolyear->schoolyear;
+                        $newsched->duetype = $installment->duetype;
+                        $newsched->duedate = $installment->duedate;
+                        $newsched->save();
+                        
+                    }
+                 
+                    }
+                }
+                elseif($schedule->duetype=='0'){
+                    if($request->strand != null){  
+                      $paymentschedules = \App\CtrFee::where('level',$request->level)->where('acctcode',$schedule->acctcode)->where('strand',$request->strand)->get();
+                      }else{ 
+                      $paymentschedules = \App\CtrFee::where('level',$request->level)->where('acctcode',$schedule->acctcode)->get();
+                      }
+                    foreach($paymentschedules as $paymentschedule){
+                        $newsched = new \App\CtrPaymentSchedule;
+                        $newsched->plan = $schedule->plan;
+                        $newsched->department = $paymentschedule->department;
+                        $newsched->level = $paymentschedule->level;
+                        $newsched->strand = $paymentschedule->strand;
+                        $newsched->course = $paymentschedule->course;
+                        $newsched->categoryswitch = $paymentschedule->categoryswitch;
+                        $newsched->accountingcode = $paymentschedule->acctcode;
+                        $newsched->acctcode = $paymentschedule->acctname;
+                        $newsched->description = $paymentschedule->subsidiary;
+                        $newsched->receipt_details = $paymentschedule->acctname;
+                        $newsched->amount= $paymentschedule->amount;
+                            if($request->plan == "Annual" && $paymentschedule->acctcode =="110100"){
+                                $newsched->discount = round($paymentschedule->amount * .03,2);
+                            }
+                        $newsched->schoolyear = $schoolyear->schoolyear;
+                        $newsched->duetype = "0";
+                        $newsched->duedate = "2017-04-01";
+                        $newsched->save();
+                        
+                    }
+                }
+                //end of due type 0
+            }
         }
 }
