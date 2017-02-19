@@ -414,6 +414,7 @@ class CashierController extends Controller
        $newcredit->referenceid = $idledger;
        $newcredit->refno = $refno;
        $newcredit->receiptno=$receiptno;
+       $newcredit->accountingcode = $ledger->accountingcode;
        $newcredit->categoryswitch = $ledger->categoryswitch;
        $newcredit->acctcode = $ledger->acctcode;
        $newcredit->description = $ledger->description;
