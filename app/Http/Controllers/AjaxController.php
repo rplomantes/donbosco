@@ -375,7 +375,7 @@ class AjaxController extends Controller
                     $request = $request . "<tr><td>Advance Payment</td><td align=\"right\"><strong style=\"color:red\">(". number_format($advance,2).")</strong></td></tr>";
                     $request = $request . "<tr><td> Total </td><td align=\"right\"><strong style=\"color:black\">". number_format($total-$discount-$otherdiscount-$advance,2)."</strong></td></tr>";
                     $request = $request . "</table>";
-                    if($strand=""){
+                    if($strand==""){
                     $books = \App\CtrBook::where('level',$level)->get();    
                     }else{
                     $books = \App\CtrBook::where('level',$level)->where('strand',$strand)->get();

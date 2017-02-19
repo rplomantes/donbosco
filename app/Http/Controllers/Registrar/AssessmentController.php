@@ -142,6 +142,7 @@ function assess(Request $request){
         $level="";
     }
     
+    
     $action = $request->action;
     
     switch($action){
@@ -149,6 +150,38 @@ function assess(Request $request){
     case "add":
         
               if($this->addLedger($request->id,$level,$request->plan,$request->discount,$request->department,$strand,$course,$contribution,$batch)){  
+                
+                  if(isset($request->books)){
+        $books = $request->books;
+                   foreach($books as $book){
+                      
+                       $paidbook = \App\CtrBook::where('id',$book)->first();
+                       $newbook = new \App\Ledger;
+                       $newbook->idno = $request->idno;
+                       $newbook->transactiondate = Carbon::now();
+                       $newbook->department = $request->department;
+                       
+                       $newbook->level = $level;
+                       $newbook->course = $course;
+                        //$newledger->track = $track;
+                       $newbook->strand= $strand;
+                       $newbook->categoryswitch = $paidbook->categoryswitch;
+                       $newbook->accountingcode = $paidbook->acctcode;
+                       $newbook->acctcode = $paidbook->acctname;
+                       $newbook->description = $paidbook->subsidiary;
+                       $newbook->receipt_details = $paidbook->receipt_details;
+                       $newbook->amount = $paidbook->amount;
+                       $newbook->schoolyear = $schoolperiod->schoolyear;
+                       $newbook->duetype = 0;
+                       $newbook->period = $schoolperiod->period;
+                       $newbook->duedate = $paidbook->duedate;
+                       $newbook->postedby = \Auth::user()->id;
+                       $newbook->save();
+                   } 
+                
+    }
+    
+                  
                 $status = new \App\Status;
                 $status->idno=$request->id;
                 $status->date_registered=Carbon::now();
@@ -191,7 +224,38 @@ function assess(Request $request){
         $newstudent->save();
         
         if($this->addLedger($request->idno,$level,$request->plan,$request->discount,$request->department, $strand,$course,$contribution,$batch)){  
-                $status = new \App\Status;
+            
+            if(isset($request->books)){
+                       $books = $request->books;
+                       foreach($books as $book){
+                       $paidbook = \App\CtrBook::where('id',$book)->first();
+                       $newbook = new \App\Ledger;
+                       $newbook->idno = $request->idno;
+                       $newbook->transactiondate = Carbon::now();
+                       $newbook->department = $request->department;
+                       
+                       $newbook->level = $level;
+                       $newbook->course = $course;
+                        //$newledger->track = $track;
+                       $newbook->strand= $strand;
+                       $newbook->categoryswitch = $paidbook->categoryswitch;
+                       $newbook->accountingcode = $paidbook->acctcode;
+                       $newbook->acctcode = $paidbook->acctname;
+                       $newbook->description = $paidbook->subsidiary;
+                       $newbook->receipt_details = $paidbook->receipt_details;
+                       $newbook->amount = $paidbook->amount;
+                       $newbook->schoolyear = $schoolperiod->schoolyear;
+                       $newbook->duetype = 0;
+                       $newbook->period = $schoolperiod->period;
+                       $newbook->duedate = $paidbook->duedate;
+                       $newbook->postedby = \Auth::user()->id;
+                       $newbook->save();
+                   } 
+                
+    }
+    
+            
+            $status = new \App\Status;
                 $status->idno=$request->idno;
                 $status->date_registered=Carbon::now();
                 if($request->department == "TVET" && $contribution == "0"){
@@ -233,6 +297,7 @@ function assess(Request $request){
             $deletestudent->delete();
         }
         
+       
         $deletegrades = \App\Grade::where($matchfields)->get();
         foreach($deletegrades as $deletegrate){
             $deletegrate->delete();
@@ -241,6 +306,11 @@ function assess(Request $request){
         $deletediscounts = \App\Discount::where($matchfields)->get();
         foreach ($deletediscounts as $deletediscount){
             $deletediscount->delete();
+        }
+        $matchfields=["idno"=>$request->id, "schoolyear"=>$schoolperiod->schoolyear, "period" => $schoolperiod->period, "accountingcode" => "440400"];
+        $deletebooks = \App\Ledger::where($matchfields)->get();
+        foreach($deletebooks as $deletebook){
+            $deletebook->delete();
         }
         $changestatus =  \App\Status::where('idno',$request->id)->first();
         $changestatus->status = "0";
@@ -269,6 +339,35 @@ function assess(Request $request){
         $this->archiveStatus($request->id);
             if($request->department == "Kindergarten" || $request->department =="Elementary" || $request->department == "Junior High School" || $request->department == "Senior High School" ||$request->department == "TVET" ){
               if($this->addLedger($request->id,$request->level,$request->plan,$request->discount,$request->department,$strand,$course,$contribution,$batch)){  
+                if(isset($request->books)){
+                       $books = $request->books;
+                       foreach($books as $book){
+                       $paidbook = \App\CtrBook::where('id',$book)->first();
+                       $newbook = new \App\Ledger;
+                       $newbook->idno = $request->idno;
+                       $newbook->transactiondate = Carbon::now();
+                       $newbook->department = $request->department;
+                       
+                       $newbook->level = $level;
+                       $newbook->course = $course;
+                        //$newledger->track = $track;
+                       $newbook->strand= $strand;
+                       $newbook->categoryswitch = $paidbook->categoryswitch;
+                       $newbook->accountingcode = $paidbook->acctcode;
+                       $newbook->acctcode = $paidbook->acctname;
+                       $newbook->description = $paidbook->subsidiary;
+                       $newbook->receipt_details = $paidbook->receipt_details;
+                       $newbook->amount = $paidbook->amount;
+                       $newbook->schoolyear = $schoolperiod->schoolyear;
+                       $newbook->duetype = 0;
+                       $newbook->period = $schoolperiod->period;
+                       $newbook->duedate = $paidbook->duedate;
+                       $newbook->postedby = \Auth::user()->id;
+                       $newbook->save();
+                   } 
+                
+    }
+                  
                 $status = \App\Status::where('idno',$request->id)->first();
                 $status->date_registered=Carbon::now();
                 if($request->department == "TVET" && $contribution == "0"){
@@ -299,6 +398,7 @@ function assess(Request $request){
         break;    
     
     }
+    
 }
       
     
@@ -348,9 +448,10 @@ function assess(Request $request){
            // $newledger->track = $ledger->track;
            // $newledger->strand= $ledger->strand;
             $newledger->categoryswitch = "7";
-            $newledger->acctcode = "Trainee Contribution";
-            $newledger->description = "Trainee Contribution";
-            $newledger->receipt_details = "Trainee Contribution";
+            $newledger->accountingcode = "440000";
+            $newledger->acctcode = "Trainees Contribution";
+            $newledger->description = "Trainees Contribution";
+            $newledger->receipt_details = "Trainees Contribution";
             $newledger->amount = $contribution;
             //$newledger->plandiscount = $ledger->discount;
             $newledger->schoolyear = $schoolperiod->schoolyear;
@@ -372,6 +473,7 @@ function assess(Request $request){
                 $newledger->track = $ledger->track;
                 $newledger->strand= $ledger->strand;
                 $newledger->categoryswitch = $ledger->categoryswitch;
+                $newledger->accountingcode = $ledger->accountingcode;
                 $newledger->acctcode = $ledger->acctcode;
                 $newledger->description = $ledger->description;
                 $newledger->receipt_details = $ledger->receipt_details;
