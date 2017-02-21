@@ -154,7 +154,7 @@ class UpdateController extends Controller
             }
         }
         function prevgrade(){
-            $sy = "2012";
+            $sy = "2013";
             $students = DB::connection('dbti2test')->select("select distinct scode from grade_report where SY_EFFECTIVE = '$sy'");
             foreach($students as $student){
                 $this->migrategrade($student->scode,$sy);
@@ -175,137 +175,134 @@ class UpdateController extends Controller
 
             foreach($hsgrades as $grade){
                 if($grade->GR_YR == 'I'){
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->CL,"CL");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->SC,"SC");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->PE,"PE");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MUS,"MUS");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MATH,"MATH");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->GMRC,"GMRC");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->FIL,"FIL");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ENGL,"ENGL");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->COM1,"COM1");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->AP,"AP");
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->CL,"CL");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->SC,"SC");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->PE,"PE");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MUS,"MUS");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MATH,"MATH");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->GMRC,"GMRC");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->FIL,"FIL");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ENGL,"ENGL");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->COM1,"COM1");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->AP,"AP");//
                 }
                 else if($grade->GR_YR == 'II'){
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->CL,"CL");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ART,"ART");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->SC,"SC");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->PE,"PE");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MUS,"MUS");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MATH,"MATH");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->GMRC,"GMRC");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->FIL,"FIL");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ENGL,"ENGL");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->COM1,"COM1");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->AP,"AP");
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->CL,"CL");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ART,"ART");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->SC,"SC");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->PE,"PE");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MUS,"MUS");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MATH,"MATH");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->GMRC,"GMRC");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->FIL,"FIL");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ENGL,"ENGL");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->COM1,"COM1");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->AP,"AP");//
                 }
                 else if($grade->GR_YR == 'III'){
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->CL,"CL");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ART,"ART");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->SC,"SC");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->PE,"PE");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MUS,"MUS");
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->CL,"CL");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ART,"ART");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->SC,"SC");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->PE,"PE");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MUS,"MUS");//
                     $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MATH,"MATH");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->GMRC,"GMRC");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->FIL,"FIL");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ENGL,"ENGL");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->COM1,"COM1");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->AP,"AP");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->WORK,"WORK");
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->GMRC,"GMRC");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->FIL,"FIL");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ENGL,"ENGL");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->COM1,"COM1");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->AP,"AP");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->WORK,"WORK");//
                 }
                 else if($grade->GR_YR == 'IV'){
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->CL,"CL");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ART,"ART");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->SC,"SC");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->PE,"PE");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MUS,"MUS");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MATH,"MATH");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->HEK,"HEK");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->GMRC,"GMRC");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->FIL,"FIL");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ENGL,"ENGL");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->COM1,"COM1");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->WORK,"WORK");
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->CL,"CL");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ART,"ART");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->SC,"SC");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->PE,"PE");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MUS,"MUS");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MATH,"MATH");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->HEK,"HEK");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->GMRC,"GMRC");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->FIL,"FIL");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ENGL,"ENGL");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->COM1,"COM1");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->WORK,"WORK");//
                 }
                 else if($grade->GR_YR == 'V'){
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->CL,"CL");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ART,"ART");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->SC,"SC");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->PE,"PE");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MUS,"MUS");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MATH,"MATH");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->HEK,"HEK");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->GMRC,"GMRC");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->FIL,"FIL");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ENGL,"ENGL");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->COM1,"COM1");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->WORK,"WORK");
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->CL,"CL");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ART,"ART");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->SC,"SC");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->PE,"PE");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MUS,"MUS");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MATH,"MATH");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->HEK,"HEK");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->GMRC,"GMRC");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->FIL,"FIL");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ENGL,"ENGL");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->COM1,"COM1");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->WORK,"WORK");//
                 }
                 else if($grade->GR_YR == 'VI'){
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->CL,"CL");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ART,"ART");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->SC,"SC");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->PE,"PE");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MUS,"MUS");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MATH,"MATH");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->HEK,"HEK");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->GMRC,"GMRC");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->FIL,"FIL");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ENGL,"ENGL");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->COM1,"COM1");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->WORK,"WORK");
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->CL,"CL");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ART,"ART");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->SC,"SC");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->PE,"PE");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MUS,"MUS");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MATH,"MATH");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->HEK,"HEK");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->GMRC,"GMRC");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->FIL,"FIL");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ENGL,"ENGL");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->COM1,"COM1");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->WORK,"WORK");//
                 }
                 else if($grade->GR_YR == 1){
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->AT_MT,"AT/MT");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->COM2,"COM2");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->DRAF,"DRAF");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ET_ELX,"ET_ELX");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->SS,"SS");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->AP,"AP");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->VE,"VE");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->SC,"SC");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->RHGP,"RHGP");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->HPE,"H&PE");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MUS,"MUS");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MATH,"MATH");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->GMRC,"GMRC");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->FIL,"FIL");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ENGL,"ENGL");
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->eTEX,"eTEX");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->AMT,"AMT");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->DT,"DT");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->CT,"CT");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->AP,"AP");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->VE,"VE");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->SC,"SC");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->RHGP,"RHGP");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->PE,"PE");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MUS,"MUS");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MATH,"MATH");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->GMRC,"GMRC");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->FIL,"FIL");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ENGL,"ENGL");//
                 }            
                 else if($grade->GR_YR == 2){
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->AT_MT,"AT/MT");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->COM2,"COM2");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->DRAF,"DRAF");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ET_ELX,"ET_ELX");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->SS,"SS");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->AP,"AP");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->VE,"VE");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->SC,"SC");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->RHGP,"RHGP");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->HPE,"H&PE");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MUS,"MUS");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MATH,"MATH");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->GMRC,"GMRC");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->FIL,"FIL");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ENGL,"ENGL");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->STAT,"STAT");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ALGEB,"ALGEB");
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->AMT,"AMT");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->eTEX,"eTEX");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->CT,"CT");//   
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->AP,"AP");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->VE,"VE");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->SC,"SC");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->RHGP,"RHGP");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->PE,"PE");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MUS,"MUS");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MATH,"MATH");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->GMRC,"GMRC");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->FIL,"FIL");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ENGL,"ENGL");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->DT,"DT");
                 }            
                 else if($grade->GR_YR == 3){
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->eTEX,"eTEX");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->AMT,"AMT");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->DT,"DT");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->CT,"CT");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->CADD,"CADD");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->FIL,"FIL");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->AP,"AP");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->VE,"VE");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->SC,"SC");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->RHGP,"RHGP");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ENGL,"ENGL");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->PE,"PE");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MUS,"MUS");
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->GMRC,"GMRC");
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->eTEX,"eTEX");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->AMT,"AMT");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->DT,"DT");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->CT,"CT");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->CADD,"CADD");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->FIL,"FIL");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->AP,"AP");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->VE,"VE");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->SC,"SC");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->RHGP,"RHGP");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->ENGL,"ENGL");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->PE,"PE");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MUS,"MUS");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->GMRC,"GMRC");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MATH,"MATH");//
                 }            
                 else if($grade->GR_YR == 4){
                     $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->CADD,"CADD");//
@@ -314,7 +311,7 @@ class UpdateController extends Controller
                     $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->RHGP,"RHGP");//
                     $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->SC,"SC");//
                     $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->SHOP,"SHOP");//
-                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->TECH,"TECH");//
+                    $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->TECH,"TECH");
                     $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->MATH,"MATH");//
                     $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->HPE,"H&PE");//
                     $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->GMRC,"GMRC");//

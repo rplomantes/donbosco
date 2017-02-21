@@ -163,6 +163,8 @@
     
     //TOOLS
     Route::get('/addoldstudent','DBFixer@addOldStudent');
+    Route::get('/gensubj','DBFixer@gensubjects');
+    
     
 });
 
