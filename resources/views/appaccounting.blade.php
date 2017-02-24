@@ -80,7 +80,7 @@
                                        @if(Auth::user()->accesslevel == env('USER_ACCOUNTING_HEAD'))
                                        <li><a href="{{url('summarymain')}}"><i class="fa fa-btn"></i>Account Summary</a>
                                            <a href="{{url('studentledger','all')}}"><i class="fa fa-btn"></i>Student Ledger Summary</a>
-                                           <a href="{{url('maincollection',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Transaction Report</a>
+                                           <a href="{{url('maincollection',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Cash Debit/Credit Accounting Entry</a>
                                            <a href="{{url('cashcollection',date('Y-m-d'))}}"><i class="fa fa-btn"></i>Actual Deposit</a>
                                            <a href="{{url('overallcollection',date('Y-m-d'))}}"><i class="fa fa-btn"></i>Collection Report</a>
                                            <a href ="{{url('cashreceipts', date('Y-m-d'))}}"><i class="fa fa-btn"></i>Cash Receipts</a>

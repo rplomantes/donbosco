@@ -2,10 +2,7 @@
 @section('content')
 
 <style>
-    #receipt tr td{
-        border-bottom: 1px solid;
-        border-top: 1px solid;
-    }    
+    
     #dates{
     margin-bottom: 0;
     font-weight: 300;
@@ -31,16 +28,6 @@
     border-color: #cccccc;
     }
 
-    #receipt tr{
-        border-bottom: 1px solid;
-        border-top: 1px solid;
-    }
-    #receipt tr td{
-        padding-left: 5px;
-        padding-right: 5px;
-        border-bottom: 1px solid;
-        border-top: 1px solid;
-    }
     body{
         font-size: 8pt;
         border-top: 0px
@@ -100,7 +87,7 @@
                 </thead>
                 <tr>
                     <td>
-                        <table width="100%" id="receipt" style="border:none;">
+                        <table width="100%"  class="table table-striped">
                             <thead>
                                 <tr >
                                     <td class="receipt">O R No.</td>

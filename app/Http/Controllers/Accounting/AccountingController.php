@@ -537,11 +537,8 @@ function collectionreport($datefrom, $dateto){
     }
 
  function summarymain(){
-     $totalmains = DB::Select("select acctcode, sum(amount) as amount, sum(payment) as payment, sum(debitmemo) as debitmemo, "
-             . " sum(plandiscount) as plandiscount, "
-             . " sum(otherdiscount) as otherdiscount from ledgers where categoryswitch <= '6' group by acctcode");
      
-     return view('accounting.showsummarymain',compact('totalmains'));
+     return view('accounting.showsummarymain');
      
  }   
  function maincollection($fromtran,$totran){

@@ -867,6 +867,27 @@ class AjaxController extends Controller
             //return $level;
         }
     }  
+    
+    function getsubjs(){
+        $quarter = \App\CtrQuarter::first();
+        $level = Input::get('level');
+        if($level == 'Grade 11' || $level == 'Grade 12'){
+            $strand = Input::get('strand');
+            if($quarter->quarter == 1 || $quarter->quarter == 2){
+                $subjects = \App\CtrSubjects::where('level',$level)->where('semester',1)->whereIn('subjecttype',array(5,6))->where('strand',$strand)->get();
+            }else{
+                $subjects = \App\CtrSubjects::where('level',$level)->where('semester',2)->whereIn('subjecttype',array(5,6))->where('strand',$strand)->get();
+            }
+        }else{
+            $subjects = \App\CtrSubjects::where('level',$level)->whereIn('subjecttype',array(0,1))->get();
+        }
+        
+        $data = "<option value='' hidden='hidden'> --Select subject-- </option>";
+        foreach($subjects as $subject){
+            $data = $data."<option value='".$subject->subjectcode."'>".$subject->subjectname."</option>";
+        }
+        return $data;
+    }
 
     function getsubjects($level){
         if(Request::ajax()){

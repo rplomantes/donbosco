@@ -96,7 +96,9 @@ public function saveInfo(Request $request){
     $student->idno = $request->idno;
     $student->save();
     $this->saveUser($request->all(), $student->id);
-  
+    
+    $this->addstatus($request->idno);
+    
     $studentInfo =new \App\StudentInfo();
     $studentInfo->idno = $request->idno;
     $studentInfo->save();
@@ -122,6 +124,8 @@ public function updateInfo(Request $request,$idno){
   
     $studentInfo =\App\StudentInfo::where('idno',$idno)->first();;
     $this->saveStudentInfo($request->all(), $studentInfo->id);
+    
+    
     
     $matchfields=["idno"=>$idno];   
     $siblingcount = \App\Sibling::where($matchfields)->count();
@@ -329,5 +333,19 @@ public function updateSibling(array $request,$idno){
     $sibling->save();
     }
     return null;
+}
+
+function addstatus($idno){
+    $schoolyear = \App\RegistrarSchoolyear::first();
+    
+    $status = new \App\Status;
+    $status->idno = $idno;
+    $status->date_registered = Carbon::now();
+    $status->schoolyear = $schoolyear->schoolyear;
+    $status->isnew = '1';
+    $status->save();
+    
+    
+    
 }
 }

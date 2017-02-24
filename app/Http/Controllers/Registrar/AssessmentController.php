@@ -405,7 +405,7 @@ function assess(Request $request){
 
     function addLedger($id, $level, $plan, $discount,$department,$strand, $course,$contribution,$batch){
         if($department=="TVET"){
-            $schoolperiod =  \App\ctrSchoolYear::where('department','TVET')->where('period',$batch)->first();    
+            $schoolperiod = \App\ctrSchoolYear::where('department','TVET')->where('period',$batch)->first();    
         }
         else{
             $schoolperiod = \App\ctrSchoolYear::where("department",$department)->first();

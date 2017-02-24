@@ -165,6 +165,10 @@
     Route::get('/addoldstudent','DBFixer@addOldStudent');
     Route::get('/gensubj','DBFixer@gensubjects');
     
+    //ACADEMIC
+    Route::post('/saveentry ','GradeSubmitController@saveentry');
+    Route::get('/upload/grade','GradeSubmitController@index');
+    Route::post('/upload/grade','GradeSubmitController@importgrade');
     
 });
 
@@ -208,7 +212,8 @@
    
     //Ajax Route Sheryl
    
-    //AJAX Vincent
+    //AJAX 
+    Route::get('/getsubjs','Vincent\AjaxController@getsubjs');
     Route::get('/showgrades', 'Vincent\AjaxController@showgrades');
     Route::get('/showgradestvet', 'Vincent\AjaxController@showgradestvet');
     Route::get('/setacadrank', 'Vincent\AjaxController@setRankingAcad');
@@ -241,6 +246,7 @@
     
     Route::get('/pullrecords','Update\UpdateController@prevgrade');
     Route::get('/getstrands','Update\NewAJAXController@getstrands');
+    
     
 // Registrar Group
 Route::group(['middleware' => ['web','registrar']], function () {

@@ -112,8 +112,6 @@ class CashierController extends Controller
        
    }
    
-  
-
     function setStatus($idno){
         $newstatus = \App\User::where('idno',$idno)->first();
         if($newstatus->status < '2'){
@@ -190,7 +188,7 @@ class CashierController extends Controller
              
                     $this->changestatatus($request->idno, $request->reservation);
                         if($request->reservation > 0){
-                        $this->debit_reservation_discount($request->idno,env('DEBIT_RESERVATION','Reservation') , $request->reservation);
+                        $this->debit_reservation_discount($request->idno,env('DEBIT_RESERVATION'), $request->reservation,'Reservation');
                         $this->consumereservation($request->idno);
                         }
             }   
@@ -231,6 +229,8 @@ class CashierController extends Controller
                         if($statusnow->status=="1"){
                         $statusnow->status="2";
                         $statusnow->update(); 
+                        $this->setuptuitionfee(1, $request->idno, $statusnow->schoolyear);
+                        
                         }
                     }
                 }
@@ -282,10 +282,11 @@ class CashierController extends Controller
                     
             if($discount > 0 ){
                 $discountname="Plan Discount";
-                $schoolyear = \App\CtrRefSchoolyear::first()->schoolyear;
-                $disc = \App\Discount::where('idno',$request->idno)->first()->description;
-                if(count($disc)>0){
-                    $discountname = $disc;
+                $schoolyear = \App\ctrSchoolYear::first()->schoolyear;
+                $disc = \App\Discount::where('idno',$request->idno)->first();
+                if($disc != ""){
+                    
+                    $discountname = $disc->description;
                 }
               $this->debit_reservation_discount($request->idno,env('DEBIT_DISCOUNT') , $discount, $discountname);
                   
@@ -307,6 +308,8 @@ class CashierController extends Controller
                $status->status='2';
                $status->date_enrolled=Carbon::now();
                $status->save();
+               
+               $this->setuptuitionfee(1, $idno, $status->schoolyear);
            }
        }
    }
@@ -319,9 +322,10 @@ class CashierController extends Controller
       $addcredit->refno = $this->getRefno();
       $addcredit->receiptno = $this->getOR();
       $addcredit->categoryswitch = "9";
-      $addcredit->acctcode = "Reservation";
-      $addcredit->description = "Reservation";
-      $addcredit->receipt_details = "Reservation";
+      $addcredit->accountingcode = '210400';
+      $addcredit->acctcode = " Enrollment Reservation";
+      $addcredit->description = "Enrollment Reservation";
+      $addcredit->receipt_details = "Enrollment Reservation";
       $addcredit->amount = "1000.00";
       if(isset($status->schoolyear)){
       $addcredit->schoolyear=$status->schoolyear;
@@ -333,7 +337,11 @@ class CashierController extends Controller
       $adddebit->idno = $idno;
       $adddebit->transactiondate = Carbon::now();
       $adddebit->paymenttype = '5';
+      $adddebit->paymenttype = '5';
       $adddebit->amount = "1000.00";
+      $adddebit->accountingcode = '210400';
+      $adddebit->acctcode = " Enrollment Reservation";
+      $adddebit->description = "Enrollment Reservation";
       $adddebit->refno = $this->getRefno();
       $adddebit->receiptno = $this->getOR();
       $adddebit->postedby = \Auth::user()->idno;
@@ -374,10 +382,28 @@ class CashierController extends Controller
         $debitaccount->idno = $idno;
         $debitaccount->transactiondate=Carbon::now();
         $debitaccount->refno=$this->getRefno();
+        switch($depositto){
+            case 'China Bank':
+                $accountingcode = \App\ChartOfAccount::where('accountname','CBC-CA 1049-00 00027-8')->first();
+                break;
+            case 'BPI 1':
+                $accountingcode = \App\ChartOfAccount::where('accountname','BPI- CA 1885-1129-82')->first();
+                break;
+            case 'BPI 2':
+                $accountingcode = \App\ChartOfAccount::where('accountname','BPICA 1881-0466-59')->first();
+                break;
+        }
+        
+        if($paymenttype == 1 || $paymenttype == 4 || $paymenttype == 5){
+            $debitaccount->entry_type = 1;
+        }else if($paymenttype == 3){
+            $debitaccount->entry_type = 2;
+        }
         $debitaccount->receiptno = $this->getOR();
         $debitaccount->paymenttype = $paymenttype;
         $debitaccount->bank_branch = $bank_branch;
         $debitaccount->check_number = $check_number;
+        $debitaccount->accountingcode = $accountingcode->acctcode;
         $debitaccount->receivefrom = $student->lastname . ", " . $student->firstname . " " . $student->extensionname . " " .$student->middlename;
         $debitaccount->receiveamount=$receiveamount;
         $debitaccount->iscbc = $iscbc;
@@ -391,11 +417,26 @@ class CashierController extends Controller
     }
    
     function debit_reservation_discount($idno,$debittype,$amount,$discountname){
+        if($discountname == "Plan Discount"){
+            $accountcode='410100';
+            $acctcode='Cash - Semi Payment Discount';
+            $description = 'Cash - Semi Payment Discount';
+        }else if($discountname == "Reservation"){
+            $accountcode='210100';
+            $acctcode='Enrollment Reservation';
+            $description = 'Enrollment Reservation';
+        }else{
+            $accountcode='410200';
+            $acctcode='Brothers Discount';
+            $description = $discountname;
+        }
         $student = \App\User::where('idno',$idno)->first();
         $debitaccount = new \App\Dedit;
         $debitaccount->idno = $idno;
         $debitaccount->transactiondate=Carbon::now();
-        $debitaccount->acctcode=$discountname;
+        $debitaccount->accountingcode=$accountcode;
+        $debitaccount->acctcode=$acctcode;
+        $debitaccount->description=$description;
         $debitaccount->refno=$this->getRefno();
         $debitaccount->receiptno = $this->getOR();
         $debitaccount->paymenttype = $debittype;
@@ -508,9 +549,10 @@ function otherpayment($idno){
             $creditreservation->refno = $refno;
             $creditreservation->receiptno = $or;
             $creditreservation->categoryswitch = '9';
-            $creditreservation->acctcode="Reservation";
-            $creditreservation->description="Reservation";
-            $creditreservation->receipt_details = "Reservation";
+            $creditreservation->accountingcode = '210400';
+            $creditreservation->acctcode="Enrollment Reservation";
+            $creditreservation->description="Enrollment Reservation";
+            $creditreservation->receipt_details = "Enrollment Reservation";
             $creditreservation->amount = $request->reservation;
             $creditreservation->postedby = \Auth::user()->idno;
             $creditreservation->save();     
@@ -639,12 +681,26 @@ function otherpayment($idno){
          if($request->iscbc =="cbc"){
                     $iscbc = 1;
                 }
+        switch($request->depositto){
+            case 'China Bank':
+                $accountingcode = \App\ChartOfAccount::where('accountname','CBC-CA 1049-00 00027-8')->first();
+                break;
+            case 'BPI 1':
+                $accountingcode = \App\ChartOfAccount::where('accountname','BPI- CA 1885-1129-82')->first();
+                break;
+            case 'BPI 2':
+                $accountingcode = \App\ChartOfAccount::where('accountname','BPICA 1881-0466-59')->first();
+                break;
+        }
+        
         $debit = new \App\Dedit;
         $debit->idno = $request->idno;
         $debit->transactiondate = Carbon::now();
         $debit->refno = $refno;
         $debit->receiptno = $or;
         $debit->paymenttype= "1";
+        $debit->entry_type="1";
+        $debit->accountingcode=$accountingcode->acctcode;
         $debit->bank_branch=$request->bank_branch;
         $debit->check_number=$request->check_number;
         $debit->iscbc=$iscbc;
@@ -1255,6 +1311,56 @@ function otherpayment($idno){
         }
         return $this->addtoaccount($account->idno);
         //return redirect(url('addtoaccount',$account->idno));
+    }
+    
+    public function getaccountname($acctcode){
+        $coa = \App\ChartOfAccount::where('acctcode',$acctcode)->first();
+        return $coa->accountname;
+    }
+    
+    function setuptuitionfee($entrytype,$idno,$schoolyear){
+        $entry_type = \App\CtrAutoEntry::where('entry_type',$entrytype)->first();
+        
+        
+        //$tuition = \App\Ledger::select('sum(amount) as amount')->where('accountingcode',$entry_type->indic)->where('idno',$idno)->where('schoolyear',$schoolyear)->first();
+        $tuitions = DB::Select("Select sum(amount) as amount from ledgers where accountingcode = ".$entry_type->indic." and idno  = '".$idno."' and schoolyear = '".$schoolyear."'");
+        $amount = 0;
+        foreach($tuitions as $tuition){
+            $amount = $amount + $tuition->amount;
+        }
+        
+        $refno = uniqid(11);
+        
+        $credit = new \App\Credit;
+        $credit->idno =$idno;
+        $credit->transactiondate = Carbon::now();
+        $credit->refno = $refno;
+        $credit->accountingcode = $entry_type->credit;
+        $credit->acctcode = $this->getaccountname($entry_type->credit);
+        $credit->description = "Tuition Fee";
+        $credit->receipt_details = "Tuition Fee Setup";
+        $credit->entry_type = 5;
+        $credit->amount = $amount;
+        $credit->schoolyear = $schoolyear;
+        $credit->postedby = \Auth::User()->idno;
+        $credit->save();
+        
+        $debit = new \App\Dedit;
+        $debit->idno = $idno;
+        $debit->transactiondate = Carbon::now();
+        $debit->refno = $refno;
+        $debit->paymenttype = 6;
+        $debit->entry_type = 5;
+        $debit->accountingcode = $entry_type->debit;
+        $debit->acctcode = $this->getaccountname($entry_type->debit);
+        $debit->description = "Tuition Fee";
+        $debit->amount = $amount;
+        $debit->postedby = \Auth::User()->idno;
+        $debit->schoolyear = $schoolyear;
+        $debit->save();
+        
+        
+        return null;
     }
     
    }
