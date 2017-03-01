@@ -15,7 +15,13 @@ if($collection->isreverse == '1'){
 ?>
 
 
-<tr><td>{{$collection->receiptno}}</td><td>{{$collection->lastname}}, {{$collection->firstname}}</td><td align="right">{{number_format($collection->amount,2)}}</td><td align="right">{{number_format($collection->checkamount,2)}}</td><td align="right">{{number_format($collection->checkamount + $collection->amount,2)}}</td><td><?php echo $remarks;?></td><td>
+<tr><td>{{$collection->receiptno}}</td>
+    @if($collection->lastname != "")
+    <td>{{$collection->lastname}}, {{$collection->firstname}}</td>
+    @else
+    <td>{{strtoupper($collection->fullname)}}</td>
+    @endif
+    <td align="right">{{number_format($collection->amount,2)}}</td><td align="right">{{number_format($collection->checkamount,2)}}</td><td align="right">{{number_format($collection->checkamount + $collection->amount,2)}}</td><td><?php echo $remarks;?></td><td>
     <a href="{{url('/viewreceipt',array($collection->refno,$collection->idno))}}">View</a>
     </td></tr>
 

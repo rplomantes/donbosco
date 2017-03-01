@@ -85,6 +85,7 @@
     Route::get('overallcollection/{transactiondate}','Accounting\AccountingController@overallcollection');
     Route::get('printactualoverall/{transactiondate}','Accounting\AccountingController@printactualoverall');
     Route::get('cashreceipts/{transactiondate}','Accounting\AccountingController@cashreceipts');
+    Route::get('printcashreceipts/{transactiondate}','Accounting\AccountingController@printcashreceipts');
     Route::get('statementofaccount','Accounting\AccountingController@statementofaccount');
     Route::get('printsoa/{idno}/{tradate}','Accounting\AccountingController@printsoa');
      Route::get('/printallsoa/{level}/{strand}/{section}/{trandate}/{amtover}','Accounting\AccountingController@printallsoa');

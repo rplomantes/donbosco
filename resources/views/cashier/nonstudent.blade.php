@@ -1,5 +1,5 @@
-@extends('appcashier');
-@section('content');
+@extends('appcashier')
+@section('content')
 
 <div class="container">
     <div class="col-md-7" >
@@ -101,7 +101,7 @@
                          <h5> Total </h5>
                          </div>
                         <div class="col-md-4">
-                            <input type="text" style="text-align:right" value="0.00" disabled="true" id="totalcredit" name="totalcredit" class="form-control">
+                            <input type="text" style="text-align:right" value="0.00" readonly="readonly" id="totalcredit" name="totalcredit" class="form-control">
                         </div>
                     </div>
          
@@ -114,6 +114,7 @@
                      <div class="form-group">
                       <label>Cash Amount</label> <input type="text" style="text-align:right" value = "0.00" onkeypress = "validateother(event,'cash')" class="form-control" id = "cash" name="cash">
                     </div>
+                 <div>Change : <span style="color:red;font-size: 10pt; font-weight: bold" id="change">0.00</span></div>
                     
                     <div class="form-group">
                          <table class="table table-responsive"  style="background-color: #ccc"><tr>
@@ -187,7 +188,10 @@
                 var totalcredit = eval(document.getElementById('totalcredit').value);
                 var totalcash = eval(document.getElementById('cash').value);
                 var totalcheck = eval(document.getElementById('receivecheck').value);
-                if(totalcredit == totalcash+totalcheck){
+                
+                if(totalcredit <= totalcash+totalcheck){
+                     total = totalcheck+totalcash-totalcredit
+                     document.getElementById('change').innerHTML = total.toFixed(2)
                     document.getElementById('submit').style.visibility="visible";
                     document.getElementById('submit').focus();
                 }
@@ -201,13 +205,15 @@
         }
         
         function ctotal(){
+            
  // alert(document.getElementById('reservation').value)
-            var r = eval(document.getElementById('reservation').value);
             var amount1 = eval(document.getElementById('amount1').value);
             var amount2 = eval(document.getElementById('amount2').value);
             var amount3 = eval(document.getElementById('amount3').value);
             var amount4 = eval(document.getElementById('amount4').value);
-            document.getElementById('totalcredit').value = r + amount1 + amount2 + amount3 + amount4;
+            
+            
+            document.getElementById('totalcredit').value = amount1 + amount2 + amount3 + amount4;
             var totalcredit = eval(document.getElementById('totalcredit').value);
                 var totalcash = eval(document.getElementById('cash').value);
                 var totalcheck = eval(document.getElementById('receivecheck').value);

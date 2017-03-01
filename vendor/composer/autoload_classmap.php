@@ -51,6 +51,7 @@ return array(
     'CreateEncashmentsTable' => $baseDir . '/database/migratin_backup/2016_03_30_070624_create_encashments_table.php',
     'CreateGradesTable' => $baseDir . '/database/migratin_backup/2016_03_06_071325_create_grades_table.php',
     'CreateLedgersTable' => $baseDir . '/database/migratin_backup/2016_01_28_054820_create_ledgers_table.php',
+    'CreateNonStudentsTable' => $baseDir . '/database/migrations/2017_02_27_114257_create_non_students_table.php',
     'CreateParentsTable' => $baseDir . '/database/migratin_backup/2016_07_04_143905_create_parents_table.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migratin_backup/2014_10_12_100000_create_password_resets_table.php',
     'CreatePaymentsTable' => $baseDir . '/database/migratin_backup/2016_01_28_054855_create_payments_table.php',

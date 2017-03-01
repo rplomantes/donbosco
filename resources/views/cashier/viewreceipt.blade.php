@@ -9,8 +9,13 @@
       
        <h5>OFFICIAL RECEIPT : <span style="font-weight: bold; color: red">{{$tdate->receiptno}}</span></h5>
        <table class = "table table-responsive">
+           @if(count($student)> 0)
            <tr><td>Received From : {{$student->lastname}}, {{$student->firstname}} {{$student->extensionname}} {{$student->midddlename}}</td><td></td></tr>
-         
+           @else
+           <?php $student = App\NonStudent::where('idno',$idno)->first();?>
+           <tr><td>Received From : {{$student->fullname}}</td><td></td></tr>
+           @endif
+           
            @if(isset($status->level))
            <tr><td>Grade/Sec : {{$status->level}} {{$status->strand}} {{$status->section}}</td><td>Date : {{$tdate->transactiondate}}  {{$timeis}}</td></tr>
            @endif

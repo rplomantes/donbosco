@@ -7,6 +7,13 @@
         float:right;
         margin-left:10px;
     }
+    .remark{
+    cursor: pointer;
+    max-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    }
 </style>
 <div class="container">
     
@@ -44,15 +51,30 @@
         </div>    
         </div>
         <div class="col-md-6">
-            <h5>Balance for Other Collections</h5>
+            <div>
+            
             @if(count($ledgers)>0)
+            <h5>Balance for Other Collections</h5>
             <table class="table table-striped">
-                <tr><td>Description</td><td>Amount</td><td></td></tr>
+                <tr><td>Description</td><td>Amount</td><td>Particular</td><td></td></tr>
                 @foreach($ledgers as $ledger)
-                <tr><td>{{$ledger->receipt_details}}</td><td align="right">{{number_format($ledger->amount,2)}}</td><td style="text-align: right"><a href="#" onclick="deleteAccount({{$ledger->id}})" >Delete</a><input type="text" class="form-control slidable" id="remark_{{$ledger->id}}" onkeypress="submitDelete({{$ledger->id}},event)"></td></tr>
+                <tr><td>{{$ledger->receipt_details}}</td><td align="right">{{number_format($ledger->amount,2)}}</td><td class="remark"  title="{{$ledger->remark}}">{{$ledger->remark}}</td><td style="text-align: right"><a href="#" onclick="deleteAccount({{$ledger->id}})" >Delete</a><input type="text" class="form-control slidable" id="remark_{{$ledger->id}}" onkeypress="submitDelete({{$ledger->id}},event)"></td></tr>
                 @endforeach
             </table>    
             @endif
+            </div>
+            <div>
+            
+            @if(count($deletes)>0)
+            <h5>Deleted Accounts</h5>
+            <table class="table table-striped">
+                <tr><td>Description</td><td>Amount</td><td>Particular</td></tr>
+                @foreach($deletes as $delete)
+                <tr><td>{{$delete->receipt_details}}</td><td align="right">{{number_format($delete->amount,2)}}</td><td class="remark"  title="{{$delete->deleted}}">{{$delete->deleted}}</td></tr>
+                @endforeach
+            </table>    
+            @endif
+            </div>
          </div>      
 </div>
 @stop

@@ -483,7 +483,7 @@ class CashierController extends Controller
        $timeis=date('h:i:s A',strtotime($timeissued->created_at));
        $tdate = \App\Dedit::where('refno',$refno)->first();
        $posted = \App\User::where('idno',$tdate->postedby)->first();
-       return view("cashier.viewreceipt",compact('posted','timeis','tdate','student','debits','credits','status','debit_discount','debit_reservation','debit_cash','debit_dm'));
+       return view("cashier.viewreceipt",compact('posted','timeis','tdate','student','debits','credits','status','debit_discount','debit_reservation','debit_cash','debit_dm','idno'));
        
    }
    
@@ -656,7 +656,6 @@ function otherpayment($idno){
             $creditreservation->postedby = \Auth::user()->idno;
             $creditreservation->sub_department = $request->acct_department6;
             $creditreservation->save(); 
-            
         }
         
          if($request->amount7 > 0){
@@ -724,7 +723,8 @@ function otherpayment($idno){
         $matchfields = ['postedby'=>\Auth::user()->idno, 'transactiondate'=>$transactiondate];
         //$collections = \App\Dedit::where($matchfields)->get();
         $collections = DB::Select("select sum(dedits.amount) as amount, sum(dedits.checkamount) as checkamount, users.idno, users.lastname, users.firstname,"
-                . " dedits.transactiondate, dedits.isreverse, dedits.receiptno, dedits.refno from users, dedits where users.idno = dedits.idno and"
+                . " dedits.transactiondate, dedits.isreverse, dedits.receiptno, dedits.refno,non_students.fullname from dedits "
+                . "left join users on users.idno = dedits.idno left join non_students on non_students.idno = dedits.idno where"
                 . " dedits.postedby = '".\Auth::user()->idno."' and dedits.transactiondate = '" 
                 . $transactiondate . "' and dedits.paymenttype = '1' group by users.idno, dedits.transactiondate, users.lastname, users.firstname, dedits.isreverse,dedits.receiptno,dedits.refno order by dedits.refno" );
         //$collections = \App\User::where('postedby',\Auth::user()->idno)->first()->dedits->where('transactiondate',date('Y-m-d'))->get();
@@ -976,43 +976,135 @@ function otherpayment($idno){
     }
     function nonstudent(){
        
-        $accounttypes = DB::Select("select distinct accounttype from ctr_other_payments");
+        $accounttypes = DB::Select("select distinct accounttype,acctcode from ctr_other_payments");
         return view('cashier.nonstudent', compact('accounttypes'));
         
     }
     
+    function getaccountingcode($accountname){
+        $coa = \App\ChartOfAccount::where('accountname',$accountname)->first();
+        return $coa->acctcode;
+    }
+    
     function postnonstudent(Request $request){
+        
        $refno = $this->getRefno();
        $or = $this->getOR(); 
-       $newcredit = new \App\Credit;
-       $newcredit->idno="9999999";
-       $newcredit->transactiondate = Carbon::now();
-       $newcredit->referenceid = $idledger;
-       $newcredit->refno = $refno;
-       $newcredit->receiptno=$or;
-       $newcredit->categoryswitch = '7';
-       $newcredit->acctcode = 'Others';
-       $newcredit->description = $request->particular;
-       $newcredit->receipt_details = $request->particular;
-       $newcredit->amount=$request->amount;
-       $newcredit->postedby=\Auth::user()->idno;
-       $newcredit->save();
+       $payee = strtoupper(str_replace(' ', '', $request->name));
+       $payeeexist = DB::Select("Select UPPER(REPLACE(fullname,' ','')) as name,fullname,idno from non_students where UPPER(REPLACE(fullname,' ','')) = '$payee'");
+       if(count($payeeexist) > 0){
+           foreach($payeeexist as $payees){
+               $idno = $payees->idno;
+               $name = $payees->fullname;
+           }
+       }else{
+        $newpayee = new \App\NonStudent;
+        $newpayee->idno = uniqid();
+        $newpayee->fullname = $request->name;
+        $newpayee->save();
         
-       $debit = new \App\Dedit;
-        $debit->idno = "9999999";
+        $idno = $newpayee->idno;
+        $name = $newpayee->fullname;
+       }
+       $this->reset_or();
+        if($request->amount1 > 0){
+            $creditreservation = new \App\Credit;
+            $creditreservation->idno = $idno;
+            $creditreservation->transactiondate = Carbon::now();
+            $creditreservation->refno = $refno;
+            $creditreservation->receiptno = $or;
+            $creditreservation->categoryswitch = '7';
+            $creditreservation->accountingcode=$this->getaccountingcode($request->groupaccount1);
+            $creditreservation->acctcode=$request->groupaccount1;
+            $creditreservation->description=$request->particular1;
+            $creditreservation->receipt_details = $request->particular1;
+            $creditreservation->amount = $request->amount1;
+            $creditreservation->postedby = \Auth::user()->idno;
+            $creditreservation->save(); 
+        }
+        
+        if($request->amount2 > 0){
+            $creditreservation = new \App\Credit;
+            $creditreservation->idno = $idno;
+            $creditreservation->transactiondate = Carbon::now();
+            $creditreservation->refno = $refno;
+            $creditreservation->receiptno = $or;
+            $creditreservation->categoryswitch = '7';
+            $creditreservation->accountingcode=$this->getaccountingcode($request->groupaccount2);
+            $creditreservation->acctcode=$request->groupaccount2;
+            $creditreservation->description=$request->particular2;
+            $creditreservation->receipt_details = $request->particular2;
+            $creditreservation->amount = $request->amount2;
+            $creditreservation->postedby = \Auth::user()->idno;
+            $creditreservation->save(); 
+        }
+        
+        if($request->amount3 > 0){
+            $creditreservation = new \App\Credit;
+            $creditreservation->idno = $idno;
+            $creditreservation->transactiondate = Carbon::now();
+            $creditreservation->refno = $refno;
+            $creditreservation->receiptno = $or;
+            $creditreservation->categoryswitch = '7';
+            $creditreservation->accountingcode=$this->getaccountingcode($request->groupaccount3);
+            $creditreservation->acctcode=$request->groupaccount3;
+            $creditreservation->description=$request->particular3;
+            $creditreservation->receipt_details = $request->particular3;
+            $creditreservation->amount = $request->amount3;
+            $creditreservation->postedby = \Auth::user()->idno;
+
+            $creditreservation->save(); 
+        }
+        
+        if($request->amount4 > 0){
+            $creditreservation = new \App\Credit;
+            $creditreservation->idno = $idno;
+            $creditreservation->transactiondate = Carbon::now();
+            $creditreservation->refno = $refno;
+            $creditreservation->receiptno = $or;
+            $creditreservation->categoryswitch = '7';
+            $creditreservation->accountingcode=$this->getaccountingcode($request->groupaccount4);
+            $creditreservation->acctcode=$request->groupaccount4;
+            $creditreservation->description=$request->particular4;
+            $creditreservation->receipt_details = $request->particular4;
+            $creditreservation->amount = $request->amount4;
+            $creditreservation->postedby = \Auth::user()->idno;
+
+            $creditreservation->save(); 
+        }
+        
+        switch($request->depositto){
+            case 'China Bank':
+                $accountingcode = \App\ChartOfAccount::where('accountname','CBC-CA 1049-00 00027-8')->first();
+                break;
+            case 'BPI 1':
+                $accountingcode = \App\ChartOfAccount::where('accountname','BPI- CA 1885-1129-82')->first();
+                break;
+            case 'BPI 2':
+                $accountingcode = \App\ChartOfAccount::where('accountname','BPICA 1881-0466-59')->first();
+                break;
+        }
+        
+        $debit = new \App\Dedit;
+        $debit->idno = $idno;
         $debit->transactiondate = Carbon::now();
         $debit->refno = $refno;
         $debit->receiptno = $or;
         $debit->paymenttype= "1";
+        $debit->entry_type= "1";
+        $debit->accountingcode= $accountingcode->acctcode;
         $debit->bank_branch=$request->bank_branch;
         $debit->check_number=$request->check_number;
-        $debit->iscbc=$iscbc;
-        $debit->amount = $request->cash;
+        $debit->description = 'Cash';
+        $debit->amount = $request->totalcredit;
         $debit->checkamount=$request->check;
-        $debit->receivefrom=$student->lastname . ", " . $student->firstname . " " . $student->extensionname . " " .$student->middlename;
+        $debit->receiveamount = $request->cash;
+        $debit->receivefrom=$name;
         $debit->depositto=$request->depositto;
         $debit->postedby= \Auth::user()->idno;
         $debit->save();
+        
+        return $this->viewreceipt($refno, $request->idno);
         
     }
     function checklist($trandate){
@@ -1247,9 +1339,10 @@ function otherpayment($idno){
     function addtoaccount($studentid){
         $accounts = \App\CtrOtherPayment::orderBy('particular')->get();
         $studentdetails = \App\User::where('idno',$studentid)->first();
-        $tatuses = \App\Status::where('idno',$studentid)->first();
+        $statuses = \App\Status::where('idno',$studentid)->first();
+        $deletes = DB::Select("Select * from deleted_accounts where idno='$studentid' AND categoryswitch = '7'");
         $ledgers = DB::Select("Select * from ledgers where idno='$studentid' AND categoryswitch = '7' and amount > payment ");
-        return view('cashier.addtoaccount',compact('studentid','accounts','studentdetails','statuses','ledgers'));
+        return view('cashier.addtoaccount',compact('studentid','accounts','studentdetails','statuses','ledgers','deletes'));
         
     }
     
