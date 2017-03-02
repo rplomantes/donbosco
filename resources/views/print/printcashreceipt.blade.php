@@ -2,14 +2,18 @@
 <head>
      <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
   <style>
-    @page { margin:10px;padding:0px;margin-top: 100px;}
+    @page { margin:10px;padding:0px;margin-top: 100px;margin-bottom: 30px;}
     #header { position: fixed; left: 0px; top: -90px; right: 0px; height: 100px; text-align: center;font-size: 15px; }
+    #footer { position: fixed; bottom:0px;border-top:1px solid gray;} .pagenum:before {content: counter(page); } </style>
   </style>
 <body>
   <div id="header">Don Bosco Technical School
             <h4 style="text-align: center;margin-bottom: 0px;padding-bottom: 0px;font-size: 12pt;">Cash Receipt</h4>
         <p style="text-align: center;margin-bottom: 0px;padding-bottom: 0px;font-size: 12pt;">For <span id="dates" >{{$asOf}}</span></p>
   </div>
+    <div id="footer">
+      Page <span class="pagenum"></span>
+    </div>
   <div id="content" width="100%" >
     <table cellspacing="0" border="0" width="100%" style="font-size: 10pt;page-break-inside: auto;">
             <thead>
@@ -134,7 +138,7 @@
 
             @endif
             </tr>
-            @if($rows == 33 | $allcollection[0] == $lastreceipt | $firstpagerows == 33)
+            @if($rows == 32 | $allcollection[0] == $lastreceipt | $firstpagerows == 32)
                 <tr style="page-break-after: always;border-bottom: 1px solid;border-top: 1px solid;"><td colspan="2" width="210px">Total</td>
             <td align="right" class="dcc">{{number_format($tempcashtotal,2)}}</td>
             <td align="right" class="ddiscount">{{number_format($tempdiscount,2)}}</td>
@@ -166,7 +170,12 @@
                $rows = 0; ?>
             @endif
 
-            <?php $rows++;
+            <?php 
+            if(strlen($allcollection[1])>40){
+                $rows=$rows+2;
+            }else{
+                $rows++;
+            }
 
             $firstpagerows++;?>
             @endforeach
