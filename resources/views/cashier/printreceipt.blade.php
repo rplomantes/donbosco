@@ -14,7 +14,18 @@ body { margin: 0px; }
 <div style="margin-left: 20px ;font-size: 10pt; width: 311">
  <table width="311" cellpadding = "0" cellspacing = "0" border = "0">
    <tr><td colspan="2" height="78"  valign="top"></td></tr>
+   @if(count($student)> 0)
    <tr><td><div style="margin-left: 110px">{{$student->idno}} - {{$student->lastname}}, {{$student->firstname}} {{$student->extensionname}} {{$student->midddlename}}</div></td><td height="20" valign="top"></td></tr>
+   @else
+   <?php
+   if($idno ==0){
+   $findperson = App\Credit::where('refno',$refno)->first();
+   $idno = $findperson->idno;
+   }
+   $student = App\NonStudent::where('idno',$idno)->first();
+   ?>
+   <tr><td><div style="margin-left: 110px">{{$student->fullname}}</div></td><td height="20" valign="top"></td></tr>
+   @endif
  </table>
  <table width="311" celpadding ="0" celspacing = "0">
      @if(isset($status->level))

@@ -40,7 +40,7 @@
     Route::post('payment','Cashier\CashierController@payment');
     Route::get('/setreceipt/{id}','Cashier\CashierController@setreceipt');
     Route::post('/setreceipt','Cashier\CashierController@setOR');
-    Route::get('/viewreceipt/{refno}/{idno}','Cashier\CashierController@viewreceipt');
+    Route::get('/viewreceipt/{refno}/{idno?}','Cashier\CashierController@viewreceipt');
     Route::get('otherpayment/{idno}','Cashier\CashierController@otherpayment');
     Route::post('othercollection','Cashier\CashierController@othercollection');
     Route::get('collectionreport/{transactiondate}','Cashier\CashierController@collectionreport');
@@ -80,6 +80,7 @@
     Route::get('printdmcmreport/{idno}/{transactiondate}','Accounting\AccountingController@printdmcmreport');
     Route::get('summarymain','Accounting\AccountingController@summarymain');
     Route::get('maincollection/{fromtran}/{totran}','Accounting\AccountingController@maincollection');
+    Route::get('printmaincollection/{fromtran}/{totran}','Accounting\AccountingController@printmaincollection');
     Route::get('studentledger/{level}','Accounting\AccountingController@studentledger');
     Route::get('cashcollection/{transactiondate}','Accounting\AccountingController@cashcollection');
     Route::get('overallcollection/{transactiondate}','Accounting\AccountingController@overallcollection');
@@ -87,6 +88,11 @@
     Route::get('cashreceipts/{transactiondate}','Accounting\AccountingController@cashreceipts');
     Route::get('printcashreceipts/{transactiondate}','Accounting\AccountingController@printcashreceipts');
     Route::get('statementofaccount','Accounting\AccountingController@statementofaccount');
+    Route::get('tvetsoa','Accounting\AccountingController@tvetsoa');
+    Route::post('gettvetsoasummary','Accounting\AccountingController@gettvetsoasummary');
+    Route::get('printtvetsoasummary/{period}/{course}/{section}/{trandate}','Accounting\AccountingController@printtvetsoasummary');
+    Route::get('printtvetallsoa/{period}/{course}/{section}/{trandate}','Accounting\AccountingController@printtvetallsoa');
+    
     Route::get('printsoa/{idno}/{tradate}','Accounting\AccountingController@printsoa');
      Route::get('/printallsoa/{level}/{strand}/{section}/{trandate}/{amtover}','Accounting\AccountingController@printallsoa');
     Route::get('/getsoasummary/{level}/{strand}/{section}/{trandate}/{plan}/{amtover}','Accounting\AccountingController@getsoasummary');
@@ -166,6 +172,7 @@
     Route::get('/addoldstudent','DBFixer@addOldStudent');
     Route::get('/gensubj','DBFixer@gensubjects');
     
+    
     //ACADEMIC
     Route::post('/saveentry ','GradeSubmitController@saveentry');
     Route::get('/upload/grade','GradeSubmitController@index');
@@ -241,12 +248,15 @@
     Route::get('/getSubsidy/{account}','Vincent\AjaxController@getsubsidy');
     Route::get('/getaccountlevel','Vincent\AjaxController@getlevel');
     Route::get('/studentchecklist','Vincent\AjaxController@studentselect');
-    Route::get('/showfinale','Vincent\AjaxController@getfinal'); 
+    Route::get('/showfinale','Vincent\AjaxController@getfinal');
+    Route::get('/getcourse/{batch}/{action?}','Vincent\AjaxController@getCourse'); 
+    Route::get('/gettvetsection/{action?}','Vincent\AjaxController@gettvetsections');
     
+    Route::get('/getsubsidiary','Vincent\AjaxController@getsubsidiary');
     
     
     Route::get('/pullrecords','Update\UpdateController@prevgrade');
-    Route::get('/getstrands','Update\NewAJAXController@getstrands');
+    
     
     
 // Registrar Group

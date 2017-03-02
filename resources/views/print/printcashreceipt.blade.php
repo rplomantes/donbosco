@@ -59,7 +59,7 @@
                 $creditreservation = 0;
                 $other=0;
                 ?>
-
+            @if(count($allcollections)>0)
             <?php 
             $index =count($allcollections)-1;
             $lastreceipt= $allcollections[$index][0];
@@ -79,6 +79,7 @@
             $rows = 1;
             $firstpagerows = 1;
             ?>
+            @endif
             <tbody>
             @if(count($allcollections)>0)
             @foreach($allcollections as $allcollection)

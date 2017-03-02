@@ -12,7 +12,15 @@
            @if(count($student)> 0)
            <tr><td>Received From : {{$student->lastname}}, {{$student->firstname}} {{$student->extensionname}} {{$student->midddlename}}</td><td></td></tr>
            @else
-           <?php $student = App\NonStudent::where('idno',$idno)->first();?>
+           
+           <?php
+           if($idno ==0){
+           $findperson = App\Credit::where('refno',$refno)->first();
+           $idno = $findperson->idno;
+           }
+           $student = App\NonStudent::where('idno',$idno)->first();
+           
+           ?>
            <tr><td>Received From : {{$student->fullname}}</td><td></td></tr>
            @endif
            

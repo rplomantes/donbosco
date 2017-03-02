@@ -96,13 +96,15 @@
                                         <span class="caret"></span></a>
                                         <ul class="dropdown-menu" role="menu">
                                         <li><a href="{{url('statementofaccount')}}"><i class="fa fa-btn fa-sign-out"></i>Statement of Account</a></li>
+                                        <li><a href="{{url('tvetsoa')}}"><i class="fa fa-btn fa-sign-out"></i>Statement of Account (TVET)</a></li>
+                                        <li><hr style="margin-top: 0px;margin-bottom: 0px;"></li>
                                         <li><a href="{{url('penalties')}}"><i class="fa fa-btn"></i>Over Due Charges </a></li>
                                         <li><a href="{{url('/addbatchaccount')}}"><i class="fa fa-btn"></i>Add Account to Batch </a></li>
                                         </ul>
                                         </li>
                                         @endif
                                         <li><a href="{{url('encashment')}}">Encashment</a></li>
-                                        <li><a href="{{url('nonstudent')}}">Other Payment</a></li>
+                                        <!--li><a href="{{url('nonstudent')}}">Other Payment</a></li-->
                                         <li><a href="{{url('studentregister')}}"><i class="fa fa-btn fa-sign-out"></i>Register</a></li>
                                         <li><a href="{{url('searchor')}}"><i class="fa fa-btn fa-sign-out"></i>Search OR</a></li>
                                     @endif

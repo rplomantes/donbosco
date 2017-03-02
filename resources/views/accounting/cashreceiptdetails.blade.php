@@ -295,6 +295,7 @@
             <br>
             <br>
             <button class="btn btn-danger" onclick="changepage()">Next Page</button>
+            <a href="{{url('printcashreceipts',$transactiondate)}}" class="btn btn-info" style="float: right">Print</a>
     </div>
     </span>
     

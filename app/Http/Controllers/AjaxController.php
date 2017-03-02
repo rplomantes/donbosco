@@ -1034,7 +1034,8 @@ class AjaxController extends Controller
                     $refno = Input::get('refno');
                     $idno = Input::get('idno');
                     $amount = Input::get('totalcredit');
-                    $isfinal = DB::Select("update accountings set isfinal = '1' where refno = '$refno'");
+                    \App\Accounting::where('refno',$refno)->update(['isfinal' => '1']);
+                    //$isfinal = DB::Select("update accountings set isfinal = '1' where refno = '$refno'");
                     $newparticular = new \App\AccountingRemark;
                     $newparticular->trandate = \Carbon\Carbon::now();
                     $newparticular->refno = $refno;

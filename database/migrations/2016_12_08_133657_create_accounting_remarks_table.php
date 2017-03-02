@@ -15,7 +15,10 @@ class CreateAccountingRemarksTable extends Migration
         Schema::create('accounting_remarks', function (Blueprint $table) {
             $table->increments('id');
             $table->string('refno');
+            $table->date('trandate');
+            $table->decimal('amount',10,2);
             $table->string('remarks');
+            $table->string('posted_by');
             $table->timestamps();
         });
     }

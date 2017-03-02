@@ -1,4 +1,4 @@
-@extends('app')
+@extends('appcashier')
 @section('content') 
 <div class="col-md-4">
     <div class="form form-group">

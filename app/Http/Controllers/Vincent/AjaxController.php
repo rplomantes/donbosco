@@ -1839,4 +1839,30 @@ class AjaxController extends Controller
             
             return array($dayt,$dayp,$daya);
     }
+    
+    function getCourse($batch,$action=null){
+        $courses = DB::Select("Select distinct course from  ctr_sections where level = '$batch'");
+        
+        return view('ajax.selectcourse',compact('courses','action'));
+    }
+    
+    function gettvetsections($action=null){
+        $batch = Input::get('batch');
+        $course = Input::get('course');
+        $sections = DB::Select("Select distinct section from  ctr_sections where level = '$batch' and course = '$course'");
+        
+        return view('ajax.selectsection',compact('sections','action'));
+    }
+    
+    function getsubsidiary(){
+        $acctcode = Input::get('acctcode');
+        
+        $subsidiary = \App\CtrOtherPayment::where('acctcode',$acctcode)->get();
+        $data = "<option value='' hidden='hidden'>select Subsidiary if available</option>";
+        foreach($subsidiary as $sub){
+            $data = $data."<option value='$sub->particular'>$sub->particular</option>";
+        }
+        
+        return $data;
+    }
 }
