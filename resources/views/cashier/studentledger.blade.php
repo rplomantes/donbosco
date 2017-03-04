@@ -271,6 +271,7 @@
                         </table>
                         <div style="color:red;font-weight: bold" id="cashdiff"></div>
                 </td> </tr>
+                <tr><td colspan="2"><label>FAPE:</label><input style ="text-align: right" type="text" placeholder="0.00" name="fape" id="fape" onkeypress="validate(event)" onkeydown="submitfape(event,this.value)" class="form form-control">
                 <tr><td colspan="2"><label>Cash Amount Rendered:</label><input style ="text-align: right" type="text" placeholder="0.00" name="receivecash" id="receivecash" onkeypress="validate(event)" onkeydown="submitcash(event,this.value)" class="form form-control">
                         </td></tr>
                 <tr><td colspan="2"><label>Change:</label><input style ="text-align: right" type="text" value="0" name="change" id="change" onkeypress="validate(event)" readonly class="form form-control">
@@ -281,7 +282,7 @@
                                             <input type="radio" name="depositto" value="BPI 2"> BPI 2
                                             
                         </td></tr> 
-                <tr><td colspan="2"><label>Particular :</label><input type="text" name="remarks" id="remarks" class="form-control" onkeypres = "validate(event)"></td></tr>
+                <tr><td colspan="2"><label>Particular :</label><input type="text" name="remarks" id="remarks" class="form-control" onkeypress = "validateParticular(event)"></td></tr>
                 <tr><td colspan="2"><input  style="visibility: hidden; font-weight: bold" type="submit" name="submit" id="submit" value ="Process Payment" class="btn btn-danger form form-control"> </td></tr>
                
              </table>    

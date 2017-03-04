@@ -26,6 +26,8 @@
            
            @if(isset($status->level))
            <tr><td>Grade/Sec : {{$status->level}} {{$status->strand}} {{$status->section}}</td><td>Date : {{$tdate->transactiondate}}  {{$timeis}}</td></tr>
+           @else
+           <tr><td></td><td style="width:232px;">Date : {{$tdate->transactiondate}}  {{$timeis}}</td></tr>
            @endif
            <tr><td colspan="2"   valign="top">
            <table width="100%">        

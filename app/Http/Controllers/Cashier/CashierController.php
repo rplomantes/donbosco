@@ -257,6 +257,10 @@ class CashierController extends Controller
                         }
                     }
                 }
+            
+            if($request->fape > 0){
+                $this->debit_reservation_discount($request->idno,env('DEBIT_DISCOUNT'), $request->fape,'FAPE');
+            }
                 
             $bank_branch = "";
             $check_number = "";
@@ -422,9 +426,13 @@ class CashierController extends Controller
             $acctcode='Cash - Semi Payment Discount';
             $description = 'Cash - Semi Payment Discount';
         }else if($discountname == "Reservation"){
-            $accountcode='210100';
+            $accountcode='210400';
             $acctcode='Enrollment Reservation';
             $description = 'Enrollment Reservation';
+        }else if($discountname == "FAPE"){
+            $accountcode='210100';
+            $acctcode='Other Current Liabilities';
+            $description = 'FAPE';
         }else{
             $accountcode='410200';
             $acctcode='Brothers Discount';

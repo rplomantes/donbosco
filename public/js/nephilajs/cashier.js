@@ -14,6 +14,15 @@
   
    
 }
+
+    function validateParticular(evt) {
+        var theEvent = evt || window.event;  
+        var key = theEvent.keyCode || theEvent.which;
+        if(key == 13){
+            theEvent.preventDefault();
+            return false;   
+        } 
+    }
 /*
 $(document).ready(function() {
   $(window).keydown(function(event){
@@ -116,55 +125,6 @@ function submitother(event,amount,original,id){
 
 }
 
-function submitcash(event,amount){
-    
-      if(document.getElementById('submit').style.visibility == "visible"){
-       document.getElementById('submit').style.visibility = "hidden" 
-       document.getElementById('change').value=""
-    }
-    
-    if(event.keyCode == 13) {  
-     
-     checkreceive = 0;
-     if(document.getElementById('receivecheck').value == ""){
-       checkreceive = 0;  
-     }   
-     else {
-      checkreceive =  eval(document.getElementById('receivecheck').value)  
-     }
-     
-     
-     if(eval(document.getElementById("totalamount").value) <= (eval(amount) + eval(checkreceive))){ 
-        
-        if(eval(document.getElementById("totalamount").value) < eval(amount) + eval(checkreceive)){
-            //alert("hello")
-         var num =    eval(amount) + eval(checkreceive)- eval(document.getElementById("totalamount").value)
-         document.getElementById('change').value =   num.toFixed(2);
-         document.getElementById('cashdiff').innerHTML ="";
-         
-        }
-          document.getElementById('submit').style.visibility="visible";
-          document.getElementById('remarks').focus();
-          
-      }  else {
-          
-        if(document.getElementById('receivecheck').value==""){
-                receivedcash = 0;
-            } else {
-                receivedcash = document.getElementById('receivecheck').value;
-            }
-            
-       var diff =  eval(document.getElementById("totalamount").value)-eval(amount)-eval(receivedcash);   
-       document.getElementById('cashdiff').innerHTML = "DIFFERENCE : " + diff.toFixed(2);    
-      document.getElementById('submit').style.visibility="hidden";    
-      document.getElementById('iscbc').focus();
-  }
-      event.preventDefault();
-      return false;
-}
-    
-}
-
 function nosubmit(event, whatbranch){
     if(event.keyCode == 13) {
         document.getElementById(whatbranch).focus();
@@ -199,6 +159,82 @@ function submitiscbc(event, isSelected){
     }     
 }
 
+function submitcash(event,amount){
+    
+      if(document.getElementById('submit').style.visibility == "visible"){
+       document.getElementById('submit').style.visibility = "hidden" 
+       document.getElementById('change').value=""
+    }
+    
+    if(event.keyCode == 13) {  
+     
+     checkreceive = 0;
+     
+     if(document.getElementById('receivecheck').value == ""){
+       checkreceive = 0;  
+     }   
+     else {
+      checkreceive =  eval(document.getElementById('receivecheck').value)  
+     }
+     
+     if(document.getElementById('fape').value == ""){
+       fape = 0;  
+     }   
+     else {
+      fape =  eval(document.getElementById('fape').value)  
+     }
+     
+     if(amount == ""){
+         amount = 0;
+     }
+     
+     if(eval(document.getElementById("totalamount").value) <= (eval(amount) + eval(checkreceive)+eval(fape))){ 
+        if(amount == 0 && checkreceive == 0){
+            alert("Cannot continue transaction without payment");
+        }
+        else{
+            if(eval(document.getElementById("totalamount").value) < eval(amount) + eval(checkreceive) + eval(fape)){
+
+             var num = eval(amount) + eval(checkreceive)+eval(fape) - eval(document.getElementById("totalamount").value)
+             document.getElementById('change').value =   num.toFixed(2);
+             document.getElementById('cashdiff').innerHTML ="";
+
+            }
+              document.getElementById('submit').style.visibility="visible";
+              document.getElementById('remarks').focus();   
+        }
+          
+      }  
+     else {
+          
+            if(document.getElementById('receivecheck').value==""){
+                receivedcheck = 0;
+            } else {
+                receivedcheck = document.getElementById('receivecheck').value;
+            }
+            
+            if(document.getElementById('fape').value===""){
+                fape = 0;
+            } else {
+                fape = document.getElementById('fape').value;
+            }
+            
+            if(amount==""){
+                amount=0;
+            }
+            
+            
+       var diff =  eval(document.getElementById("totalamount").value)-eval(amount)-eval(receivedcheck)-eval(fape);   
+       document.getElementById('cashdiff').innerHTML = "DIFFERENCE : " + diff.toFixed(2);    
+      document.getElementById('submit').style.visibility="hidden";    
+      document.getElementById('iscbc').focus();
+     }
+      event.preventDefault();
+      return false;
+}
+    
+}
+
 function submitcheck(event, amount){
     document.getElementById('cashdiff').innerHTML =""
     if(document.getElementById('submit').style.visibility == "visible"){
@@ -217,12 +253,64 @@ function submitcheck(event, amount){
             document.getElementById('receivecheck').value= ""
         }
         else {
+            if(document.getElementById('receivecash').value===""){
+                receivedcash = 0;
+            } else {
+                receivedcash = document.getElementById('receivecash').value;
+            }
+            
+            if(document.getElementById('fape').value===""){
+                fape = 0;
+            } else {
+                fape = document.getElementById('fape').value;
+            }
+            
+            if(amount==""){
+                amount = 0;
+            }
+            
+            var diff =  eval(document.getElementById("totalamount").value)-eval(amount)-eval(receivedcash)-eval(fape);
+            document.getElementById('submit').style.visibility="hidden";
+            document.getElementById('cashdiff').innerHTML = "DIFFERENCE : " + diff.toFixed(2);
+            document.getElementById('fape').focus();
+        }
+     event.preventDefault();
+     return false;
+        
+    }
+    
+}
+
+function submitfape(event, amount){
+    document.getElementById('cashdiff').innerHTML =""
+    if(document.getElementById('submit').style.visibility == "visible"){
+       document.getElementById('submit').style.visibility = "hidden" 
+       document.getElementById('change').value=""
+    }
+    if(event.keyCode == 13) {
+        checkreceive = 0
+       
+
+        if(eval(amount) > eval(document.getElementById("totalamount").value)){
+            document.getElementById('fape').value= ""
+        }
+        else {
             if(document.getElementById('receivecash').value==""){
                 receivedcash = 0;
             } else {
                 receivedcash = document.getElementById('receivecash').value;
             }
-            var diff =  eval(document.getElementById("totalamount").value)-eval(amount)-eval(receivedcash);
+            
+            if(document.getElementById('receivecheck').value==""){
+                receivedcheck = 0;
+            } else {
+                receivedcheck = document.getElementById('receivecheck').value;
+            }
+            
+            if(amount==""){
+                amount = 0;
+            }
+            var diff =  eval(document.getElementById("totalamount").value)-eval(amount)-eval(receivedcash)-eval(receivedcheck);
             document.getElementById('submit').style.visibility="hidden";
             document.getElementById('cashdiff').innerHTML = "DIFFERENCE : " + diff.toFixed(2);
             document.getElementById('receivecash').focus();

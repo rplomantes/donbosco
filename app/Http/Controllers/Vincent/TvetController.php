@@ -47,9 +47,7 @@ class TvetController extends Controller
     }    
     
     function studentlist($batch,$course,$section){
-        if($batch == 87){
-            $batch = '1st Batch';
-        }
+
         $students = DB::Select("Select class_no,remarks,tvet_subsidies.discount,statuses.period,users.idno,firstname,lastname,middlename,extensionname,subsidy,discount,sponsor,amount "
                 . "from users "
                 . "join statuses on users.idno = statuses.idno "
