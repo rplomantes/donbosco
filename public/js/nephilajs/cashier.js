@@ -226,8 +226,8 @@ function submitcash(event,amount){
             
        var diff =  eval(document.getElementById("totalamount").value)-eval(amount)-eval(receivedcheck)-eval(fape);   
        document.getElementById('cashdiff').innerHTML = "DIFFERENCE : " + diff.toFixed(2);    
-      document.getElementById('submit').style.visibility="hidden";    
-      document.getElementById('iscbc').focus();
+       document.getElementById('submit').style.visibility="hidden";    
+       document.getElementById('iscbc').focus();
      }
       event.preventDefault();
       return false;
@@ -247,7 +247,7 @@ function submitcheck(event, amount){
         if(eval(amount) == eval(document.getElementById("totalamount").value)){
                 document.getElementById('submit').style.visibility="visible";
                 document.getElementById('remarks').focus();
-        } 
+        }
         else if(eval(amount) > eval(document.getElementById("totalamount").value)){
             alert("Amount Rreceive should not be greater than the amount to be collected!")
             document.getElementById('receivecheck').value= ""
@@ -288,11 +288,19 @@ function submitfape(event, amount){
        document.getElementById('change').value=""
     }
     if(event.keyCode == 13) {
-        checkreceive = 0
-       
+        checkreceive = 0;
+        
+        if(eval(amount) == eval(document.getElementById("totalamount").value)){
+                document.getElementById('submit').style.visibility="visible";
+                document.getElementById('remarks').focus();
+        }       
 
-        if(eval(amount) > eval(document.getElementById("totalamount").value)){
-            document.getElementById('fape').value= ""
+        else if(eval(amount) > eval(document.getElementById("totalamount").value)){
+            document.getElementById('receivecash').value= "";
+            document.getElementById('receivecheck').value="";
+            document.getElementById('submit').style.visibility="visible";
+            document.getElementById('remarks').focus();
+            
         }
         else {
             if(document.getElementById('receivecash').value==""){

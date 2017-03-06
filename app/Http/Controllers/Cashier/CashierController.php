@@ -188,7 +188,7 @@ class CashierController extends Controller
              
                     $this->changestatatus($request->idno, $request->reservation);
                         if($request->reservation > 0){
-                        $this->debit_reservation_discount($request->idno,env('DEBIT_RESERVATION'), $request->reservation,'Reservation');
+                        $this->debit_reservation_discount($refno, $orno,$request->idno,env('DEBIT_RESERVATION'), $request->reservation,'Reservation');
                         $this->consumereservation($request->idno);
                         }
             }   
@@ -259,7 +259,25 @@ class CashierController extends Controller
                 }
             
             if($request->fape > 0){
-                $this->debit_reservation_discount($request->idno,7, $request->fape,'FAPE');
+                $this->debit_reservation_discount($refno, $orno,$request->idno,7, $request->fape,'FAPE');
+                
+                if($request->totalamount < $request->fape){
+                    $remainingbalance = $request->fape - $request->totalamount;
+                    $creditstudentdeposit = new \App\Credit;
+                    $creditstudentdeposit->idno = $request->idno;
+                    $creditstudentdeposit->transactiondate = Carbon::now();
+                    $creditstudentdeposit->refno = $refno;
+                    $creditstudentdeposit->receiptno = $orno;
+                    $creditstudentdeposit->categoryswitch = '9';
+                    $creditstudentdeposit->accountingcode = '210100';
+                    $creditstudentdeposit->acctcode='Other Current Liabilities';
+                    $creditstudentdeposit->description='Student Deposit';
+                    $creditstudentdeposit->receipt_details = 'Student Deposit';
+                    $creditstudentdeposit->amount = $remainingbalance;
+                    $creditstudentdeposit->postedby = \Auth::user()->idno;
+                    $creditstudentdeposit->sub_department = 'None';
+                    $creditstudentdeposit->save(); 
+                }
             }
                 
             $bank_branch = "";
@@ -276,7 +294,7 @@ class CashierController extends Controller
             $totalcash = $request->receivecash - $request->change;
             $receiveamount = $request->receivecash ;
             $remarks=$request->remarks;
-            $this->debit($request->idno,env('DEBIT_CHECK') , $bank_branch, $check_number,$totalcash, $request->receivecheck, $iscbc,$depositto,$receiveamount,$remarks);
+            $this->debit($refno, $orno,$request->idno,env('DEBIT_CHECK') , $bank_branch, $check_number,$totalcash, $request->receivecheck, $iscbc,$depositto,$receiveamount,$remarks);
             //}
             
             
@@ -292,7 +310,7 @@ class CashierController extends Controller
                     
                     $discountname = $disc->description;
                 }
-              $this->debit_reservation_discount($request->idno,env('DEBIT_DISCOUNT') , $discount, $discountname);
+              $this->debit_reservation_discount($refno, $orno,$request->idno,env('DEBIT_DISCOUNT') , $discount, $discountname);
                   
           }
             
@@ -380,12 +398,12 @@ class CashierController extends Controller
         }
     }
    
-    function debit($idno, $paymenttype, $bank_branch, $check_number,$cashamount,$checkamount,$iscbc,$depositto,$receiveamount,$remarks){
+    function debit($refno, $orno,$idno, $paymenttype, $bank_branch, $check_number,$cashamount,$checkamount,$iscbc,$depositto,$receiveamount,$remarks){
         $student= \App\User::where('idno', $idno)->first();
         $debitaccount = new \App\Dedit;
         $debitaccount->idno = $idno;
         $debitaccount->transactiondate=Carbon::now();
-        $debitaccount->refno=$this->getRefno();
+        $debitaccount->refno=$refno;
         switch($depositto){
             case 'China Bank':
                 $accountingcode = \App\ChartOfAccount::where('accountname','CBC-CA 1049-00 00027-8')->first();
@@ -403,7 +421,7 @@ class CashierController extends Controller
         }else if($paymenttype == 3){
             $debitaccount->entry_type = 2;
         }
-        $debitaccount->receiptno = $this->getOR();
+        $debitaccount->receiptno = $orno;
         $debitaccount->paymenttype = $paymenttype;
         $debitaccount->bank_branch = $bank_branch;
         $debitaccount->check_number = $check_number;
@@ -420,7 +438,7 @@ class CashierController extends Controller
         
     }
    
-    function debit_reservation_discount($idno,$debittype,$amount,$discountname){
+    function debit_reservation_discount($refno, $orno,$idno,$debittype,$amount,$discountname){
         if($discountname == "Plan Discount"){
             $accountcode='410100';
             $acctcode='Cash - Semi Payment Discount';
@@ -445,8 +463,8 @@ class CashierController extends Controller
         $debitaccount->accountingcode=$accountcode;
         $debitaccount->acctcode=$acctcode;
         $debitaccount->description=$description;
-        $debitaccount->refno=$this->getRefno();
-        $debitaccount->receiptno = $this->getOR();
+        $debitaccount->refno=$refno;
+        $debitaccount->receiptno = $orno;
         $debitaccount->paymenttype = $debittype;
         $debitaccount->receivefrom = $student->lastname . ", " . $student->firstname . " " . $student->extensionname . " " .$student->middlename;
         $debitaccount->amount = $amount;    

@@ -641,7 +641,7 @@ function cashreceipts($transactiondate){
     $asOf = date("l, F d, Y",strtotime($transactiondate));
     $wilddate = $rangedate."-%";
     $collections = DB::Select("select sum(dedits.amount) as amount, sum(dedits.checkamount) as checkamount, users.idno, users.lastname, users.firstname,"
-                . " dedits.transactiondate, dedits.isreverse, dedits.receiptno, dedits.refno, dedits.postedby from users, dedits,non_students where users.idno = dedits.idno and non_students.idno = dedits.idno and"
+                . " dedits.transactiondate, dedits.isreverse, dedits.receiptno, dedits.refno, dedits.postedby from users, dedits where users.idno = dedits.idno and"
                 . " dedits.transactiondate = '" 
                 . $transactiondate . "' and dedits.paymenttype = '1' group by users.idno, dedits.transactiondate, dedits.postedby, users.lastname, users.firstname, dedits.isreverse,dedits.receiptno,dedits.refno order by dedits.refno" );
       
@@ -748,11 +748,13 @@ function printcashreceipts($transactiondate){
     $rangedate = date("Y-m",strtotime($transactiondate));
     $asOf = date("l, F d, Y",strtotime($transactiondate));
     $wilddate = $rangedate."-%";
+    
     $collections = DB::Select("select sum(dedits.amount) as amount, sum(dedits.checkamount) as checkamount, users.idno, users.lastname, users.firstname,"
                 . " dedits.transactiondate, dedits.isreverse, dedits.receiptno, dedits.refno, dedits.postedby from users, dedits where users.idno = dedits.idno and"
                 . " dedits.transactiondate = '" 
                 . $transactiondate . "' and dedits.paymenttype = '1' group by users.idno, dedits.transactiondate, dedits.postedby, users.lastname, users.firstname, dedits.isreverse,dedits.receiptno,dedits.refno order by dedits.refno" );
-     
+    
+   //DEBIT 
    $totalcashdb = DB::Select("select sum(amount) as amount, sum(checkamount) as checkamount "
                 . "from dedits where "
                 . " dedits.transactiondate LIKE '" 
@@ -773,6 +775,8 @@ function printcashreceipts($transactiondate){
    }else{
    $totaldiscount = 0;
    }
+   
+   
    
    $elearningcr = $this->getcrmonthmain(1, $wilddate, $transactiondate);
    $misccr = $this->getcrmonthmain(2, $wilddate, $transactiondate);
