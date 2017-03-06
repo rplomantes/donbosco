@@ -37,6 +37,9 @@
            @if(count($debit_discount)>0)
             <tr><td>Less Discount</td><td align="right">({{number_format($debit_discount->amount,2)}})</td></tr>
            @endif
+           @if(count($debit_fape)>0)
+            <tr><td>Less FAPE</td><td align="right">({{number_format($debit_fape->amount,2)}})</td></tr>
+           @endif
             @if(count($debit_reservation)>0)
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Less Reservation</td><td align="right">({{number_format($debit_reservation->amount,2)}})</td></tr>
            @endif

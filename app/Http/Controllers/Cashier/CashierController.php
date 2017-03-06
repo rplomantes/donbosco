@@ -259,7 +259,7 @@ class CashierController extends Controller
                 }
             
             if($request->fape > 0){
-                $this->debit_reservation_discount($request->idno,env('DEBIT_DISCOUNT'), $request->fape,'FAPE');
+                $this->debit_reservation_discount($request->idno,7, $request->fape,'FAPE');
             }
                 
             $bank_branch = "";
@@ -483,6 +483,7 @@ class CashierController extends Controller
        $debits = \App\Dedit::where('refno',$refno)->get();
        $debit_discount = \App\Dedit::where('refno',$refno)->where('paymenttype','4')->first();
        $debit_reservation = \App\Dedit::where('refno',$refno)->where('paymenttype','5')->first();
+       $debit_fape = \App\Dedit::where('refno',$refno)->where('paymenttype','7')->first();
        $debit_cash = \App\Dedit::where('refno',$refno)->where('paymenttype','1')->first();
        $debit_dm = \App\Dedit::where('refno',$refno)->where('paymenttype','3')->first();
        $credits = DB::Select("select sum(amount) as amount, receipt_details, transactiondate, sub_department from credits "
@@ -491,7 +492,7 @@ class CashierController extends Controller
        $timeis=date('h:i:s A',strtotime($timeissued->created_at));
        $tdate = \App\Dedit::where('refno',$refno)->first();
        $posted = \App\User::where('idno',$tdate->postedby)->first();
-       return view("cashier.viewreceipt",compact('posted','timeis','tdate','student','debits','credits','status','debit_discount','debit_reservation','debit_cash','debit_dm','idno','refno'));
+       return view("cashier.viewreceipt",compact('posted','timeis','tdate','student','debits','credits','status','debit_discount','debit_reservation','debit_cash','debit_dm','idno','refno','debit_fape'));
        
    }
    
@@ -502,6 +503,7 @@ class CashierController extends Controller
        $debits = \App\Dedit::where('refno',$refno)->get();
        $debit_discount = \App\Dedit::where('refno',$refno)->where('paymenttype','4')->first();
        $debit_reservation = \App\Dedit::where('refno',$refno)->where('paymenttype','5')->first();
+       $debit_fape = \App\Dedit::where('refno',$refno)->where('paymenttype','7')->first();
        $debit_cash = \App\Dedit::where('refno',$refno)->where('paymenttype','1')->first();
        $debit_check = \App\Dedit::where('refno',$refno)->where('paymenttype','2')->first();
        $debit_dm = \App\Dedit::where('refno',$refno)->where('paymenttype','3')->first();
@@ -513,7 +515,7 @@ class CashierController extends Controller
        $posted = \App\User::where('idno',$tdate->postedby)->first();
        $pdf = \App::make('dompdf.wrapper');
        $pdf->setPaper([0, 0, 336, 440], 'portrait');
-       $pdf->loadView("cashier.printreceipt",compact('posted','timeis','tdate','student','debits','credits','status','debit_discount','debit_reservation','debit_cash','debit_dm','idno','refno'));
+       $pdf->loadView("cashier.printreceipt",compact('posted','timeis','tdate','student','debits','credits','status','debit_discount','debit_reservation','debit_cash','debit_dm','idno','refno','debit_fape'));
        return $pdf->stream();
         
     
