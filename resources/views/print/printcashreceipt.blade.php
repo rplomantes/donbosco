@@ -19,9 +19,10 @@
             <thead>
                 <tr>
                     <td class="receipt" width="50px">OR No.</td>
-                    <td class="name" width="280px">Name</td>
+                    <td class="name" width="195px" style="overflow:visible">Name</td>
                     <td class="dcc" style="text-align: right;width:100px;">Debit <br> Cash/Check</td>
                     <td class="ddiscount" style="text-align: right;width:80px;">Debit <br>Discount</td>
+                    <td class="dfape" style="text-align: right;width:80px;">Debit <br> FAPE</td>
                     <td class="dreserve" style="text-align: right;width:80px;">Debit <br> Reservation</td>
                     <td class="elearn" style="text-align: right;width:80px;">E-learning</td>
                     <td class="misc" style="text-align: right;width:80px;">Misc</td>
@@ -33,11 +34,14 @@
                     <td class="others" style="text-align: right;width:80px;">Others</td>
                     <td class="stat" style="text-align: right;width:50px;">Status</td>
                 </tr>
+                
                 <tr style="text-align: right">
                     <td colspan="2" style="text-align: left">Balance brought forward</td>
                     <td class="dcc">{{number_format($totalcash,2)}}</td>
                     <td class="ddiscount">{{number_format($totaldiscount,2)}}</td>
+                    <td class="dreserve">{{number_format($totalfape,2)}}</td>
                     <td class="dreserve">{{number_format($drreservation,2)}}</td>
+                    
                     <td class="elearn">{{number_format($elearningcr,2)}}</td>
                     <td class="misc">{{number_format($misccr,2)}}</td>
                     <td class="book">{{number_format($bookcr,2)}}</td>
@@ -54,6 +58,7 @@
                 $cashtotal=0;
                 $discount=0;
                 $debitreservation = 0;
+                $debitfape = 0;
                 $elearning=0;
                 $misc=0;
                 $books=0;
@@ -70,6 +75,7 @@
 
             $tempcashtotal=0;
             $tempdiscount=0;
+            $tempfape=0;
             $tempdebitreservation = 0;
             $tempelearning=0;
             $tempmisc=0;
@@ -101,6 +107,7 @@
             $creditreservation = $creditreservation + $allcollection[10];
             $other=$other+$allcollection[11];
             $discount=$discount + $allcollection[13];
+            $debitfape = $debitfape + $allcollection[14];
 
 
             $tempcashtotal = $tempcashtotal + $allcollection[2];
@@ -113,18 +120,20 @@
             $temptuition=$temptuition + $allcollection[9];
             $tempcreditreservation = $tempcreditreservation + $allcollection[10];
             $tempother=$tempother+$allcollection[11];
-            $tempdiscount=$tempdiscount + $allcollection[13];            
+            $tempdiscount=$tempdiscount + $allcollection[13];
+            $tempfape = $tempfape + $allcollection[14];
             }
             ?>
             <tr style="border-bottom: 1px solid;border-top: 1px solid;">
             @if($allcollection[12]=="1")
-            <td class="receipt" style="border-bottom: 1px solid;border-top: 1px solid;">{{$allcollection[0]}}</td><td colspan="13" style="border-bottom: 1px solid;border-top: 1px solid;">Cancelled</td>
+            <td class="receipt" style="border-bottom: 1px solid;border-top: 1px solid;">{{$allcollection[0]}}</td><td colspan="14" style="border-bottom: 1px solid;border-top: 1px solid;">Cancelled</td>
             @else
 
             <td class="receipt" style="border-bottom: 1px solid;border-top: 1px solid;">{{$allcollection[0]}}</td>
             <td class="name" style="border-bottom: 1px solid;border-top: 1px solid;">{{$allcollection[1]}}</td>
             <td class="dcc" align="right" style="border-bottom: 1px solid;border-top: 1px solid;">{{number_format($allcollection[2],2)}}</td>
             <td class="ddiscount" align="right" style="border-bottom: 1px solid;border-top: 1px solid;">{{number_format($allcollection[13],2)}}</td>
+            <td class="dfape" align="right" style="border-bottom: 1px solid;border-top: 1px solid;">{{number_format($allcollection[14],2)}}</td>
             <td class="dreserve" align="right" style="border-bottom: 1px solid;border-top: 1px solid;">{{number_format($allcollection[3],2)}}</td>
             <td class="elearn" align="right" style="border-bottom: 1px solid;border-top: 1px solid;">{{number_format($allcollection[4],2)}}</td>
             <td class="misc" align="right" style="border-bottom: 1px solid;border-top: 1px solid;">{{number_format($allcollection[5],2)}}</td>
@@ -142,6 +151,7 @@
                 <tr style="page-break-after: always;border-bottom: 1px solid;border-top: 1px solid;"><td colspan="2" width="210px">Total</td>
             <td align="right" class="dcc">{{number_format($tempcashtotal,2)}}</td>
             <td align="right" class="ddiscount">{{number_format($tempdiscount,2)}}</td>
+            <td align="right" class="ddiscount">{{number_format($tempfape,2)}}</td>
             <td align="right" class="dreserve">{{number_format($tempdebitreservation,2)}}</td>
             <td align="right" class="elearn">{{number_format($tempelearning,2)}}</td>
             <td align="right" class="misc">{{number_format($tempmisc,2)}}</td>
@@ -171,7 +181,7 @@
             @endif
 
             <?php 
-            if(strlen($allcollection[1])>40){
+            if(strlen($allcollection[1])>35){
                 $rows=$rows+2;
             }else{
                 $rows++;
@@ -184,6 +194,7 @@
 
             <td align="right" class="dcc">{{number_format($cashtotal,2)}}</td>
             <td align="right" class="ddiscount">{{number_format($discount,2)}}</td>
+            <td align="right" class="dreserve">{{number_format($debitfape,2)}}</td>
             <td align="right" class="dreserve">{{number_format($debitreservation,2)}}</td>
             <td align="right" class="elearn">{{number_format($elearning,2)}}</td>
             <td align="right" class="misc">{{number_format($misc,2)}}</td>
@@ -204,6 +215,7 @@
                 <tr style="border-bottom: none;border-top: none;text-align: right;"><td colspan="2" width="210px" style="text-align: left">Current Balance</td>
                 <td class="dcc">{{number_format($totalcash+$cashtotal,2)}}</td>
                 <td class="ddiscount">{{number_format($totaldiscount+$discount,2)}}</td>
+                <td class="ddiscount">{{number_format($totalfape+$debitfape,2)}}</td>
                 <td class="dreserve">{{number_format($drreservation+$debitreservation,2)}}</td>
                 <td class="elearn">{{number_format($elearningcr+$elearning,2)}}</td>
                 <td class="misc">{{number_format($misccr+$misc,2)}}</td>

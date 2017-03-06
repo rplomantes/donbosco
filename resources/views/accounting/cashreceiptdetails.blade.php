@@ -94,6 +94,7 @@
                                     <td class="name">Name</td>
                                     <td class="dcc">Debit <br> Cash/Check</td>
                                     <td class="ddiscount">Debit <br>Discount</td>
+                                    <td class="ddiscount">Debit <br>FAPE</td>
                                     <td class="dreserve">Debit <br> Reservation</td>
                                     <td class="elearn">E-learning</td>
                                     <td class="misc">Misc</td>
@@ -109,6 +110,8 @@
                                     <td width="260px" colspan="2" style="text-align: left">Balance brought forward</td>
                                     <td class="dcc">{{number_format($totalcash,2)}}</td>
                                     <td class="ddiscount">{{number_format($totaldiscount,2)}}</td>
+                                    <td class="ddiscount">{{number_format($totalfape,2)}}</td>
+                                    
                                     <td class="dreserve">{{number_format($drreservation,2)}}</td>
                                     <td class="elearn">{{number_format($elearningcr,2)}}</td>
                                     <td class="misc">{{number_format($misccr,2)}}</td>
@@ -124,6 +127,7 @@
     <?php             
         $cashtotal=0;
         $discount=0;
+        $fape=0;
         $debitreservation = 0;
         $elearning=0;
         $misc=0;
@@ -141,6 +145,7 @@
 
         $tempcashtotal=0;
         $tempdiscount=0;
+        $tempfape=0;
         $tempdebitreservation = 0;
         $tempelearning=0;
         $tempmisc=0;
@@ -169,6 +174,7 @@
         $creditreservation = $creditreservation + $allcollection[10];
         $other=$other+$allcollection[11];
         $discount=$discount + $allcollection[13];
+        $fape=$fape + $allcollection[14];
 
 
         $tempcashtotal = $tempcashtotal + $allcollection[2];
@@ -181,7 +187,8 @@
         $temptuition=$temptuition + $allcollection[9];
         $tempcreditreservation = $tempcreditreservation + $allcollection[10];
         $tempother=$tempother+$allcollection[11];
-        $tempdiscount=$tempdiscount + $allcollection[13];            
+        $tempdiscount=$tempdiscount + $allcollection[13];
+        $tempfape=$tempfape + $allcollection[14];
         }
         ?>
             <tr @if($allcollection[12]=="1")
@@ -190,6 +197,7 @@
         <td class="name">{{$allcollection[1]}}</td>
         <td class="dcc" align="right">{{number_format($allcollection[2],2)}}</td>
         <td class="ddiscount" align="right">{{number_format($allcollection[13],2)}}</td>
+        <td class="ddiscount" align="right">{{number_format($allcollection[14],2)}}</td>
         <td class="dreserve" align="right">{{number_format($allcollection[3],2)}}</td>
         <td class="elearn" align="right">{{number_format($allcollection[4],2)}}</td>
         <td class="misc" align="right">{{number_format($allcollection[5],2)}}</td>
@@ -215,9 +223,11 @@
             <tr 
             @if($rows == 30 |$firstpagerows == 30)
             class="breakpage"
-            @endif><td colspan="2" width="210px">Total</td>
+            @endif>
+            <td colspan="2" width="210px">Total</td>
         <td align="right" class="dcc">{{number_format($tempcashtotal,2)}}</td>
         <td align="right" class="ddiscount">{{number_format($tempdiscount,2)}}</td>
+        <td align="right" class="ddiscount">{{number_format($tempfape,2)}}</td>
         <td align="right" class="dreserve">{{number_format($tempdebitreservation,2)}}</td>
         <td align="right" class="elearn">{{number_format($tempelearning,2)}}</td>
         <td align="right" class="misc">{{number_format($tempmisc,2)}}</td>
@@ -234,6 +244,7 @@
            <?php
         $tempcashtotal=0;
         $tempdiscount=0;
+        $tempfape=0;
         $tempdebitreservation = 0;
         $tempelearning=0;
         $tempmisc=0;
@@ -256,6 +267,7 @@
 
         <td align="right" class="dcc">{{number_format($cashtotal,2)}}</td>
         <td align="right" class="ddiscount">{{number_format($discount,2)}}</td>
+        <td align="right" class="ddiscount">{{number_format($fape,2)}}</td>
         <td align="right" class="dreserve">{{number_format($debitreservation,2)}}</td>
         <td align="right" class="elearn">{{number_format($elearning,2)}}</td>
         <td align="right" class="misc">{{number_format($misc,2)}}</td>
@@ -274,6 +286,7 @@
             <tr style="border-bottom: none;border-top: none;text-align: right;"><td colspan="2" width="210px" style="text-align: left">Current Balance</td>
             <td class="dcc">{{number_format($totalcash+$cashtotal,2)}}</td>
             <td class="ddiscount">{{number_format($totaldiscount+$discount,2)}}</td>
+            <td class="ddiscount">{{number_format($totalfape+$fape,2)}}</td>
             <td class="dreserve">{{number_format($drreservation+$debitreservation,2)}}</td>
             <td class="elearn">{{number_format($elearningcr+$elearning,2)}}</td>
             <td class="misc">{{number_format($misccr+$misc,2)}}</td>

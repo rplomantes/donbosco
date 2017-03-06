@@ -641,7 +641,7 @@ function cashreceipts($transactiondate){
     $asOf = date("l, F d, Y",strtotime($transactiondate));
     $wilddate = $rangedate."-%";
     $collections = DB::Select("select sum(dedits.amount) as amount, sum(dedits.checkamount) as checkamount, users.idno, users.lastname, users.firstname,"
-                . " dedits.transactiondate, dedits.isreverse, dedits.receiptno, dedits.refno, dedits.postedby from users, dedits where users.idno = dedits.idno and"
+                . " dedits.transactiondate, dedits.isreverse, dedits.receiptno, dedits.refno, dedits.postedby from users, dedits where users.idno = dedits.idno and "
                 . " dedits.transactiondate = '" 
                 . $transactiondate . "' and dedits.paymenttype = '1' group by users.idno, dedits.transactiondate, dedits.postedby, users.lastname, users.firstname, dedits.isreverse,dedits.receiptno,dedits.refno order by dedits.refno" );
       
@@ -657,6 +657,7 @@ function cashreceipts($transactiondate){
                 . $transactiondate . "' and credits.refno=dedits.refno and credits.categoryswitch >= '7'  and credits.acctcode != 'Reservation' and dedits.paymenttype = '1' and dedits.isreverse = '0' group by  dedits.transactiondate, "
                 . " credits.acctcode order by credits.acctcode" );
      
+   //FORWARDED BALANCE  
    $totalcashdb = DB::Select("select sum(amount) as amount, sum(checkamount) as checkamount "
                 . "from dedits where "
                 . " dedits.transactiondate LIKE '" 
@@ -678,6 +679,26 @@ function cashreceipts($transactiondate){
    $totaldiscount = 0;
    }
    
+   $drreservationdb = DB::Select("select sum(amount) as amount, sum(checkamount) as checkamount "
+                . "from dedits where "
+                . " dedits.transactiondate LIKE '" 
+                . $wilddate. "' and transactiondate < '$transactiondate' and paymenttype = '5' and isreverse = '0'" );
+   if(count($drreservationdb)>0){
+        $drreservation = $drreservationdb[0]->amount + $drreservationdb[0]->checkamount;
+    }else {
+       $drreservation=0;
+    }
+    
+   $totalfapedb = DB::Select("select sum(amount) as amount, sum(checkamount) as checkamount "
+                . "from dedits where "
+                . " dedits.transactiondate LIKE '" 
+                . $wilddate. "' and transactiondate < '$transactiondate' and paymenttype = '4' and isreverse = '0'" );
+   if(count($totalfapedb)>0){
+    $totalfape = $totalfapedb[0]->amount;
+   }else{
+   $totalfape = 0;
+   }
+    
    $elearningcr = $this->getcrmonthmain(1, $wilddate, $transactiondate);
    $misccr = $this->getcrmonthmain(2, $wilddate, $transactiondate);
    $bookcr = $this->getcrmonthmain(3, $wilddate, $transactiondate);
@@ -692,6 +713,7 @@ function cashreceipts($transactiondate){
        $crreservation = 0;
    }
    
+   
    $crothersdb = DB::Select("Select sum(amount) as amount from credits where transactiondate like "
            . "'$wilddate' and transactiondate < '$transactiondate' and categoryswitch >= '7' and acctcode !='Reservation' and isreverse = '0'");
    if(count($crothersdb)>0){
@@ -699,6 +721,8 @@ function cashreceipts($transactiondate){
    } else {
        $crothers = 0;
    }
+   //END FORWARD BALANCE
+   
    
    $forward = DB::Select("select sum(dedits.amount) as amount, sum(dedits.checkamount) as checkamount, users.idno, users.lastname, users.firstname,"
                 . " dedits.transactiondate, dedits.isreverse, dedits.receiptno, dedits.refno, dedits.postedby from users, dedits where users.idno = dedits.idno and"
@@ -706,15 +730,6 @@ function cashreceipts($transactiondate){
                 . $wilddate. "' and dedits.transactiondate < '$transactiondate'" );
    $forwardbal = $forward[0]->amount+$forward[0]->checkamount;
      
-   $drreservationdb = DB::Select("select sum(amount) as amount, sum(checkamount) as checkamount "
-                . "from dedits where "
-                . " dedits.transactiondate LIKE '" 
-                . $wilddate. "' and transactiondate < '$transactiondate' and paymenttype = '5' and isreverse = '0'" );
-   if(count($drreservationdb)>0){
-        $drreservation = $drreservationdb[0]->amount + $drreservationdb[0]->checkamount;
-    }else {
-       $drreservation=0;
-    }
     $allcollections = array();
     $int=0;
     
@@ -734,13 +749,16 @@ foreach ($collections as $collection){
         $this->getReservationCredit($collection->refno),
         $this->getcreditamount1($collection->refno,7),
         $collection->isreverse,
-        $this->getDiscount($collection->refno)
+        $this->getDiscount($collection->refno),
+        $this->getFapeDebit($collection->refno)
+            
         );
+    
     $int=$int+1;
 }
     
     //return $othersummaries;
-    return view('accounting.cashreceiptdetails',compact('elearningcr','misccr','bookcr','departmentcr','registrationcr','tuitioncr','crreservation','crothers','totalcash','totaldiscount','drreservation','allcollections','transactiondate','otheraccounts','othersummaries','forwardbal','asOf'));
+    return view('accounting.cashreceiptdetails',compact('elearningcr','misccr','bookcr','departmentcr','registrationcr','tuitioncr','crreservation','crothers','totalcash','totaldiscount','drreservation','allcollections','transactiondate','otheraccounts','othersummaries','forwardbal','asOf','totalfape'));
     //return $forwardbal;
 }
 
@@ -748,13 +766,13 @@ function printcashreceipts($transactiondate){
     $rangedate = date("Y-m",strtotime($transactiondate));
     $asOf = date("l, F d, Y",strtotime($transactiondate));
     $wilddate = $rangedate."-%";
-    
     $collections = DB::Select("select sum(dedits.amount) as amount, sum(dedits.checkamount) as checkamount, users.idno, users.lastname, users.firstname,"
                 . " dedits.transactiondate, dedits.isreverse, dedits.receiptno, dedits.refno, dedits.postedby from users, dedits where users.idno = dedits.idno and"
                 . " dedits.transactiondate = '" 
                 . $transactiondate . "' and dedits.paymenttype = '1' group by users.idno, dedits.transactiondate, dedits.postedby, users.lastname, users.firstname, dedits.isreverse,dedits.receiptno,dedits.refno order by dedits.refno" );
+  
     
-   //DEBIT 
+    //FORWARD BALANCE
    $totalcashdb = DB::Select("select sum(amount) as amount, sum(checkamount) as checkamount "
                 . "from dedits where "
                 . " dedits.transactiondate LIKE '" 
@@ -776,8 +794,26 @@ function printcashreceipts($transactiondate){
    $totaldiscount = 0;
    }
    
-   
-   
+   $drreservationdb = DB::Select("select sum(amount) as amount, sum(checkamount) as checkamount "
+                . "from dedits where "
+                . " dedits.transactiondate LIKE '" 
+                . $wilddate. "' and transactiondate < '$transactiondate' and paymenttype = '5' and isreverse = '0'" );
+   if(count($drreservationdb)>0){
+        $drreservation = $drreservationdb[0]->amount + $drreservationdb[0]->checkamount;
+    }else {
+       $drreservation=0;
+    }
+    
+   $totalfapedb = DB::Select("select sum(amount) as amount, sum(checkamount) as checkamount "
+                . "from dedits where "
+                . " dedits.transactiondate LIKE '" 
+                . $wilddate. "' and transactiondate < '$transactiondate' and paymenttype = '4' and isreverse = '0'" );
+   if(count($totalfapedb)>0){
+    $totalfape = $totalfapedb[0]->amount;
+   }else{
+   $totalfape = 0;
+   }
+    
    $elearningcr = $this->getcrmonthmain(1, $wilddate, $transactiondate);
    $misccr = $this->getcrmonthmain(2, $wilddate, $transactiondate);
    $bookcr = $this->getcrmonthmain(3, $wilddate, $transactiondate);
@@ -792,6 +828,7 @@ function printcashreceipts($transactiondate){
        $crreservation = 0;
    }
    
+   
    $crothersdb = DB::Select("Select sum(amount) as amount from credits where transactiondate like "
            . "'$wilddate' and transactiondate < '$transactiondate' and categoryswitch >= '7' and acctcode !='Reservation' and isreverse = '0'");
    if(count($crothersdb)>0){
@@ -800,21 +837,15 @@ function printcashreceipts($transactiondate){
        $crothers = 0;
    }
    
+   //END FORWARD BALANCE
+   
+   
    $forward = DB::Select("select sum(dedits.amount) as amount, sum(dedits.checkamount) as checkamount, users.idno, users.lastname, users.firstname,"
                 . " dedits.transactiondate, dedits.isreverse, dedits.receiptno, dedits.refno, dedits.postedby from users, dedits where users.idno = dedits.idno and"
                 . " dedits.transactiondate LIKE '" 
                 . $wilddate. "' and dedits.transactiondate < '$transactiondate'" );
    $forwardbal = $forward[0]->amount+$forward[0]->checkamount;
      
-   $drreservationdb = DB::Select("select sum(amount) as amount, sum(checkamount) as checkamount "
-                . "from dedits where "
-                . " dedits.transactiondate LIKE '" 
-                . $wilddate. "' and transactiondate < '$transactiondate' and paymenttype = '5' and isreverse = '0'" );
-   if(count($drreservationdb)>0){
-        $drreservation = $drreservationdb[0]->amount + $drreservationdb[0]->checkamount;
-    }else {
-       $drreservation=0;
-    }
     $allcollections = array();
     $int=0;
     
@@ -834,13 +865,14 @@ foreach ($collections as $collection){
         $this->getReservationCredit($collection->refno),
         $this->getcreditamount1($collection->refno,7),
         $collection->isreverse,
-        $this->getDiscount($collection->refno)
+        $this->getDiscount($collection->refno),
+        $this->getFapeDebit($collection->refno)
         );
     $int=$int+1;
 }
        $pdf = \App::make('dompdf.wrapper');
        $pdf->setPaper('legal','landscape');
-       $pdf->loadView('print.printcashreceipt',compact('elearningcr','misccr','bookcr','departmentcr','registrationcr','tuitioncr','crreservation','crothers','totalcash','totaldiscount','drreservation','allcollections','transactiondate','otheraccounts','othersummaries','forwardbal','asOf'));
+       $pdf->loadView('print.printcashreceipt',compact('elearningcr','misccr','bookcr','departmentcr','registrationcr','tuitioncr','crreservation','crothers','totalcash','totaldiscount','drreservation','allcollections','transactiondate','otheraccounts','othersummaries','forwardbal','asOf','totalfape'));
        return $pdf->stream();
     //return $forwardbal;
 }
@@ -876,6 +908,14 @@ foreach ($collections as $collection){
     function getReservationDebit($refno){
         $mt=0;
         $amount = \App\Dedit::where('refno',$refno)->where('paymenttype','5')->first();
+        if(count($amount)>0){
+            $mt = $amount->amount;
+        }
+        return $mt;
+        }
+    function getFapeDebit($refno){
+        $mt=0;
+        $amount = \App\Dedit::where('refno',$refno)->where('paymenttype','7')->first();
         if(count($amount)>0){
             $mt = $amount->amount;
         }
