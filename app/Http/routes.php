@@ -179,6 +179,7 @@
     Route::post('/upload/grade','GradeSubmitController@importgrade');
     
     Route::get('trialbalance/{fromtran}/{totran}','Vincent\TrialBalanceController@viewtrilaBalance');
+    Route::get('generalledger/{fromtran}/{totran}','Vincent\GLController@index');
     
 });
 
