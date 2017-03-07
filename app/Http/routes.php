@@ -180,6 +180,9 @@
     
     Route::get('trialbalance/{fromtran}/{totran}','Vincent\TrialBalanceController@viewtrilaBalance');
     Route::get('generalledger/{fromtran}/{totran}','Vincent\GLController@index');
+    Route::get('balancesheet','Vincent\BalanceSheetController@index');
+    
+    
     
 });
 
