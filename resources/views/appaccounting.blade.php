@@ -69,10 +69,61 @@
                                  @if(Auth::guest())
                                  @else
                                     @if(Auth::user()->accesslevel == env('USER_ACCOUNTING') || Auth::user()->accesslevel == env('USER_ACCOUNTING_HEAD'))
-                                        <li><a href="{{url('/')}}">Home</a>
-                                        </li>    
                                         <li class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Reports
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Accounting Entries
+                                        <span class="caret"></span></a>
+                                         <ul class="dropdown-menu" role="menu">
+                                             <li>
+                                            <a href="#"><i class="fa fa-btn"></i>Disbursement</a>
+                                            <a href="{{url('addentry')}}"><i class="fa fa-btn"></i>Journal Entry</a>
+                                            <a href="{{url('/')}}"><i class="fa fa-btn"></i>Debit Memo</a>
+                                            <hr/>
+                                            <a href="#"><i class="fa fa-btn"></i>Chart of Accounts</a>
+                                            </li>
+                                         </ul>    
+                                        </li>    
+                                            
+                                        @if(Auth::user()->accesslevel == env('USER_ACCOUNTING_HEAD'))
+                                         <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Book of Accounts
+                                        <span class="caret"></span></a>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li>
+                                                <a href ="#"><i class="fa fa-btn"></i>Cash Disbursement</a>
+                                                <a href ="{{url('cashreceipts', date('Y-m-d'))}}"><i class="fa fa-btn"></i>Cash Receipts</a>
+                                                <a href ="#"><i class="fa fa-btn"></i>General Journal</a>
+                                                <a href ="#"><i class="fa fa-btn"></i>Debit Memo Journal</a>
+                                                
+                                            </li>  
+                                        </ul></li>
+                                        
+                                        <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Ledger Reports
+                                        <span class="caret"></span></a>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li>
+                   
+                                                <a href ="#"><i class="fa fa-btn"></i>Trial Balance</a>
+                                                <a href ="#"><i class="fa fa-btn"></i>General Ledger</a>
+                                            </li>  
+                                        </ul></li>
+                                        
+                                        <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Financial Statement
+                                        <span class="caret"></span></a>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li>
+                                               
+                                                <a href ="#"><i class="fa fa-btn"></i>Statement of Income</a>
+                                                <a href ="#"><i class="fa fa-btn"></i>Statement of Financial Position</a>
+                                                <a href ="#"><i class="fa fa-btn"></i>Retained Earnings</a>
+                                                <a href ="#"><i class="fa fa-btn"></i>Statement of Cash Flows</a>
+                                            </li>  
+                                        </ul></li>
+                                        
+                                       
+                                        <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Management Reports
                                         <span class="caret"></span></a>
                                
                                         <ul class="dropdown-menu" role="menu">
@@ -83,7 +134,7 @@
                                            <a href="{{url('maincollection',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Cash Debit/Credit Accounting Entry</a>
                                            <a href="{{url('cashcollection',date('Y-m-d'))}}"><i class="fa fa-btn"></i>Actual Deposit</a>
                                            <a href="{{url('overallcollection',date('Y-m-d'))}}"><i class="fa fa-btn"></i>Collection Report</a>
-                                           <a href ="{{url('cashreceipts', date('Y-m-d'))}}"><i class="fa fa-btn"></i>Cash Receipts</a>
+                                           
                                            <a href="{{url('dmcmallreport',date('Y-m-d'))}}"><i class="fa fa-btn"></i>DM Issued</a>
                                            <a href ="{{url('subsidiary')}}"><i class="fa fa-btn"></i>Individual Account Summary</a>
                                        </li>  
@@ -91,17 +142,18 @@
                                         @endif
                                         <li><a href="{{url('statementofaccount')}}"><i class="fa fa-btn fa-sign-out"></i>Statement of Account</a></li>
                                         </ul>
-                                         </li>    
-                                        @if(Auth::user()->accesslevel == env('USER_ACCOUNTING_HEAD'))
-                                        <li><a href="{{url('penalties')}}"><i class="fa fa-btn"></i>Over Due Charges </a></li>
-                                        <li><a href="{{url('searchor')}}"><i class="fa fa-btn fa-sign-out"></i>Search OR</a></li>
-                                        <li class="dropdown">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role=""button>Accounting
-                                                <span class="caret"></span></a>
-                                            <ul class = "dropdown-menu" role="memu">
-                                                <li><a href="{{url('addentry')}}"><i class="fa fa-btn"></i>Journal Entry</a></li>
-                                            </ul>    
-                                        </li>    
+                                         </li>
+                                         
+                                         <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Other Features
+                                        <span class="caret"></span></a>
+                               
+                                        <ul class="dropdown-menu" role="menu">
+                                       <li><a href="{{url('penalties')}}"><i class="fa fa-btn"></i>Over Due Charges </a>
+                                        <a href="{{url('searchor')}}"><i class="fa fa-btn fa-sign-out"></i>Search OR</a></li>
+                                        </ul>
+                                         </li>
+                                         
                                         @endif
                                        
                                         
