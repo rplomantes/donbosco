@@ -244,6 +244,7 @@
                     @endif
                @endforeach
                 @endif
+                
                 @if($penalty > 0)
                 <tr><td>Add: Penalty</td><td align="right"><span class="form-control">{{number_format($penalty,2)}}</span></td></tr>
                 @endif
@@ -271,6 +272,17 @@
                         </table>
                         <div style="color:red;font-weight: bold" id="cashdiff"></div>
                 </td> </tr>
+                @if($deposit > 0)
+                <?php 
+                if(($totaldue-$reservation+$totalprevious+$totalother+$penalty) < $deposit){
+                    $depositavailable = $totaldue-$reservation+$totalprevious+$totalother+$penalty;
+                }
+                else{
+                    $depositavailable = $deposit;
+                }
+                ?>
+                <tr><td style="vertical-align: middle">Student Deposit</td><td align="right"><span style="color:red;">Remaining: {{$deposit}}</span><br><input style ="text-align: right" type="text" placeholder="0.00" name="deposit" id="deposit" onkeypress="validate(event)" onkeydown="checkdeposit(event,this.value)" class="form form-control" value="{{$depositavailable}}"></td></tr>
+                @endif
                 <tr><td colspan="2"><label>FAPE:</label><input style ="text-align: right" type="text" placeholder="0.00" name="fape" id="fape" onkeypress="validate(event)" onkeydown="submitfape(event,this.value)" class="form form-control">
                 <tr><td colspan="2"><label>Cash Amount Rendered:</label><input style ="text-align: right" type="text" placeholder="0.00" name="receivecash" id="receivecash" onkeypress="validate(event)" onkeydown="submitcash(event,this.value)" class="form form-control">
                         </td></tr>
@@ -294,4 +306,60 @@
    
 <script src="{{url('/js/nephilajs/cashier.js')}}"></script>    
 <script src="{{url('/js/nephilajs/getpaymenttype.js')}}"></script>
+
+@if($deposit > 0)
+<script>
+    function checkdeposit(event,amount) {
+        document.getElementById('cashdiff').innerHTML =""
+        if(document.getElementById('submit').style.visibility == "visible"){
+           document.getElementById('submit').style.visibility = "hidden" 
+           document.getElementById('change').value=""
+        }
+        
+        if(event.keyCode == 13){
+            
+            if(eval(amount) == eval(document.getElementById("totalamount").value)){
+                document.getElementById('submit').style.visibility="visible";
+                document.getElementById('remarks').focus();
+            }
+            else if(eval(amount) > eval({{$deposit}}) || eval(amount) > eval(document.getElementById("totalamount").value)){
+                document.getElementById('deposit').value={{$depositavailable}}
+            }
+            else{
+                if(document.getElementById('receivecheck').value == ""){
+                  checkreceive = 0;  
+                }   
+                else {
+                 checkreceive =  eval(document.getElementById('receivecheck').value)  
+                }
+
+                if(document.getElementById('fape').value == ""){
+                  fape = 0;  
+                }   
+                else {
+                 fape =  eval(document.getElementById('fape').value)  
+                }
+
+                if(document.getElementById('receivecash').value===""){
+                    receivedcash = 0;
+                } else {
+                    receivedcash = document.getElementById('receivecash').value;
+                }
+
+                if(amount == ""){
+                    amount = 0;
+                }
+                var diff =  eval(document.getElementById("totalamount").value)-eval(amount)-eval(receivedcash)-eval(checkreceive)-eval(fape);
+                document.getElementById('submit').style.visibility="hidden";
+                document.getElementById('cashdiff').innerHTML = "DIFFERENCE : " + diff.toFixed(2);
+                document.getElementById('fape').focus();
+                
+            }
+            
+            event.preventDefault();
+            return false;
+        }
+    }
+</script>
+@endif
 @stop

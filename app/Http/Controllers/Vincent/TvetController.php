@@ -23,7 +23,7 @@ class TvetController extends Controller
                 . "and ledgers.period = tvet_subsidies.batch "
                 . "where users.idno = '$idno' "
                 . "and ledgers.schoolyear = '$schoolyear->schoolyear'");*/
-          $batches = \App\ctrSchoolYear::where('department','TVET')->where('schoolyear',$schoolyear->schoolyear)->get();
+          $batches = \App\ctrSchoolYear::where('department','TVET')->get();
           $courses = DB::Select("select distinct course from ctr_subjects where department = 'TVET'");
         return view('vincent.tvet.TVETLedger',compact('batches','courses'));
     }
@@ -31,7 +31,7 @@ class TvetController extends Controller
     function getsectionstudent($batch,$cours,$section){
         $schoolyear = \App\CtrRefSchoolyear::first();
         $students = $this->studentlist($batch,$cours,$section);
-        $batches = \App\ctrSchoolYear::where('department','TVET')->where('schoolyear',$schoolyear->schoolyear)->get();
+        $batches = \App\ctrSchoolYear::where('department','TVET')->get();
         $courses = DB::Select("select distinct course from ctr_subjects where department = 'TVET'");        
         
         return view('vincent.tvet.TVETLedger',compact('batches','courses','batch','cours','section','students'));
@@ -40,7 +40,7 @@ class TvetController extends Controller
     function edittvetcontribution($batch,$cours,$section){
         $schoolyear = \App\CtrRefSchoolyear::first();
         $studentledgers = $this->studentlist($batch,$cours,$section);
-        $batches = \App\ctrSchoolYear::where('department','TVET')->where('schoolyear',$schoolyear->schoolyear)->get();
+        $batches = \App\ctrSchoolYear::where('department','TVET')->get();
         $courses = DB::Select("select distinct course from ctr_subjects where department = 'TVET'");        
         
         return view('vincent.tvet.TVETLedger',compact('batches','courses','batch','cours','section','studentledgers'));
@@ -48,7 +48,7 @@ class TvetController extends Controller
     
     function studentlist($batch,$course,$section){
 
-        $students = DB::Select("Select class_no,remarks,tvet_subsidies.discount,statuses.period,users.idno,firstname,lastname,middlename,extensionname,subsidy,discount,sponsor,amount "
+        $students = DB::Select("Select class_no,remarks,tvet_subsidies.discount,statuses.period,users.idno,firstname,lastname,middlename,extensionname,subsidy,discount,sponsor,amount,payment,discount "
                 . "from users "
                 . "join statuses on users.idno = statuses.idno "
                 . "join ledgers on ledgers.idno = statuses.idno and ledgers.period = statuses.period "

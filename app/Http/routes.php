@@ -178,6 +178,8 @@
     Route::get('/upload/grade','GradeSubmitController@index');
     Route::post('/upload/grade','GradeSubmitController@importgrade');
     
+    Route::get('trialbalance/{fromtran}/{totran}','Vincent\TrialBalanceController@viewtrilaBalance');
+    
 });
 
 //Ajax route

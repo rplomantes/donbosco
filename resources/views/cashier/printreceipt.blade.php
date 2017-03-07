@@ -51,7 +51,10 @@ body { margin: 0px; }
                 @if(count($debit_reservation)>0)
                 <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Less Reservation</td><td align="right">({{number_format($debit_reservation->amount,2)}})</td></tr>
                 @endif
-            
+                @if(count($debit_deposit)>0)
+                 <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Less Student Deposit</td><td align="right">({{number_format($debit_deposit->amount,2)}})</td></tr>
+                @endif
+                
                 <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total</td><td align="right"><b>{{number_format($debit_cash->amount + $debit_cash->checkamount,2)}}</b></td></tr>
                 <tr><td colspan="2">&nbsp;&nbsp;</td></tr>
                 <tr><td colspan="2">

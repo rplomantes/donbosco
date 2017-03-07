@@ -1040,6 +1040,11 @@ foreach ($collections as $collection){
                   . " idno = '$idno'  and (categoryswitch <= '6' or ledgers.receipt_details LIKE 'Trainee%') group by "
                   . "receipt_details, categoryswitch order by categoryswitch");
           
+          if($statuses->department == "TVET"){
+          $balances = DB::Select("select sum(amount)+sum(s.discount)+sum(s.subsidy)+sum(sponsor) as amount , sum(s.discount) as discount, sum(payment) as payment, sum(sponsor) as sponsor,"
+                  . "sum(s.subsidy) as subsidy ,receipt_details from ledgers join tvet_subsidies as s on s.idno=ledgers.idno and s.batch=ledgers.period where ledgers.idno = '$idno' and ledgers.receipt_details LIKE 'Trainee%' group by receipt_details, categoryswitch order by categoryswitch");
+          }
+          
           $schedules=DB::Select("select sum(amount) as amount , sum(plandiscount) + sum(otherdiscount) as discount, "
                   . "sum(payment) as payment, sum(debitmemo) as debitmemo, duedate  from ledgers  where "
                   . " idno = '$idno' and (categoryswitch <= '6' or ledgers.receipt_details LIKE 'Trainee%') group by "
@@ -1286,7 +1291,8 @@ foreach ($collections as $collection){
                 return $penalty;
             }
         
-        
+
+    //Subsidiary
     function subsidiary(){
                 if(\Auth::user()->accesslevel==env('USER_ACCOUNTING')|| \Auth::user()->accesslevel==env('USER_ACCOUNTING_HEAD')){
                 $acctcodes = DB::Select("select distinct description from credits order by description");

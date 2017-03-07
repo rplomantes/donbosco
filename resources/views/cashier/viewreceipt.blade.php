@@ -38,12 +38,14 @@
             <tr><td>Less Discount</td><td align="right">({{number_format($debit_discount->amount,2)}})</td></tr>
            @endif
            @if(count($debit_fape)>0)
-            <tr><td>Less FAPE</td><td align="right">({{number_format($debit_fape->amount,2)}})</td></tr>
+            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Less FAPE</td><td align="right">({{number_format($debit_fape->amount,2)}})</td></tr>
            @endif
             @if(count($debit_reservation)>0)
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Less Reservation</td><td align="right">({{number_format($debit_reservation->amount,2)}})</td></tr>
            @endif
-           
+           @if(count($debit_deposit)>0)
+            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Less Student Deposit</td><td align="right">({{number_format($debit_deposit->amount,2)}})</td></tr>
+           @endif
             @if(count($debit_cash)>0)
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total</td><td align="right"><b>{{number_format($debit_cash->amount + $debit_cash->checkamount ,2)}}</b></td></tr>
            @endif

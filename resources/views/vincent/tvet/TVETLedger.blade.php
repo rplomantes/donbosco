@@ -36,9 +36,11 @@
     <table class="table table-stripped">
         <thead>
         <td>Class No.</td>
-        <td>Name</td>
+        <td >Name</td>
+        <td>Total Payment</td>
         <td>Total Training Fee</td>
         <td>Sponsor's Contribution</td>
+        <td>Discount</td>
         <td>TVET Subsidy</td>
         <td>Trainees Contribution</td>
         <td>Remarks</td>
@@ -48,10 +50,12 @@
         <tr>
             <td>{{$student->class_no}}</td>
             <td>{{$student->lastname}}, {{$student->firstname}} {{$student->middlename}} {{$student->extensionname}}</td>
-            <td>{{$student->sponsor+$student->subsidy+$student->amount}}</td>
-            <td>{{$student->sponsor}}</td>
-            <td>{{$student->subsidy}}</td>
-            <td>{{$student->amount}}</td>
+            <td>{{number_format($student->payment, 2, '.', ', ')}}</td>
+            <td>{{number_format($student->sponsor+$student->subsidy+$student->discount+$student->amount,2, '.', ', ')}}</td>
+            <td>{{number_format($student->sponsor,2, '.', ', ')}}</td>
+            <td>{{number_format($student->discount,2, '.', ', ')}}</td>
+            <td>{{number_format($student->subsidy,2, '.', ', ')}}</td>
+            <td>{{number_format($student->amount,2, '.', ', ')}}</td>
             <td>{{$student->remarks}}</td>
         </tr>
         @endforeach
@@ -74,8 +78,10 @@
         <thead>
         <td>Class No.</td>
         <td>Name</td>
+        <td>Total Payment</td>
         <td>Total Training Fee</td>
         <td>Sponsor's Contribution</td>
+        <td>Discount</td>
         <td>TVET Subsidy</td>
         <td>Trainees Contribution</td>
         <td>Remarks</td>
@@ -86,15 +92,16 @@
         <tr>
             <td>{{$student->class_no}}<input type="hidden" name="idno{{$count}}" value="{{$student->idno}}"></td>
             <td>{{$student->lastname}}, {{$student->firstname}} {{$student->middlename}} {{$student->extensionname}}</td>
-            <td class="total">{{$student->sponsor+$student->subsidy+$student->amount}}</td>
-            <td><input type="text" class="sponsors" name="sponsor{{$count}}" id="sponsor{{$count}}" value="{{$student->sponsor}}"></td>
-            <td><input type="text" class="no-edit subsidy" name="subsidy{{$count}}" id="subsidy{{$count}}" value="{{$student->subsidy}}" readonly="true"></td>
-            <td><input type="text" class="amount" name="trainees{{$count}}" id="trainees{{$count}}" value="{{$student->amount}}"></td>
-            <td><input type="text" class="desc" name="desc{{$count}}" id="desc{{$count}}" value="{{$student->remarks}}" >
-
-            </td>
-            <?php $count++;?>
+            <td><input readonly="readonly" style="width: 100px" type="text" class=" no-edit payment" name="payment{{$count}}" id="payment{{$count}}" value="{{number_format($student->payment, 2, '.', ', ')}}"></td>
+            <td class="total" style="display:none;">{{$student->sponsor+$student->subsidy+$student->amount+$student->discount}}</td>            
+            <td>{{number_format($student->sponsor+$student->subsidy+$student->amount+$student->discount, 2, '.', ', ')}}</td>            
+            <td><input  type="text" style="width: 100px" class="sponsors" name="sponsor{{$count}}" id="sponsor{{$count}}" value="{{$student->sponsor}}"></td>
+            <td><input type="text" style="width: 100px" class="discount" name="discount{{$count}}" id="discount{{$count}}" value="{{$student->discount}}"></td>
+            <td><input type="text" style="width: 100px" class="no-edit subsidy" name="subsidy{{$count}}" id="subsidy{{$count}}" value="{{number_format($student->subsidy, 2, '.', ', ')}}" ></td>
+            <td><input type="text" style="width: 100px" class="amount" name="trainees{{$count}}" id="trainees{{$count}}" value="{{$student->amount}}"></td>
+            <td><input type="text" style="width: 100px" class="desc" name="desc{{$count}}" id="desc{{$count}}" value="{{$student->remarks}}" ></td>
         </tr>
+        <?php $count++;?>
         @endforeach
         </tbody>
     </table>
@@ -106,8 +113,44 @@
 $('.sponsors').keyup(function(){
     var trainees = $(this).closest("td").siblings().find('.amount').attr('id');
     var subsidy = $(this).closest("td").siblings().find('.subsidy').attr('id');
+    var discount = $(this).closest("td").siblings().find('.discount').attr('id');
     var total = $(this).closest("td").siblings('.total').html();
-    var newcontribution = parseInt(total)-(parseFloat($(this).val()) + parseFloat($('#'+subsidy).val()));
+    
+    if(trainees == ""){
+        trainees = 0;
+    }
+    if(subsidy == ""){
+        subsidy = 0;
+    }
+    if(discount == ""){
+        discount = 0;
+    }
+    
+    var newcontribution = parseInt(total)-(parseFloat($(this).val()) + parseFloat($('#'+subsidy).val())+ parseFloat($('#'+discount).val()));
+    
+    $('#'+trainees).val(newcontribution.toFixed(2))
+    $(this).val().toFixed(2);
+});
+
+$('.discount').keyup(function(){
+    var trainees = $(this).closest("td").siblings().find('.amount').attr('id');
+    var subsidy = $(this).closest("td").siblings().find('.subsidy').attr('id');
+    var sponsor = $(this).closest("td").siblings().find('.sponsors').attr('id');
+    var total = $(this).closest("td").siblings('.total').html();
+    
+    if(trainees == ""){
+        trainees = 0;
+    }
+    if(subsidy == ""){
+        subsidy = 0;
+    }
+    if(sponsor == ""){
+        sponsor = 0;
+    }
+
+    var newcontribution = parseInt(total)-(parseFloat($(this).val()) 
+            + parseFloat($('#'+subsidy).val())+ parseFloat($('#'+sponsor).val())
+            + parseFloat($('#'+trainees).val()));
     
     $('#'+trainees).val(newcontribution.toFixed(2))
     $(this).val().toFixed(2);
@@ -116,8 +159,22 @@ $('.sponsors').keyup(function(){
 $('.amount').keyup(function(){
     var sponsor = $(this).closest("td").siblings().find('.sponsors').attr('id');
     var subsidy = $(this).closest("td").siblings().find('.subsidy').attr('id');
+    var discount = $(this).closest("td").siblings().find('.discount').attr('id');
     var total = $(this).closest("td").siblings('.total').html();
-    var newcontribution = parseInt(total)-(parseFloat($(this).val()) + parseFloat($('#'+sponsor).val()));
+
+    if(sponsor == ""){
+        sponsor = 0;
+    }
+    if(subsidy == ""){
+        subsidy = 0;
+    }
+    if(discount == ""){
+        discount = 0;
+    }
+    
+    
+    
+    var newcontribution = parseInt(total)-(parseFloat($(this).val()) + parseFloat($('#'+discount).val()));
     
     $('#'+subsidy).val(newcontribution.toFixed(2))
     $(this).val().toFixed(2);

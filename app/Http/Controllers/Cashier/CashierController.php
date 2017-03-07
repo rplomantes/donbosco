@@ -22,6 +22,7 @@ class CashierController extends Controller
        $student = \App\User::where('idno',$idno)->first();
        $status = \App\Status::where('idno',$idno)->first();  
        $reservation = 0;
+       $deposit = 0;
        $totalprevious = 0;
        $ledgers = null;
        $dues = null;
@@ -58,7 +59,17 @@ class CashierController extends Controller
                {
                    $reservation = $reservation + $reserve->amount;
                }
-       }}
+                       
+       }
+       
+               }
+               
+               $studentdeposit = DB::Select("select amount from student_deposits where idno = '$idno'");
+               if(count($studentdeposit)>0 ){
+                   foreach($studentdeposit as $deposits){
+                       $deposit = $deposit + $deposits->amount;
+                   }
+               }
            
        //get current account
           if(isset($status->department)){
@@ -106,7 +117,7 @@ class CashierController extends Controller
         
            $debitdms = DB::SELECT("select * from dedits where idno = '" . $idno . "' and "
                    . "paymenttype = '3' order by transactiondate");
-           return view('cashier.studentledger',  compact('debitdms','debits','penalty','totalmain','totalprevious','previousbalances','othercollections','student','status','ledgers','reservation','dues','totalothers'));
+           return view('cashier.studentledger',  compact('debitdms','debits','penalty','totalmain','totalprevious','previousbalances','othercollections','student','status','ledgers','reservation','dues','totalothers','deposit'));
            
        }   
        
@@ -277,7 +288,19 @@ class CashierController extends Controller
                     $creditstudentdeposit->postedby = \Auth::user()->idno;
                     $creditstudentdeposit->sub_department = 'None';
                     $creditstudentdeposit->save(); 
+                    
+                    $deposit = new \App\StudentDeposit;
+                    $deposit->amount = $remainingbalance; 
+                    $deposit->idno = $request->idno;
+                    $deposit->transactiondate = Carbon::now();
+                    $deposit->postedby = \Auth::user()->idno;
+                    $deposit->save();
                 }
+            }
+            
+            if($request->deposit > 0){
+                $this->debit_reservation_discount($refno, $orno,$request->idno,8, $request->deposit,'Student Deposit');
+                $this->reduce_deposit($request->deposit,$request->idno);
             }
                 
             $bank_branch = "";
@@ -334,6 +357,29 @@ class CashierController extends Controller
                $this->setuptuitionfee(1, $idno, $status->schoolyear);
            }
        }
+   }
+   
+   function reduce_deposit($deposit,$idno){
+       do{
+           $deposits = \App\StudentDeposit::where('idno',$idno)->where('amount','>',0)->first();
+           if(count($deposits)>0){
+               if($deposits->amount < $deposit){
+                   $deposit = $deposit - $deposits->amount;
+                   $deposits->amount = 0;
+                   $deposits->save();
+               }else{
+                   $current_amount = $deposits->amount;
+                   $deposits->amount = $deposits->amount - $deposit;
+                   $deposits->save();
+
+                   $deposit = $deposit - $current_amount;
+               }   
+           }
+           
+       }while($deposit > 0);
+       
+       return $deposit;
+       
    }
    
   function addreservation($idno){
@@ -447,10 +493,10 @@ class CashierController extends Controller
             $accountcode='210400';
             $acctcode='Enrollment Reservation';
             $description = 'Enrollment Reservation';
-        }else if($discountname == "FAPE"){
+        }else if($discountname == "FAPE" || $discountname == "Student Deposit"){
             $accountcode='210100';
             $acctcode='Other Current Liabilities';
-            $description = 'FAPE';
+            $description = $discountname;
         }else{
             $accountcode='410200';
             $acctcode='Brothers Discount';
@@ -502,6 +548,7 @@ class CashierController extends Controller
        $debit_discount = \App\Dedit::where('refno',$refno)->where('paymenttype','4')->first();
        $debit_reservation = \App\Dedit::where('refno',$refno)->where('paymenttype','5')->first();
        $debit_fape = \App\Dedit::where('refno',$refno)->where('paymenttype','7')->first();
+       $debit_deposit = \App\Dedit::where('refno',$refno)->where('paymenttype','8')->first();
        $debit_cash = \App\Dedit::where('refno',$refno)->where('paymenttype','1')->first();
        $debit_dm = \App\Dedit::where('refno',$refno)->where('paymenttype','3')->first();
        $credits = DB::Select("select sum(amount) as amount, receipt_details, transactiondate, sub_department from credits "
@@ -510,7 +557,7 @@ class CashierController extends Controller
        $timeis=date('h:i:s A',strtotime($timeissued->created_at));
        $tdate = \App\Dedit::where('refno',$refno)->first();
        $posted = \App\User::where('idno',$tdate->postedby)->first();
-       return view("cashier.viewreceipt",compact('posted','timeis','tdate','student','debits','credits','status','debit_discount','debit_reservation','debit_cash','debit_dm','idno','refno','debit_fape'));
+       return view("cashier.viewreceipt",compact('posted','timeis','tdate','student','debits','credits','status','debit_discount','debit_reservation','debit_cash','debit_dm','idno','refno','debit_fape','debit_deposit'));
        
    }
    
@@ -522,6 +569,7 @@ class CashierController extends Controller
        $debit_discount = \App\Dedit::where('refno',$refno)->where('paymenttype','4')->first();
        $debit_reservation = \App\Dedit::where('refno',$refno)->where('paymenttype','5')->first();
        $debit_fape = \App\Dedit::where('refno',$refno)->where('paymenttype','7')->first();
+       $debit_deposit = \App\Dedit::where('refno',$refno)->where('paymenttype','8')->first();
        $debit_cash = \App\Dedit::where('refno',$refno)->where('paymenttype','1')->first();
        $debit_check = \App\Dedit::where('refno',$refno)->where('paymenttype','2')->first();
        $debit_dm = \App\Dedit::where('refno',$refno)->where('paymenttype','3')->first();
@@ -533,7 +581,7 @@ class CashierController extends Controller
        $posted = \App\User::where('idno',$tdate->postedby)->first();
        $pdf = \App::make('dompdf.wrapper');
        $pdf->setPaper([0, 0, 336, 440], 'portrait');
-       $pdf->loadView("cashier.printreceipt",compact('posted','timeis','tdate','student','debits','credits','status','debit_discount','debit_reservation','debit_cash','debit_dm','idno','refno','debit_fape'));
+       $pdf->loadView("cashier.printreceipt",compact('posted','timeis','tdate','student','debits','credits','status','debit_discount','debit_reservation','debit_cash','debit_dm','idno','refno','debit_fape','debit_deposit'));
        return $pdf->stream();
         
     
@@ -802,6 +850,15 @@ function otherpayment($idno){
           $res->save();//->update(['status'=>'0']);
          
         }
+        }
+        
+        $matchfields=["refno"=>$refno,"paymenttype"=>"8"];
+        $debitdeposit = \App\Dedit::where($matchfields)->first();
+        if(count($debitdeposit)>0){
+          $deposit=  \App\StudentDeposit::where('idno',$idno)->first();
+          $deposit->amount = $deposit->amount + $debitdeposit->amount;
+          $deposit->save();
+
         }
         \App\Credit::where('refno',$refno)->update(['isreverse'=>'1','reversedate'=>  Carbon::now(), 'reverseby'=> \Auth::user()->idno]);
         \App\Dedit::where('refno',$refno)->update(['isreverse'=>'1']);

@@ -15,12 +15,12 @@
    
 }
 
-    function validateParticular(evt) {
+    function validateDeposit(evt) {
         var theEvent = evt || window.event;  
         var key = theEvent.keyCode || theEvent.which;
         if(key == 13){
             theEvent.preventDefault();
-            return false;   
+            document.getElementById('receivecheck').focus();
         } 
     }
 /*
@@ -184,18 +184,25 @@ function submitcash(event,amount){
       fape =  eval(document.getElementById('fape').value)  
      }
      
+     if(document.getElementById('deposit').value == ""){
+       deposit = 0;  
+     }   
+     else {
+      deposit =  eval(document.getElementById('deposit').value)  
+     }
+     
      if(amount == ""){
          amount = 0;
      }
      
-     if(eval(document.getElementById("totalamount").value) <= (eval(amount) + eval(checkreceive)+eval(fape))){ 
+     if(eval(document.getElementById("totalamount").value) <= (eval(amount) + eval(checkreceive)+eval(fape)+eval(deposit))){ 
         if(amount == 0 && checkreceive == 0){
             alert("Cannot continue transaction without payment");
         }
         else{
-            if(eval(document.getElementById("totalamount").value) < eval(amount) + eval(checkreceive) + eval(fape)){
+            if(eval(document.getElementById("totalamount").value) < eval(amount) + eval(checkreceive) + eval(fape)+eval(deposit)){
 
-             var num = eval(amount) + eval(checkreceive)+eval(fape) - eval(document.getElementById("totalamount").value)
+             var num = eval(amount) + eval(checkreceive)+eval(fape)+eval(deposit) - eval(document.getElementById("totalamount").value)
              document.getElementById('change').value =   num.toFixed(2);
              document.getElementById('cashdiff').innerHTML ="";
 
@@ -224,7 +231,7 @@ function submitcash(event,amount){
             }
             
             
-       var diff =  eval(document.getElementById("totalamount").value)-eval(amount)-eval(receivedcheck)-eval(fape);   
+       var diff =  eval(document.getElementById("totalamount").value)-eval(amount)-eval(receivedcheck)-eval(fape)- eval(deposit);   
        document.getElementById('cashdiff').innerHTML = "DIFFERENCE : " + diff.toFixed(2);    
        document.getElementById('submit').style.visibility="hidden";    
        document.getElementById('iscbc').focus();
@@ -249,7 +256,7 @@ function submitcheck(event, amount){
                 document.getElementById('remarks').focus();
         }
         else if(eval(amount) > eval(document.getElementById("totalamount").value)){
-            alert("Amount Rreceive should not be greater than the amount to be collected!")
+            alert("Amount Rereceived should not be greater than the amount to be collected!")
             document.getElementById('receivecheck').value= ""
         }
         else {
@@ -265,14 +272,20 @@ function submitcheck(event, amount){
                 fape = document.getElementById('fape').value;
             }
             
+            if(document.getElementById('deposit').value===""){
+                deposit = 0;
+            } else {
+                deposit = document.getElementById('deposit').value;
+            }
+            
             if(amount==""){
                 amount = 0;
             }
             
-            var diff =  eval(document.getElementById("totalamount").value)-eval(amount)-eval(receivedcash)-eval(fape);
+            var diff =  eval(document.getElementById("totalamount").value)-eval(amount)-eval(receivedcash)-eval(fape)-eval(deposit);
             document.getElementById('submit').style.visibility="hidden";
             document.getElementById('cashdiff').innerHTML = "DIFFERENCE : " + diff.toFixed(2);
-            document.getElementById('fape').focus();
+            document.getElementById('deposit').focus();
         }
      event.preventDefault();
      return false;
@@ -315,10 +328,16 @@ function submitfape(event, amount){
                 receivedcheck = document.getElementById('receivecheck').value;
             }
             
+            if(document.getElementById('deposit').value==""){
+                deposit = 0;
+            } else {
+                deposit = document.getElementById('deposit').value;
+            }
+            
             if(amount==""){
                 amount = 0;
             }
-            var diff =  eval(document.getElementById("totalamount").value)-eval(amount)-eval(receivedcash)-eval(receivedcheck);
+            var diff =  eval(document.getElementById("totalamount").value)-eval(amount)-eval(receivedcash)-eval(receivedcheck)-eval(deposit);
             document.getElementById('submit').style.visibility="hidden";
             document.getElementById('cashdiff').innerHTML = "DIFFERENCE : " + diff.toFixed(2);
             document.getElementById('receivecash').focus();
