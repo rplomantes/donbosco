@@ -103,7 +103,7 @@
                                         <ul class="dropdown-menu" role="menu">
                                             <li>
                    
-                                                <a href ="#"><i class="fa fa-btn"></i>Trial Balance</a>
+                                                <a href="{{url('trialbalance',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Trial Balance</a>
                                                 <a href ="#"><i class="fa fa-btn"></i>General Ledger</a>
                                             </li>  
                                         </ul></li>

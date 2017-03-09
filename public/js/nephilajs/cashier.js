@@ -184,25 +184,19 @@ function submitcash(event,amount){
       fape =  eval(document.getElementById('fape').value)  
      }
      
-     if(document.getElementById('deposit').value == ""){
-       deposit = 0;  
-     }   
-     else {
-      deposit =  eval(document.getElementById('deposit').value)  
-     }
      
      if(amount == ""){
          amount = 0;
      }
      
-     if(eval(document.getElementById("totalamount").value) <= (eval(amount) + eval(checkreceive)+eval(fape)+eval(deposit))){ 
+     if(eval(document.getElementById("totalamount").value) <= (eval(amount) + eval(checkreceive)+eval(fape))){ 
         if(amount == 0 && checkreceive == 0){
             alert("Cannot continue transaction without payment");
         }
         else{
-            if(eval(document.getElementById("totalamount").value) < eval(amount) + eval(checkreceive) + eval(fape)+eval(deposit)){
+            if(eval(document.getElementById("totalamount").value) < eval(amount) + eval(checkreceive) + eval(fape)){
 
-             var num = eval(amount) + eval(checkreceive)+eval(fape)+eval(deposit) - eval(document.getElementById("totalamount").value)
+             var num = eval(amount) + eval(checkreceive)+eval(fape) - eval(document.getElementById("totalamount").value)
              document.getElementById('change').value =   num.toFixed(2);
              document.getElementById('cashdiff').innerHTML ="";
 
@@ -231,7 +225,7 @@ function submitcash(event,amount){
             }
             
             
-       var diff =  eval(document.getElementById("totalamount").value)-eval(amount)-eval(receivedcheck)-eval(fape)- eval(deposit);   
+       var diff =  eval(document.getElementById("totalamount").value)-eval(amount)-eval(receivedcheck)-eval(fape);
        document.getElementById('cashdiff').innerHTML = "DIFFERENCE : " + diff.toFixed(2);    
        document.getElementById('submit').style.visibility="hidden";    
        document.getElementById('iscbc').focus();
@@ -272,20 +266,14 @@ function submitcheck(event, amount){
                 fape = document.getElementById('fape').value;
             }
             
-            if(document.getElementById('deposit').value===""){
-                deposit = 0;
-            } else {
-                deposit = document.getElementById('deposit').value;
-            }
             
             if(amount==""){
                 amount = 0;
             }
             
-            var diff =  eval(document.getElementById("totalamount").value)-eval(amount)-eval(receivedcash)-eval(fape)-eval(deposit);
+            var diff =  eval(document.getElementById("totalamount").value)-eval(amount)-eval(receivedcash)-eval(fape);
             document.getElementById('submit').style.visibility="hidden";
             document.getElementById('cashdiff').innerHTML = "DIFFERENCE : " + diff.toFixed(2);
-            document.getElementById('deposit').focus();
         }
      event.preventDefault();
      return false;
@@ -328,16 +316,11 @@ function submitfape(event, amount){
                 receivedcheck = document.getElementById('receivecheck').value;
             }
             
-            if(document.getElementById('deposit').value==""){
-                deposit = 0;
-            } else {
-                deposit = document.getElementById('deposit').value;
-            }
             
             if(amount==""){
                 amount = 0;
             }
-            var diff =  eval(document.getElementById("totalamount").value)-eval(amount)-eval(receivedcash)-eval(receivedcheck)-eval(deposit);
+            var diff =  eval(document.getElementById("totalamount").value)-eval(amount)-eval(receivedcash)-eval(receivedcheck);
             document.getElementById('submit').style.visibility="hidden";
             document.getElementById('cashdiff').innerHTML = "DIFFERENCE : " + diff.toFixed(2);
             document.getElementById('receivecash').focus();

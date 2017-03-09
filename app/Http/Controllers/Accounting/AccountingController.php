@@ -1031,7 +1031,10 @@ foreach ($collections as $collection){
         $payscheds=DB::Select("select distinct plan from ctr_payment_schedules order by plan");
         return view('accounting.statementofaccount',compact('sy','levels','payscheds'));
     }
-    
+    function studentsoa($idno,Request $request){
+        session()->put('remind', $request->reminder);
+        return $this->printsoa($idno, $request->soadate);
+    }
     function printsoa($idno, $trandate){
           $statuses = \App\Status::where('idno',$idno)->first();
           $users = \App\User::where('idno',$idno)->first();
@@ -1041,7 +1044,7 @@ foreach ($collections as $collection){
                   . "receipt_details, categoryswitch order by categoryswitch");
           
           if($statuses->department == "TVET"){
-          $balances = DB::Select("select sum(amount)+sum(s.discount)+sum(s.subsidy)+sum(sponsor) as amount , sum(s.discount) as discount, sum(payment) as payment, sum(sponsor) as sponsor,"
+          $balances = DB::Select("select sum(amount)+sum(s.discount)+sum(s.subsidy)+sum(sponsor) as amount ,sum(amount) as trainees ,sum(s.discount) as discount, sum(payment) as payment, sum(sponsor) as sponsor,"
                   . "sum(s.subsidy) as subsidy ,receipt_details from ledgers join tvet_subsidies as s on s.idno=ledgers.idno and s.batch=ledgers.period where ledgers.idno = '$idno' and ledgers.receipt_details LIKE 'Trainee%' group by receipt_details, categoryswitch order by categoryswitch");
           }
           

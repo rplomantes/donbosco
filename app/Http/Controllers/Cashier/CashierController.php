@@ -29,7 +29,7 @@ class CashierController extends Controller
        $penalty = 0;
        $totalmain = 0;
        $totalothers=0;
-
+       session()->put('remind', "");
        //Get other added collection
        $matchfields = ["idno"=>$idno, "categoryswitch"=>env("OTHER_FEE")];
        $othercollections = \App\Ledger::where($matchfields)->get();

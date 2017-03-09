@@ -64,7 +64,7 @@ th {
        $idno = $soasum->idno;    
        $statuses = \App\Status::where('idno',$idno)->first();
        $users = \App\User::where('idno',$idno)->first(); 
-        $balances = DB::Select("select sum(amount)+sum(s.discount)+sum(s.subsidy)+sum(sponsor) as amount , sum(s.discount) as discount, sum(payment) as payment, sum(sponsor) as sponsor,"
+        $balances = DB::Select("select sum(amount)+sum(s.discount)+sum(s.subsidy)+sum(sponsor) as amount,sum(amount) as trainees , sum(s.discount) as discount, sum(payment) as payment, sum(sponsor) as sponsor,"
               . "sum(s.subsidy) as subsidy ,receipt_details from ledgers join tvet_subsidies as s on s.idno=ledgers.idno and s.batch=ledgers.period where ledgers.idno = '$idno' and ledgers.receipt_details LIKE 'Trainee%' group by receipt_details, categoryswitch order by categoryswitch");
 
        $schedules=DB::Select("select sum(amount) as amount , sum(plandiscount) + sum(otherdiscount) as discount, "
@@ -117,7 +117,7 @@ th {
                 @endif
             </table>   
             <span style="font-size: 9pt;font-weight: bold"><u>ACCOUNT DETAILS</u></span>     
-                <table style="font-size: 9pt;"><tr><td width='200px'>Account Description</td><td>Total</td><td>Less: Discount</td><td>Sponsor</td><td>Subsidy</td><td>Payment</td><td>Balance</td></tr>
+                <table style="font-size: 9pt;"><tr><td width="100px">Total Training Fee</td><td>TraineesContribution</td><td>Less: Discount</td><td>Sponsor</td><td>Subsidy</td><td>Payment</td><td>Balance</td></tr>
                     <?php
                     $totamount = 0; $totdiscount=0; $totalsponsor=0; $totsubsidy=0;
                     $totpayment = 0;
@@ -133,16 +133,12 @@ th {
 
                     ?>
 
-                    <tr><td>{{$balance->receipt_details}}</td><td align="right">{{number_format($balance->amount,2)}}</td>
+                    <tr><td align="right">{{number_format($balance->amount,2)}}</td><td  align="right">{{number_format($balance->trainees,2)}}</td>
                         <td align="right">{{number_format($balance->discount,2)}}</td><td align="right">{{number_format($balance->sponsor,2)}}</td>
                         <td align="right">{{number_format($balance->subsidy,2)}}</td><td align="right">{{number_format($balance->payment,2)}}</td><td align="right">{{number_format($balance->amount-$balance->discount-$balance->payment-$balance->subsidy-$balance->sponsor,2)}}</td></tr>
 
                     @endforeach
 
-                    <!--Main Account Total-->
-                    <tr style="font-weight:bold"><td>Total</td><td align="right">{{number_format($totamount,2)}}</td>
-                        <td align="right">{{number_format($totdiscount,2)}}</td><td align="right">{{number_format($totalsponsor,2)}}</td>
-                        <td align="right">{{number_format($totsubsidy,2)}}</td><td align="right">{{number_format($totpayment,2)}}</td><td align="right">{{number_format($totamount-$totdiscount-$totpayment-$totsubsidy-$totalsponsor,2)}}</td></tr>
 
                </table>     
         </td>
@@ -150,7 +146,9 @@ th {
             <table style="font-size:10pt;border:thin" border="1" cellpadding="1" cellspacing='0'>
                 <tr><td style="border: 1px solid black;">Total Amount</td><td style="border: 1px solid black;" align="right">{{number_format($totamount + $otherbalance,2)}}</tr>
                 <tr><td style="border: 1px solid black;">Less : Discount</td><td style="border: 1px solid black;" align="right">({{number_format($totdiscount,2)}})</tr>
-                <tr><td style="border: 1px solid black;">&nbsp;&nbsp;&nbsp;&nbsp;Payment</td><td style="border: 1px solid black;" align="right">({{number_format($totpayment,2)}})</tr>
+                <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sponsor</td><td align="right">({{number_format($totalsponsor,2)}})</tr>
+                <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Subsidy</td><td align="right">({{number_format($totsubsidy,2)}})</tr>
+                <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Payment</td><td align="right">({{number_format($totpayment,2)}})</tr>
                 <tr><td style="border: 1px solid black;">Total Balance</td><td align="right" style="border: 1px solid black;">{{number_format($totamount-$totdiscount-$totpayment-$totsubsidy-$totalsponsor,2)}}</tr>
                 <tr style="font-size:11pt;font-weight:bold;border: 1px solid black;"><td>Total Due</td><td style="border: 1px solid black;" align="right">{{number_format($totaldue,2)}}</tr>
             </table>

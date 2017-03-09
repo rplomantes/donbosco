@@ -45,7 +45,7 @@
 function showtran(){
     var fromtran = document.getElementById('fromtran').value
     var totran = document.getElementById('totran').value
-    document.location="/maincollection/" + fromtran + "/" + totran
+    document.location="/trialbalance/" + fromtran + "/" + totran
 }
 </script>
 @stop

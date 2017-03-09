@@ -71,24 +71,26 @@ th {
     </table>
     
     
-<table><tr><td width="70%" valign="top" style="padding-right:0px;">
+<table>
+    <tr>
+        <td width="70%" valign="top" style="padding-right:0px;">
             <table style="font-size:10pt">
-       <tr><td width="30%">Student No :</td><td><b>{{$users->idno}}</b></td></tr>  
-       <tr><td>Name :</td><td><b>{{$users->lastname}}, {{$users->firstname}} {{$users->middlename}}</b></td></tr>
-       @if(count($statuses)>0)
-       @if($statuses->department == "TVET")
-       <tr><td>Batch/Section :</td><td>Batch {{$statuses->period}} - {{$statuses->section}}</td></tr>
-       @else
-       <tr><td>Level/Section :</td><td> {{$statuses->level}} - {{$statuses->section}}</td></tr>
-       @endif
+                <tr><td width="30%">Student No :</td><td><b>{{$users->idno}}</b></td></tr>  
+                    <tr><td>Name :</td><td><b>{{$users->lastname}}, {{$users->firstname}} {{$users->middlename}}</b></td></tr>
+                    @if(count($statuses)>0)
+                    @if($statuses->department == "TVET")
+                        <tr><td>Batch/Section :</td><td>Batch {{$statuses->period}} - {{$statuses->section}}</td></tr>
+                    @else
+                        <tr><td>Level/Section :</td><td> {{$statuses->level}} - {{$statuses->section}}</td></tr>
+                    @endif
        
        
       
-           @if($statuses->level == "Grade 9" || $statuses->level == "Grade 10" || $statuses->level == "Grade 11" || $statuses->level == "Grade 12" )
+            @if($statuses->level == "Grade 9" || $statuses->level == "Grade 10" || $statuses->level == "Grade 11" || $statuses->level == "Grade 12" )
             <tr><td>
-           Strand/Shop : <td>{{$statuses->strand}}</td>
+            Strand/Shop : <td>{{$statuses->strand}}</td>
             </td> </tr>         
-           @endif
+            @endif
            
            @if($statuses->department == "TVET")
             <tr><td>
@@ -96,12 +98,12 @@ th {
             </td> </tr>         
            @endif
        
-       @endif
-    </table>
+        @endif
+        </table>
             
     <span style="font-size: 9pt;font-weight: bold"><u>ACCOUNT DETAILS</u></span>
    @if($statuses->department == "TVET")
-   <table style="font-size: 9pt;"><tr><td width='200px'>Account Description</td><td>Total</td><td>Less: Discount</td><td>Sponsor</td><td>Subsidy</td><td>Payment</td><td>Balance</td></tr>
+   <table style="font-size: 9pt;"><tr><td width="100px">Total Training Fee</td><td>TraineesContribution</td><td>Less: Discount</td><td>Sponsor</td><td>Subsidy</td><td>Payment</td><td>Balance</td></tr>
        <?php
        $totamount = 0; $totdiscount=0; $totalsponsor=0; $totsubsidy=0;
        $totpayment = 0;
@@ -117,17 +119,13 @@ th {
        
        ?>
        
-       <tr><td>{{$balance->receipt_details}}</td><td align="right">{{number_format($balance->amount,2)}}</td>
+       <tr><td align="right">{{number_format($balance->amount,2)}}</td><td  align="right">{{number_format($balance->trainees,2)}}</td>
            <td align="right">{{number_format($balance->discount,2)}}</td><td align="right">{{number_format($balance->sponsor,2)}}</td>
            <td align="right">{{number_format($balance->subsidy,2)}}</td><td align="right">{{number_format($balance->payment,2)}}</td><td align="right">{{number_format($balance->amount-$balance->discount-$balance->payment-$balance->subsidy-$balance->sponsor,2)}}</td></tr>
        
        @endforeach
        
-       <!--Main Account Total-->
-       <tr style="font-weight:bold"><td>Total</td><td align="right">{{number_format($totamount,2)}}</td>
-           <td align="right">{{number_format($totdiscount,2)}}</td><td align="right">{{number_format($totalsponsor,2)}}</td>
-           <td align="right">{{number_format($totsubsidy,2)}}</td><td align="right">{{number_format($totpayment,2)}}</td><td align="right">{{number_format($totamount-$totdiscount-$totpayment-$totsubsidy-$totalsponsor,2)}}</td></tr>
-       
+
   </table>     
    @else
    <table style="font-size: 9pt;"><tr><td width='200px'>Account Description</td><td>Amount</td><td>Less: Discount</td><td>Payment</td><td>DM</td><td>Balance</td></tr>
@@ -249,7 +247,8 @@ th {
   </table>     
    @endif
         
-        </td><td valign="top" style="padding-right:0px;padding-left:0px;">
+        </td>
+        <td valign="top" style="padding-right:0px;padding-left:0px;">
     <h5></h5>
     <table style="font-size:10pt;border:thin" border="1" cellpadding="1" cellspacing='0'>
     <tr><td>Total Amount</td><td align="right">{{number_format($totamount,2)}}</tr>
@@ -257,7 +256,9 @@ th {
     @if($statuses->department != "TVET")
     <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Debit Memo</td><td align="right">({{number_format($totdm,2)}})</tr>
     @endif
-    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Payment</td><td align="right">({{number_format($totpayment,2)}})</tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sponsor</td><td align="right">({{number_format($totalsponsor,2)}})</tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Subsidy</td><td align="right">({{number_format($totsubsidy,2)}})</tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Payment</td><td align="right">({{number_format($totpayment,2)}})</tr>
     @if($statuses->department != "TVET")
     <tr><td>Total Balance</td><td align="right">{{number_format($totamount-$totdiscount-$totdm-$totpayment,2)}}</tr>
     @else

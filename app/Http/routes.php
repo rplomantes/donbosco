@@ -92,7 +92,7 @@
     Route::post('gettvetsoasummary','Accounting\AccountingController@gettvetsoasummary');
     Route::get('printtvetsoasummary/{period}/{course}/{section}/{trandate}','Accounting\AccountingController@printtvetsoasummary');
     Route::get('printtvetallsoa/{period}/{course}/{section}/{trandate}','Accounting\AccountingController@printtvetallsoa');
-    
+    Route::post('studentsoa/{idno}','Accounting\AccountingController@studentsoa');
     Route::get('printsoa/{idno}/{tradate}','Accounting\AccountingController@printsoa');
      Route::get('/printallsoa/{level}/{strand}/{section}/{trandate}/{amtover}','Accounting\AccountingController@printallsoa');
     Route::get('/getsoasummary/{level}/{strand}/{section}/{trandate}/{plan}/{amtover}','Accounting\AccountingController@getsoasummary');
