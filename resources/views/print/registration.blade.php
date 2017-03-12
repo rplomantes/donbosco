@@ -99,9 +99,15 @@ th {
         <tr><td>&nbsp;&nbsp;Less : Plan Discount</td><td align="right">({{number_format( $totalplandiscount,2)}})</td></tr>
         <tr><td>&nbsp;&nbsp;&nbsp;Other Discount</td><td align="right">({{number_format( $totalotherdiscount,2)}})</td></tr>
         <tr><td>&nbsp;&nbsp;&nbsp;Reservation</td><td align="right">({{number_format( $reserve,2)}})</td></tr>
+        <tr><td>&nbsp;&nbsp;&nbsp;Student Deposit</td><td align="right">({{number_format( $deposit,2)}})</td></tr>
+        
         </tbody>
         <tfoot>
-        <tr ><td class='footer' style="font-weight:bold">Total</td><td class='footer' align="right" ><strong>{{number_format($totalamount-$totalplandiscount-$totalotherdiscount-$reserve,2)}}</strong></td></tr>
+            @if($deposit != 0 && ($totalamount-$totalplandiscount-$totalotherdiscount-$reserve-$deposit)<0)
+        <tr ><td class='footer' style="font-weight:bold">Remaining Student Deposit</td><td class='footer' align="right" ><strong>({{number_format(abs($totalamount-$totalplandiscount-$totalotherdiscount-$reserve-$deposit),2)}})</strong></td></tr>  
+            @else
+        <tr ><td class='footer' style="font-weight:bold">Total</td><td class='footer' align="right" ><strong>{{number_format($totalamount-$totalplandiscount-$totalotherdiscount-$reserve-$deposit,2)}}</strong></td></tr>
+            @endif
         </tfoot>
     </table>
       

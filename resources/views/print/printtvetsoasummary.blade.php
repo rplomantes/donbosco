@@ -76,9 +76,13 @@ th {
     <div class="body">
         <table class="table table-stripped"><thead><tr><td>Student No</td><td>Name</td><td>Batch</td><td>Section</td><td>Balance</td></tr></thead>
        @foreach($soasummary as $soa)
-       @if($soa->amount > 0)
+       @if($soa->amount != 0)
        <tr><td>{{$soa->idno}}</td><td>{{$soa->lastname}}, {{$soa->firstname}} {{$soa->middlename}}</td>
-           <td>{{$soa->period}}</td><td>{{$soa->section}}</td><td align="right">{{number_format($soa->amount,2)}}</td></tr>
+           <td>{{$soa->period}}</td><td>{{$soa->section}}</td><td align="right">{{number_format($soa->amount,2)}}
+           @if($display == 3 && $soa->amount > 0)
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+           @endif
+           </td></tr>
        @endif
        @endforeach
  </table>

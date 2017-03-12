@@ -29,6 +29,7 @@ class AssessmentController extends Controller
         $currentschoolyear = "";
         $mydiscount="";
         $ledgers="";
+        $deposit = 0;
         
         
         $student = \App\User::where('idno',$id)->first();
@@ -66,7 +67,17 @@ class AssessmentController extends Controller
             $reservation = $reservation + $res->amount;
             }
         }
-        return view('registrar.oldstudent', compact('reservation','student','status','balance','programs','k_levels','elem_levels','shs_levels','jhs_levels','k11_tracks','k12_tracks','courses','currentschoolyear','mydiscount','ledgers'));
+        
+        $matchfields=['idno'=>$id, 'status'=>'1']; 
+        $deposits = \App\StudentDeposit::where($matchfields)->get();
+        if(count($deposits)> 0 ){
+            foreach ($deposits as $depo){
+            $deposit = $deposit + $depo->amount;
+            }
+        }
+        
+        
+        return view('registrar.oldstudent', compact('reservation','student','status','balance','programs','k_levels','elem_levels','shs_levels','jhs_levels','k11_tracks','k12_tracks','courses','currentschoolyear','mydiscount','ledgers','deposit'));
     }
     
 function assess(Request $request){
@@ -171,6 +182,7 @@ function assess(Request $request){
                        $newbook->description = $paidbook->subsidiary;
                        $newbook->receipt_details = $paidbook->receipt_details;
                        $newbook->amount = $paidbook->amount;
+                       $newbook->sub_department = $paidbook->sub_department;
                        $newbook->schoolyear = $schoolperiod->schoolyear;
                        $newbook->duetype = 0;
                        $newbook->period = $schoolperiod->period;
@@ -328,6 +340,14 @@ function assess(Request $request){
             }
         }
         
+        
+        $deposits = \App\StudentDeposit::where('idno',$request->id)->where('status','1')->get();
+        if(count($deposits)>0){
+            foreach($deposits as $deposit){
+                \App\StudentDeposit::where('id',$deposit->id)->update(['status'=>'0']);
+            }
+        }
+        
         //return redirect('registrar/evaluate/'. $request->id);
         return $this->evaluate($request->id);
         
@@ -476,6 +496,7 @@ function assess(Request $request){
                 $newledger->accountingcode = $ledger->accountingcode;
                 $newledger->acctcode = $ledger->acctcode;
                 $newledger->description = $ledger->description;
+                $newledger->sub_department = $ledger->sub_department;
                 $newledger->receipt_details = $ledger->receipt_details;
                 $newledger->amount = $ledger->amount;
                     if($ledger->categoryswitch == env('TUITION_FEE')){
@@ -581,6 +602,14 @@ function assess(Request $request){
                        \App\AdvancePayment::where('id',$res->id)->update(['status'=>'0']);
                     }
                 }
+                
+                $deposits = \App\StudentDeposit::where('idno',$id)->where('status','0')->get();
+                if(count($deposits)>0){
+                    foreach($deposits as $deposit){
+                        \App\StudentDeposit::where('id',$deposit->id)->update(['status'=>'1']);
+                    }
+                }
+                
                  return true;
     }
 
@@ -603,12 +632,22 @@ function assess(Request $request){
                 . " group by idno, duetype, duedate order by duedate");
         $matchfields=['idno'=>$idno, 'status'=>'0'];
         $reservation = \App\AdvancePayment::where($matchfields)->first();
+        
+        $matchfields=['idno'=>$idno, 'status'=>'1']; 
+        $deposit = 0;
+        $deposits = \App\StudentDeposit::where($matchfields)->get();
+        if(count($deposits)> 0 ){
+            foreach ($deposits as $depo){
+            $deposit = $deposit + $depo->amount;
+            }
+        }
+        
         $pdf = \App::make('dompdf.wrapper');
         $pdf->setPaper("Folio", "portrait");
         if($status->department=="TVET"){
         $pdf->loadView('print.registrationtvet',compact('ledger','postedby','dues','status','user','ledgers','breakdownfees','reservation'));    
         }else{
-        $pdf->loadView('print.registration',compact('ledger','postedby','dues','status','user','ledgers','breakdownfees','reservation'));
+        $pdf->loadView('print.registration',compact('ledger','postedby','dues','status','user','ledgers','breakdownfees','reservation','deposit'));
         }
         return $pdf->stream();
        

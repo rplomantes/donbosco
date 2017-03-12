@@ -36,7 +36,9 @@ $(document).ready(function() {
 */
 
 function duenosubmit(event){
-     if(event.keyCode == 13) {
+        var theEvent = event || window.event;  
+        var key = theEvent.keyCode || theEvent.which;
+     if(key== 13) {
          totaldue=document.getElementById('totaldue').value;
          totalmain=document.getElementById('totalmain').value;
          if(parseFloat(totaldue) > parseFloat(totalmain)){
@@ -48,7 +50,7 @@ function duenosubmit(event){
              document.getElementById('bank_branch').focus(); 
              computetotal();
         }
-      event.preventDefault();
+      theEvent.preventDefault();
       return false;
     }
     
@@ -76,7 +78,23 @@ function computetotal(){
     var penalty = document.getElementById('penalty').value;
     var reservation = document.getElementById('reservation').value;
     var total = parseFloat(totaldue) + parseFloat(totalprevious) + parseFloat(totalother) + parseFloat(penalty) - parseFloat(reservation);
+    var usedeposit = 0;
+    var deposits = document.getElementById('remainingdeposit').value;
+    
+    
+    if(total > deposits){
+        usedeposit = deposits
+        document.getElementById('deposit').value = deposits.toFixed(2);
+        $('#displaydeposit').html(deposits.toFixed(2));
+        total = total - usedeposit;
+    }else if(total < deposits){
+        usedeposit = total
+        document.getElementById('deposit').value = total.toFixed(2);
+        $('#displaydeposit').html(total.toFixed(2));
+        total = total - usedeposit;
+    }
     document.getElementById('totalamount').value = total.toFixed(2);
+    
     //alert(total);
 }
 

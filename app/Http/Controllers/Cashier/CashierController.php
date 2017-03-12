@@ -64,7 +64,7 @@ class CashierController extends Controller
        
                }
                
-               $studentdeposit = DB::Select("select amount from student_deposits where idno = '$idno'");
+               $studentdeposit = DB::Select("select amount from student_deposits where idno = '$idno' and status=1");
                if(count($studentdeposit)>0 ){
                    foreach($studentdeposit as $deposits){
                        $deposit = $deposit + $deposits->amount;
@@ -170,7 +170,7 @@ class CashierController extends Controller
             $totaldue = $request->totaldue;       
             //$accounts = \App\Ledger::where('idno',$request->idno)->where('categoryswitch','<=','6')->orderBy('categoryswitch')->get();
                 $accounts = DB::SELECT("select * from ledgers where idno = '".$request->idno."' and categoryswitch <= '6' "
-                     . " and (amount - payment - debitmemo - plandiscount - otherdiscount) > 0 order By duedate, categorySwitch");    
+                     ." and (amount - payment - debitmemo - plandiscount - otherdiscount) > 0 order By duedate, categorySwitch");    
                     foreach($accounts as $account){
                     
                         $balance = $account->amount - $account->payment - $account->plandiscount - $account->otherdiscount - $account->debitmemo;
@@ -229,10 +229,12 @@ class CashierController extends Controller
             
             if(isset($request->other)){
                     foreach($request->other as $key=>$value){
+                    if($value > 0){
                     $updateother = \App\Ledger::find($key);
                     $updateother->payment = $updateother->payment + $value;
                     $updateother->save();
                     $this->credit($updateother->idno, $updateother->id, $refno, $orno, $value);
+                    }
                     }
                 
                     $statusnow =  \App\Status::where('idno',$request->idno)->where('department','TVET')->first();
@@ -361,7 +363,7 @@ class CashierController extends Controller
    
    function reduce_deposit($deposit,$idno){
        do{
-           $deposits = \App\StudentDeposit::where('idno',$idno)->where('amount','>',0)->first();
+           $deposits = \App\StudentDeposit::where('idno',$idno)->where('amount','>',0)->where('status',1)->first();
            if(count($deposits)>0){
                if($deposits->amount < $deposit){
                    $deposit = $deposit - $deposits->amount;
@@ -534,6 +536,7 @@ class CashierController extends Controller
        $newcredit->receipt_details = $ledger->receipt_details;
        $newcredit->duedate=$ledger->duedate;
        $newcredit->amount=$amount;
+       $newcredit->sub_department=$ledger->sub_department;
        $newcredit->schoolyear=$ledger->schoolyear;
        $newcredit->period=$ledger->period;
        $newcredit->postedby=\Auth::user()->idno;
@@ -587,21 +590,21 @@ class CashierController extends Controller
     
 }
 
-function otherpayment($idno){
-    $student =  \App\User::where('idno',$idno)->first();
-    $status = \App\Status::where('idno',$idno)->first();
-    $acct_departments = DB::Select('Select * from ctr_acct_dept order by sub_department');
-    $advances = \App\AdvancePayment::where("idno",$idno)->where("status",'2')->get();
-    $advance=0;
-    if(count($advances)>0){    
-        foreach($advances as $adv){
-           $advance=$advance+$adv->amount;
+    function otherpayment($idno){
+        $student =  \App\User::where('idno',$idno)->first();
+        $status = \App\Status::where('idno',$idno)->first();
+        $acct_departments = DB::Select('Select * from ctr_acct_dept order by sub_department');
+        $advances = \App\AdvancePayment::where("idno",$idno)->where("status",'2')->get();
+        $advance=0;
+        if(count($advances)>0){    
+            foreach($advances as $adv){
+               $advance=$advance+$adv->amount;
+            }
         }
+        $accounttypes = DB::Select("select distinct accounttype from ctr_other_payments order by accounttype");
+        $paymentothers = DB::Select("select sum(amount) as amount, receipt_details from credits where idno ='" . $idno . "' and (categoryswitch = '7' OR categoryswitch = '9') and isreverse = '0' group by receipt_details");
+        return view('cashier.otherpayment',compact('acct_departments','student','status','accounttypes','advance','paymentothers'));
     }
-    $accounttypes = DB::Select("select distinct accounttype from ctr_other_payments order by accounttype");
-    $paymentothers = DB::Select("select sum(amount) as amount, receipt_details from credits where idno ='" . $idno . "' and (categoryswitch = '7' OR categoryswitch = '9') and isreverse = '0' group by receipt_details");
-    return view('cashier.otherpayment',compact('acct_departments','student','status','accounttypes','advance','paymentothers'));
-}
 
     function othercollection(Request $request){
         $or = $this->getOR();
@@ -855,7 +858,7 @@ function otherpayment($idno){
         $matchfields=["refno"=>$refno,"paymenttype"=>"8"];
         $debitdeposit = \App\Dedit::where($matchfields)->first();
         if(count($debitdeposit)>0){
-          $deposit=  \App\StudentDeposit::where('idno',$idno)->first();
+          $deposit=  \App\StudentDeposit::where('idno',$idno)->where('status',1)->first();
           $deposit->amount = $deposit->amount + $debitdeposit->amount;
           $deposit->save();
 
@@ -898,6 +901,15 @@ function otherpayment($idno){
         if(count($debitreservation)>0){
            
             \App\AdvancePayment::where('idno',$idno)->where('status','0')->update(['status'=>'1']);
+        }
+        
+        $matchfields=["refno"=>$refno,"paymenttype"=>"8"];
+        $debitdeposit = \App\Dedit::where($matchfields)->first();
+        if(count($debitdeposit)>0){
+          $deposit=  \App\StudentDeposit::where('idno',$idno)->where('status',1)->first();
+          $deposit->amount = $deposit->amount - $debitdeposit->amount;
+          $deposit->save();
+
         }
         
         \App\Credit::where('refno',$refno)->update(['isreverse'=>'0','reversedate'=>  '0000-00-00', 'reverseby'=> '']);

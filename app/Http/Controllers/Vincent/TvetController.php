@@ -96,9 +96,6 @@ class TvetController extends Controller
             return Redirect::to('/studentsledger/'.$batch.'/'.$cours.'/'.$section.'/edit')->withErrors($validator);
         }else{
         */
-        if($batch == 87){
-            $batch = '1st Batch';
-        }        
         for($index = 1;$nos>=$index;$index++){
             $student = $request['idno'.$index];
             $new_subsidy = $request['subsidy'.$index];

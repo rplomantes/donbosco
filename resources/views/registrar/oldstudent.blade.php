@@ -278,11 +278,19 @@
                 ?>
                 <tr><td>{{$ledger->receipt_details}}</td><td align="right">{{$ledger->amount}}</td></tr>
                 @endforeach
+                
                 <tr><td>Sub Total</td><td align="right"><?php echo number_format($totalamount,2); ?></td><tr>
                 <tr><td>Less: Plan Discount</td><td align="right"><span style="color:red">(<?php echo number_format($totalplandiscount,2); ?>)</span></td><tr>    
                 <tr><td> Other Discount</td><td align="right"><span style="color:red">(<?php echo number_format($totalotherdiscount,2); ?>)</span></td><tr> 
                 <tr><td>Reservation</td><td align="right"><span style="color:red">(<?php echo number_format($reservation,2); ?>)</span></td><tr>
-                <tr><td>Total</td><td align="right"><b><?php echo number_format($totalamount-$totalotherdiscount-$totalplandiscount-$reservation,2); ?></td></b><tr>
+                <tr><td>Student Deposit</td><td align="right"><span style="color:red">(<?php echo number_format($deposit,2); ?>)</span></td><tr>
+                <tr><td>
+                        @if($deposit != 0 && ($totalamount-$totalotherdiscount-$totalplandiscount-$reservation-$deposit)<0)
+                        Remaining Student Deposit
+                        @else
+                        Total
+                        @endif
+                    </td><td align="right"><b><?php echo number_format(abs($totalamount-$totalotherdiscount-$totalplandiscount-$reservation-$deposit),2); ?></td></b><tr>
                 </table>
                 <div class="col-md-6">
                 <input type="submit" class="btn btn-primary form-control" value = "Reassess">

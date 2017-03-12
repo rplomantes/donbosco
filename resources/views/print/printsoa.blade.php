@@ -103,7 +103,7 @@ th {
             
     <span style="font-size: 9pt;font-weight: bold"><u>ACCOUNT DETAILS</u></span>
    @if($statuses->department == "TVET")
-   <table style="font-size: 9pt;"><tr><td width="100px">Total Training Fee</td><td>TraineesContribution</td><td>Less: Discount</td><td>Sponsor</td><td>Subsidy</td><td>Payment</td><td>Balance</td></tr>
+   <table style="font-size: 9pt;"><tr><td width="100px">Total Training Fee</td><td>TraineesContribution</td><td>Sponsor</td><td>Subsidy</td><td>Payment</td><td>Balance</td></tr>
        <?php
        $totamount = 0; $totdiscount=0; $totalsponsor=0; $totsubsidy=0;
        $totpayment = 0;
@@ -120,8 +120,8 @@ th {
        ?>
        
        <tr><td align="right">{{number_format($balance->amount,2)}}</td><td  align="right">{{number_format($balance->trainees,2)}}</td>
-           <td align="right">{{number_format($balance->discount,2)}}</td><td align="right">{{number_format($balance->sponsor,2)}}</td>
-           <td align="right">{{number_format($balance->subsidy,2)}}</td><td align="right">{{number_format($balance->payment,2)}}</td><td align="right">{{number_format($balance->amount-$balance->discount-$balance->payment-$balance->subsidy-$balance->sponsor,2)}}</td></tr>
+           </td><td align="right">{{number_format($balance->sponsor,2)}}</td>
+           <td align="right">{{number_format($balance->subsidy+$balance->discount,2)}}</td><td align="right">{{number_format($balance->payment,2)}}</td><td align="right">{{number_format($balance->amount-$balance->discount-$balance->payment-$balance->subsidy-$balance->sponsor,2)}}</td></tr>
        
        @endforeach
        
@@ -252,12 +252,14 @@ th {
     <h5></h5>
     <table style="font-size:10pt;border:thin" border="1" cellpadding="1" cellspacing='0'>
     <tr><td>Total Amount</td><td align="right">{{number_format($totamount,2)}}</tr>
-    <tr><td>Less : Discount</td><td align="right">({{number_format($totdiscount,2)}})</tr>
+    
     @if($statuses->department != "TVET")
+    <tr><td>Less : Discount</td><td align="right">({{number_format($totdiscount,2)}})</tr>
     <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Debit Memo</td><td align="right">({{number_format($totdm,2)}})</tr>
-    @endif
+    @else
     <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sponsor</td><td align="right">({{number_format($totalsponsor,2)}})</tr>
-    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Subsidy</td><td align="right">({{number_format($totsubsidy,2)}})</tr>
+    <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Subsidy</td><td align="right">({{number_format($totsubsidy+$totdiscount,2)}})</tr>
+    @endif
     <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Payment</td><td align="right">({{number_format($totpayment,2)}})</tr>
     @if($statuses->department != "TVET")
     <tr><td>Total Balance</td><td align="right">{{number_format($totamount-$totdiscount-$totdm-$totpayment,2)}}</tr>
@@ -291,7 +293,10 @@ th {
 </td>
 </table>
     <table style="position: absolute;bottom:5.5in"><tr><td width="70%">
-    <p style="font-size: 8pt;"><b>Reminder:</b><br>
+    <p style="font-size: 8pt;">
+        @if(!ctype_space($reminder))
+        <b>Reminder:</b><br>
+        @endif
         @if(strlen($reminder) == 0)
         Please disregard this statement if payment has been made. Last day of payment is <b>{{date('M d, Y',strtotime($trandate))}}</b>. Payments made after due date is subject 
         to penalty of 5% or P250.00 whichever is higher. ADMINISTRATION

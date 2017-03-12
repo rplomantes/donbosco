@@ -88,10 +88,10 @@
     Route::get('cashreceipts/{transactiondate}','Accounting\AccountingController@cashreceipts');
     Route::get('printcashreceipts/{transactiondate}','Accounting\AccountingController@printcashreceipts');
     Route::get('statementofaccount','Accounting\AccountingController@statementofaccount');
-    Route::get('tvetsoa','Accounting\AccountingController@tvetsoa');
-    Route::post('gettvetsoasummary','Accounting\AccountingController@gettvetsoasummary');
-    Route::get('printtvetsoasummary/{period}/{course}/{section}/{trandate}','Accounting\AccountingController@printtvetsoasummary');
-    Route::get('printtvetallsoa/{period}/{course}/{section}/{trandate}','Accounting\AccountingController@printtvetallsoa');
+    Route::get('tvetsoa','Accounting\TvetSoaController@tvetsoa');
+    Route::post('gettvetsoasummary','Accounting\TvetSoaController@gettvetsoasummary');
+    Route::get('printtvetsoasummary/{period}/{course}/{section}/{trandate}/{display}','Accounting\TvetSoaController@printtvetsoasummary');
+    Route::get('printtvetallsoa/{period}/{course}/{section}/{trandate}/{display}','Accounting\TvetSoaController@printtvetallsoa');
     Route::post('studentsoa/{idno}','Accounting\AccountingController@studentsoa');
     Route::get('printsoa/{idno}/{tradate}','Accounting\AccountingController@printsoa');
      Route::get('/printallsoa/{level}/{strand}/{section}/{trandate}/{amtover}','Accounting\AccountingController@printallsoa');
@@ -200,6 +200,7 @@
     Route::get('/compute','AjaxController@compute');
     Route::get('/getpaymenttype/{ptype}','AjaxController@getpaymenttype');
     Route::get('/getparticular/{group}/{particular}','AjaxController@getparticular');
+    Route::get('/getaccount/{group}','Cashier\AjaxController@getaccount');
     Route::get('/getprevious/{idno}/{schoolyear}','AjaxController@getprevious');
     Route::get('/studentlist/{level}','AjaxController@studentlist');
     Route::get('/strand/{strand}/{level}','AjaxController@strand');

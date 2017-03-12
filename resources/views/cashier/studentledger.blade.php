@@ -263,8 +263,20 @@
                 @if($reservation > 0)
                 <tr><td>Less: Reservation</td><td align="right"><span class="form-control">{{number_format($reservation,2)}}</span></td></tr>
                 @endif
-               
-                <tr><td>Amount To Be Paid</td><td align="right"><input type="text" name="totalamount" id ="totalamount" style="color: red; font-weight: bold; text-align: right" class="form-control" value="{{ number_format($totaldue-$reservation+$totalprevious+$totalother+$penalty,2,'.','')}}" readonly></td></tr>
+                <?php 
+                $deposits = $deposit;
+                if($deposit > $totaldue-$reservation+$totalprevious+$totalother+$penalty){
+                    $deposits = $totaldue-$reservation+$totalprevious+$totalother+$penalty;
+                }
+                ?>
+                <input id="deposit" name="deposit" readonly="readonly" style="display:none" class="form-control" value="{{$deposits}}">
+                <input id="remainingdeposit" readonly="readonly" style="display:none" class="form-control" value="{{$deposit}}">                
+                @if($deposit > 0)
+
+                <tr><td style="text-align: right">Less: Student Deposit</td><td align="right"><span id="displaydeposit" class="form-control">{{number_format($deposits,2)}}</span><span>Remaining: {{number_format($deposit,2,'.',',')}}</span></td></tr>
+
+               @endif
+                <tr><td>Amount To Be Paid</td><td align="right"><input type="text" name="totalamount" id ="totalamount" style="color: red; font-weight: bold; text-align: right" class="form-control" value="{{ number_format($totaldue-$reservation+$totalprevious+$totalother+$penalty-$deposits,2,'.','')}}" readonly></td></tr>
                 <!--<tr><td><input type="radio" value="1" name="paymenttype" checked onclick="getpaymenttype(this.value)"> Cash</td><td><input onclick="getpaymenttype(this.value)" type="radio" value="2" name="paymenttype" > ChecK</td></tr> -->
                 
                 <tr><td colspan="2">
@@ -307,5 +319,10 @@
    
 <script src="{{url('/js/nephilajs/cashier.js')}}"></script>    
 <script src="{{url('/js/nephilajs/getpaymenttype.js')}}"></script>
+<script>
+    $("#totalamount").change(function(){
+        alert("mes")
+    });
+</script>
 
 @stop
