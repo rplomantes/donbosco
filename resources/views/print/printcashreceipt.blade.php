@@ -19,7 +19,7 @@
             <thead>
                 <tr>
                     <td class="receipt" width="50px">OR No.</td>
-                    <td class="name" width="195px" style="overflow:visible">Name</td>
+                    <td class="name" width="195px"  style="max-width:195px;min-width:195px;overflow:visible;white-space: nowrap;">Name</td>
                     <td class="dcc" style="text-align: right;width:100px;">Debit <br> Cash/Check</td>
                     <td class="ddiscount" style="text-align: right;width:80px;">Debit <br>Discount</td>
                     <td class="dfape" style="text-align: right;width:80px;">Debit <br> FAPE</td>
@@ -122,6 +122,8 @@
             $tempother=$tempother+$allcollection[11];
             $tempdiscount=$tempdiscount + $allcollection[13];
             $tempfape = $tempfape + $allcollection[14];
+            
+            $newtext = wordwrap($allcollection[1], 25, "<br />");
             }
             ?>
             <tr style="border-bottom: 1px solid;border-top: 1px solid;">
@@ -130,7 +132,7 @@
             @else
 
             <td class="receipt" style="border-bottom: 1px solid;border-top: 1px solid;">{{$allcollection[0]}}</td>
-            <td class="name" style="border-bottom: 1px solid;border-top: 1px solid;">{{$allcollection[1]}}</td>
+            <td class="name" style="border-bottom: 1px solid;border-top: 1px solid;">{!!nl2br($newtext)!!}</td>
             <td class="dcc" align="right" style="border-bottom: 1px solid;border-top: 1px solid;">{{number_format($allcollection[2],2)}}</td>
             <td class="ddiscount" align="right" style="border-bottom: 1px solid;border-top: 1px solid;">{{number_format($allcollection[13],2)}}</td>
             <td class="dfape" align="right" style="border-bottom: 1px solid;border-top: 1px solid;">{{number_format($allcollection[14],2)}}</td>
@@ -147,7 +149,7 @@
 
             @endif
             </tr>
-            @if($rows == 32 | $allcollection[0] == $lastreceipt | $firstpagerows == 32)
+            @if($rows == 31 | $allcollection[0] == $lastreceipt | $firstpagerows == 31)
                 <tr style="page-break-after: always;border-bottom: 1px solid;border-top: 1px solid;"><td colspan="2" width="210px">Total</td>
             <td align="right" class="dcc">{{number_format($tempcashtotal,2)}}</td>
             <td align="right" class="ddiscount">{{number_format($tempdiscount,2)}}</td>
@@ -181,9 +183,12 @@
             @endif
 
             <?php 
-            if(strlen($allcollection[1])>35){
+            if(strlen($allcollection[1])>25){
                 $rows=$rows+2;
-            }else{
+            }elseif(strlen($allcollection[1])>50){
+                $rows=$rows+3;
+            }
+            else{
                 $rows++;
             }
 

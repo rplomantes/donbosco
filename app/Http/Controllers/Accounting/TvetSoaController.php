@@ -107,4 +107,55 @@ class TvetSoaController extends Controller
         return view('print.printalltvetsoa',compact('soasummary','period','course','section','trandate','reminder'));
         
     }
+    
+    static function printTvetSoa($idno, $trandate){
+          $statuses = \App\Status::where('idno',$idno)->first();
+          $users = \App\User::where('idno',$idno)->first();
+          $balances = DB::Select("select sum(amount) as amount , sum(plandiscount) + sum(otherdiscount) as discount, "
+                  . "sum(payment) as payment, sum(debitmemo) as debitmemo, receipt_details, categoryswitch  from ledgers  where "
+                  . " idno = '$idno'  and (categoryswitch <= '6' or ledgers.receipt_details LIKE 'Trainee%') group by "
+                  . "receipt_details, categoryswitch order by categoryswitch");
+          
+          if($statuses->department == "TVET"){
+          $balances = DB::Select("select sum(amount)+sum(s.discount)+sum(s.subsidy)+sum(sponsor) as amount ,sum(amount) as trainees ,sum(s.discount) as discount, sum(payment) as payment, sum(sponsor) as sponsor,"
+                  . "sum(s.subsidy) as subsidy ,receipt_details from ledgers join tvet_subsidies as s on s.idno=ledgers.idno and s.batch=ledgers.period where ledgers.idno = '$idno' and ledgers.receipt_details LIKE 'Trainee%' group by receipt_details, categoryswitch order by categoryswitch");
+          }
+          
+          $schedules=DB::Select("select sum(amount) as amount , sum(plandiscount) + sum(otherdiscount) as discount, "
+                  . "sum(payment) as payment, sum(debitmemo) as debitmemo, duedate  from ledgers  where "
+                  . " idno = '$idno' and (categoryswitch <= '6' or ledgers.receipt_details LIKE 'Trainee%') group by "
+                  . "duedate order by duedate");
+
+          $others=DB::Select("select sum(amount) - sum(plandiscount) - sum(otherdiscount) - "
+                  . "sum(payment) - sum(debitmemo) as balance ,sum(amount) as amount , sum(plandiscount) + sum(otherdiscount) as discount,"
+                  . "sum(payment) as payment, sum(debitmemo) as debitmemo, receipt_details,description, categoryswitch from ledgers  where "
+                  . " idno = '$idno' and categoryswitch > '6' and ledgers.receipt_details NOT LIKE 'Trainee%'  group by "
+                  . "receipt_details, transactiondate order by LEFT(receipt_details, 4) ASC,id");
+          $schedulebal = 0;
+          if(count($schedules)>0){
+              foreach($schedules as $sched){
+                  if($sched->duedate <= $trandate){
+                   $schedulebal = $schedulebal + $sched->amount - $sched->discount -$sched->debitmemo - $sched->payment;
+                  }
+              }
+          }
+          $otherbalance = 0;
+          if(count($others)>0){
+              foreach($others as $ot){
+                  $otherbalance = $otherbalance+$ot->balance;
+              }
+          }
+          
+          $transactionreceipts = DB::Select("select transactiondate,receiptno,amount from "
+                  . "(select transactiondate,receiptno,sum(amount)+sum(checkamount) as amount from dedits where idno ='$idno' and paymenttype=1 group by receiptno"
+                  . " UNION ALL "
+                  . "select transactiondate,receiptno,amount from old_receipts where idno ='$idno') allrec order by transactiondate, receiptno");
+          
+          $totaldue = $schedulebal + $otherbalance;
+          $reminder = session('remind');
+          $pdf = \App::make('dompdf.wrapper');
+          // $pdf->setPaper([0, 0, 336, 440], 'portrait');
+          $pdf->loadView("print.printtvetsoa",compact('statuses','users','balances','trandate','schedules','others','otherbalance','totaldue','reminder','transactionreceipts'));
+          return $pdf->stream();
+    }
 }

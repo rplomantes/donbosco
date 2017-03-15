@@ -77,6 +77,12 @@ th {
                . "sum(payment) as payment, sum(debitmemo) as debitmemo,description, receipt_details, categoryswitch from ledgers  where "
                . " idno = '$idno' and categoryswitch > '6' and ledgers.receipt_details NOT LIKE 'Trainee%'  group by "
                . "receipt_details, transactiondate order by LEFT(receipt_details, 4) ASC,id");
+       
+      $transactionreceipts = DB::Select("select transactiondate,receiptno,amount from "
+              . "(select transactiondate,receiptno,sum(amount)+sum(checkamount) as amount from dedits where idno ='$idno' and paymenttype=1 group by receiptno"
+              . " UNION ALL "
+              . "select transactiondate,receiptno,amount from old_receipts where idno ='$idno') allrec order by transactiondate, receiptno");
+      
        $schedulebal = 0;
        if(count($schedules)>0){
            foreach($schedules as $sched){
@@ -103,7 +109,7 @@ th {
         <tr><td style="font-size:10pt;">Tel No : 892-01-01</td><td align="right">Plan : {{$statuses->plan}}</td></tr>
     </table>
 
-<table>
+<table style="margin-top: 20px;">
     <tr>
         <td width="70%" valign="top" style="padding-right:0px;">
             <table style="font-size:10pt">
@@ -116,11 +122,12 @@ th {
                     </td> </tr> 
                 @endif
             </table>   
-            <span style="font-size: 9pt;font-weight: bold"><u>ACCOUNT DETAILS</u></span>     
-        <table style="font-size: 9pt;"><tr><td width="100px">Total Training Fee</td><td>TraineesContribution</td><td>Sponsor</td><td>Subsidy</td><td>Payment</td><td>Balance</td></tr>
+
+
                <?php
                $totamount = 0; $totdiscount=0; $totalsponsor=0; $totsubsidy=0;
                $totpayment = 0;
+               $total_receipt = 0;
 
                ?>
                @foreach($balances as $balance)
@@ -133,40 +140,44 @@ th {
 
                ?>
 
-               <tr><td align="right">{{number_format($balance->amount,2)}}</td><td  align="right">{{number_format($balance->trainees,2)}}</td>
-                   </td><td align="right">{{number_format($balance->sponsor,2)}}</td>
-                   <td align="right">{{number_format($balance->subsidy+$balance->discount,2)}}</td><td align="right">{{number_format($balance->payment,2)}}</td><td align="right">{{number_format($balance->amount-$balance->discount-$balance->payment-$balance->subsidy-$balance->sponsor,2)}}</td></tr>
-
                @endforeach
-
-
-          </table>          
+         
+        <br>
+        
+        <table style="font-size: 9pt;margin-top: 20px">
+            <thead>
+                <tr><td colspan="3" style="font-size: 9pt;font-weight: bold"><b><u>Transaction History</u></b></td></tr>
+                <tr><td>Receipt No.</td><td>Transaction Date</td><td>Amount</td></tr></thead>
+            @foreach($transactionreceipts as $transactionreceipt)
+            <tr>
+                <?php $total_receipt = $total_receipt + $transactionreceipt->amount; ?>
+                <td>{{$transactionreceipt->receiptno}}</td>
+                <td>{{$transactionreceipt->transactiondate}}</td>
+                <td>{{number_format($transactionreceipt->amount,2)}}</td>
+            </tr>
+            @endforeach
+            <tr><td colspan="2" style="text-align: right;border-top: 1px solid;">Total</td><td style="border-top: 1px solid;">{{number_format($total_receipt,2)}}</td></tr>
+        </table>
         </td>
         <td valign="top" style="padding-left: 0px;padding-right: 0px;">
             <table style="font-size:10pt;border:thin" border="1" cellpadding="1" cellspacing='0'>
-                <tr><td style="border: 1px solid black;">Total Amount</td><td style="border: 1px solid black;" align="right">{{number_format($totamount + $otherbalance,2)}}</tr>
-                @if($statuses->department != "TVET")
-                <tr><td>Less : Discount</td><td align="right">({{number_format($totdiscount,2)}})</tr>
-                <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Debit Memo</td><td align="right">({{number_format($totdm,2)}})</tr>
-                @else
-                <tr><td style="border: 1px solid black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sponsor</td><td style="border: 1px solid black;" align="right">({{number_format($totalsponsor,2)}})</tr>
-                <tr><td style="border: 1px solid black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Subsidy</td><td style="border: 1px solid black;" align="right">({{number_format($totsubsidy+$totdiscount,2)}})</tr>
-                @endif
-                <tr><td style="border: 1px solid black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Payment</td><td style="border: 1px solid black;" align="right">({{number_format($totpayment,2)}})</tr>
-                @if($statuses->department != "TVET")
-                <tr><td style="border: 1px solid black;">Total Balance</td><td style="border: 1px solid black;" align="right">{{number_format($totamount-$totdiscount-$totdm-$totpayment,2)}}</tr>
-                @else
+                <tr><td style="border: 1px solid black;"><b>Total Amount</b></td><td align="right" style="border: 1px solid black;">{{number_format($totamount,2)}}</tr>
+
+
+                <tr><td style="border: 1px solid black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sponsor</td><td align="right" style="border: 1px solid black;">({{number_format($totalsponsor,2)}})</tr>
+                <tr><td style="border: 1px solid black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Subsidy</td><td align="right" style="border: 1px solid black;">({{number_format($totsubsidy+$totdiscount,2)}})</tr>
+                <tr><td style="border: 1px solid black;"><b>Trainees Contribution</b></td><td align="right" style="border: 1px solid black;">({{number_format($balance->trainees,2)}})</tr>
+                <tr><td style="border: 1px solid black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Payment</td><td align="right" style="border: 1px solid black;">({{number_format($totpayment,2)}})</tr>
+
                 <tr><td style="border: 1px solid black;">Total Balance</td><td align="right" style="border: 1px solid black;">{{number_format($totamount-$totdiscount-$totpayment-$totsubsidy-$totalsponsor,2)}}</tr>
-                @endif
-                @if($statuses->department != "TVET")<tr style="font-size:11pt;font-weight:bold"><td>Due Date</td><td align="right">{{date('M d, Y',strtotime($trandate))}}</tr>@endif
-                <tr style="font-size:11pt;font-weight:bold"><td style="border: 1px solid black;">Total Due</td><td style="border: 1px solid black;" align="right">{{number_format($totaldue,2)}}</tr>
+                <tr style="font-size:11pt;font-weight:bold"><td style="border: 1px solid black;">Total Due</td><td align="right" style="border: 1px solid black;">{{number_format($totaldue,2)}}</tr>
             </table>
             <br>
         </td>
     </tr>    
 </table>
     
-    <table style="position:absolute;bottom:40px;">
+    <table style="margin-top: 20px;">
         <tr>
             <td width="70%">
                 <p style="font-size: 8pt;">
@@ -188,7 +199,7 @@ th {
             </td>
         </tr>
     </table>
-  </div>  
+  </div>
     <?php
        }
     ?>

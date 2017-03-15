@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Http\Controllers\Accounting\TvetSoaController;
 
 class AccountingController extends Controller
 {
@@ -955,8 +956,14 @@ foreach ($collections as $collection){
         return view('accounting.statementofaccount',compact('sy','levels','payscheds'));
     }
     function studentsoa($idno,Request $request){
+        $statuses = \App\Status::where('idno',$idno)->first();
         session()->put('remind', $request->reminder);
-        return $this->printsoa($idno, $request->soadate);
+        if($statuses->department == "TVET"){
+            return TvetSoaController::printTvetSoa($idno, $request->soadate);
+        }else{
+            return $this->printsoa($idno, $request->soadate);
+        }
+        
     }
     function printsoa($idno, $trandate){
           $statuses = \App\Status::where('idno',$idno)->first();
@@ -967,8 +974,7 @@ foreach ($collections as $collection){
                   . "receipt_details, categoryswitch order by categoryswitch");
           
           if($statuses->department == "TVET"){
-          $balances = DB::Select("select sum(amount)+sum(s.discount)+sum(s.subsidy)+sum(sponsor) as amount ,sum(amount) as trainees ,sum(s.discount) as discount, sum(payment) as payment, sum(sponsor) as sponsor,"
-                  . "sum(s.subsidy) as subsidy ,receipt_details from ledgers join tvet_subsidies as s on s.idno=ledgers.idno and s.batch=ledgers.period where ledgers.idno = '$idno' and ledgers.receipt_details LIKE 'Trainee%' group by receipt_details, categoryswitch order by categoryswitch");
+                return TvetSoaController::printTvetSoa($idno, $trandate);
           }
           
           $schedules=DB::Select("select sum(amount) as amount , sum(plandiscount) + sum(otherdiscount) as discount, "

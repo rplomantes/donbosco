@@ -12,7 +12,7 @@ class AjaxController extends Controller
 {
     function getaccount($group){
         if(Request::ajax()){
-            $accounts = \App\CtrOtherPayment::where("acctcode",'LIKE',"$group%")->get();
+            $accounts = DB::Select("select distinct accounttype from ctr_other_payments where acctcode like '$group%'");
             $data = "";
             if(count($accounts)>0){
                 $data = $data."<option value='' hidden='hidden'>-- Select Account Group--</option>";

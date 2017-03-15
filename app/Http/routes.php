@@ -179,7 +179,8 @@
     Route::post('/upload/grade','GradeSubmitController@importgrade');
     
     Route::get('trialbalance/{fromtran}/{totran}','Vincent\TrialBalanceController@viewtrilaBalance');
-    Route::get('generalledger/{fromtran}/{totran}','Vincent\GLController@index');
+    Route::get('printtrialbalance/{fromtran}/{totran}','Vincent\TrialBalanceController@printtrilaBalance');
+    Route::get('generalledger/{accounts}/{title}/{totran?}','Accounting\GenLedgerController@index');
     Route::get('balancesheet','Vincent\BalanceSheetController@index');
     
     

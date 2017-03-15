@@ -13,9 +13,5 @@ class GLController extends Controller
 	$this->middleware(['auth','acct']);
     }
     
-    function index(){
-        $coa = \App\ChartOfAccount::pluck('accountname')->toArray();
-        
-        return view("vincent.accounting.generalLedger",compact('coa'));
-    }
+
 }

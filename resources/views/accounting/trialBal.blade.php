@@ -40,7 +40,7 @@
 </div>
     
 
-<div class="col-md-offset-10 col-md-2"><a class="btn btn-danger" href="{{url('printmaincollection',array($fromtran,$totran))}}">Print</a></div>
+<div class="col-md-offset-10 col-md-2"><a class="btn btn-danger" href="{{url('printtrialbalance',array($fromtran,$totran))}}">Print</a></div>
 <script>
 function showtran(){
     var fromtran = document.getElementById('fromtran').value

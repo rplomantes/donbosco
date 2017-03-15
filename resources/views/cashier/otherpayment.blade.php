@@ -122,7 +122,7 @@
                     
                     <div class="form-group">
                     <div class="col-md-2">
-                        <select name="basicaccount2" id="groupaccount2"  class="form-control" onchange = "getAccount(this.value,'groupaccount2')">
+                        <select name="basicaccount2"  class="form-control" onchange = "getAccount(this.value,'groupaccount2')">
                             <option value="" hidden="hidden">--Select Account--</option>
                             <option value = "1">Assets</option>
                             <option value = "2">Liabilities</option>
@@ -133,7 +133,7 @@
                     </div>
                         
                     <div class="col-md-3">
-                        <select name="groupaccount2"   class="form-control" onchange = "getParticular(this.value,'particular2')">
+                        <select name="groupaccount2" id="groupaccount2" class="form-control" onchange = "getParticular(this.value,'particular2')">
                         </select>    
                     </div>    
                     
@@ -158,7 +158,7 @@
                     
                     <div class="form-group">
                         <div class="col-md-2">
-                            <select name="basicaccount3" id="groupaccount3"  class="form-control" onchange = "getAccount(this.value,'groupaccount3')">
+                            <select name="basicaccount3" class="form-control" onchange = "getAccount(this.value,'groupaccount3')">
                                 <option value="" hidden="hidden">--Select Account--</option>
                                 <option value = "1">Assets</option>
                                 <option value = "2">Liabilities</option>
@@ -169,7 +169,7 @@
                         </div>
                         
                     <div class="col-md-3">
-                        <select name="groupaccount3"   class="form-control" onchange = "getParticular(this.value,'particular3')">
+                        <select name="groupaccount3" id="groupaccount3" class="form-control" onchange = "getParticular(this.value,'particular3')">
                         </select>    
                     </div>    
                     
@@ -194,7 +194,7 @@
                     
                     <div class="form-group">
                         <div class="col-md-2">
-                            <select name="basicaccount4" id="groupaccount4"  class="form-control" onchange = "getAccount(this.value,'groupaccount4')">
+                            <select name="basicaccount4"  class="form-control" onchange = "getAccount(this.value,'groupaccount4')">
                                 <option value="" hidden="hidden">--Select Account--</option>
                                 <option value = "1">Assets</option>
                                 <option value = "2">Liabilities</option>
@@ -205,7 +205,7 @@
                         </div>
                         
                     <div class="col-md-3">
-                        <select name="groupaccount4"   class="form-control" onchange = "getParticular(this.value,'particular4')">
+                        <select name="groupaccount4" id="groupaccount4" class="form-control" onchange = "getParticular(this.value,'particular4')">
                         </select>    
                     </div>    
                     
@@ -229,7 +229,7 @@
                     
                     <div class="form-group">
                         <div class="col-md-2">
-                            <select name="basicaccount5" id="groupaccount5"  class="form-control" onchange = "getAccount(this.value,'groupaccount5')">
+                            <select name="basicaccount5" class="form-control" onchange = "getAccount(this.value,'groupaccount5')">
                                 <option value="" hidden="hidden">--Select Account--</option>
                                 <option value = "1">Assets</option>
                                 <option value = "2">Liabilities</option>
@@ -240,7 +240,7 @@
                         </div>
                         
                     <div class="col-md-3">
-                        <select name="groupaccount5"   class="form-control" onchange = "getParticular(this.value,'particular5')">
+                        <select name="groupaccount5" id="groupaccount5" class="form-control" onchange = "getParticular(this.value,'particular5')">
 
                         </select>    
                     </div>    
@@ -267,7 +267,7 @@
                     
                     <div class="form-group">
                         <div class="col-md-2">
-                            <select name="basicaccount6" id="groupaccount6"  class="form-control" onchange = "getAccount(this.value,'groupaccount6')">
+                            <select name="basicaccount6" class="form-control" onchange = "getAccount(this.value,'groupaccount6')">
                                 <option value="" hidden="hidden">--Select Account--</option>
                                 <option value = "1">Assets</option>
                                 <option value = "2">Liabilities</option>
@@ -278,7 +278,7 @@
                         </div>
                         
                         <div class="col-md-3">
-                            <select name="groupaccount6"   class="form-control" onchange = "getParticular(this.value,'particular6')">
+                            <select name="groupaccount6" id="groupaccount6" class="form-control" onchange = "getParticular(this.value,'particular6')">
 
                             </select>    
                         </div>    
@@ -447,7 +447,7 @@
                 else if(particular == 'groupaccount3'){
                  $('#accountparticular3').html(data);
                 }
-                else if(particular == 'particular4'){
+                else if(particular == 'groupaccount4'){
                  $('#groupaccount4').html(data);
                 }
                 else if(particular == 'groupaccount5'){

@@ -79,7 +79,7 @@ function computetotal(){
     var reservation = document.getElementById('reservation').value;
     var total = parseFloat(totaldue) + parseFloat(totalprevious) + parseFloat(totalother) + parseFloat(penalty) - parseFloat(reservation);
     var usedeposit = 0;
-    var deposits = document.getElementById('remainingdeposit').value;
+    var deposits = parseFloat(document.getElementById('remainingdeposit').value);
     
     
     if(total > deposits){

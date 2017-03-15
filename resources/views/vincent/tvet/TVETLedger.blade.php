@@ -40,7 +40,6 @@
         <td>Total Payment</td>
         <td>Total Training Fee</td>
         <td>Sponsor's Contribution</td>
-        <td>Discount</td>
         <td>TVET Subsidy</td>
         <td>Trainees Contribution</td>
         <td>Remarks</td>
@@ -53,8 +52,7 @@
             <td>{{number_format($student->payment, 2, '.', ', ')}}</td>
             <td>{{number_format($student->sponsor+$student->subsidy+$student->discount+$student->amount,2, '.', ', ')}}</td>
             <td>{{number_format($student->sponsor,2, '.', ', ')}}</td>
-            <td>{{number_format($student->discount,2, '.', ', ')}}</td>
-            <td>{{number_format($student->subsidy,2, '.', ', ')}}</td>
+            <td>{{number_format($student->subsidy+$student->discount,2, '.', ', ')}}</td>
             <td>{{number_format($student->amount,2, '.', ', ')}}</td>
             <td>{{$student->remarks}}</td>
         </tr>
@@ -96,8 +94,7 @@
             <td class="total" style="display:none;">{{$student->sponsor+$student->subsidy+$student->amount+$student->discount}}</td>            
             <td>{{number_format($student->sponsor+$student->subsidy+$student->amount+$student->discount, 2, '.', ', ')}}</td>            
             <td><input  type="text" style="width: 100px" class="sponsors" name="sponsor{{$count}}" id="sponsor{{$count}}" value="{{$student->sponsor}}"></td>
-            <td><input type="text" style="width: 100px" class="discount" name="discount{{$count}}" id="discount{{$count}}" value="{{$student->discount}}"></td>
-            <td><input type="text" style="width: 100px" class="no-edit subsidy" name="subsidy{{$count}}" id="subsidy{{$count}}" value="{{number_format($student->subsidy, 2, '.', ', ')}}" ></td>
+            <td><input type="text" style="width: 100px" class="no-edit subsidy" name="subsidy{{$count}}" id="subsidy{{$count}}" value="{{number_format($student->subsidy+$student->discount, 2, '.', ', ')}}" ></td>
             <td><input type="text" style="width: 100px" class="amount" name="trainees{{$count}}" id="trainees{{$count}}" value="{{$student->amount}}"></td>
             <td><input type="text" style="width: 100px" class="desc" name="desc{{$count}}" id="desc{{$count}}" value="{{$student->remarks}}" ></td>
         </tr>
@@ -113,7 +110,6 @@
 $('.sponsors').keyup(function(){
     var trainees = $(this).closest("td").siblings().find('.amount').attr('id');
     var subsidy = $(this).closest("td").siblings().find('.subsidy').attr('id');
-    var discount = $(this).closest("td").siblings().find('.discount').attr('id');
     var total = $(this).closest("td").siblings('.total').html();
     
     if(trainees == ""){
@@ -159,7 +155,6 @@ $('.discount').keyup(function(){
 $('.amount').keyup(function(){
     var sponsor = $(this).closest("td").siblings().find('.sponsors').attr('id');
     var subsidy = $(this).closest("td").siblings().find('.subsidy').attr('id');
-    var discount = $(this).closest("td").siblings().find('.discount').attr('id');
     var total = $(this).closest("td").siblings('.total').html();
 
     if(sponsor == ""){
@@ -174,7 +169,7 @@ $('.amount').keyup(function(){
     
     
     
-    var newcontribution = parseInt(total)-(parseFloat($(this).val()) + parseFloat($('#'+discount).val()));
+    var newcontribution = parseInt(total)-(parseFloat($(this).val()));
     
     $('#'+subsidy).val(newcontribution.toFixed(2))
     $(this).val().toFixed(2);
