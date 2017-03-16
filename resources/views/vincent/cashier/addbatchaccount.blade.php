@@ -12,6 +12,42 @@
 <div class="col-md-6">
         {!! csrf_field() !!} 
         <div class="form-group">
+            <label>Account Type</label>
+            <select name="basicaccount1"   class="form-control" onchange = "getAccount(this.value,'groupaccount1')">
+                <option value="" hidden="hidden">--Select Account--</option>
+                <option value = "1">Assets</option>
+                <option value = "2">Liabilities</option>
+                <option value = "3">Equity</option>
+                <option value = "4">Income</option>
+                <option value = "5">Expense</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Account Group</label>
+            
+            <select id="accttype" name="accttype" class="form form-control" onchange="getParticular(this.value)">
+            </select>    
+        </div>
+
+        <div class="form-group">
+            <label>Particular</label>
+            <select class="form-control" name="particular" id="particular">
+                <option value="" hidden="hidden"></option>
+            </select>  
+        </div>
+
+        <div class="form-group">
+            <label>Department</label>
+        <select class="form-control" name="department">
+            <option value="None">None</option>
+            @foreach($acct_departments as $acct_dept)
+            <option value = "{{$acct_dept->sub_department}}">{{$acct_dept->sub_department}}</option>
+            @endforeach
+        </select>
+        </div>
+        <!--
+        <div class="form-group">
             <label>Account name</label>
             <select name="accttype" class="form form-control" onchange="findSubsidy(this.value)">
                 @foreach($acctcode as $account)
@@ -25,11 +61,18 @@
             <select name="subsidy" id="subsidy" class="form form-control" onchange="setlevel()" >
                 <option disable hidden>--Select--</option>
             </select>
-        </div>        
+        </div>      
+        -->
         <div class="form-group">
             <label>Amount</label>
             <input type="text" class="form form-control" id="amount" name="amount" onkeypress ="validate(event)" style="text-align: right">
         </div>    
+        
+        <div class="form-group">
+            <label>Particular:</label>
+            <input type="text" class="form form-control" id="remark" name="remark" style="text-align: right">
+        </div>
+        
          <div class="form-group">
             <button type="submit" class=" form form-control btn btn-primary" name="submit"  id="submit" >Add to account</button>
         </div> 
@@ -51,6 +94,31 @@
 </div>
 
 <script>
+    function getAccount(group){
+
+        $.ajax({
+        type: "GET", 
+        url: "/getaccount/" + group, 
+        success:function(data){
+            $('#accttype').html(data);
+          } 
+        }); 
+
+    }
+    
+    function getParticular(group){
+        $.ajax({
+        type: "GET", 
+        url: "/getparticulars/" + group, 
+        success:function(data){
+            $('#particular').html(data);
+            setlevel()
+          } 
+        }); 
+
+    }
+    
+    
     function findSubsidy(account){
         $.ajax({
             type:"GET",

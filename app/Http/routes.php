@@ -2,6 +2,10 @@
     Route::group(['middleware' => 'web'], function () {
     Route::auth();
     Route::get('/', 'MainController@index');
+    //Book Store Module
+    Route::get('books/{idno}', 'Miscellaneous\BookController@index');
+    Route::post('/books/update', 'Miscellaneous\BookController@updatebooks');
+    Route::get('/getsearchbookstore/{student}','Miscellaneous\AjaxController@getsearchbookstore');
     //Registrar module
     Route::get('studentlist','Registrar\StudentlistController@studentlist');
     Route::get('enrollmentstat','Registrar\EnrollmentstatController@enrollmentstat');
@@ -65,9 +69,9 @@
     Route::get('actualdeposit/{trasactiondate}', 'Cashier\CashierController@actualdeposit');
     Route::get('cutoff/{transactiondate}','Cashier\CashierController@cutoff');
     Route::get('printactualdeposit/{transactiondate}', 'Cashier\CashierController@printactualdeposit');
-    Route::get('addtoaccount/{studentid}','Cashier\CashierController@addtoaccount');
-    Route::post('addtoaccount','Cashier\CashierController@posttoaccount');
-    Route::get('addtoaccountdelete/{id}','Cashier\CashierController@addtoaccountdelete');
+    Route::get('addtoaccount/{studentid}','Cashier\AddtoAccountController@addtoaccount');
+    Route::post('addtoaccount','Cashier\AddtoAccountController@posttoaccount');
+    Route::get('addtoaccountdelete/{id}','Cashier\AddtoAccountController@addtoaccountdelete');
      
     //accounting module
     Route::get('accounting/{idno}','Accounting\AccountingController@view');
@@ -99,11 +103,12 @@
     //Route::get('/getsoasummary','Accounting\AccountingController@getsoasummary');
     Route::post('/getsoasummary','Accounting\AccountingController@setsoasummary');
     Route::get('/printsoasummary/{level}/{strand}/{section}/{trandate}/{amtover}','Accounting\AccountingController@printsoasummary');
-    Route::get('penalties','Accounting\AccountingController@penalties');
-    Route::post('postpenalties','Accounting\AccountingController@postpenalties');
-    Route::post('postviewpenalty','Accounting\AccountingController@postviewpenalty');
-    Route::get('subsidiary','Accounting\AccountingController@subsidiary');
-    Route::post('subsidiary','Accounting\AccountingController@postsubsidiary');
+    
+    Route::get('penalties','Accounting\PenaltyController@penalties');
+    Route::post('postpenalties','Accounting\PenaltyController@postpenalties');
+    Route::post('postviewpenalty','Accounting\PenaltyController@postviewpenalty');
+    Route::get('subsidiary','Accounting\PenaltyController@subsidiary');
+    Route::post('subsidiary','Accounting\PenaltyController@postsubsidiary');
     //update module
     //Elective submitted by registrar on STEM
     //Route::get('updateelective','Registrar\AssessmentController@updateelective');
@@ -148,8 +153,8 @@
     
     Route::get('TOR/{idno}','Vincent\TORController@index');
     //Cashier VINCENT
-    Route::get('/addbatchaccount','Vincent\CashierController@batchposting');
-    Route::post('/addtobatchaccount','Vincent\CashierController@savebatchposting');
+    Route::get('/addbatchaccount','Cashier\AddtoBatchController@batchposting');
+    Route::post('/addtobatchaccount','Cashier\AddtoBatchController@savebatchposting');
     Route::get('/searchor','Vincent\CashierController@searchor');
     Route::post('/searchor','Vincent\CashierController@findor');
     
@@ -171,6 +176,7 @@
     //TOOLS
     Route::get('/addoldstudent','DBFixer@addOldStudent');
     Route::get('/gensubj','DBFixer@gensubjects');
+    Route::get('/updateentrytype','DBFixer@updateentrytype');
     
     
     //ACADEMIC
@@ -180,7 +186,7 @@
     
     Route::get('trialbalance/{fromtran}/{totran}','Vincent\TrialBalanceController@viewtrilaBalance');
     Route::get('printtrialbalance/{fromtran}/{totran}','Vincent\TrialBalanceController@printtrilaBalance');
-    Route::get('generalledger/{accounts}/{title}/{totran?}','Accounting\GenLedgerController@index');
+    Route::get('generalledger/{basic}/{title}/{todate?}','Accounting\GenLedgerController@index');
     Route::get('balancesheet','Vincent\BalanceSheetController@index');
     
     
@@ -202,6 +208,7 @@
     Route::get('/getpaymenttype/{ptype}','AjaxController@getpaymenttype');
     Route::get('/getparticular/{group}/{particular}','AjaxController@getparticular');
     Route::get('/getaccount/{group}','Cashier\AjaxController@getaccount');
+    Route::get('/getaccount2/{group}','Cashier\AjaxController@getaccount2');
     Route::get('/getprevious/{idno}/{schoolyear}','AjaxController@getprevious');
     Route::get('/studentlist/{level}','AjaxController@studentlist');
     Route::get('/strand/{strand}/{level}','AjaxController@strand');
@@ -229,6 +236,7 @@
     //Ajax Route Sheryl
    
     //AJAX 
+    Route::get('/getparticulars/{group}','Cashier\AjaxController@getparticular');
     Route::get('/getsubjs','Vincent\AjaxController@getsubjs');
     Route::get('/showgrades', 'Vincent\AjaxController@showgrades');
     Route::get('/showgradestvet', 'Vincent\AjaxController@showgradestvet');

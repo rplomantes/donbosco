@@ -473,6 +473,7 @@ function assess(Request $request){
             $newledger->description = "Trainees Contribution";
             $newledger->receipt_details = "Trainees Contribution";
             $newledger->amount = $contribution;
+            $newledger->sub_department = $ledger->sub_department;
             //$newledger->plandiscount = $ledger->discount;
             $newledger->schoolyear = $schoolperiod->schoolyear;
             $newledger->duetype = "1";

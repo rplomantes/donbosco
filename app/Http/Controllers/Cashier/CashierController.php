@@ -282,6 +282,7 @@ class CashierController extends Controller
                     $creditstudentdeposit->refno = $refno;
                     $creditstudentdeposit->receiptno = $orno;
                     $creditstudentdeposit->categoryswitch = '9';
+                    $creditstudentdeposit->entry_type = '1';
                     $creditstudentdeposit->accountingcode = '210100';
                     $creditstudentdeposit->acctcode='Other Current Liabilities';
                     $creditstudentdeposit->description='Student Deposit';
@@ -392,6 +393,7 @@ class CashierController extends Controller
       $addcredit->refno = $this->getRefno();
       $addcredit->receiptno = $this->getOR();
       $addcredit->categoryswitch = "9";
+      $addcredit->entry_type = "1";
       $addcredit->accountingcode = '210400';
       $addcredit->acctcode = " Enrollment Reservation";
       $addcredit->description = "Enrollment Reservation";
@@ -454,21 +456,25 @@ class CashierController extends Controller
         $debitaccount->refno=$refno;
         switch($depositto){
             case 'China Bank':
+                $acctcode = 'CBC-CA 1049-00 00027-8';
                 $accountingcode = \App\ChartOfAccount::where('accountname','CBC-CA 1049-00 00027-8')->first();
                 break;
             case 'BPI 1':
+                $acctcode = 'BPI- CA 1885-1129-82';
                 $accountingcode = \App\ChartOfAccount::where('accountname','BPI- CA 1885-1129-82')->first();
                 break;
             case 'BPI 2':
+                $acctcode = 'BPICA 1881-0466-59';
                 $accountingcode = \App\ChartOfAccount::where('accountname','BPICA 1881-0466-59')->first();
                 break;
         }
         
-        if($paymenttype == 1 || $paymenttype == 4 || $paymenttype == 5){
+        if($paymenttype == 1 || $paymenttype == 4 || $paymenttype == 5 || $paymenttype == 7 ){
             $debitaccount->entry_type = 1;
         }else if($paymenttype == 3){
             $debitaccount->entry_type = 2;
         }
+        $debitaccount->acctcode = $acctcode;
         $debitaccount->receiptno = $orno;
         $debitaccount->paymenttype = $paymenttype;
         $debitaccount->bank_branch = $bank_branch;
@@ -483,7 +489,7 @@ class CashierController extends Controller
         $debitaccount->remarks = $remarks;
         $debitaccount->postedby=\Auth::user()->idno;
         $debitaccount->save();
-        
+            
     }
    
     function debit_reservation_discount($refno, $orno,$idno,$debittype,$amount,$discountname){
@@ -512,6 +518,7 @@ class CashierController extends Controller
         $debitaccount->acctcode=$acctcode;
         $debitaccount->description=$description;
         $debitaccount->refno=$refno;
+        $debitaccount->entry_type='1';
         $debitaccount->receiptno = $orno;
         $debitaccount->paymenttype = $debittype;
         $debitaccount->receivefrom = $student->lastname . ", " . $student->firstname . " " . $student->extensionname . " " .$student->middlename;
@@ -536,6 +543,7 @@ class CashierController extends Controller
        $newcredit->receipt_details = $ledger->receipt_details;
        $newcredit->duedate=$ledger->duedate;
        $newcredit->amount=$amount;
+       $newcredit->entry_type='1';
        $newcredit->sub_department=$ledger->sub_department;
        $newcredit->schoolyear=$ledger->schoolyear;
        $newcredit->period=$ledger->period;
@@ -622,10 +630,12 @@ class CashierController extends Controller
             $newreservation->status = '2';
             $newreservation->postedby = \Auth::user()->idno;
             $newreservation->save();
+            
             $creditreservation = new \App\Credit;
             $creditreservation->idno = $request->idno;
             $creditreservation->transactiondate = Carbon::now();
             $creditreservation->refno = $refno;
+            $creditreservation->entry_type='1';
             $creditreservation->receiptno = $or;
             $creditreservation->categoryswitch = '9';
             $creditreservation->accountingcode = '210400';
@@ -644,10 +654,12 @@ class CashierController extends Controller
             $creditreservation->refno = $refno;
             $creditreservation->receiptno = $or;
             $creditreservation->categoryswitch = '9';
+            $creditreservation->accountingcode=$this->getaccountingcode($request->groupaccount1);
             $creditreservation->acctcode=$request->groupaccount1;
             $creditreservation->description=$request->particular1;
             $creditreservation->receipt_details = $request->particular1;
             $creditreservation->amount = $request->amount1;
+            $creditreservation->entry_type='1';
             $creditreservation->postedby = \Auth::user()->idno;
             $creditreservation->sub_department = $request->acct_department1;
             $creditreservation->save(); 
@@ -661,6 +673,8 @@ class CashierController extends Controller
             $creditreservation->refno = $refno;
             $creditreservation->receiptno = $or;
             $creditreservation->categoryswitch = '9';
+            $creditreservation->entry_type='1';
+            $creditreservation->accountingcode=$this->getaccountingcode($request->groupaccount2);
             $creditreservation->acctcode=$request->groupaccount2;
             $creditreservation->description=$request->particular2;
             $creditreservation->receipt_details = $request->particular2;
@@ -678,6 +692,8 @@ class CashierController extends Controller
             $creditreservation->refno = $refno;
             $creditreservation->receiptno = $or;
             $creditreservation->categoryswitch = '9';
+            $creditreservation->entry_type='1';
+            $creditreservation->accountingcode=$this->getaccountingcode($request->groupaccount3);
             $creditreservation->acctcode=$request->groupaccount3;
             $creditreservation->description=$request->particular3;
             $creditreservation->receipt_details = $request->particular3;
@@ -694,6 +710,8 @@ class CashierController extends Controller
             $creditreservation->refno = $refno;
             $creditreservation->receiptno = $or;
             $creditreservation->categoryswitch = '9';
+            $creditreservation->entry_type='1';
+            $creditreservation->accountingcode=$this->getaccountingcode($request->groupaccount4);
             $creditreservation->acctcode=$request->groupaccount4;
             $creditreservation->description=$request->particular4;
             $creditreservation->receipt_details = $request->particular4;
@@ -711,6 +729,8 @@ class CashierController extends Controller
             $creditreservation->refno = $refno;
             $creditreservation->receiptno = $or;
             $creditreservation->categoryswitch = '9';
+            $creditreservation->entry_type='1';
+            $creditreservation->accountingcode=$this->getaccountingcode($request->groupaccount5);
             $creditreservation->acctcode=$request->groupaccount5;
             $creditreservation->description=$request->particular5;
             $creditreservation->receipt_details = $request->particular5;
@@ -728,6 +748,8 @@ class CashierController extends Controller
             $creditreservation->refno = $refno;
             $creditreservation->receiptno = $or;
             $creditreservation->categoryswitch = '9';
+            $creditreservation->entry_type='1';
+            $creditreservation->accountingcode=$this->getaccountingcode($request->groupaccount6);
             $creditreservation->acctcode=$request->groupaccount6;
             $creditreservation->description=$request->particular6;
             $creditreservation->receipt_details = $request->particular6;
@@ -744,6 +766,8 @@ class CashierController extends Controller
             $creditreservation->refno = $refno;
             $creditreservation->receiptno = $or;
             $creditreservation->categoryswitch = '9';
+            $creditreservation->entry_type='1';
+            $creditreservation->accountingcode=$this->getaccountingcode($request->groupaccount7);
             $creditreservation->acctcode=$request->groupaccount7;
             $creditreservation->description=$request->particular7;
             $creditreservation->receipt_details = $request->particular7;
@@ -759,14 +783,18 @@ class CashierController extends Controller
          if($request->iscbc =="cbc"){
                     $iscbc = 1;
                 }
+                
         switch($request->depositto){
             case 'China Bank':
+                $acctcode = 'CBC-CA 1049-00 00027-8';
                 $accountingcode = \App\ChartOfAccount::where('accountname','CBC-CA 1049-00 00027-8')->first();
                 break;
             case 'BPI 1':
+                $acctcode = 'BPI- CA 1885-1129-82';
                 $accountingcode = \App\ChartOfAccount::where('accountname','BPI- CA 1885-1129-82')->first();
                 break;
             case 'BPI 2':
+                $acctcode = 'BPICA 1881-0466-59';
                 $accountingcode = \App\ChartOfAccount::where('accountname','BPICA 1881-0466-59')->first();
                 break;
         }
@@ -775,6 +803,7 @@ class CashierController extends Controller
         $debit->idno = $request->idno;
         $debit->transactiondate = Carbon::now();
         $debit->refno = $refno;
+        $debit->acctcode = $acctcode;
         $debit->receiptno = $or;
         $debit->paymenttype= "1";
         $debit->entry_type="1";
@@ -1432,75 +1461,6 @@ class CashierController extends Controller
         return $this->actualdeposit($transactiondate);
         //return redirect(url('actualdeposit',$transactiondate));
         
-    }
-    function addtoaccount($studentid){
-        $accounts = \App\CtrOtherPayment::orderBy('particular')->get();
-        $studentdetails = \App\User::where('idno',$studentid)->first();
-        $statuses = \App\Status::where('idno',$studentid)->first();
-        $deletes = DB::Select("Select * from deleted_accounts where idno='$studentid' AND categoryswitch = '7'");
-        $ledgers = DB::Select("Select * from ledgers where idno='$studentid' AND categoryswitch = '7' and amount > payment ");
-        return view('cashier.addtoaccount',compact('studentid','accounts','studentdetails','statuses','ledgers','deletes'));
-        
-    }
-    
-    function posttoaccount(Request $request){
-        $idno = $request->studentid;
-        $status = \App\Status::where('idno',$request->idno)->first();
-        $newledger = new \App\Ledger;
-        $acctcode = \App\CtrOtherPayment::where('particular',$request->accttype)->first();
-        $myacct=$acctcode->accounttype;
-        if(count($status)>0){
-        $newledger->level=$status->level;
-        $newledger->course=$status->course;
-        $newledger->strand=$status->strand;
-        $newledger->department = $status->department;
-        $newledger->schoolyear=$status->schoolyear;
-        $newledger->period=$status->period;
-        }
-        $newledger->idno = $request->idno;
-        $newledger->categoryswitch = '7';
-        $newledger->transactiondate = Carbon::now();       
-        $newledger->acctcode=$myacct;
-        $newledger->description=$request->accttype;
-        $newledger->postedby=\Auth::user()->idno;
-        $newledger->receipt_details=$request->accttype;
-        $newledger->duetype="0";
-        $newledger->duedate=Carbon::now();
-        $newledger->amount=$request->amount;
-        $newledger->remark=$request->remark;
-        $newledger->save();
-        return $this->addtoaccount($request->idno);
-        //return redirect(url('addtoaccount',$request->idno));
-    }
-    function addtoaccountdelete($id){
-        $account = \App\Ledger::where('id',$id)->first();
-        if($account->payment+$account->debitmemo==0){
-            
-            $deleteAccount = new \App\DeletedAccount;
-            $deleteAccount->level=$account->level;
-            $deleteAccount->course=$account->course;
-            $deleteAccount->strand=$account->strand;
-            $deleteAccount->department = $account->department;
-            $deleteAccount->schoolyear=$account->schoolyear;
-            $deleteAccount->period=$account->period;
-            $deleteAccount->idno = $account->idno;
-            $deleteAccount->categoryswitch = $account->categoryswitch;
-            $deleteAccount->transactiondate = $account->transactiondate;
-            $deleteAccount->acctcode=$account->acctcode;
-            $deleteAccount->description=$account->description;
-            $deleteAccount->postedby=$account->postedby;
-            $deleteAccount->receipt_details=$account->receipt_details;
-            $deleteAccount->duetype=$account->duetype;
-            $deleteAccount->duedate=$account->duedate;
-            $deleteAccount->amount=$account->amount;
-            $deleteAccount->remark=$account->remark;
-            $deleteAccount->deleted=Input::get('remark');
-            $deleteAccount->save();
-            
-            $account->delete();  
-        }
-        return $this->addtoaccount($account->idno);
-        //return redirect(url('addtoaccount',$account->idno));
     }
     
     public function getaccountname($acctcode){

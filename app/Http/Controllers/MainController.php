@@ -60,7 +60,13 @@ class MainController extends Controller
                case env('USER_TVET_ASST');
                      
                         return redirect('/sectiontvet');
-                  break;                
+                  break;
+              
+               case env('USER_BOOK_STORE');
+                    $students = DB::Select("Select u.idno,lastname,firstname,extensionname,middlename from statuses s join users u on s.idno = u.idno where s.status IN (2,3)");
+
+                    return view("book.index",compact('students'));
+                   break;
             }
             
         } else {    

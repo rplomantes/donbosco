@@ -100,6 +100,7 @@ th {
        
        $totaldue = $schedulebal + $otherbalance;
     ?>
+    
     <div style="max-height: 6.3in;height: 6.3in;position:relative;padding-top:25px;padding-bottom:25px;page-break-after:always;">
     <table border = '0' cellpacing="0" cellpadding = "0" width="100%" align="center">
         <tr><td rowspan="3" width="50" style="padding-right: 0px;">

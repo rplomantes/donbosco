@@ -304,7 +304,7 @@
                     
                     <div class="form-group">
                         <div class="col-md-2">
-                            <select name="basicaccount7" id="groupaccount7" class="form-control" onchange = "getAccount(this.value,'groupaccount7')">
+                            <select name="basicaccount7" class="form-control" onchange = "getAccount(this.value,'groupaccount7')">
                                 <option value="" hidden="hidden">--Select Account--</option>
                                 <option value = "1">Assets</option>
                                 <option value = "2">Liabilities</option>
@@ -315,7 +315,7 @@
                         </div>
                         
                         <div class="col-md-3">
-                            <select name="groupaccount7"   class="form-control" onchange = "getParticular(this.value,'particular7')">
+                            <select name="groupaccount7" id="groupaccount7" class="form-control" onchange = "getParticular(this.value,'particular7')">
                             </select>    
                         </div>    
                     
@@ -435,7 +435,7 @@
            // alert(particular);
             $.ajax({
             type: "GET", 
-            url: "/getaccount/" + group, 
+            url: "/getaccount2/" + group, 
             success:function(data){
                 if(particular == "groupaccount1"){
                 $('#groupaccount1').html(data);
@@ -445,7 +445,7 @@
                  $('#groupaccount2').html(data);
                 }
                 else if(particular == 'groupaccount3'){
-                 $('#accountparticular3').html(data);
+                 $('#groupaccount3').html(data);
                 }
                 else if(particular == 'groupaccount4'){
                  $('#groupaccount4').html(data);

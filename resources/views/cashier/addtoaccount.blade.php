@@ -22,30 +22,59 @@
         <table class="table table-striped">
             <tr><td>Student No</td><td>{{$studentid}}</td></tr>
              <tr><td>Name</td><td>{{$studentdetails->lastname}}, {{$studentdetails->firstname}}</td></tr>
-        </table>    
-    <form method="POST" action="{{url('addtoaccount')}}">
-        {!! csrf_field() !!} 
-        <div class="form-group">
-            <label>Account name</label>
-            <input type="hidden" name='idno' value="{{$studentid}}">
-            <select name="accttype" class="form form-control" onkeypress="document.getElementById('amount').focus()">
-                @foreach($accounts as $account)
-                <option = "{{$account->particular}}">{{$account->particular}}</option>
+        </table> 
+        
+        <form method="POST" action="{{url('addtoaccount')}}">
+            {!! csrf_field() !!} 
+            <div class="form-group">
+                <label>Account Type</label>
+                <select name="basicaccount1"   class="form-control" onchange = "getAccount(this.value,'groupaccount1')">
+                    <option value="" hidden="hidden">--Select Account--</option>
+                    <option value = "1">Assets</option>
+                    <option value = "2">Liabilities</option>
+                    <option value = "3">Equity</option>
+                    <option value = "4">Income</option>
+                    <option value = "5">Expense</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Account Group</label>
+                <input type="hidden" name='idno' value="{{$studentid}}">
+                <select id="accttype" name="accttype" class="form form-control" onchange="getParticular(this.value)">
+                </select>    
+            </div>
+            
+            <div class="form-group">
+                <label>Particular</label>
+                <select class="form-control" name="particular" id="particular">
+                    <option value="" hidden="hidden"></option>
+                </select>  
+            </div>
+            
+            <div class="form-group">
+                <label>Department</label>
+            <select class="form-control" name="department">
+                <option value="None">None</option>
+                @foreach($acct_departments as $acct_dept)
+                <option value = "{{$acct_dept->sub_department}}">{{$acct_dept->sub_department}}</option>
                 @endforeach
-            </select>    
-        </div>
-        <div class="form-group">
-            <label>Amount</label>
-            <input type="text" class="form form-control" id="amount" name="amount" onkeypress ="validate(event)" style="text-align: right">
-        </div>
-        <div class="form-group">
-            <label>Particular:</label>
-            <input type="text" class="form form-control" id="remark" name="remark" style="text-align: right">
-        </div>
-         <div class="form-group">
-             <input type="submit" class="form form-control btn btn-primary" name="submit"  id="submit" value="Add to account">
-        </div> 
-    </form>    
+            </select>
+            </div>
+
+            
+            <div class="form-group">
+                <label>Amount</label>
+                <input type="text" class="form form-control" id="amount" name="amount" onkeypress ="validate(event)" style="text-align: right">
+            </div>
+            <div class="form-group">
+                <label>Particular:</label>
+                <input type="text" class="form form-control" id="remark" name="remark" style="text-align: right">
+            </div>
+             <div class="form-group">
+                 <input type="submit" class="form form-control btn btn-primary" name="submit"  id="submit" value="Add to account">
+            </div> 
+        </form>    
         <div class="form-group">
             <a href="{{url('cashier',$studentid)}}" class="btn btn-primary">Back To ledger</a>
         </div>    
@@ -84,9 +113,33 @@
 @stop
 
 <script>
-function validate(evt) {
-  var theEvent = evt || window.event;
-  var key = theEvent.keyCode || theEvent.which;
+    function getAccount(group){
+
+
+        $.ajax({
+        type: "GET", 
+        url: "/getaccount/" + group, 
+        success:function(data){
+            $('#accttype').html(data);
+          } 
+        }); 
+
+    }
+    
+    function getParticular(group){
+        $.ajax({
+        type: "GET", 
+        url: "/getparticulars/" + group, 
+        success:function(data){
+            $('#particular').html(data);
+          } 
+        }); 
+
+    }
+    
+    function validate(evt) {
+        var theEvent = evt || window.event;
+        var key = theEvent.keyCode || theEvent.which;
         if ((key < 48 || key > 57) && !(key == 8 || key == 9 || key == 13 || key == 37 || key == 39 || key == 46) ){ 
             theEvent.returnValue = false;
                 if (theEvent.preventDefault) theEvent.preventDefault();
