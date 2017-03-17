@@ -514,4 +514,13 @@ class UpdateController extends Controller
                 //end of due type 0
             }
         }
+        function updateentrytype(){
+            $string="hello";
+        $totaldebit = DB::Select("select distinct refno from dedits where paymenttype = '1'");
+        foreach($totaldebit as $tb){
+            \App\Dedit::where('refno',$tb->refno)->update(['entry_type'=>'1']);
+        }
+        
+            return "done";
+        }
 }

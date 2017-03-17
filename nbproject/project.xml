@@ -10,6 +10,7 @@
             <word>elseif</word>
             <word>endfoeach</word>
             <word>endforeach</word>
+            <word>endif</word>
             <word>foreach</word>
         </spellchecker-wordlist>
     </configuration>

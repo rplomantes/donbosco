@@ -98,17 +98,26 @@
     Route::get('printtvetallsoa/{period}/{course}/{section}/{trandate}/{display}','Accounting\TvetSoaController@printtvetallsoa');
     Route::post('studentsoa/{idno}','Accounting\AccountingController@studentsoa');
     Route::get('printsoa/{idno}/{tradate}','Accounting\AccountingController@printsoa');
-     Route::get('/printallsoa/{level}/{strand}/{section}/{trandate}/{amtover}','Accounting\AccountingController@printallsoa');
+    Route::get('/printallsoa/{level}/{strand}/{section}/{trandate}/{amtover}','Accounting\AccountingController@printallsoa');
     Route::get('/getsoasummary/{level}/{strand}/{section}/{trandate}/{plan}/{amtover}','Accounting\AccountingController@getsoasummary');
     //Route::get('/getsoasummary','Accounting\AccountingController@getsoasummary');
     Route::post('/getsoasummary','Accounting\AccountingController@setsoasummary');
     Route::get('/printsoasummary/{level}/{strand}/{section}/{trandate}/{amtover}','Accounting\AccountingController@printsoasummary');
-    
-    Route::get('penalties','Accounting\PenaltyController@penalties');
-    Route::post('postpenalties','Accounting\PenaltyController@postpenalties');
-    Route::post('postviewpenalty','Accounting\PenaltyController@postviewpenalty');
-    Route::get('subsidiary','Accounting\PenaltyController@subsidiary');
-    Route::post('subsidiary','Accounting\PenaltyController@postsubsidiary');
+    Route::get('penalties','Accounting\AccountingController@penalties');
+    Route::post('postpenalties','Accounting\AccountingController@postpenalties');
+    Route::post('postviewpenalty','Accounting\AccountingController@postviewpenalty');
+    Route::get('subsidiary','Accounting\AccountingController@subsidiary');
+    Route::post('subsidiary','Accounting\AccountingController@postsubsidiary');
+    Route::get('showjournallist','Accounting\JournalController@ShowJournalList');
+    Route::get('printjournalvoucher/{referenceid}','Accounting\JournalController@printjournalvoucher');
+    Route::get('dailyjournallist/{trandate}','Accounting\JournalController@dailyjournallist');
+    Route::get('printpdfjournalvoucher/{refno}','Accounting\JournalController@printpdfjournalvoucher');
+    Route::get('restorecanceljournal/{kind}/{refno}','Accounting\JournalController@restorecanceljournal');
+    Route::get('adddisbursement','Accounting\DisbursementController@adddisbursement');
+    Route::get('printdisbursement/{refno}','Accounting\DisbursementController@printdisbursement');
+    Route::get('restorecanceldisbursement/{kind}/{refno}','Accounting\DisbursementController@restorecanceldisbursement');
+    Route::get('printcheckdetails/{refno}','Accounting\DisbursementController@printcheckdetails');
+    Route::get('printcheckvoucher/{refno}','Accounting\DisbursementController@printcheckvoucher');
     //update module
     //Elective submitted by registrar on STEM
     //Route::get('updateelective','Registrar\AssessmentController@updateelective');
@@ -121,6 +130,7 @@
     //Route::get('updatehsattendance','Update\UpdateController@updatehsattendance');
     //Route::get('updatecashdiscount','Update\UpdateController@updatecashdiscount');
     //Route::get('updateacctcode','Update\UpdateController@updateacctcode');
+    Route::get('/updateentrytype','Update\UpdateController@updateentrytype');
     Route::get('makepaymentschedule',function(){
         return view("update.makepaymentschedule");
     });
@@ -163,7 +173,7 @@
     Route::get('/studentsledger/{batch}/{cours}/{section}','Vincent\TvetController@getsectionstudent');
     Route::get('/studentsledger/{batch}/{cours}/{section}/edit','Vincent\TvetController@edittvetcontribution');
     Route::post('/studentsledger/{batch}/{cours}/{section}/edit','Vincent\TvetController@savetvetChanges');
-    Route::get('/addentry','Vincent\JournalController@addEntry');
+    Route::get('/addentry','Accounting\JournalController@addEntry');
     //Route::post('/addentry','Vincent\JournalController@saveEntry');
     Route::get('/listofentry','Vincent\JournalController@listofentry');
     Route::get('/accountingview/{refno}','Vincent\JournalController@accountingview');
@@ -194,7 +204,7 @@
 });
 
 //Ajax route
-   Route::get('/myDeposit','AjaxController@myDeposit');
+    Route::get('/myDeposit','AjaxController@myDeposit');
     Route::get('/getid/{varid}','AjaxController@getid');
     Route::get('/getlevel/{vardepartment}','AjaxController@getlevel');
     Route::get('/gettrack/{vardepartment}','AjaxController@gettrack');
@@ -230,7 +240,8 @@
     Route::get('/removeacctgall','AjaxController@removeacctgall');
     Route::get('/getpartialentry/{refno}','AjaxController@getpartialentry');
     Route::get('/postacctgremarks','AjaxController@postacctgremarks');
-    
+    Route::get('/getjournallist','AjaxController@getjournallist');
+    Route::get('/processdisbursement','AjaxController@processdisbursement');
     // Route::get('/getsoasummary/{level}/{strand}/{section}/{trandate}','AjaxController@getsoasummary');
    
     //Ajax Route Sheryl

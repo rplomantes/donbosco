@@ -971,11 +971,14 @@ class AjaxController extends Controller
                     $subsidiary = Input::get("subsidiary");
                     $department = Input::get("department");
                     $entrytype = Input::get("entrytype");
+                    $entry_type=Input::get("entry_type");
                     $amount = Input::get("amount");
+                    $referenceid =Input::get("referenceid");
                     //$trandate = \Carbon\Carbon::now();
                     
                     $newpartial = new \App\Accounting;
                     $newpartial->refno = $refno;
+                    $newpartial->referenceid=$referenceid;
                     $newpartial->accountcode = $acctcode;
                     $newpartial->accountname = $accountname;
                     $newpartial->subsidiary = $subsidiary;
@@ -990,7 +993,7 @@ class AjaxController extends Controller
                     $newpartial->transactiondate = \Carbon\Carbon::now();
                     $newpartial->fiscalyear = $fiscalyear;
                     $newpartial->posted_by =Input::get('idno');
-                    $newpartial->type = '3';
+                    $newpartial->type = $entry_type;
                     $newpartial->save();  
                     return $this->getpartialentry($refno);
                 }
@@ -1004,6 +1007,7 @@ class AjaxController extends Controller
             }
             
             function getpartialentry($refno){
+                    
                     $data="";
                     $totaldebit=0.00;
                     $totalcredit=0.00;
@@ -1014,16 +1018,18 @@ class AjaxController extends Controller
                                 . "<td>" . $display->accountname . "</td>"
                                 . "<td>" . $display->subsidiary . "</td>"
                                 . "<td>" . $display->sub_department . "</td>"
-                                . "<td align=\"right\">" . $display->debit . "</td>"
-                                . "<td align=\"right\">" . $display->credit. "</td>"
-                                . "<td> <button class=\"btn btn-default form-control\" onclick=\"removeacctgpost(" . $display->id . ")\">Remove</button></td> </tr>";
+                                . "<td align=\"right\">" . $display->debit . "</td>";
+                        //if($display->type=="3"){
+                         $data= $data . "<td align=\"right\">" . $display->credit. "</td>";
+                        //}
+                        $data = $data. "<td> <button class=\"btn btn-default form-control\" onclick=\"removeacctgpost(" . $display->id . ")\">Remove</button></td> </tr>";
                     $totalcredit = $totalcredit + $display->credit;
                     $totaldebit = $totaldebit + $display->debit;    
                     }
                     if($totalcredit == $totaldebit){
-                    $data = $data. "<td colspan=\"4\">Total<input type=\"hidden\" id=\"balance\" value=\"yes\"></td><td align=\"right\" style=\"font-weight:bold\">".number_format($totaldebit,2)."</td><td align=\"right\" style=\"font-weight:bold\">". number_format($totalcredit,2)."<input type=\"hidden\" value=\"$totalcredit\" name=\"totalcredit\" id=\"totalcredit\"></td><td><button id=\"removeall\"class=\"btn btn-danger form-control removeall\" onclick=\"removeall()\">Remove All</button></td></tr>";
-                    }else{
-                    $data = $data. "<td colspan=\"4\">Total<input type=\"hidden\" id=\"balance\" value=\"no\"></td><td align=\"right\" style=\"font-weight:bold;color:red\">".number_format($totaldebit,2)."</td><td align=\"right\" style=\"font-weight:bold;color:red\">". number_format($totalcredit,2)."</td><td><button id=\"removeall\"class=\"btn btn-danger form-control removeall\" onclick=\"removeall()\">Remove All</button></td></tr>";    
+                    $data = $data. "<td colspan=\"4\">Total<input type=\"hidden\" id=\"balance\" value=\"yes\"><input type=\"hidden\" id=\"crdrdiff\" value=\"" . ($totaldebit-$totalcredit) . "\"></td><td align=\"right\" style=\"font-weight:bold\">".number_format($totaldebit,2)."</td><td align=\"right\" style=\"font-weight:bold\">". number_format($totalcredit,2)."<input type=\"hidden\" value=\"$totalcredit\" name=\"totalcredit\" id=\"totalcredit\"></td><td><button id=\"removeall\"class=\"btn btn-danger form-control removeall\" onclick=\"removeall()\">Remove All</button></td></tr>";
+                    }else{                     
+                    $data = $data. "<td colspan=\"4\">Total<input type=\"hidden\" id=\"balance\" value=\"no\"><input type=\"hidden\" id=\"crdrdiff\" value=\"" . ($totaldebit-$totalcredit) . "\"></td><td align=\"right\" style=\"font-weight:bold;color:red\">".number_format($totaldebit,2)."</td><td align=\"right\" style=\"font-weight:bold;color:red\">". number_format($totalcredit,2)."</td><td><button id=\"removeall\"class=\"btn btn-danger form-control removeall\" onclick=\"removeall()\">Remove All</button></td></tr>";    
                     }}
                     return $data;    
             }
@@ -1033,16 +1039,44 @@ class AjaxController extends Controller
                     $particular = Input::get('particular');
                     $refno = Input::get('refno');
                     $idno = Input::get('idno');
+                    $referenceid = Input::get("referenceid");
                     $amount = Input::get('totalcredit');
-                    \App\Accounting::where('refno',$refno)->update(['isfinal' => '1']);
+                    $entry_type=Input::get('entry_type');
+                    \App\Accounting::where('refno',$refno)->update(['isfinal' => '1','transactiondate'=>\Carbon\Carbon::now()]);
+                    $updates = \App\Accounting::where('refno',$refno)->get();
+                    foreach ($updates as $update){
+                        if($update->cr_db_indic == '1'){
+                            $add = new \App\Credit;
+                            $add->amount = $update->credit;
+                        }else{
+                            $add = new \App\Dedit;
+                            $add->amount=$update->debit;
+                        }
+                         $add->transactiondate = \Carbon\Carbon::now();
+                         $add->refno = $update->refno;
+                         $add->receiptno = $update->referenceid;
+                         $add->accountingcode = $update->accountcode;
+                         $add->acctcode = $update->accountname;
+                         $add->description = $update->subsidiary;
+                         $add->entry_type = $entry_type;
+                         $add->sub_department = $update->sub_department;
+                         $add->fiscalyear = $update->fiscalyear;
+                         $add->postedby = $idno;
+                         $add->save();
+                         
+                    }
                     //$isfinal = DB::Select("update accountings set isfinal = '1' where refno = '$refno'");
                     $newparticular = new \App\AccountingRemark;
                     $newparticular->trandate = \Carbon\Carbon::now();
                     $newparticular->refno = $refno;
+                    $newparticular->referenceid = $referenceid;
                     $newparticular->remarks = $particular;
                     $newparticular->amount = $amount;
                     $newparticular->posted_by = $idno;
-                    $newparticular->save(); 
+                    $newparticular->save();
+                    $incrementreceipt = \App\User::where('idno',$idno)->first();
+                    $incrementreceipt->receiptno = $incrementreceipt->receiptno + 1;
+                    $incrementreceipt->update();
                     return "done";
                 }
             }
@@ -1056,4 +1090,85 @@ class AjaxController extends Controller
                     return "true";
                 }
             }
+            
+            function getjournallist(){
+               if(Request::ajax()){
+               $voucherno = Input::get("search");
+               $voucher = \App\AccountingRemark::where("referenceid",$voucherno)->first();
+                   if(count($voucher)>0){
+                       return view('accounting.searchjournallist',compact('voucher'));
+                   } else {
+                       return "<h1>Record Not Found!!! Please Enter Voucher Number Again!!";
+                   }
+               } 
             }
+            
+            function processdisbursement(){
+                if(Request::ajax()){
+                    $refno = Input::get("refno");
+                    $voucherno = Input::get("voucherno");
+                    $payee = Input::get("payee");
+                    $checkno = Input::get("checkno");
+                    $remarks=Input::get("remarks");
+                    $bankaccount=Input::get('bankaccount');
+                    $idno=Input::get('idno');
+                    $entry_type=Input::get('entry_type');
+                    $creditamount = Input::get('creditamount');
+                    $accountcode = Input::get('accountcode');
+                    
+                    $addaccounting = new \App\Accounting;
+                    $addaccounting->transactiondate = \Carbon\Carbon::now();
+                    $addaccounting->refno = $refno;
+                    $addaccounting->referenceid = $voucherno;
+                    $addaccounting->accountcode = $accountcode;
+                    $addaccounting->accountname = $this->getaccountname($accountcode);
+                    $addaccounting->credit=$creditamount;
+                    $addaccounting->fiscalyear = \App\CtrFiscalyear::first()->fiscalyear;
+                    $addaccounting->posted_by=$idno;
+                    $addaccounting->cr_db_indic = "1";
+                    $addaccounting->isfinal = "1";
+                    $addaccounting->type = "4";
+                    $addaccounting->save();
+                    
+                    \App\Accounting::where('refno',$refno)->update(['isfinal' => '1','transactiondate'=>\Carbon\Carbon::now()]);
+                    $updates = \App\Accounting::where('refno',$refno)->get();
+                    foreach ($updates as $update){
+                        if($update->cr_db_indic == '1'){
+                            $add = new \App\Credit;
+                            $add->amount = $update->credit;
+                        }else{
+                            $add = new \App\Dedit;
+                            $add->amount=$update->debit;
+                        }
+                         $add->transactiondate = \Carbon\Carbon::now();
+                         $add->refno = $update->refno;
+                         $add->receiptno = $update->referenceid;
+                         $add->accountingcode = $update->accountcode;
+                         $add->acctcode = $update->accountname;
+                         $add->description = $update->subsidiary;
+                         $add->entry_type = $entry_type;
+                         $add->sub_department = $update->sub_department;
+                         $add->fiscalyear = $update->fiscalyear;
+                         $add->postedby = $idno;
+                         $add->save();
+                         
+                    }
+                    
+                    $newdisbursement = new \App\Disbursement;
+                    $newdisbursement->transactiondate = \Carbon\Carbon::now();
+                    $newdisbursement->refno = $refno;
+                    $newdisbursement->checkno = $checkno;
+                    $newdisbursement->voucherno = $voucherno;
+                    $newdisbursement->bank = $this->getaccountname($bankaccount);
+                    $newdisbursement->amount = $creditamount;
+                    $newdisbursement->remarks = $remarks;
+                    $newdisbursement->payee=$payee;
+                    $newdisbursement->postedby=$idno;
+                    $newdisbursement->save();
+                  return "true";  
+                }
+            }
+            function getaccountname($acctcode){
+                return \App\ChartOfAccount::where('acctcode',$acctcode)->first()->accountname;
+            }
+ }

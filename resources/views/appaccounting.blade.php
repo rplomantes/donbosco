@@ -48,11 +48,10 @@
          </div>
             <div class="col-md-11" style="padding-top: 20px"><span style="font-size: 14pt; font-weight: bold;">Don Bosco Technical School of Makati</span><br>Chino Roces Ave., Makati City<br>Tel No : 892-01-01
          </div>   
-</div>
     </div>
- 
-       <nav class="navbar navbar-default">
-		<div class="container-fluid">
+</div>
+<nav class="navbar navbar-default">
+   
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
 					<span class="sr-only">Toggle Navigation</span>
@@ -74,9 +73,13 @@
                                         <span class="caret"></span></a>
                                          <ul class="dropdown-menu" role="menu">
                                              <li>
-                                            <a href="#"><i class="fa fa-btn"></i>Disbursement</a>
+                                            <a href="{{url('adddisbursement')}}"><i class="fa fa-btn"></i>Disbursement</a>
+                                            <a href="#"><i class="fa fa-btn"></i>Disbursement Daily Summary</a>
                                             <a href="{{url('addentry')}}"><i class="fa fa-btn"></i>Journal Entry</a>
+                                            <a href="{{url('dailyjournallist',date('Y-m-d',strtotime(\Carbon\Carbon::now())))}}"><i class="fa fa-btn"></i>Journal Entry Daily Summary</a>
+                                            <a href="{{url('showjournallist')}}"><i class="fa fa-btn"></i>Search Journal Entries</a>
                                             <a href="{{url('/')}}"><i class="fa fa-btn"></i>Debit Memo</a>
+                                            <a href="{{url('dmcmreport',date('Y-m-d'))}}"><i class="fa fa-btn fa-sign-out"></i>Debit Memo Daily Summary</a>
                                             <hr/>
                                             <a href="#"><i class="fa fa-btn"></i>Chart of Accounts</a>
                                             </li>
@@ -90,10 +93,13 @@
                                         <ul class="dropdown-menu" role="menu">
                                             <li>
                                                 <a href ="#"><i class="fa fa-btn"></i>Cash Disbursement</a>
+                                                <a href="#"><i class="fa fa-btn"></i>Cash Disbursement Debit/Credit Summary </a>
                                                 <a href ="{{url('cashreceipts', date('Y-m-d'))}}"><i class="fa fa-btn"></i>Cash Receipts</a>
+                                                <a href="{{url('maincollection',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Cash Receipt Debit/Credit Summary</a>
                                                 <a href ="#"><i class="fa fa-btn"></i>General Journal</a>
+                                                 <a href="#"><i class="fa fa-btn"></i>General Journal Debit/Credit Summary </a>
                                                 <a href ="#"><i class="fa fa-btn"></i>Debit Memo Journal</a>
-                                                
+                                                <a href="#"><i class="fa fa-btn"></i>Debit Memo  Debit/Credit Summary </a>
                                             </li>  
                                         </ul></li>
                                         
@@ -102,9 +108,9 @@
                                         <span class="caret"></span></a>
                                         <ul class="dropdown-menu" role="menu">
                                             <li>
-                   
-                                                <a href="{{url('trialbalance',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Trial Balance</a>
                                                 <a href ="#"><i class="fa fa-btn"></i>General Ledger</a>
+                                                <a href ="#"><i class="fa fa-btn"></i>Trial Balance</a>
+                                                
                                             </li>  
                                         </ul></li>
                                         
@@ -127,11 +133,17 @@
                                         <span class="caret"></span></a>
                                
                                         <ul class="dropdown-menu" role="menu">
-                                       <li><a href="{{url('dmcmreport',date('Y-m-d'))}}"><i class="fa fa-btn fa-sign-out"></i>DM/CM Report</a></li>
+                                       
                                        @if(Auth::user()->accesslevel == env('USER_ACCOUNTING_HEAD'))
-                                       <li><a href="{{url('summarymain')}}"><i class="fa fa-btn"></i>Account Summary</a>
+                                       
+                                       <li>
+                                           
+                                           
+                                          
+                                           
+                                           <a href="{{url('summarymain')}}"><i class="fa fa-btn"></i>Account Summary</a>
                                            <a href="{{url('studentledger','all')}}"><i class="fa fa-btn"></i>Student Ledger Summary</a>
-                                           <a href="{{url('maincollection',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Cash Debit/Credit Accounting Entry</a>
+                                           
                                            <a href="{{url('cashcollection',date('Y-m-d'))}}"><i class="fa fa-btn"></i>Actual Deposit</a>
                                            <a href="{{url('overallcollection',date('Y-m-d'))}}"><i class="fa fa-btn"></i>Collection Report</a>
                                            
@@ -182,8 +194,8 @@
                     @endif
 				</ul>
 			</div>
-		</div>
-	</nav>
+                
+  </nav>
 
     @yield('content')
 

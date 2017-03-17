@@ -1,15 +1,28 @@
-@extends('appaccounting')
-@section('content')
 <?php
 $coa = \App\ChartOfAccount::pluck('accountname')->toArray();
-$initialentry = \App\Accounting::where("posted_by",\Auth::user()->idno)->where('isfinal','0')->first();
+$initialentry = \App\Accounting::where("posted_by",\Auth::user()->idno)->where('isfinal','0')->where('type','4')->first();
 if(count($initialentry)>0){
 $uniqid = $initialentry->refno;    
+$voucherno = $initialentry->referenceid;
+
 }else{
+$vouchzero="";    
+$voucherid =  \App\User::where('idno',\Auth::user()->idno)->first();
+$voucherno = $voucherid->disbursementno;
+$voucheruserid = $voucherid->reference_number;
+for($i=strlen($voucherno);$i<=5;$i++ ){
+   $vouchzero = $vouchzero."0"; 
+}
+$voucherno= $voucheruserid.$vouchzero.$voucherno;
+//$voucherid->receiptno = $voucherid->receiptno+1;
+//$voucherid->update();
 $uniqid = uniqid();
 }
 $departments = DB::Select("Select * from ctr_acct_dept");
+$bankaccounts = \App\ChartOfAccount::where('acctcode','>','110010')->where('acctcode','<=','110029')->get();
 ?>
+@extends('appaccounting')
+@section('content')
 <style>
     .form-control{
         border-radius: 0px;
@@ -27,18 +40,32 @@ $departments = DB::Select("Select * from ctr_acct_dept");
     });
     });
   </script>
-<div class="container-fluid">
-    <div class=" col-md-12 form form-group" >
-       <label class="label label-danger" style="font-size:15pt; background-color: pink;"> Ref No : {{$uniqid}}</label>
-    </div>    
-    <div style="padding-top: 10px; padding-bottom: auto;background: #ccc;height: 100px" class="col-md-12 panel panel-default">
+  <div class="container-fluid">
+      <div class="col-md-2">
+      <h2>DISBURSEMENT</h2>    
+      </div>    
+    <div class=" col-md-2 form form-group" >
+        <label>Reference Number</label>
+       <div class="btn btn-primary form-control">{{$uniqid}}</div>
+    </div> 
+    <div class=" col-md-2 form form-group" >
+        <label>Voucher Number</label>
+        <div class="btn btn-primary form-control">{{$voucherno}}</div>
+    </div> 
+    <div class=" col-md-6 form form-group" >
+        <a href="{{url('dailyjournallist',date('Y-m-d',strtotime(\Carbon\Carbon::now())))}}" class="btn btn-primary navbar-right"> Daily Journal Summary</a>
+    </div> 
+    
+    <div style="padding-top: 10px; padding-bottom: auto;background: #fff5cc;height: 100px" class="col-md-12 panel panel-default">
         <div class="col-md-1">
             <label for = "acctcode">Account Code</label>
             <input type="text" name="acctcode" id="acctcode" class="form-control" readonly="readonly" style="background-color: #ddd;color: red">
         </div>
             <div class="col-md-3">
                 <label for="accountname">Account Name</label>
-                <input type="hidden" value="{{$uniqid}}" name="refno" id="refno">    
+                <input type="hidden" value="{{$uniqid}}" name="refno" id="refno">  
+                <input type="hidden" value="{{$voucherno}}" name="referenceid" id="referenceid">  
+                <input type="hidden" value="4" name="entry_type" id="entry_type">
                 <input class="form-control coa" id="accountname" name="accountname">
             </div>
             <div class="amountdetails" id="amountdetails">
@@ -88,12 +115,63 @@ $departments = DB::Select("Select * from ctr_acct_dept");
            
     </div>    
      
-</div>  
 
+  <div class="col-md-12" style="background-color:#fff5cc;padding-top:10px">
+          <div class="form-group col-md-2">
+              <label>Bank Account</label>
+              <select name = "account" id="account" class="form-control">
+                  @foreach($bankaccounts as $bankaccount)
+                        <option value="{{$bankaccount->acctcode}}">{{$bankaccount->accountname}}</option>
+                  @endforeach
+              </select>      
+          </div>
+          <div class="form-group col-md-2">
+              <label>Amount</label>
+              <input type="text" class="form-control" name="creditamount" id="creditamount" style="text-align:right" readonly>
+          </div>
+          <div class="form-group col-md-2">
+              <label>Check Number</label>
+              <input type = "text" name="checkno" id="checkno" class="form form-control">
+          </div>
+          <div class="form-group col-md-6">
+              <label>Payee</label>
+              <input type="text" class="form form-control" name="payee" id="payee">
+          </div>  
+          <div class="form-group col-md-12">
+              <label>Description</label>
+              <input type="text" class="form form-control" name="remarks" id="remarks">
+          </div> 
+          <div class="form-group col-md-12">
+              <button class="btn btn-primary form-control" id="btnprocess">Process Payment</button>
+          </div> 
+      </div>
+    </div>
+    
+  
 <script type="text/javascript">
 $(document).ready(function(){ 
    $("#forsubmit").fadeOut();
    $("#amountdetails").fadeOut();
+   $("#checkno").keypress(function(e){
+      if(e.keyCode==13){
+          if($("#checkno").val()==""){
+              alert("Please Enter Check Number");
+          } else {
+              $("#payee").focus();
+          }
+      } 
+   });
+   
+   $("#payee").keypress(function(e){
+      if(e.keyCode==13){
+          if($("#payee").val()==""){
+              alert("Please Type Explanation/Remarks");
+          } else {
+              $("#remarks").focus();
+          }
+      } 
+   });
+   
     partialtable();
    $("#accountname").keypress(function(e){
        if(e.keyCode==13){
@@ -127,8 +205,10 @@ $(document).ready(function(){
                arrays['subsidiary']=$("#subsidiary").val();
                arrays['department']=$("#department").val();
                arrays['entrytype']=$("#entrytype").val();
+               arrays['entry_type']=$("#entry_type").val();
                arrays['amount']=$("#amount").val();
                arrays['refno']=$("#refno").val();
+               arrays['referenceid'] = $('#referenceid').val();
                arrays['idno']= "{{Auth::user()->idno}}";
                
                $.ajax({
@@ -142,6 +222,7 @@ $(document).ready(function(){
                         $("#subsidiary").html("<option>Select Subsidiary If Any</option>");
                         $("#amount").val("");
                         $("#accountname").focus();
+                        $("#creditamount").val($("#crdrdiff").val()); 
                         if($("#balance").val() == "yes"){
                          $("#forsubmit").fadeIn();   
                         }else{
@@ -154,6 +235,37 @@ $(document).ready(function(){
            }
        } 
     });
+    
+    $("#btnprocess").click(function(){
+    if($("#checkno").val()=="" || $("#payee").val()=="" || $("#remarks").val()==""){
+        alert("Please Fill Up Necessary Fields!!");
+        //return false;
+    }    
+    else{
+       
+         var arrays={};
+         arrays['refno'] = $("#refno").val();
+         arrays['voucherno'] = $("#referenceid").val();
+         arrays['payee'] = $("#payee").val();
+         arrays['checkno']= $("#checkno").val();
+         arrays['remarks']=$("#remarks").val();
+         arrays['creditamount']=$("#creditamount").val();
+         arrays['bankaccount'] = $("#account").val();
+         arrays['idno']="{{\Auth::user()->idno}}";
+         arrays['entry_type']=$("#entry_type").val();
+         arrays['accountcode'] = $("#account").val();
+       // alert($("#account"))
+;         $.ajax({
+             type:"GET",
+             url:"processdisbursement",
+             data:arrays,
+             success:function(data){
+             document.location= "{{url('printdisbursement')}}" + "/" + $("#refno").val()
+             }
+        });
+    }
+    })
+    /*
     $("#processbtn").click(function(){
         if($("#particular").val()==""){
             alert("Please Fill-up Particular!!!");
@@ -162,6 +274,7 @@ $(document).ready(function(){
                 
               var arrays = {};
               arrays['refno'] = $("#refno").val();
+              arrays['referenceid'] = $("#referenceid").val();
               arrays['particular'] = $("#particular").val();
               arrays['idno']="{{Auth::user()->idno}}";
               arrays['totalcredit']=$("#totalcredit").val();
@@ -170,12 +283,12 @@ $(document).ready(function(){
                   url:"/postacctgremarks",
                   data:arrays,
                   success:function(data){
-                     document.location = "{{url('addentry')}}" 
+                     document.location = "{{url('printjournalvoucher')}}" + "/" + $("#refno").val(); 
                   }
               });
                
             }
-    })
+    })*/
     
     }); 
 
@@ -185,7 +298,7 @@ $(document).ready(function(){
         url:"/getpartialentry/" + $("#refno").val(),
             success:function(data){
                $("#partialentry").html(data);
-                       
+               $("#creditamount").val($("#crdrdiff").val());        
                         if($("#balance").val() == "yes"){
                          $("#forsubmit").fadeIn();   
                         } else{
@@ -222,6 +335,7 @@ $(document).ready(function(){
          data:arrays,
          success:function(data){
              $("#partialentry").html(data);
+             $("#creditamount").val($("#crdrdiff").val()); 
              if($("#balance").val() == "yes"){
                 $("#forsubmit").fadeIn();   
              }else{
@@ -242,10 +356,12 @@ $(document).ready(function(){
           data:array,
           success:function(data){
               if(data=="true")
-              document.location = "{{url('addentry')}}"
+              document.location = "{{url('adddisbursement')}}"
           }
       });
   }
  
 </script>
+
+
 @stop

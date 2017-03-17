@@ -1,0 +1,23 @@
+<?php
+$lists = \App\AccountingRemark::where('trandate', $trandate)->get();
+?>
+@extends('appaccounting')
+@section('content')
+<div class="container">
+    <h3>List of Journal Entry</h3>
+    <h5>Date : {{$trandate}}</h5>
+        <table class="table table-bordered table-striped"><tr><td>Journal Voucher No</td><td>Remarks</td><td>Amount</td><td>View</td><td>Status</td></tr>
+           @foreach($lists as $list)
+           <tr><td>{{$list->referenceid}}</td><td>{{$list->remarks}}</td><td>{{$list->amount}}</td><td><a href="{{url('printjournalvoucher',$list->refno)}}"> View Voucher </a></td>
+           <td>@if($list->isreverse == "0")
+               OK
+               @else
+               Cancelled
+               @endif
+           </td>    
+           </tr>
+           @endforeach 
+        </table>
+</div>
+
+@stop

@@ -542,8 +542,8 @@ function collectionreport($datefrom, $dateto){
      
  }   
  function maincollection($fromtran,$totran){
-     $credits = DB::Select("select sum(amount) as amount,acctcode from credits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and entry_type=1 group by acctcode");
-      $debitcashchecks = DB::Select("select sum(amount)+sum(checkamount) as totalamount, acctcode, depositto from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and entry_type=1 group by acctcode, depositto");
+     $credits = DB::Select("select sum(amount) as amount,acctcode from credits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and entry_type = '1' group by acctcode");
+      $debitcashchecks = DB::Select("select sum(amount)+sum(checkamount) as totalamount, acctcode, depositto from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and entry_type = '1' group by acctcode, depositto");
      //$debitcashchecks = DB::Select("select sum(amount)+sum(checkamount) as totalamount, depositto from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and (paymenttype = '1' or paymenttype = '2') group by depositto");
      //$debitdebitmemos = DB::Select("select sum(amount)+sum(checkamount) as totalamount, acctcode from dedits where (transactiondate between '$fromtran' and '$totran') and paymenttype = '3' and isreverse = '0' group by acctcode");
      //$debitdiscounts = DB::Select("select sum(amount)+sum(checkamount) as totalamount from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and paymenttype = '4'");

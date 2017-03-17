@@ -1,11 +1,24 @@
 @extends('appaccounting')
 @section('content')
 <?php
+
 $coa = \App\ChartOfAccount::pluck('accountname')->toArray();
-$initialentry = \App\Accounting::where("posted_by",\Auth::user()->idno)->where('isfinal','0')->first();
+$initialentry = \App\Accounting::where("posted_by",\Auth::user()->idno)->where('isfinal','0')->where('type','3')->first();
 if(count($initialentry)>0){
 $uniqid = $initialentry->refno;    
+$voucherno = $initialentry->referenceid;
+
 }else{
+$vouchzero="";    
+$voucherid =  \App\User::where('idno',\Auth::user()->idno)->first();
+$voucherno = $voucherid->receiptno;
+$voucheruserid = $voucherid->reference_number;
+for($i=strlen($voucherno);$i<=5;$i++ ){
+   $vouchzero = $vouchzero."0"; 
+}
+$voucherno= $voucheruserid.$vouchzero.$voucherno;
+//$voucherid->receiptno = $voucherid->receiptno+1;
+//$voucherid->update();
 $uniqid = uniqid();
 }
 $departments = DB::Select("Select * from ctr_acct_dept");
@@ -27,10 +40,22 @@ $departments = DB::Select("Select * from ctr_acct_dept");
     });
     });
   </script>
+  <div class="col-md-3">
+      <h2>JOURNAL ENTRY</h2>
+  </div>    
 <div class="container-fluid">
-    <div class=" col-md-12 form form-group" >
-       <label class="label label-danger" style="font-size:15pt; background-color: pink;"> Ref No : {{$uniqid}}</label>
-    </div>    
+    <div class=" col-md-2 form form-group" >
+        <label>Reference Number</label>
+       <div class="btn btn-danger form-control">{{$uniqid}}</div>
+    </div> 
+    <div class=" col-md-2 form form-group" >
+        <label>Voucher Number</label>
+        <div class="btn btn-danger form-control">{{$voucherno}}</div>
+    </div> 
+    <div class=" col-md-5 form form-group" >
+        <a href="{{url('dailyjournallist',date('Y-m-d',strtotime(\Carbon\Carbon::now())))}}" class="btn btn-primary navbar-right"> Daily Journal Summary</a>
+    </div> 
+    
     <div style="padding-top: 10px; padding-bottom: auto;background: #ccc;height: 100px" class="col-md-12 panel panel-default">
         <div class="col-md-1">
             <label for = "acctcode">Account Code</label>
@@ -38,7 +63,9 @@ $departments = DB::Select("Select * from ctr_acct_dept");
         </div>
             <div class="col-md-3">
                 <label for="accountname">Account Name</label>
-                <input type="hidden" value="{{$uniqid}}" name="refno" id="refno">    
+                <input type="hidden" value="{{$uniqid}}" name="refno" id="refno">  
+                <input type="hidden" value="{{$voucherno}}" name="referenceid" id="referenceid">  
+                <input type="hidden" value="3" name="entry_type" id="entry_type">
                 <input class="form-control coa" id="accountname" name="accountname">
             </div>
             <div class="amountdetails" id="amountdetails">
@@ -127,8 +154,10 @@ $(document).ready(function(){
                arrays['subsidiary']=$("#subsidiary").val();
                arrays['department']=$("#department").val();
                arrays['entrytype']=$("#entrytype").val();
+               arrays['entry_type']=$("#entry_type").val();
                arrays['amount']=$("#amount").val();
                arrays['refno']=$("#refno").val();
+               arrays['referenceid'] = $('#referenceid').val();
                arrays['idno']= "{{Auth::user()->idno}}";
                
                $.ajax({
@@ -162,15 +191,17 @@ $(document).ready(function(){
                 
               var arrays = {};
               arrays['refno'] = $("#refno").val();
+              arrays['referenceid'] = $("#referenceid").val();
               arrays['particular'] = $("#particular").val();
               arrays['idno']="{{Auth::user()->idno}}";
               arrays['totalcredit']=$("#totalcredit").val();
+              arrays['entry_type']=$("#entry_type").val();
               $.ajax({
                   type:"GET",
                   url:"/postacctgremarks",
                   data:arrays,
                   success:function(data){
-                     document.location = "{{url('addentry')}}" 
+                     document.location = "{{url('printjournalvoucher')}}" + "/" + $("#refno").val(); 
                   }
               });
                
