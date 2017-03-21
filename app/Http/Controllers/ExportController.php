@@ -123,7 +123,6 @@ class ExportController extends Controller
 				if(!empty($insert)){
 
 					DB::table('conduct_repos')->insert($insert);
-
 					
 
 				}
@@ -434,7 +433,7 @@ class ExportController extends Controller
             $idno = "0".$idno;
         }     
         
-        $ug = \App\Competency::where('idno',$idno)->where('competencycode',$competencycode)->where('schoolyear',$sy)->first();
+        $ug = \App\Competency::where('idno',$idno)->where('competencycode',$competencycode)->where('schoolyear',$sy)->where('quarter',$quarter)->first();
         if(count($ug)>0){
         $ug->value = $value;
         $ug->update();    

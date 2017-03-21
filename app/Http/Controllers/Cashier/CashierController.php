@@ -158,7 +158,7 @@ class CashierController extends Controller
      return redirect('/');
     }
     
-     function payment(Request $request){
+    function payment(Request $request){
             $account=null;
             $orno = $this->getOR();
             $refno = $this->getRefno();
@@ -229,21 +229,20 @@ class CashierController extends Controller
             
             if(isset($request->other)){
                     foreach($request->other as $key=>$value){
-                    if($value > 0){
-                    $updateother = \App\Ledger::find($key);
-                    $updateother->payment = $updateother->payment + $value;
-                    $updateother->save();
-                    $this->credit($updateother->idno, $updateother->id, $refno, $orno, $value);
-                    }
+                        if($value > 0){
+                            $updateother = \App\Ledger::find($key);
+                            $updateother->payment = $updateother->payment + $value;
+                            $updateother->save();
+                            $this->credit($updateother->idno, $updateother->id, $refno, $orno, $value);
+                        }
                     }
                 
                     $statusnow =  \App\Status::where('idno',$request->idno)->where('department','TVET')->first();
                     if(count($statusnow)>0){
                         if($statusnow->status=="1"){
-                        $statusnow->status="2";
-                        $statusnow->update(); 
-                        $this->setuptuitionfee(1, $request->idno, $statusnow->schoolyear);
-                        
+                            $statusnow->status="2";
+                            $statusnow->update(); 
+                            $this->setuptuitionfee(1, $request->idno, $statusnow->schoolyear);
                         }
                     }
                 }
@@ -289,6 +288,7 @@ class CashierController extends Controller
                     $creditstudentdeposit->receipt_details = 'Student Deposit';
                     $creditstudentdeposit->amount = $remainingbalance;
                     $creditstudentdeposit->postedby = \Auth::user()->idno;
+                    $creditstudentdeposit->acct_department = 'None';
                     $creditstudentdeposit->sub_department = 'None';
                     $creditstudentdeposit->save(); 
                     
@@ -385,53 +385,53 @@ class CashierController extends Controller
        
    }
    
-  function addreservation($idno){
-      $status=  \App\Status::where('idno',$idno)->first();
-      $addcredit = new \App\Credit;
-      $addcredit->idno = $idno;
-      $addcredit->transactiondate = Carbon::now();
-      $addcredit->refno = $this->getRefno();
-      $addcredit->receiptno = $this->getOR();
-      $addcredit->categoryswitch = "9";
-      $addcredit->entry_type = "1";
-      $addcredit->accountingcode = '210400';
-      $addcredit->acctcode = " Enrollment Reservation";
-      $addcredit->description = "Enrollment Reservation";
-      $addcredit->receipt_details = "Enrollment Reservation";
-      $addcredit->amount = "1000.00";
-      if(isset($status->schoolyear)){
-      $addcredit->schoolyear=$status->schoolyear;
-      }
-      $addcredit->postedby=\Auth::user()->idno;
-      $addcredit->save();
-      
-      $adddebit = new \App\Dedit;
-      $adddebit->idno = $idno;
-      $adddebit->transactiondate = Carbon::now();
-      $adddebit->paymenttype = '5';
-      $adddebit->paymenttype = '5';
-      $adddebit->amount = "1000.00";
-      $adddebit->accountingcode = '210400';
-      $adddebit->acctcode = " Enrollment Reservation";
-      $adddebit->description = "Enrollment Reservation";
-      $adddebit->refno = $this->getRefno();
-      $adddebit->receiptno = $this->getOR();
-      $adddebit->postedby = \Auth::user()->idno;
-      if(isset($status->schoolyear)){
-      $adddebit->schoolyear = $status->schoolyear;
-      }
-      $adddebit->save();
-      
-      $addreservation = new \App\AdvancePayment;
-      $addreservation->idno = $idno;
-      $addreservation->amount = "1000.00";
-      $addreservation->refno = $this->getRefno();
-      $addreservation->transactiondate=Carbon::now();
-      $addreservation->postedby=\Auth::user()->idno;
-      $addreservation->status = "1";
-      $addreservation->save();
-      
-  } 
+    function addreservation($idno){
+        $status=  \App\Status::where('idno',$idno)->first();
+        $addcredit = new \App\Credit;
+        $addcredit->idno = $idno;
+        $addcredit->transactiondate = Carbon::now();
+        $addcredit->refno = $this->getRefno();
+        $addcredit->receiptno = $this->getOR();
+        $addcredit->categoryswitch = "9";
+        $addcredit->entry_type = "1";
+        $addcredit->accountingcode = '210400';
+        $addcredit->acctcode = " Enrollment Reservation";
+        $addcredit->description = "Enrollment Reservation";
+        $addcredit->receipt_details = "Enrollment Reservation";
+        $addcredit->amount = "1000.00";
+        if(isset($status->schoolyear)){
+        $addcredit->schoolyear=$status->schoolyear;
+        }
+        $addcredit->postedby=\Auth::user()->idno;
+        $addcredit->save();
+
+        $adddebit = new \App\Dedit;
+        $adddebit->idno = $idno;
+        $adddebit->transactiondate = Carbon::now();
+        $adddebit->paymenttype = '5';
+        $adddebit->paymenttype = '5';
+        $adddebit->amount = "1000.00";
+        $adddebit->accountingcode = '210400';
+        $adddebit->acctcode = " Enrollment Reservation";
+        $adddebit->description = "Enrollment Reservation";
+        $adddebit->refno = $this->getRefno();
+        $adddebit->receiptno = $this->getOR();
+        $adddebit->postedby = \Auth::user()->idno;
+        if(isset($status->schoolyear)){
+        $adddebit->schoolyear = $status->schoolyear;
+        }
+        $adddebit->save();
+
+        $addreservation = new \App\AdvancePayment;
+        $addreservation->idno = $idno;
+        $addreservation->amount = "1000.00";
+        $addreservation->refno = $this->getRefno();
+        $addreservation->transactiondate=Carbon::now();
+        $addreservation->postedby=\Auth::user()->idno;
+        $addreservation->status = "1";
+        $addreservation->save();
+
+    } 
     function reset_or(){
         $resetor = \App\User::where('idno', \Auth::user()->idno)->first();
         $resetor->receiptno = $resetor->receiptno + 1;
@@ -448,8 +448,10 @@ class CashierController extends Controller
         }
     }
    
-    function debit($refno, $orno,$idno, $paymenttype, $bank_branch, $check_number,$cashamount,$checkamount,$iscbc,$depositto,$receiveamount,$remarks){
+   function debit($refno, $orno,$idno, $paymenttype, $bank_branch, $check_number,$cashamount,$checkamount,$iscbc,$depositto,$receiveamount,$remarks){
         $student= \App\User::where('idno', $idno)->first();
+        $status = \App\Status::where('idno',$idno)->first();
+        $fiscal = \App\CtrFiscalyear::first();
         $debitaccount = new \App\Dedit;
         $debitaccount->idno = $idno;
         $debitaccount->transactiondate=Carbon::now();
@@ -482,17 +484,32 @@ class CashierController extends Controller
         $debitaccount->accountingcode = $accountingcode->acctcode;
         $debitaccount->receivefrom = $student->lastname . ", " . $student->firstname . " " . $student->extensionname . " " .$student->middlename;
         $debitaccount->receiveamount=$receiveamount;
+        $debitaccount->fiscalyear=$fiscal->fiscalyear;
+        $debitaccount->schoolyear=$fiscal->fiscalyear;
         $debitaccount->iscbc = $iscbc;
         $debitaccount->depositto = $depositto;
         $debitaccount->checkamount = $checkamount;
         $debitaccount->amount = $cashamount;
+        if(count($status)>0){
+            if($status->department == "Kindergarten" ||$status->department == "Elementary"){
+                $debitaccount->acct_department = "Elementary Department";
+                $debitaccount->sub_department = "Elementary Department";
+            }elseif($status->department == "Junior High School" ||$status->department == "Senior High School"){
+                $debitaccount->acct_department = "High School Department";
+                $debitaccount->sub_department = "High School Department";
+            }elseif($status->department == "TVET"){
+                $debitaccount->acct_department = "TVET";
+                $debitaccount->sub_department = "TVET";
+            }
+            $debitaccount->schoolyear=$status->schoolyear;
+        }
         $debitaccount->remarks = $remarks;
         $debitaccount->postedby=\Auth::user()->idno;
         $debitaccount->save();
             
     }
    
-    function debit_reservation_discount($refno, $orno,$idno,$debittype,$amount,$discountname){
+   function debit_reservation_discount($refno, $orno,$idno,$debittype,$amount,$discountname){
         if($discountname == "Plan Discount"){
             $accountcode='410100';
             $acctcode='Cash - Semi Payment Discount';
@@ -511,25 +528,42 @@ class CashierController extends Controller
             $description = $discountname;
         }
         $student = \App\User::where('idno',$idno)->first();
+        $status = \App\Status::where('idno',$idno)->first();
+        $fiscal = \App\CtrFiscalyear::first();        
         $debitaccount = new \App\Dedit;
         $debitaccount->idno = $idno;
-        $debitaccount->transactiondate=Carbon::now();
-        $debitaccount->accountingcode=$accountcode;
-        $debitaccount->acctcode=$acctcode;
-        $debitaccount->description=$description;
-        $debitaccount->refno=$refno;
-        $debitaccount->entry_type='1';
+        $debitaccount->fiscalyear=$fiscal->fiscalyear;
+        $debitaccount->transactiondate = Carbon::now();
+        $debitaccount->accountingcode = $accountcode;
+        $debitaccount->acctcode = $acctcode;
+        $debitaccount->description = $description;
+        $debitaccount->refno = $refno;
+        $debitaccount->entry_type = '1';
         $debitaccount->receiptno = $orno;
         $debitaccount->paymenttype = $debittype;
         $debitaccount->receivefrom = $student->lastname . ", " . $student->firstname . " " . $student->extensionname . " " .$student->middlename;
-        $debitaccount->amount = $amount;    
-        $debitaccount->postedby=\Auth::user()->idno;
+        $debitaccount->amount = $amount;
+        if(count($status)>0){
+            if($status->department == "Kindergarten" ||$status->department == "Elementary"){
+                $debitaccount->acct_department = "Elementary Department";
+                $debitaccount->sub_department = "Elementary Department";
+            }elseif($status->department == "Junior High School" ||$status->department == "Senior High School"){
+                $debitaccount->acct_department = "High School Department";
+                $debitaccount->sub_department = "High School Department";
+            }elseif($status->department == "TVET"){
+                $debitaccount->acct_department = "TVET";
+                $debitaccount->sub_department = "TVET";
+            }
+            $debitaccount->schoolyear=$status->schoolyear;
+        }
+        $debitaccount->postedby = \Auth::user()->idno;
         $debitaccount->save();
         
     }
   
    function credit($idno, $idledger, $refno, $receiptno, $amount){
        $ledger = \App\Ledger::find($idledger);
+       $fiscal = \App\CtrFiscalyear::first();
        $newcredit = new \App\Credit;
        $newcredit->idno=$idno;
        $newcredit->transactiondate = Carbon::now();
@@ -544,7 +578,9 @@ class CashierController extends Controller
        $newcredit->duedate=$ledger->duedate;
        $newcredit->amount=$amount;
        $newcredit->entry_type='1';
+       $newcredit->acct_department=$ledger->acct_department;
        $newcredit->sub_department=$ledger->sub_department;
+       $newcredit->fiscalyear=$fiscal->fiscalyear;
        $newcredit->schoolyear=$ledger->schoolyear;
        $newcredit->period=$ledger->period;
        $newcredit->postedby=\Auth::user()->idno;
@@ -613,12 +649,33 @@ class CashierController extends Controller
         $paymentothers = DB::Select("select sum(amount) as amount, receipt_details from credits where idno ='" . $idno . "' and (categoryswitch = '7' OR categoryswitch = '9') and isreverse = '0' group by receipt_details");
         return view('cashier.otherpayment',compact('acct_departments','student','status','accounttypes','advance','paymentothers'));
     }
-
+    
+    function mainDepartment($department){
+        $departments = DB::Select("Select * from ctr_acct_dept where sub_department = '$department'");
+        
+        $dept = "None";
+        
+        if(count($departments)>0){
+            foreach($departments as $depts){
+                $dept = $depts->main_department;
+            }
+        }
+        
+        return $dept;
+    }
+    
     function othercollection(Request $request){
         $or = $this->getOR();
         $refno = $this->getRefno();
-        $status = \App\Status::where('idno',$request->idno)->where('status','2')->first();
+        $status = \App\Status::where('idno',$request->idno)->first();
+        $fiscal = \App\CtrFiscalyear::first();
         $student=  \App\User::where('idno',$request->idno)->first();
+        
+        if(count($status)>0){
+            $sy = $status->schoolyear;
+        }else{
+            $sy = $fiscal->fiscalyear;
+        }
         
         $this->reset_or();
         if($request->reservation > 0 ){
@@ -642,12 +699,17 @@ class CashierController extends Controller
             $creditreservation->acctcode="Enrollment Reservation";
             $creditreservation->description="Enrollment Reservation";
             $creditreservation->receipt_details = "Enrollment Reservation";
+            $creditreservation->acct_department = "None";
+            $creditreservation->sub_department = "None";
+            $creditreservation->schoolyear=$sy;
+            $creditreservation->fiscalyear=$fiscal->fiscalyear;
             $creditreservation->amount = $request->reservation;
             $creditreservation->postedby = \Auth::user()->idno;
             $creditreservation->save();     
         }
         
         if($request->amount1 > 0){
+            
             $creditreservation = new \App\Credit;
             $creditreservation->idno = $request->idno;
             $creditreservation->transactiondate = Carbon::now();
@@ -656,11 +718,19 @@ class CashierController extends Controller
             $creditreservation->categoryswitch = '9';
             $creditreservation->accountingcode=$this->getaccountingcode($request->groupaccount1);
             $creditreservation->acctcode=$request->groupaccount1;
-            $creditreservation->description=$request->particular1;
-            $creditreservation->receipt_details = $request->particular1;
+            if(isset($request->particular1) && ($request->particular1 != "" || $request->particular1 != NULL)){
+                $creditreservation->description=$request->particular1;
+                $creditreservation->receipt_details=$request->particular1;
+            }else{
+                $creditreservation->description=$request->groupaccount1;
+                $creditreservation->receipt_details=$request->groupaccount1;
+            }
             $creditreservation->amount = $request->amount1;
             $creditreservation->entry_type='1';
             $creditreservation->postedby = \Auth::user()->idno;
+            $creditreservation->schoolyear=$sy;
+            $creditreservation->fiscalyear=$fiscal->fiscalyear;
+            $creditreservation->acct_department = $this->mainDepartment($request->acct_department1);
             $creditreservation->sub_department = $request->acct_department1;
             $creditreservation->save(); 
             
@@ -676,10 +746,18 @@ class CashierController extends Controller
             $creditreservation->entry_type='1';
             $creditreservation->accountingcode=$this->getaccountingcode($request->groupaccount2);
             $creditreservation->acctcode=$request->groupaccount2;
-            $creditreservation->description=$request->particular2;
-            $creditreservation->receipt_details = $request->particular2;
+            if(isset($request->particular2) && ($request->particular2 != "" || $request->particular2 != NULL)){
+                $creditreservation->description=$request->particular2;
+                $creditreservation->receipt_details=$request->particular2;
+            }else{
+                $creditreservation->description=$request->groupaccount2;
+                $creditreservation->receipt_details=$request->groupaccount2;
+            }
             $creditreservation->amount = $request->amount2;
             $creditreservation->postedby = \Auth::user()->idno;
+            $creditreservation->schoolyear=$sy;
+            $creditreservation->fiscalyear=$fiscal->fiscalyear;
+            $creditreservation->acct_department = $this->mainDepartment($request->acct_department2);
             $creditreservation->sub_department = $request->acct_department2;
             $creditreservation->save(); 
             
@@ -695,10 +773,18 @@ class CashierController extends Controller
             $creditreservation->entry_type='1';
             $creditreservation->accountingcode=$this->getaccountingcode($request->groupaccount3);
             $creditreservation->acctcode=$request->groupaccount3;
-            $creditreservation->description=$request->particular3;
-            $creditreservation->receipt_details = $request->particular3;
+            if(isset($request->particular3) && ($request->particular3 != "" || $request->particular3 != NULL)){
+                $creditreservation->description=$request->particular3;
+                $creditreservation->receipt_details=$request->particular3;
+            }else{
+                $creditreservation->description=$request->groupaccount3;
+                $creditreservation->receipt_details=$request->groupaccount3;
+            }
             $creditreservation->amount = $request->amount3;
             $creditreservation->postedby = \Auth::user()->idno;
+            $creditreservation->fiscalyear=$fiscal->fiscalyear;
+            $creditreservation->schoolyear=$sy;
+            $creditreservation->acct_department = $this->mainDepartment($request->acct_department3);
             $creditreservation->sub_department = $request->acct_department3;
             $creditreservation->save(); 
             
@@ -713,10 +799,18 @@ class CashierController extends Controller
             $creditreservation->entry_type='1';
             $creditreservation->accountingcode=$this->getaccountingcode($request->groupaccount4);
             $creditreservation->acctcode=$request->groupaccount4;
-            $creditreservation->description=$request->particular4;
-            $creditreservation->receipt_details = $request->particular4;
+            if(isset($request->particular4) && ($request->particular4 != "" || $request->particular4 != NULL)){
+                $creditreservation->description=$request->particular4;
+                $creditreservation->receipt_details=$request->particular4;
+            }else{
+                $creditreservation->description=$request->groupaccount4;
+                $creditreservation->receipt_details=$request->groupaccount4;
+            }
             $creditreservation->amount = $request->amount4;
             $creditreservation->postedby = \Auth::user()->idno;
+            $creditreservation->schoolyear=$sy;
+            $creditreservation->fiscalyear=$fiscal->fiscalyear;
+            $creditreservation->acct_department = $this->mainDepartment($request->acct_department4);
             $creditreservation->sub_department = $request->acct_department4;
             $creditreservation->save(); 
             
@@ -732,10 +826,18 @@ class CashierController extends Controller
             $creditreservation->entry_type='1';
             $creditreservation->accountingcode=$this->getaccountingcode($request->groupaccount5);
             $creditreservation->acctcode=$request->groupaccount5;
-            $creditreservation->description=$request->particular5;
-            $creditreservation->receipt_details = $request->particular5;
+            if(isset($request->particular5) && ($request->particular5 != "" || $request->particular5 != NULL)){
+                $creditreservation->description=$request->particular5;
+                $creditreservation->receipt_details=$request->particular5;
+            }else{
+                $creditreservation->description=$request->groupaccount5;
+                $creditreservation->receipt_details=$request->groupaccount5;
+            }
             $creditreservation->amount = $request->amount5;
             $creditreservation->postedby = \Auth::user()->idno;
+            $creditreservation->schoolyear=$sy;
+            $creditreservation->fiscalyear=$fiscal->fiscalyear;
+            $creditreservation->acct_department = $this->mainDepartment($request->acct_department5);
             $creditreservation->sub_department = $request->acct_department5;
             $creditreservation->save(); 
             
@@ -751,10 +853,18 @@ class CashierController extends Controller
             $creditreservation->entry_type='1';
             $creditreservation->accountingcode=$this->getaccountingcode($request->groupaccount6);
             $creditreservation->acctcode=$request->groupaccount6;
-            $creditreservation->description=$request->particular6;
-            $creditreservation->receipt_details = $request->particular6;
+            if(isset($request->particular6) && ($request->particular6 != "" || $request->particular6 != NULL)){
+                $creditreservation->description=$request->particular6;
+                $creditreservation->receipt_details=$request->particular6;
+            }else{
+                $creditreservation->description=$request->groupaccount6;
+                $creditreservation->receipt_details=$request->groupaccount6;
+            }
             $creditreservation->amount = $request->amount6;
             $creditreservation->postedby = \Auth::user()->idno;
+            $creditreservation->schoolyear=$sy;
+            $creditreservation->fiscalyear=$fiscal->fiscalyear;
+            $creditreservation->acct_department = $this->mainDepartment($request->acct_department6);
             $creditreservation->sub_department = $request->acct_department6;
             $creditreservation->save(); 
         }
@@ -769,10 +879,18 @@ class CashierController extends Controller
             $creditreservation->entry_type='1';
             $creditreservation->accountingcode=$this->getaccountingcode($request->groupaccount7);
             $creditreservation->acctcode=$request->groupaccount7;
-            $creditreservation->description=$request->particular7;
-            $creditreservation->receipt_details = $request->particular7;
+            if(isset($request->particular7) && ($request->particular7 != "" || $request->particular7 != NULL)){
+                $creditreservation->description=$request->particular7;
+                $creditreservation->receipt_details=$request->particular7;
+            }else{
+                $creditreservation->description=$request->groupaccount7;
+                $creditreservation->receipt_details=$request->groupaccount7;
+            }
             $creditreservation->amount = $request->amount7;
             $creditreservation->postedby = \Auth::user()->idno;
+            $creditreservation->schoolyear=$sy;
+            $creditreservation->fiscalyear=$fiscal->fiscalyear;
+            $creditreservation->acct_department = $this->mainDepartment($request->acct_department7);
             $creditreservation->sub_department = $request->acct_department7;
             $creditreservation->save(); 
             
@@ -817,6 +935,10 @@ class CashierController extends Controller
         $debit->receivefrom=$student->lastname . ", " . $student->firstname . " " . $student->extensionname . " " .$student->middlename;
         $debit->depositto=$request->depositto;
         $debit->remarks=$request->remarks;
+        $debit->schoolyear=$sy->schoolyear;
+        $debit->fiscalyear=$fiscal->fiscalyear;
+        $debit->acct_department = "None";
+        $debit->sub_department = "None";
         $debit->postedby= \Auth::user()->idno;
         $debit->save();
         
@@ -1100,139 +1222,13 @@ class CashierController extends Controller
                 'bpi1check','bpi2cash','bpi2check','encashcbc','encashbpi1','encashbpi2','actual','action','transactiondate','totalissued','batch'));
         
     }
-    function nonstudent(){
-       
-        $accounttypes = DB::Select("select distinct accounttype,acctcode from ctr_other_payments");
-        return view('cashier.nonstudent', compact('accounttypes'));
-        
-    }
+
     
     function getaccountingcode($accountname){
         $coa = \App\ChartOfAccount::where('accountname',$accountname)->first();
         return $coa->acctcode;
     }
     
-    function postnonstudent(Request $request){
-        
-       $refno = $this->getRefno();
-       $or = $this->getOR(); 
-       $payee = strtoupper(str_replace(' ', '', $request->name));
-       $payeeexist = DB::Select("Select UPPER(REPLACE(fullname,' ','')) as name,fullname,idno from non_students where UPPER(REPLACE(fullname,' ','')) = '$payee'");
-       if(count($payeeexist) > 0){
-           foreach($payeeexist as $payees){
-               $idno = $payees->idno;
-               $name = $payees->fullname;
-           }
-       }else{
-        $newpayee = new \App\NonStudent;
-        $newpayee->idno = uniqid();
-        $newpayee->fullname = $request->name;
-        $newpayee->save();
-        
-        $idno = $newpayee->idno;
-        $name = $newpayee->fullname;
-       }
-       $this->reset_or();
-        if($request->amount1 > 0){
-            $creditreservation = new \App\Credit;
-            $creditreservation->idno = $idno;
-            $creditreservation->transactiondate = Carbon::now();
-            $creditreservation->refno = $refno;
-            $creditreservation->receiptno = $or;
-            $creditreservation->categoryswitch = '7';
-            $creditreservation->accountingcode=$this->getaccountingcode($request->groupaccount1);
-            $creditreservation->acctcode=$request->groupaccount1;
-            $creditreservation->description=$request->particular1;
-            $creditreservation->receipt_details = $request->particular1;
-            $creditreservation->amount = $request->amount1;
-            $creditreservation->postedby = \Auth::user()->idno;
-            $creditreservation->save(); 
-        }
-        
-        if($request->amount2 > 0){
-            $creditreservation = new \App\Credit;
-            $creditreservation->idno = $idno;
-            $creditreservation->transactiondate = Carbon::now();
-            $creditreservation->refno = $refno;
-            $creditreservation->receiptno = $or;
-            $creditreservation->categoryswitch = '7';
-            $creditreservation->accountingcode=$this->getaccountingcode($request->groupaccount2);
-            $creditreservation->acctcode=$request->groupaccount2;
-            $creditreservation->description=$request->particular2;
-            $creditreservation->receipt_details = $request->particular2;
-            $creditreservation->amount = $request->amount2;
-            $creditreservation->postedby = \Auth::user()->idno;
-            $creditreservation->save(); 
-        }
-        
-        if($request->amount3 > 0){
-            $creditreservation = new \App\Credit;
-            $creditreservation->idno = $idno;
-            $creditreservation->transactiondate = Carbon::now();
-            $creditreservation->refno = $refno;
-            $creditreservation->receiptno = $or;
-            $creditreservation->categoryswitch = '7';
-            $creditreservation->accountingcode=$this->getaccountingcode($request->groupaccount3);
-            $creditreservation->acctcode=$request->groupaccount3;
-            $creditreservation->description=$request->particular3;
-            $creditreservation->receipt_details = $request->particular3;
-            $creditreservation->amount = $request->amount3;
-            $creditreservation->postedby = \Auth::user()->idno;
-
-            $creditreservation->save(); 
-        }
-        
-        if($request->amount4 > 0){
-            $creditreservation = new \App\Credit;
-            $creditreservation->idno = $idno;
-            $creditreservation->transactiondate = Carbon::now();
-            $creditreservation->refno = $refno;
-            $creditreservation->receiptno = $or;
-            $creditreservation->categoryswitch = '7';
-            $creditreservation->accountingcode=$this->getaccountingcode($request->groupaccount4);
-            $creditreservation->acctcode=$request->groupaccount4;
-            $creditreservation->description=$request->particular4;
-            $creditreservation->receipt_details = $request->particular4;
-            $creditreservation->amount = $request->amount4;
-            $creditreservation->postedby = \Auth::user()->idno;
-
-            $creditreservation->save(); 
-        }
-        
-        switch($request->depositto){
-            case 'China Bank':
-                $accountingcode = \App\ChartOfAccount::where('accountname','CBC-CA 1049-00 00027-8')->first();
-                break;
-            case 'BPI 1':
-                $accountingcode = \App\ChartOfAccount::where('accountname','BPI- CA 1885-1129-82')->first();
-                break;
-            case 'BPI 2':
-                $accountingcode = \App\ChartOfAccount::where('accountname','BPICA 1881-0466-59')->first();
-                break;
-        }
-        
-        $debit = new \App\Dedit;
-        $debit->idno = $idno;
-        $debit->transactiondate = Carbon::now();
-        $debit->refno = $refno;
-        $debit->receiptno = $or;
-        $debit->paymenttype= "1";
-        $debit->entry_type= "1";
-        $debit->accountingcode= $accountingcode->acctcode;
-        $debit->bank_branch=$request->bank_branch;
-        $debit->check_number=$request->check_number;
-        $debit->description = 'Cash';
-        $debit->amount = $request->totalcredit;
-        $debit->checkamount=$request->check;
-        $debit->receiveamount = $request->cash;
-        $debit->receivefrom=$name;
-        $debit->depositto=$request->depositto;
-        $debit->postedby= \Auth::user()->idno;
-        $debit->save();
-        
-        return $this->viewreceipt($refno, $idno);
-        
-    }
     function checklist($trandate){
         $checklists = DB::Select("select bank_branch, check_number, sum(checkamount) as checkamount, receiptno, receivefrom  from dedits "
                 . "where paymenttype = '1' and isreverse = '0' and postedby = '" . \Auth::user()->idno . "'"
@@ -1474,6 +1470,7 @@ class CashierController extends Controller
         
         //$tuition = \App\Ledger::select('sum(amount) as amount')->where('accountingcode',$entry_type->indic)->where('idno',$idno)->where('schoolyear',$schoolyear)->first();
         $tuitions = DB::Select("Select sum(amount) as amount from ledgers where accountingcode = ".$entry_type->indic." and idno  = '".$idno."' and schoolyear = '".$schoolyear."'");
+        $fiscal = \App\CtrFiscalyear::first();
         $amount = 0;
         foreach($tuitions as $tuition){
             $amount = $amount + $tuition->amount;
@@ -1491,6 +1488,7 @@ class CashierController extends Controller
         $credit->receipt_details = "Tuition Fee Setup";
         $credit->entry_type = 5;
         $credit->amount = $amount;
+        $credit->fiscalyear=$fiscal->fiscalyear;
         $credit->schoolyear = $schoolyear;
         $credit->postedby = \Auth::User()->idno;
         $credit->save();
@@ -1506,6 +1504,7 @@ class CashierController extends Controller
         $debit->description = "Tuition Fee";
         $debit->amount = $amount;
         $debit->postedby = \Auth::User()->idno;
+        $debit->fiscalyear=$fiscal->fiscalyear;
         $debit->schoolyear = $schoolyear;
         $debit->save();
         

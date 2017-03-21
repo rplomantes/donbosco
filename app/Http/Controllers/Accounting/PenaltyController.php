@@ -74,8 +74,10 @@ class PenaltyController extends Controller
                     $newpenalty->schoolyear=$status->schoolyear;
                     $newpenalty->period=$status->period;
                     if($status->department == 'Elementary' || $status->department == 'Kindergarten'){
-                        $newpenalty->sub_department='Elementary Department';    
+                        $newpenalty->acct_department='Elementary Department';
+                        $newpenalty->sub_department='Elementary Department';
                     }elseif($status->department == 'Junior High School' || $status->department == 'Senior High School'){
+                        $newpenalty->acct_department='High School Department';    
                         $newpenalty->sub_department='High School Department';    
                     }
                     $newpenalty->duedate=Carbon::now();

@@ -2,7 +2,16 @@
 @section('content')
 
 <div class="container">
-    <h5>Transaction Report</h5>
+    @if($entry == 1)
+    <h5> Cash Receipt Debit/Credit Summary Report</h5>
+    @elseif($entry == 2)
+    <h5> Debit Memo Debit/Credit Summary Report</h5>
+    @elseif($entry == 3)
+    <h5> General Journal Debit/Credit Summary Report</h5>
+    @elseif($entry == 4)
+    <h5> Cash Disbursement Debit/Credit Summary Report</h5>
+    @endif
+    
     <p>Period Covered</p>
     <label>From</label>
     <input type="text" id="fromtran" class="form" value="{{$fromtran}}">
@@ -20,9 +29,9 @@
         <tr><td><b>Total Credit</b></td><td align="right"><b>{{number_format($totalcredit,2)}}</b></td></tr>
      </table>   
 </div>
-<div class="container">
+<div class="container" style="page-break-inside: avoid">
 <h5>Debit</h5>
-    <table class="table table-striped">
+    <table class="table table-striped" style="page-break-inside: avoid">
     <tr><td>Partcular</td><td align="right">Amount</td></tr>
     <?php $totaldebits=0;?>    
     @if(count($debitcashchecks)>0)
@@ -37,12 +46,13 @@
    <tr><td><b>Total Debit</b></td><td align="right"><b>{{number_format($totaldebits,2)}}</b></td></tr> 
 </table>
 </div>
-<div class="col-md-offset-10 col-md-2"><a class="btn btn-danger" href="{{url('printmaincollection',array($fromtran,$totran))}}">Print</a></div>
+
+<div class="col-md-12"><a class="form-control btn btn-danger" href="{{url('printmaincollection',array($entry,$fromtran,$totran))}}">Print</a></div>
 <script>
 function showtran(){
     var fromtran = document.getElementById('fromtran').value
     var totran = document.getElementById('totran').value
-    document.location="/maincollection/" + fromtran + "/" + totran
+    document.location="/maincollection/"+{{$entry}} + "/" + fromtran + "/" + totran
 }
 </script>
 @stop

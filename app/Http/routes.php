@@ -61,8 +61,8 @@
     Route::get('actualcashcheck/{batch}/{transactiondate}','Cashier\CashierController@actualcashcheck');
     Route::get('printencashment/{idno}','Cashier\CashierController@printencashment');
     Route::get('printcollection/{idno}/{transactiondate}','Cashier\CashierController@printcollection');
-    Route::get('nonstudent','Cashier\CashierController@nonstudent');
-    Route::post('nonstudent','Cashier\CashierController@postnonstudent');
+    Route::get('nonstudent','Cashier\NonStudentController@nonstudent');
+    Route::post('nonstudent','Cashier\NonStudentController@postnonstudent');
     Route::get('checklist/{trandate}','Cashier\CashierController@checklist');
     Route::post('postactual','Cashier\CashierController@postactual');
     Route::get('printactualcash/{transactiondate}','Cashier\CashierController@printactualcash');
@@ -83,8 +83,8 @@
     Route::get('collectionreport/{datefrom}/{dateto}','Accounting\AccountingController@collectionreport');
     Route::get('printdmcmreport/{idno}/{transactiondate}','Accounting\AccountingController@printdmcmreport');
     Route::get('summarymain','Accounting\AccountingController@summarymain');
-    Route::get('maincollection/{fromtran}/{totran}','Accounting\AccountingController@maincollection');
-    Route::get('printmaincollection/{fromtran}/{totran}','Accounting\AccountingController@printmaincollection');
+    Route::get('maincollection/{entry}/{fromtran}/{totran}','Accounting\AccountingController@maincollection');
+    Route::get('printmaincollection/{entry}/{fromtran}/{totran}','Accounting\AccountingController@printmaincollection');
     Route::get('studentledger/{level}','Accounting\AccountingController@studentledger');
     Route::get('cashcollection/{transactiondate}','Accounting\AccountingController@cashcollection');
     Route::get('overallcollection/{transactiondate}','Accounting\AccountingController@overallcollection');
@@ -199,6 +199,9 @@
     Route::get('generalledger/{basic}/{title}/{todate?}','Accounting\GenLedgerController@index');
     Route::get('balancesheet','Vincent\BalanceSheetController@index');
     
+    Route::get('dmsummary/{fromtran}/{totran}','Accounting\DebitDCSummaryController@index');
+    Route::get('printdmjournal/{fromtran}/{totran}','Accounting\DebitDCSummaryController@printsummary');
+    
     
     
 });
@@ -248,6 +251,7 @@
    
     //AJAX 
     Route::get('/getparticulars/{group}','Cashier\AjaxController@getparticular');
+    Route::get('/finalsheetb/{quarter}/{level}/{}','Cashier\AjaxController@getparticular');
     Route::get('/getsubjs','Vincent\AjaxController@getsubjs');
     Route::get('/showgrades', 'Vincent\AjaxController@showgrades');
     Route::get('/showgradestvet', 'Vincent\AjaxController@showgradestvet');

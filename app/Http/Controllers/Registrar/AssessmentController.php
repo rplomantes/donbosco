@@ -36,15 +36,17 @@ class AssessmentController extends Controller
         $status = \App\Status::where('idno',$id)->first();
        
         if(count($status) > 0){
-            if($status->department=="TVET"){
-            $currentschoolyear = \App\ctrSchoolYear::where('department',$status->department)->where('period',$status->period)->first();
-            }else{
-            $currentschoolyear = \App\ctrSchoolYear::where('department', $status->department)->first();
+            if($status->status != 0){
+                if($status->department=="TVET"){
+                    $currentschoolyear = \App\ctrSchoolYear::where('department',$status->department)->where('period',$status->period)->first();
+                }else{
+                    $currentschoolyear = \App\ctrSchoolYear::where('department', $status->department)->first();
+                }
+                $matchfields=["idno"=>$id, "schoolyear" =>$currentschoolyear->schoolyear, "period" => $currentschoolyear->period ];
+                $mydiscount=  \App\Discount::where($matchfields)->first();
+                $ledgers =  DB::Select("select sum(amount) as amount, sum(plandiscount) as plandiscount,  sum(otherdiscount) as otherdiscount,receipt_details  from ledgers
+                                 where idno = '$id' and schoolyear = '".$currentschoolyear->schoolyear."'  and period = '". $currentschoolyear->period."' Group by receipt_details ");
             }
-            $matchfields=["idno"=>$id, "schoolyear" =>$currentschoolyear->schoolyear, "period" => $currentschoolyear->period ];
-            $mydiscount=  \App\Discount::where($matchfields)->first();
-            $ledgers =  DB::Select("select sum(amount) as amount, sum(plandiscount) as plandiscount,  sum(otherdiscount) as otherdiscount,receipt_details  from ledgers
-                             where idno = '$id' and schoolyear = '".$currentschoolyear->schoolyear."'  and period = '". $currentschoolyear->period."' Group by receipt_details ");
         }
         $programs = DB::Select("select distinct department from ctr_levels");
         //$k_levels = \App\CtrLevel::where('department','Kindergarten')->get();
@@ -182,6 +184,7 @@ function assess(Request $request){
                        $newbook->description = $paidbook->subsidiary;
                        $newbook->receipt_details = $paidbook->receipt_details;
                        $newbook->amount = $paidbook->amount;
+                       $newbook->acct_department = $paidbook->acct_department;
                        $newbook->sub_department = $paidbook->sub_department;
                        $newbook->schoolyear = $schoolperiod->schoolyear;
                        $newbook->duetype = 0;
@@ -473,6 +476,7 @@ function assess(Request $request){
             $newledger->description = "Trainees Contribution";
             $newledger->receipt_details = "Trainees Contribution";
             $newledger->amount = $contribution;
+            $newledger->acct_department = $ledger->acct_department;
             $newledger->sub_department = $ledger->sub_department;
             //$newledger->plandiscount = $ledger->discount;
             $newledger->schoolyear = $schoolperiod->schoolyear;
@@ -497,6 +501,7 @@ function assess(Request $request){
                 $newledger->accountingcode = $ledger->accountingcode;
                 $newledger->acctcode = $ledger->acctcode;
                 $newledger->description = $ledger->description;
+                $newledger->acct_department = $ledger->acct_department;
                 $newledger->sub_department = $ledger->sub_department;
                 $newledger->receipt_details = $ledger->receipt_details;
                 $newledger->amount = $ledger->amount;

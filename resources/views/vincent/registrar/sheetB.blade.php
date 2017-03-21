@@ -44,7 +44,7 @@
 					<span style="margin-top: 4px;display: block;width: 22px;height: 2px;border-radius: 1px;background-color: gray;" class="icon-bar"></span>        
         </strong></button>
         <span class="col-md-offset-1" id="quarters">
-            <a class="btn btn-default quarter btn-primary" id="1st" onclick="changequarter(1,'FIRST')">1st Quarter</a><a class="btn btn-default quarter" id="2nd" onclick="changequarter(2,'SECOND')">2nd Quarter</a><a class="btn btn-default quarter" id="3rd" onclick="changequarter(3,'THIRD')">3rd Quarter</a><a class="btn btn-default quarter" id="4th" onclick="changequarter(4,'FINAL')">4th Quarter</a>
+            <a class="btn btn-default quarter btn-primary" id="1st" onclick="changequarter(1,'FIRST')">1st Quarter</a><a class="btn btn-default quarter" id="2nd" onclick="changequarter(2,'SECOND')">2nd Quarter</a><a class="btn btn-default quarter" id="3rd" onclick="changequarter(3,'THIRD')">3rd Quarter</a><a class="btn btn-default quarter" id="4th" onclick="changequarter(4,'FOURTH')">4th Quarter</a>
         </span>
         </div>
     <div class="col-md-3 collapse in" id='menu'>
@@ -156,6 +156,7 @@ function seeGrade(){
     arrays['strand']= strands;
     arrays['department']= dept;
     $('#display').html("");
+    
     $.ajax({
             type: "GET", 
             url: "/showgrades",

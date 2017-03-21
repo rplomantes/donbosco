@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use DB;
 use Carbon\Carbon;
+use App\Http\Controllers\Cashier\CashierController;
 
 class AddtoAccountController extends Controller
 {
@@ -33,6 +34,7 @@ class AddtoAccountController extends Controller
     static function savetoaccount($idno,array $request){
         $status = \App\Status::where('idno',$idno)->first();
         $newledger = new \App\Ledger;
+        $fiscal = \App\CtrFiscalyear::first();
         $acctcode = \App\ChartOfAccount::where('acctcode',$request['accttype'])->first();
         
         if(count($status)>0){
@@ -44,6 +46,7 @@ class AddtoAccountController extends Controller
         $newledger->period=$status->period;
         }
         
+        $newledger->fiscalyear = $fiscal->fiscalyear;
         $newledger->idno = $idno;
         $newledger->transactiondate = Carbon::now();
         $newledger->categoryswitch = '7';
@@ -61,6 +64,7 @@ class AddtoAccountController extends Controller
         $newledger->duetype="0";
         $newledger->duedate=Carbon::now();
         $newledger->amount=$request['amount'];
+        $newledger->sub_department=  CashierController::mainDepartment($request['department']);
         $newledger->sub_department=$request['department'];
         $newledger->remark=$request['remark'];
         $newledger->save();

@@ -229,16 +229,18 @@
                             {{--*/$third = $third + round($academics->third_grading,2)/*--}}
                         </td>
                         <td>
-                            @if(round($academics->third_grading,2) != 0)
+                            @if(round($academics->fourth_grading,2) != 0)
                                 {{round($academics->fourth_grading,2)}}
                             @endif
                             {{--*/$fourth = $fourth + round($academics->fourth_grading,2)/*--}}
                         </td>
+                        
                         <td>
-                            @if(round($academics->final_grade,2) != 0)
-                                {{round($academics->final_grade,2)}}
+                            @if(round($academics->fourth_grading,2) != 0)
+                            <?php $final_grade = ($academics->first_grading+$academics->second_grading+$academics->third_grading+$academics->fourth_grading)/4; ?>
+                                {{round($final_grade,2)}}
                             @endif
-                            {{--*/$final = $final + round($academics->final_grade,2)/*--}}
+                            {{--*/$final = $final + round($final_grade,2)/*--}}
                         </td>
                         <td>
                             {{$academics->remarks}}

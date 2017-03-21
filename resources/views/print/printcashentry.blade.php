@@ -59,8 +59,15 @@ th {
     </td>
     </tr>
     </table>
-    
-    <h3 align="center"> Transaction Report</h3>
+    @if($entry == 1)
+    <h3 align="center"> Cash Receipt Debit/Credit Summary Report</h3>
+    @elseif($entry == 2)
+    <h3 align="center"> Debit Memo Debit/Credit Summary Report</h3>
+    @elseif($entry == 3)
+    <h3 align="center"> General Journal Debit/Credit Summary Report</h3>
+    @elseif($entry == 4)
+    <h3 align="center"> Cash Disbursement Debit/Credit Summary Report</h3>
+    @endif
     <table>
         <tr><td>From: {{$fromtran}}</td></tr>
         <tr><td>To: {{$totran}}</td></tr>

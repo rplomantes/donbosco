@@ -41,7 +41,7 @@ class GradeController extends Controller
     }
     
     function reset(){
-        $no_student=0;
+        /*$no_student=0;
                     $students = \App\Status::whereIn('status',array(2,3))->where('strand','ABM')->get();
         foreach($students as $student){
             $subjects = \App\CtrSubjects::where('level',$student->level)->where('semester',2)->where('strand','ABM')->get();
@@ -62,11 +62,11 @@ class GradeController extends Controller
                     }
                     $no_student =$no_student +1;
                     echo "NO Of Student: ".$no_student;
-        }
-        /*
+        }*/
+        
         $students = \App\Status::where('status',2)->where('department','Kindergarten')->get();
         foreach($students as $student){
-            $subjects = \App\CtrCompetence::where('quarter',2)->get();
+            $subjects = \App\CtrCompetence::where('quarter',4)->get();
                     foreach($subjects as $subject){
                             $newgrade = new \App\Competency;
                             $newgrade->idno = $student->idno;
@@ -82,7 +82,7 @@ class GradeController extends Controller
                     }
                     
         }        
-        
+        /*
         $students = \App\Grade::distinct()->select('idno')->get();
         foreach($students as $student){
             $subjects = \App\CtrSubjects::where('subjecttype',2)->where('level','Grade 11')->where('strand','ABM')->get();

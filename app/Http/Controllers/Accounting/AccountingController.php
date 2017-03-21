@@ -541,26 +541,26 @@ function collectionreport($datefrom, $dateto){
      return view('accounting.showsummarymain',compact('schoolyear'));
      
  }   
- function maincollection($fromtran,$totran){
-     $credits = DB::Select("select sum(amount) as amount,acctcode from credits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and entry_type = '1' group by acctcode");
-      $debitcashchecks = DB::Select("select sum(amount)+sum(checkamount) as totalamount, acctcode, depositto from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and entry_type = '1' group by acctcode, depositto");
+ function maincollection($entry,$fromtran,$totran){
+     $credits = DB::Select("select sum(amount) as amount,acctcode from credits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and entry_type = '$entry' group by acctcode");
+      $debitcashchecks = DB::Select("select sum(amount)+sum(checkamount) as totalamount, acctcode, depositto from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and entry_type = '$entry' group by acctcode, depositto");
      //$debitcashchecks = DB::Select("select sum(amount)+sum(checkamount) as totalamount, depositto from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and (paymenttype = '1' or paymenttype = '2') group by depositto");
      //$debitdebitmemos = DB::Select("select sum(amount)+sum(checkamount) as totalamount, acctcode from dedits where (transactiondate between '$fromtran' and '$totran') and paymenttype = '3' and isreverse = '0' group by acctcode");
      //$debitdiscounts = DB::Select("select sum(amount)+sum(checkamount) as totalamount from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and paymenttype = '4'");
      //$debitreservations = DB::Select("select sum(amount)+sum(checkamount) as totalamount from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and paymenttype = '5'");
    
-    return view('accounting.maincollection',compact('credits','debitcashchecks','fromtran','totran')); 
+    return view('accounting.maincollection',compact('credits','debitcashchecks','fromtran','totran','entry')); 
  }
  
-  function printmaincollection($fromtran,$totran){
-     $credits = DB::Select("select sum(amount) as amount,acctcode from credits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' group by acctcode");
-      $debitcashchecks = DB::Select("select sum(amount)+sum(checkamount) as totalamount, acctcode, depositto from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' group by acctcode, depositto");
+  function printmaincollection($entry,$fromtran,$totran){
+     $credits = DB::Select("select sum(amount) as amount,acctcode from credits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and entry_type = '$entry' group by acctcode");
+      $debitcashchecks = DB::Select("select sum(amount)+sum(checkamount) as totalamount, acctcode, depositto from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and entry_type = '$entry' group by acctcode, depositto");
      //$debitcashchecks = DB::Select("select sum(amount)+sum(checkamount) as totalamount, depositto from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and (paymenttype = '1' or paymenttype = '2') group by depositto");
      //$debitdebitmemos = DB::Select("select sum(amount)+sum(checkamount) as totalamount, acctcode from dedits where (transactiondate between '$fromtran' and '$totran') and paymenttype = '3' and isreverse = '0' group by acctcode");
      //$debitdiscounts = DB::Select("select sum(amount)+sum(checkamount) as totalamount from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and paymenttype = '4'");
      //$debitreservations = DB::Select("select sum(amount)+sum(checkamount) as totalamount from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and paymenttype = '5'");
         $pdf = \App::make('dompdf.wrapper');
-        $pdf->loadView('print.printcashentry',compact('credits','debitcashchecks','fromtran','totran')); 
+        $pdf->loadView('print.printcashentry',compact('credits','debitcashchecks','fromtran','totran','entry')); 
         return $pdf->stream();  
 
  }

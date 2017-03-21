@@ -397,7 +397,7 @@
                         <br>
                     </div>
                     <div  id="math_{{$info['info']->idno}}">
-                        @if($quarter == 4)
+                        @if($quarter == 0)
                     <table border="1" width="100%" cellpadding="0" cellspacing="0">
                         <tr style="text-align:center"><td colspan="2"><b>MATHEMATICS</b></td></tr>
                         <tr>
@@ -482,7 +482,7 @@
                         
                         
                     </table>
-                        @elseif($quarter == 2)
+                        @if($quarter == 2)
                     <table border="1" width="100%" cellpadding="0" cellspacing="0">
                         <tr style="text-align:center"><td colspan="2"><b>MATHEMATICS</b></td></tr>
                         <tr>
