@@ -1165,6 +1165,10 @@ class AjaxController extends Controller
                     $newdisbursement->payee=$payee;
                     $newdisbursement->postedby=$idno;
                     $newdisbursement->save();
+                    
+                    $incrementreceipt = \App\User::where('idno',$idno)->first();
+                    $incrementreceipt->disbursementno = $incrementreceipt->disbursementno + 1;
+                    $incrementreceipt->update();
                   return "true";  
                 }
             }

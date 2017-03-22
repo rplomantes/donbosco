@@ -75,7 +75,7 @@
                                          <ul class="dropdown-menu" role="menu">
                                              <li>
                                             <a href="{{url('adddisbursement')}}"><i class="fa fa-btn"></i>Disbursement</a>
-                                            <a href="#"><i class="fa fa-btn"></i>Disbursement Daily Summary</a>
+                                            <a href="{{url('dailydisbursementlist',date('Y-m-d',strtotime(\Carbon\Carbon::now())))}}"><i class="fa fa-btn"></i>Disbursement Daily Summary</a>
                                             <a href="{{url('addentry')}}"><i class="fa fa-btn"></i>Journal Entry</a>
                                             <a href="{{url('dailyjournallist',date('Y-m-d',strtotime(\Carbon\Carbon::now())))}}"><i class="fa fa-btn"></i>Journal Entry Daily Summary</a>
                                             <a href="{{url('showjournallist')}}"><i class="fa fa-btn"></i>Search Journal Entries</a>

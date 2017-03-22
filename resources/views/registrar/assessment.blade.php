@@ -5,56 +5,45 @@
          <div class='container_fluid'>
          <input type="hidden" name="encoded_by" value = "{{Auth::user()->id}}">      
          <div class='col-md-6'>
-         
-         <div class='col-md-12'>
-         <label for="idno">Student ID Number</label> 
-         </div>
-         <div class='col-md-6'>
+             <div class="col-md-12">
+                 <label for="idno">Student ID Number</label>  
+              </div>   
+         <div class='form-group'>
+         <div class="col-md-6">
+            
          <input type="text" name = "id_number" id="id_number" class="form-control" readonly> 
          <input type="hidden" name = "idno" id="idno"> 
          <input type="hidden" name="action" value="addnew">
          </div>
-         <div class='col-md-6'>
+            
+         <div class="col-md-6">   
          <a class="btn btn-primary" onclick="getid('{{Auth::user()->id}}')">Get ID</a>
          <a class="btn btn-primary" href="{{url('/registrar/show')}}">Clear</a>
          <a class="btn btn-primary" href="{{url('/')}}">Back</a>
           <script src = "{{asset('/js/nephilajs/studentid.js')}}"></script>
          </div>
-        
-             <div id="credentials" style="visibility: hidden">
-         <div class="col-md-3">       
-         
-         
+        </div>
+         <div id="credentials" style="visibility: hidden">
+         <div class="form-group">       
+         <div class="col-md-3">      
          <label for="idno">Last Name</label> 
          <input type="text" name = "lastname" id="lastname" class="form-control"> 
-         
-          
          </div>
          
          <div class="col-md-3">      
-         
-         
          <label for="idno">First Name</label> 
          <input type="text" name = "firstname" id="firstname" class="form-control"> 
-           
-         
          </div>    
              
          <div class="col-md-3">      
-         
-        
          <label for="idno">Middle Name</label> 
          <input type="text" name = "middlename" id="middlename" class="form-control"> 
-           
-       
          </div>    
              
           <div class="col-md-3">      
-        
-        
-         <label for="idno">Extension Name</label> 
-         <input type="text" name = "extensionname" id="extensionname" class="form-control"> 
-       
+          <label for="idno">Extension Name</label> 
+          <input type="text" name = "extensionname" id="extensionname" class="form-control"> 
+       </div>
         
          </div>      
              

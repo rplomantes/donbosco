@@ -51,4 +51,10 @@ class JournalController extends Controller
            $pdfprint->loadView('print.printjournalvoucher',compact('refno'));
            return $pdfprint->stream();
         }
+        function printjournallistpdf($trandate){
+            $pdf= \App::make('dompdf.wrapper');
+            $pdf->setPaper('Letter','portrait');
+            $pdf->loadView('print.printjournallistpdf',compact('trandate'));
+            return $pdf->stream();
+        } 
 }

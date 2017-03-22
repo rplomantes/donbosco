@@ -53,11 +53,28 @@ class DisbursementController extends Controller
        }
        
        
+       function printcheckvoucher($refno){
+           $disbursement=  \App\Disbursement::where('refno',$refno)->first();
+           $accountings = \App\Accounting::where('refno',$refno)->get();
+           $amountinwords = $this->convert_number_to_words($disbursement->amount);
+           $pdf = \App::make('dompdf.wrapper');
+           $pdf->setPaper("Letter",'portrait');
+           $pdf->loadView('print.printcheckvoucher',compact('disbursement','accountings','amountinwords'));
+           return $pdf->stream();
+       }
+       function dailydisbursementlist($trandate){
+           return view('accounting.dailydisbursementlist',compact('trandate'));
+       }
        
-       
+       function printdisbursementlistpdf($trandate){
+           $pdf = \App::make('dompdf.wrapper');
+           $pdf->setPaper("Letter","portrait");
+           $pdf->loadView('print.printdisbursementlistpdf',compact('trandate'));
+           return $pdf->stream();
+       }
        
     function convert_number_to_words($number) {
-    $hyphen      = '-';
+    $hyphen      = ' ';
     $conjunction = ' ';
     $separator   = ' ';
     $negative    = 'negative ';
@@ -162,9 +179,13 @@ class DisbursementController extends Controller
             $words[] = $dictionary[$number];
         }
         $string .= implode(' ', $words); */
+        if($fraction != "00"){
         $string = $string . " and " . $fraction . "/100 ";
+        }
     }
 
     return $string;
 }
+
+
 }

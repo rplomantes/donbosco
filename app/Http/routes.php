@@ -75,7 +75,7 @@
      
     //accounting module
     Route::get('accounting/{idno}','Accounting\AccountingController@view');
-    Route::post('debitcredit','Accounting\AccountingController@debitcredit');
+    Route::post('debitcredit','Accounting\DebitMemoController@debitcredit');
     Route::get('viewdm/{refno}/{idno}','Accounting\AccountingController@viewdm');
     Route::get('printdmcm/{refno}/{idno}','Accounting\AccountingController@printdmcm');
     Route::get('dmcmreport/{transationdate}','Accounting\AccountingController@dmcmreport');
@@ -118,6 +118,10 @@
     Route::get('restorecanceldisbursement/{kind}/{refno}','Accounting\DisbursementController@restorecanceldisbursement');
     Route::get('printcheckdetails/{refno}','Accounting\DisbursementController@printcheckdetails');
     Route::get('printcheckvoucher/{refno}','Accounting\DisbursementController@printcheckvoucher');
+    Route::get('dailydisbursementlist/{trandate}','Accounting\DisbursementController@dailydisbursementlist');
+    Route::get('printdisbursementlistpdf/{trandate}','Accounting\DisbursementController@printdisbursementlistpdf');
+    Route::get('printjournallistpdf/{trandate}','Accounting\JournalController@printjournallistpdf');
+    Route::get('viewdebitmemo/{idno}','Accounting\DebitMemoController@viewdebitmemo');
     //update module
     //Elective submitted by registrar on STEM
     //Route::get('updateelective','Registrar\AssessmentController@updateelective');

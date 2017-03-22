@@ -187,13 +187,17 @@
          </div> 
      
         <div class="col-md-3">
-             <div class="col-md-12">
-                <h5>Due Today</h5>
+            <h5>Due Today</h5>
+            <div class="form form-group">
+             
                 <div class="btn btn-danger form-control" style="font-size:20pt; font-weight: bold; height: 50px">{{number_format($totaldue + $totalprevious - $reservation ,2) }}</div>
+            
+             </div>
+            <div class="form form-group">
+            
+                <a href = "{{url('viewdebitmemo',$student->idno)}}" class="btn btn-primary form-control" style="font-size:20pt; font-weight: bold; height: 50px">DEBIT MEMO</a>
+           
             </div>    
-            <div class="col-md-12" style=" margin-top: 10px;background-color: ">
-                <a href = "{{url('viewdebitmemo',$student->idno)}}" class="btn btn-primary form-control">DEBIT MEMO</a>
-            </div>
         </div>
             
     </div>
