@@ -36,7 +36,7 @@ class AssessmentController extends Controller
         $status = \App\Status::where('idno',$id)->first();
        
         if(count($status) > 0){
-            if($status->status != 0){
+            
                 if($status->department=="TVET"){
                     $currentschoolyear = \App\ctrSchoolYear::where('department',$status->department)->where('period',$status->period)->first();
                 }else{
@@ -46,7 +46,7 @@ class AssessmentController extends Controller
                 $mydiscount=  \App\Discount::where($matchfields)->first();
                 $ledgers =  DB::Select("select sum(amount) as amount, sum(plandiscount) as plandiscount,  sum(otherdiscount) as otherdiscount,receipt_details  from ledgers
                                  where idno = '$id' and schoolyear = '".$currentschoolyear->schoolyear."'  and period = '". $currentschoolyear->period."' Group by receipt_details ");
-            }
+            
         }
         $programs = DB::Select("select distinct department from ctr_levels");
         //$k_levels = \App\CtrLevel::where('department','Kindergarten')->get();

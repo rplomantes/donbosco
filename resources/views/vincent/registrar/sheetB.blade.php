@@ -44,7 +44,7 @@
 					<span style="margin-top: 4px;display: block;width: 22px;height: 2px;border-radius: 1px;background-color: gray;" class="icon-bar"></span>        
         </strong></button>
         <span class="col-md-offset-1" id="quarters">
-            <a class="btn btn-default quarter btn-primary" id="1st" onclick="changequarter(1,'FIRST')">1st Quarter</a><a class="btn btn-default quarter" id="2nd" onclick="changequarter(2,'SECOND')">2nd Quarter</a><a class="btn btn-default quarter" id="3rd" onclick="changequarter(3,'THIRD')">3rd Quarter</a><a class="btn btn-default quarter" id="4th" onclick="changequarter(4,'FOURTH')">4th Quarter</a>
+            <a class="btn btn-default quarter btn-primary" id="1st" onclick="changequarter(1,'FIRST')">1st Quarter</a><a class="btn btn-default quarter" id="2nd" onclick="changequarter(2,'SECOND')">2nd Quarter</a><a class="btn btn-default quarter" id="3rd" onclick="changequarter(3,'THIRD')">3rd Quarter</a><a class="btn btn-default quarter" id="4th" onclick="changequarter(4,'FOURTH')">4th Quarter</a><a class="btn btn-default quarter" id="final" onclick="changequarter(5,'FINAL')">FINAL</a>
         </span>
         </div>
     <div class="col-md-3 collapse in" id='menu'>
@@ -156,17 +156,31 @@ function seeGrade(){
     arrays['strand']= strands;
     arrays['department']= dept;
     $('#display').html("");
-    
-    $.ajax({
-            type: "GET", 
-            url: "/showgrades",
-            data : arrays,
-            success:function(data){
-                
-                $('#display').html(data); 
-                
-                }
-            }); 
+    if(quarter == 5){
+        $.ajax({
+                type: "GET", 
+                url: "/finalsheetb/" + quarter + "/" + lvl + "/" + sec,
+                data : arrays,
+                success:function(data){
+
+                    $('#display').html(data); 
+
+                    }
+                }); 
+    }
+    else{
+        $.ajax({
+                type: "GET", 
+                url: "/showgrades",
+                data : arrays,
+                success:function(data){
+
+                    $('#display').html(data); 
+
+                    }
+                }); 
+    }
+
 
 }
 
@@ -228,7 +242,11 @@ function dos(){
     var arrays ={} ;
     arrays['quarter'] = quarter;
     //$('#dos').html("ddd");
-    
+    if(quarter == 5){
+        <?php $att=  \App\CtrAttendance::where('level','Kindergarten')->first(); ?>
+        $('#dos').html({{$att->Jul+$att->Aug+$att->Sept+$att->Oct+$att->Nov+$att->Dece+$att->Jan+$att->Feb+$att->Mar+$att->Jun}});
+    }
+    else{
 
             $.ajax({
             type: "GET", 
@@ -238,6 +256,7 @@ function dos(){
                 $('#dos').html(data);                
                 }
             }); 
+        }
 
 }
 

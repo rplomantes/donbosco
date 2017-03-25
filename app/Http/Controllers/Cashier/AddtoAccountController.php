@@ -46,7 +46,6 @@ class AddtoAccountController extends Controller
         $newledger->period=$status->period;
         }
         
-        $newledger->fiscalyear = $fiscal->fiscalyear;
         $newledger->idno = $idno;
         $newledger->transactiondate = Carbon::now();
         $newledger->categoryswitch = '7';

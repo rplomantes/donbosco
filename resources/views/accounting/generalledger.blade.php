@@ -93,7 +93,7 @@
             ?>
             <table width="100%" class="table table-borderless">
                 <thead>
-                    <tr><td width="25%"></td><td width="25%"><u>DEBIT</u></td><td width="25%"><u>CREDIT</u></td><td width="25%"><u>BALANCE</u></td></tr>
+                    <tr style="text-align: right"><td width="25%"></td><td width="25%"><u>DEBIT</u></td><td width="25%"><u>CREDIT</u></td><td width="25%"><u>BALANCE</u></td></tr>
                 </thead>
                 @if($basic == 1 || $basic == 2 || $basic == 3)
                 <tr style="text-align: right"><td style="text-align: left">Beginning Balance: </td><td>{{number_format($beginningdebit,2,'.',',')}}</td><td>{{number_format($beginningcredit,2,'.',',')}}</td><td>{{number_format($beginningtotal,2,'.',',')}}</td></tr>
@@ -196,7 +196,7 @@
                             $totalbalance = $monthlycredit-$monthlygranddebit;
                             }
                             elseif($basic == 3){
-                            $totalbalance = $monthlytotal + ($monthlycredit-$monthlydebit);
+                            $totalbalance = $monthlytotal + ($monthlygrandcredit-$monthlydebit);
                             }
                             elseif($basic == 4){
                             $totalbalance = $monthlytotal + ($monthlycredit-$monthlydebit);
@@ -206,8 +206,9 @@
                             }  
                         ?>
                     @if($basic == 1 || $basic == 2 || $basic == 3)
-                        <tr  style="text-align: right"><td width="25%"  style="text-align: left">Monthly Grand Total</td><td width="25%"><u>{{number_format($monthlygranddebit,2)}}</u></td><td width="25%"><u>{{number_format($monthlygrandcredit,2)}}</u></td><td width="25%">{{number_format($monthlygrandcredit,2)}}</td></tr>
+                        <tr  style="text-align: right"><td width="25%"  style="text-align: left">Monthly Grand Total</td><td width="25%"><u>{{number_format($monthlygranddebit,2)}}</u></td><td width="25%"><u>{{number_format($monthlygrandcredit,2)}}</u></td><td width="25%"></td></tr>
                     @endif
+                    <tr  style="text-align: right"><td width="25%"  style="text-align: left">Monthly Grand Total</td><td width="25%"><u>{{number_format($monthlygranddebit,2)}}</u></td><td width="25%"><u>{{number_format($monthlygrandcredit,2)}}</u></td><td width="25%"></td></tr>
                 </table>
         @endforeach
 

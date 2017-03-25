@@ -205,6 +205,8 @@
                     {{--*/$fourth=0/*--}}
                     {{--*/$final=0/*--}}
                     {{--*/$count=0/*--}}
+                    {{--*/$isup=0/*--}}
+
                     @foreach($info['aca'] as $key=>$academics)
                     <tr style="text-align: center;font-size: 8pt;">
                         <td style="text-align: left;padding-left: 10px;">
@@ -234,16 +236,18 @@
                             @endif
                             {{--*/$fourth = $fourth + round($academics->fourth_grading,2)/*--}}
                         </td>
-                        
                         <td>
                             @if(round($academics->fourth_grading,2) != 0)
-                            <?php $final_grade = ($academics->first_grading+$academics->second_grading+$academics->third_grading+$academics->fourth_grading)/4; ?>
-                                {{round($final_grade,2)}}
+				<?php $final_grade = ($academics->first_grading+$academics->second_grading+$academics->third_grading+$academics->fourth_grading)/4; ?>
+                                {{round($final_grade,0)}}
                             @endif
                             {{--*/$final = $final + round($final_grade,2)/*--}}
                         </td>
                         <td>
-                            {{$academics->remarks}}
+	                        @if((round($final_grade,0)) != 0)
+        	        	       <b> {{round($final_grade,0) >= 75 ? "Passed":"Failed"}}</b>
+                	        @endif
+
                             {{--*/$count ++/*--}}
                         </td>                         
                     </tr>
@@ -275,12 +279,13 @@
                         <td>
                             @if(round($fourth/$count,0) != 0)
                             <b>{{round($final/$count,0)}}</b>
+				<?php $isup = round($final/$count,0);?>
                             @endif
                         </td>
 
                         <td>
                         @if((round($final/$count,0)) != 0)
-                        {{round($final/$count,0) >= 75 ? "Passed":"Failed"}}
+                       <b> {{round($final/$count,0) >= 75 ? "Passed":"Failed"}}</b>
                         @endif
                         </td>
                         
@@ -308,6 +313,7 @@
                         {{--*/$third=0/*--}}
                         {{--*/$fourth=0/*--}}
                         {{--*/$final=0/*--}}
+                        {{--*/$isuptech=0/*--}}
 
                         @foreach($info['tech'] as $key=>$tech)
                         <?php $weight=$tech->weighted / 100;?>
@@ -340,13 +346,16 @@
                                 {{--*/$fourth = $fourth + round($tech->fourth_grading,2)*$weight/*--}}
                             </td>
                             <td class="print-size">
-                                @if(!round($final/$count,0) == 0)
-                                {{round($tech->final_grade,0)}}
-                                @endif
-                                {{--*/$final = $final + round($tech->final_grade,2)*$weight/*--}}
+                            @if(round($tech->fourth_grading,2) != 0)
+                            <?php $final_grade = ($tech->first_grading+$tech->second_grading+$tech->third_grading+$tech->fourth_grading)/4; ?>
+                                {{round($final_grade,0)}}
+                            @endif
+                                {{--*/$final = $final + round($final_grade,2)*$weight/*--}}
                             </td>
                             <td class="print-size">
-                                {{$tech->remarks}}
+	                        @if((round($final_grade,0)) != 0)
+        	        	       <b>{{round($final_grade,0) >= 75 ? "Passed":"Failed"}}</b>
+                	        @endif
                             </td>                         
                         </tr>
                         @endforeach
@@ -356,10 +365,14 @@
                             <td class="print-size"><b>@if(!round($second,0) == 0) {{round($second,0)}}@endif</b></td>
                             <td class="print-size"><b>@if(!round($third,0) == 0) {{round($third,0)}}@endif</b></td>
                             <td class="print-size"><b>@if(!round($fourth,0) == 0) {{round($fourth,0)}}@endif</b></td>
-                            <td class="print-size"><b>@if(!round($final,0) == 0) {{round($final,0)}}@endif</b></td>
+                            <td class="print-size"><b>
+				@if(!round($final,0) == 0) 
+					{{round($final,0)}}
+					<?php $isuptech = $final;?>
+				@endif</b></td>
                             <td class="print-size">
-                               @if(!round($final/$count,0) == 0) 
-                            {{round($final/$count,0) >= 75 ? "Passed":"Failed"}} 
+                               @if(!round($final,0) == 0) 
+                            <b>{{round($final,0) > 75 ? "Passed":"Failed"}} </b>
                             @endif
                             </td></tr>
                     </table>        
@@ -596,7 +609,7 @@
                         <td>@if($curr_month->jan != 0){{round($attend->Jan,1)}}@endif</td>
                         <td>@if($curr_month->feb != 0){{round($attend->Feb,1)}}@endif</td>
                         <td>@if($curr_month->mar != 0){{round($attend->Mar,1)}}@endif</td>                        
-                        <td>@if($curr_month->mar != 0){{round($attend->Nov+$attend->Dece+$attend->Jan+$attend->Feb+$attend->Mar+$attend->Jun+$attend->Jul+$attend->Aug+$attend->Sep+$attend->Oct,1)}}@endif</td>
+                        <td>@if($curr_month->mar != 0){{round($attend->Nov+$attend->Dece+$attend->Jan+$attend->Feb+$attend->Mar+$attend->Jun+$attend->Jul+$attend->Aug+$attend->Sept+$attend->Oct,1)}}@endif</td>
                         
                         
                         
@@ -640,11 +653,29 @@
                         </td>                                                    
                     </tr>
                     <tr>
+                        @if($isup >= 75)
+                        <?php  $levelup = intval(str_replace("Grade","",$level));
+                                $newlevel = $levelup + 1;
+                        ?>
+                        <td class="print-size" >admission to:<div style="
+    display: inline-block;
+    border-bottom: 1px solid;
+    height: 16px;
+    width: 145px;
+    text-align: center;
+"><i>Grade {{$newlevel}}</i></div></td>
+                        @else
                         <td class="print-size" >admission to:___________________</td>
+                        @endif
                         <td class="print-size" >Grade:_________ Date:_________</td>
                     </tr>                       
                     <tr>
-                        <td class="print-size" >Date of Issue:___________________</td>
+			@if($isup >= 75)
+                         <td class="print-size" >Date of Issue:<div style="display: inline-block;border-bottom: 1px solid;height: 16px;width: 145px;text-align: center;"><i>April 11, 2017</i></div></td>
+                        @else
+                        <td class="print-size" >Date of Issue:__________________</td>
+                        @endif
+
                         <td></td>                                                    
                     </tr>
                     <tr>
@@ -691,7 +722,7 @@
             var bodywidth = document.getElementById('body').offsetWidth;
             
             bodywidth = bodywidth/2
-            widths = (widths+140)/2
+            widths = (widths+100)/2
             
             var placement = bodywidth - widths;
             document.getElementById("cardHeader{{$card}}").style.marginLeft = placement+"px";

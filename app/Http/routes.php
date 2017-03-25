@@ -82,7 +82,7 @@
     Route::get('dmcmallreport/{transactiondate}','Accounting\AccountingController@dmcmallreport');
     Route::get('collectionreport/{datefrom}/{dateto}','Accounting\AccountingController@collectionreport');
     Route::get('printdmcmreport/{idno}/{transactiondate}','Accounting\AccountingController@printdmcmreport');
-    Route::get('summarymain','Accounting\AccountingController@summarymain');
+    Route::get('summarymain/{schoolyear}','Accounting\AccountingController@summarymain');
     Route::get('maincollection/{entry}/{fromtran}/{totran}','Accounting\AccountingController@maincollection');
     Route::get('printmaincollection/{entry}/{fromtran}/{totran}','Accounting\AccountingController@printmaincollection');
     Route::get('studentledger/{level}','Accounting\AccountingController@studentledger');
@@ -203,7 +203,7 @@
     Route::get('printdmjournal/{fromtran}/{totran}','Accounting\DebitDCSummaryController@printsummary');
     
     
-    
+    Route::get('/finalsheetb/{quarter}/{level}/{section}/{strand?}','Registrar\SheetBController@finalSheetB');
 });
 
 //Ajax route
@@ -251,7 +251,7 @@
    
     //AJAX 
     Route::get('/getparticulars/{group}','Cashier\AjaxController@getparticular');
-    Route::get('/finalsheetb/{quarter}/{level}/{}','Cashier\AjaxController@getparticular');
+    
     Route::get('/getsubjs','Vincent\AjaxController@getsubjs');
     Route::get('/showgrades', 'Vincent\AjaxController@showgrades');
     Route::get('/showgradestvet', 'Vincent\AjaxController@showgradestvet');

@@ -650,7 +650,7 @@ class CashierController extends Controller
         return view('cashier.otherpayment',compact('acct_departments','student','status','accounttypes','advance','paymentothers'));
     }
     
-    function mainDepartment($department){
+   static function mainDepartment($department){
         $departments = DB::Select("Select * from ctr_acct_dept where sub_department = '$department'");
         
         $dept = "None";

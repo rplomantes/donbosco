@@ -16,6 +16,6 @@ class TORController extends Controller
       // $pdf->setPaper([0, 0, 336, 440], 'portrait');
        $pdf->loadView("vincent.registrar.permanentRecord",compact('info','student'));
        return $pdf->stream();
-       //return view('vincent.registrar.permanentRecord',compact('info','student'));
+       return view('vincent.registrar.permanentRecord',compact('info','student'));
     }
 }

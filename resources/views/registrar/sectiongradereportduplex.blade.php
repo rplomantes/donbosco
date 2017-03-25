@@ -40,10 +40,10 @@
                 margin-left: -0.8cm;
                 padding-left: .8cm;
                 margin-right: -0.8cm;
-                padding-right: .8cm;                
-            }            
-        </style>    
-       
+                padding-right: .8cm;
+            }
+        </style>
+
         <style type="text/css" media="print">
             body{width:100%;}
             .front{
@@ -51,16 +51,16 @@
                 margin-left: 0px;
                 padding-left: 0px;
                 margin-right: 0px;
-                padding-right: 0px;                
+                padding-right: 0px;
             }
             .back{
                 border: none;
                 margin-left: 0px;
                 padding-left: 0px;
                 margin-right: 0px;
-                padding-right: 0px;               
-            }             
-            
+                padding-right: 0px;
+            }
+
             body{
                 width:100%;
             }
@@ -68,7 +68,7 @@
             font-family: calibri;
             width:100%;
             padding-left: .5cm;
-            padding-right: .5cm;
+            padding-right: .6cm;
 
             }            
             body{
@@ -197,10 +197,12 @@
                     </tr>
                     {{--*/$first=0/*--}}
                     {{--*/$second=0/*--}}
+			{{--*/$final_grade=0/*--}}
                     {{--*/$third=0/*--}}
                     {{--*/$fourth=0/*--}}
                     {{--*/$final=0/*--}}
                     {{--*/$count=0/*--}}
+		    {{--*/$isup = 0/*--}}
                     @foreach($info['aca'] as $key=>$academics)
                     <tr style="text-align: center;font-size: 8pt;">
                         <td style="text-align: left;padding-left: 10px;">
@@ -230,17 +232,22 @@
                             @endif
                             {{--*/$fourth = $fourth + round($academics->fourth_grading,2)/*--}}
                         </td>
-                        <td>
-                            @if(round($academics->final_grade,2) != 0)
-                            
-                            {{round($academics->final_grade,2)}}
+                        <td><b>
+                            @if(round($academics->fourth_grading,2) != 0)
+                            <?php $final_grade = ($academics->first_grading+$academics->second_grading+$academics->third_grading+$academics->fourth_grading)/4; ?>
+                                {{number_format(round($final_grade,2),2)}}
                             @endif
-                            {{--*/$final = $final + round($academics->final_grade,2)/*--}}
-                        </td>
-                        <td>
-                            {{$academics->remarks}}
+                            {{--*/$final = $final + round($final_grade,2)/*--}}
+			
+                       </b> </td>
+                        <td><b>
+                        @if((round($final_grade,2)) != 0)
+                        {{round($final_grade,2) >= 75 ? "Passed":"Failed"}}
+                        @endif
+
+                          
                             {{--*/$count ++/*--}}
-                        </td>                         
+                        </b></td>                         
                     </tr>
                     @endforeach
                     <tr style="text-align: center">
@@ -249,36 +256,38 @@
                         </td>
                         <td><b>
                             @if(round($first/$count,2) != 0)
-                                {{round($first/$count,2)}}
+                                {{number_format(round($first/$count,2),2)}}
                             @endif</b>
                         </td>
                         <td><b>
                             @if(round($second/$count,2) != 0)
-                                {{round($second/$count,2)}}
+                                {{number_format(round($second/$count,2),2)}}
                             @endif
                             </b>
                         </td>
                         <td><b>
                             @if(round($third/$count,2) != 0)
-                            {{round($third/$count,2)}}
+                            {{number_format(round($third/$count,2),2)}}
                             @endif</b>
                         </td>
                         <td><b>
                             @if(round($fourth/$count,2) != 0)
-                            {{round($fourth/$count,2)}}
+                            {{number_format(round($fourth/$count,2),2)}}
                             @endif</b>
                         </td>
-                        <td>
+                        <td><b>
                             @if(round($fourth/$count,2) != 0)
-                                {{round($final/$count,2)}}
+                                {{number_format(round($final/$count,2),2)}}
                             @endif
+			</b>
                         </td>
 
-                        <td>
+                        <td><b>
                         @if((round($final/$count,2)) != 0)
+			<?php $isup = round($final/$count,2);?>
                         {{round($final/$count,2) >= 75 ? "Passed":"Failed"}}
                         @endif
-                        </td>
+                        </b></td>
                         
                     </tr>
                 </table>
@@ -425,14 +434,14 @@
                             <tr>
                                 <td style="border: 1px solid"><b>CONDUCT GRADE</b></td>
                                 <td style="border: 1px solid"><b>100</b></td>
-                                <td style="border: 1px solid"><b>@if(!$first == 0){{$first}}@endif</b></td>
-                                <td style="border: 1px solid"><b>@if(!$second == 0){{$second}}@endif</b></td>
-                                <td style="border: 1px solid"><b>@if(!$third == 0){{$third}}@endif</b></td>
-                                <td style="border: 1px solid"><b>@if(!$fourth == 0){{$fourth}}@endif</b></td>
+                                <td style="border: 1px solid"><b>@if(!$first  == 0){{number_format($first,2)}}@endif</b></td>
+                                <td style="border: 1px solid"><b>@if(!$second == 0){{number_format($second,2)}}@endif</b></td>
+                                <td style="border: 1px solid"><b>@if(!$third  == 0){{number_format($third,2)}}@endif</b></td>
+                                <td style="border: 1px solid"><b>@if(!$fourth == 0){{number_format($fourth,2)}}@endif</b></td>
 
                                 <td style="border: 1px solid"><b>
                                     @if(!$fourth == 0)
-                                    {{round(($first+$second+$third+$fourth)/4,2)}}
+                                    {{number_format(round(($first+$second+$third+$fourth)/4,2),2)}}
                                 @endif</b></td>
 
                             </tr>
@@ -479,7 +488,7 @@
                             <td>@if($curr_month->jan != 0){{round($attend->Jan,1)}}@endif</td>
                             <td>@if($curr_month->feb != 0){{round($attend->Feb,1)}}@endif</td>
                             <td>@if($curr_month->mar != 0){{round($attend->Mar,1)}}@endif</td>                        
-                            <td>@if($curr_month->mar != 0){{round($attend->Nov+$attend->Dece+$attend->Jan+$attend->Feb+$attend->Mar+$attend->Jun+$attend->Jul+$attend->Aug+$attend->Sep+$attend->Oct,1)}}@endif</td>
+                            <td>@if($curr_month->mar != 0){{round($attend->Nov+$attend->Dece+$attend->Jan+$attend->Feb+$attend->Mar+$attend->Jun+$attend->Jul+$attend->Aug+$attend->Sept+$attend->Oct,1)}}@endif</td>
 
                         </tr>
                         @endforeach
@@ -524,14 +533,37 @@
                         </td>
                         <td class="print-size" >
                             Admitted in:____________________
-                        </td>                                                    
+                        </td>
                     </tr>
                     <tr>
+			@if($isup >= 75)
+			<?php  $levelup = intval(str_replace("Grade","",$level));
+				$newlevel = $levelup + 1;
+			?>
+                        <td class="print-size" >admission to:<div style="
+    display: inline-block;
+    border-bottom: 1px solid;
+    height: 14px;
+    width: 122px;
+    text-align: center;
+"><i>Grade {{$newlevel}}</i></div></td>
+			@else
                         <td class="print-size" >admission to:___________________</td>
+			@endif
                         <td class="print-size" >Grade:_________ Date:___________</td>                                                    
                     </tr>                       
                     <tr>
-                        <td class="print-size" >Date of Issue:___________________</td>
+			@if($isup >= 75)
+                         <td class="print-size" >Date of Issue:<div style="
+    display: inline-block;
+    border-bottom: 1px solid;
+    height: 14px;
+    width: 122px;
+    text-align: center;
+"><i>April 11, 2017</i></div></td>
+			@else
+			<td class="print-size" >Date of Issue:__________________</td>
+			@endif
                         <td></td>                                                    
                     </tr>
                     <tr>
@@ -539,7 +571,7 @@
                     </tr>
                                                                     <tr style="text-align: center">
                         <td class="print-size"></td>
-                        <td class="print-size" ><div style="border-bottom: 1px solid;width: 80%;margin-left: auto;margin-right: auto;height:36px"><img src="{{asset('images/elem_sig.png')}}"  style="display: inline-block;width:180px;"></div></td>
+                        <td class="print-size" ><div style="display:inline-block;border-bottom: 1px solid;width: 80%;margin-left: auto;margin-right: auto;height:36px"><img src="{{asset('images/elem_sig.png')}}"  style="display: inline-block;width:180px;"></div></td>
                     </tr>
                     <tr style="text-align: center;">
                         <td class="print-size" >
@@ -549,7 +581,7 @@
                     </tr>
                     <tr style="text-align: center">
                         <td class="print-size" ></td>
-                        <td class="print-size" ><b>Grade School - Principal</b></td>
+                        <td class="print-size" ><b>Elementary - Principal</b></td>
                     </tr>
                 </table>
             </td>
@@ -568,7 +600,7 @@
             var bodywidth = document.getElementById('body').offsetWidth;
             
             bodywidth = bodywidth/2
-            widths = (widths+150)/2
+            widths = (widths+155)/2
             
             var placement = bodywidth - widths;
             document.getElementById("cardHeader{{$card}}").style.marginLeft = placement+"px";

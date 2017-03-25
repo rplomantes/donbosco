@@ -615,7 +615,10 @@ class AjaxController extends Controller
                     break;
                     case 4;
                         $averages = DB::Select("SELECT grades.idno,weighted,ROUND( SUM( fourth_grading *(weighted/100))  , 0 ) AS average FROM `grades` join statuses on statuses.idno = grades.idno WHERE subjecttype =1 AND grades.level = '$level' AND grades.schoolyear = '$schoolyear' AND statuses.status = 2 GROUP BY idno ORDER BY `average` DESC");
-                    break;                
+                    break;
+                    case 5;
+                        $averages = DB::Select("SELECT grades.idno,weighted,(ROUND( SUM( fourth_grading *(weighted/100))  , 0 )+ROUND( SUM( third_grading *(weighted/100))  , 0 )+ROUND( SUM( second_grading *(weighted/100))  , 0 )+ROUND( SUM( first_grading *(weighted/100))  , 0 ))/4 AS average FROM `grades` join statuses on statuses.idno = grades.idno WHERE subjecttype =1 AND grades.level = '$level' AND grades.schoolyear = '$schoolyear' AND statuses.status = 2 GROUP BY idno ORDER BY `average` DESC");
+                    break;
                 }    
 
 
@@ -648,6 +651,9 @@ class AjaxController extends Controller
             case 4;
                 $averages = DB::Select("SELECT grades.idno,ROUND( SUM( fourth_grading ) / count( grades.idno ) ,0) AS average FROM `grades` left join statuses on statuses.idno = grades.idno WHERE subjecttype IN (0,5,6) AND grades.level = '$level' AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear->schoolyear' AND isdisplaycard = 1 GROUP BY idno ORDER BY `average` DESC");
            break; 
+            case 5;
+                $averages = DB::Select("SELECT grades.idno,ROUND((ROUND( SUM( first_grading ) / COUNT( grades.idno ) , 0 ) + ROUND( SUM( second_grading ) / COUNT( grades.idno ) , 0 ) + ROUND( SUM( third_grading ) / COUNT( grades.idno ) , 0 ) + ROUND( SUM( fourth_grading ) / COUNT( grades.idno ) , 0 ) ) /4, 0 ) as average FROM `grades` left join statuses on statuses.idno = grades.idno WHERE subjecttype IN (0,5,6) AND grades.level = '$level' AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear->schoolyear' AND isdisplaycard = 1 GROUP BY idno ORDER BY `average` DESC");
+           break; 
         }
         }elseif($level == "Grade 11" || $level == "Grade 12"){
             switch ($quarter){
@@ -662,6 +668,9 @@ class AjaxController extends Controller
                 break;
                 case 4;
                     $averages = DB::Select("SELECT grades.idno,ROUND( SUM( fourth_grading ) / count( grades.idno ) ,0) AS average FROM `grades` left join statuses on statuses.idno = grades.idno WHERE subjecttype IN (0,5,6) AND grades.level = '$level' AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear->schoolyear' AND isdisplaycard = 1 and semester = 2  GROUP BY idno ORDER BY `average` DESC");
+               break; 
+                case 5;
+                    $averages = DB::Select("SELECT grades.idno,ROUND((ROUND( SUM( first_grading ) / COUNT( grades.idno ) , 0 ) + ROUND( SUM( second_grading ) / COUNT( grades.idno ) , 0 ) + ROUND( SUM( third_grading ) / COUNT( grades.idno ) , 0 ) + ROUND( SUM( fourth_grading ) / COUNT( grades.idno ) , 0 ) ) /4, 0 ) AS average FROM `grades` left join statuses on statuses.idno = grades.idno WHERE subjecttype IN (0,5,6) AND grades.level = '$level' AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear->schoolyear' AND isdisplaycard = 1 and semester = 2  GROUP BY idno ORDER BY `average` DESC");
                break; 
             }
         }
@@ -678,7 +687,11 @@ class AjaxController extends Controller
             break;
             case 4;
                 $averages = DB::Select("SELECT grades.idno,ROUND( SUM( fourth_grading ) / count( grades.idno ) ,2) AS average FROM `grades` left join statuses on statuses.idno = grades.idno WHERE subjecttype IN (0,5,6) AND grades.level = '$level' AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear->schoolyear' AND isdisplaycard = 1 GROUP BY idno ORDER BY `average` DESC");
-           break; 
+            break; 
+            case 5;
+                $averages = DB::Select("SELECT grades.idno, ROUND((ROUND( SUM( first_grading ) / COUNT( grades.idno ) , 2 ) + ROUND( SUM( second_grading ) / COUNT( grades.idno ) , 2 ) + ROUND( SUM( third_grading ) / COUNT( grades.idno ) , 2 ) + ROUND( SUM( fourth_grading ) / COUNT( grades.idno ) , 2 ) ) /4, 2 )  AS average "
+                        . "FROM `grades` left join statuses on statuses.idno = grades.idno WHERE subjecttype IN (0,5,6) AND grades.level = '$level' AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear->schoolyear' AND isdisplaycard = 1 GROUP BY idno ORDER BY `average` DESC");
+           break;
         }            
         }
         $ranking = 0;
@@ -722,7 +735,10 @@ class AjaxController extends Controller
                     break;
                     case 4;
                         $rank->acad_4 = $ranking;
-                   break;            
+                   break;  
+                   case 5;
+                        $rank->acad_final = $ranking;
+                   break; 
                
                 }
             $rank->schoolyear =   $schoolyear->schoolyear;  
@@ -759,7 +775,17 @@ class AjaxController extends Controller
             break;
             case 4;
                 $averages = DB::Select("SELECT grades.idno,weighted, ROUND( SUM( fourth_grading ) / count( grades.idno ) , 2 ) AS average FROM `grades` left join statuses on statuses.idno = grades.idno WHERE subjecttype =1 AND grades.level = '$level' AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear->schoolyear' AND statuses.strand = '$strand' GROUP BY idno ORDER BY `average` DESC");
-           break;                
+           break;
+            case 5;
+                $averages = DB::Select("SELECT grades.idno,weighted,ROUND("
+                        . "((SUM( fourth_grading ) / count( grades.idno ))"
+                        . "+ (SUM( third_grading ) / count( grades.idno )) "
+                        . "+ (SUM( second_grading ) / count( grades.idno )) "
+                        . "+ (SUM( first_grading ) / count( grades.idno )))/4 , 0 ) AS average "
+                        . "FROM `grades` left join statuses on statuses.idno = grades.idno "
+                        . "WHERE subjecttype =1 AND grades.level = '$level' "
+                        . "AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear->schoolyear' AND statuses.strand = '$strand' GROUP BY idno ORDER BY `average` DESC");
+           break;
         }
                 if($averages[0]->weighted != 0){
                     $averages = $this->weightedRank($quarter,$schoolyear->schoolyear,$strand,$level,$section);
@@ -827,7 +853,10 @@ class AjaxController extends Controller
                     break;
                     case 4;
                         $averages = DB::Select("SELECT grades.idno,weighted,ROUND( SUM( fourth_grading *(weighted/100))  , 0 ) AS average FROM `grades` join statuses on statuses.idno = grades.idno WHERE subjecttype =1 AND grades.level = '$level' AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear' AND statuses.strand = '$strand' GROUP BY idno ORDER BY `average` DESC");
-                    break;                
+                    break;
+                    case 5;
+                        $averages = DB::Select("SELECT grades.idno,weighted,ROUND( (SUM(fourth_grading *(weighted/100)) + SUM(third_grading *(weighted/100)) + SUM(second_grading *(weighted/100)) +SUM(first_grading *(weighted/100)))/4 , 0 ) AS average FROM `grades` join statuses on statuses.idno = grades.idno WHERE subjecttype =1 AND grades.level = '$level' AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear' AND statuses.strand = '$strand' GROUP BY idno ORDER BY `average` DESC");
+                    break;
                 }    
 
 

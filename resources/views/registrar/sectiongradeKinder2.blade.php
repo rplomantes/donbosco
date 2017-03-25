@@ -17,7 +17,7 @@
                padding-top: 2px;
                padding-bottom: 2px;
            }
-           @endif           
+           @endif
 
            table tr td{font-size:10pt;}
            body{
@@ -51,7 +51,7 @@
         
         @foreach($collection as $info)       
         <div class="back">
-        <table style="margin-top: 55px;margin-bottom:30px;margin-left: .5cm;margin-right:.5cm">
+        <table style="margin-top: 40px;margin-bottom:30px;margin-left: .5cm;margin-right:.5cm">
             <tr>
                 <td style="width:8.33cm" id="init_{{$info['info']->idno}}">
                     @if(sizeOf($info['aca'])!= 0)
@@ -101,10 +101,11 @@
                             {{--*/$fourth = $fourth + round($academics->fourth_grading,2)/*--}}
                         </td>
                         <td>
-                            @if(round($academics->final_grade,2) != 0)
-                            {{round($academics->final_grade,2)}}
+                            @if(round($academics->fourth_grading,2) != 0)
+                            <?php $final_grade = ($academics->first_grading+$academics->second_grading+$academics->third_grading+$academics->fourth_grading)/4; ?>
+                                {{number_format(round($final_grade,2),2)}}
                             @endif
-                            {{--*/$final = $final + round($academics->final_grade,2)/*--}}
+                            {{--*/$final = $final + round($final_grade,2)/*--}}
                         </td>
                                 {{--*/$count ++/*--}}
 
@@ -121,23 +122,24 @@
                         </td>
                         <td>
                             @if(round($second/$count,2) != 0)
-                            <b>{{round($second/$count,2)}}</b>
+                            <b>{{number_format(round($second/$count,2),2)}}</b>
                             @endif
                         </td>
                         <td>
                             @if(round($third/$count,2) != 0)
-                            <b>{{round($third/$count,2)}}</b>
+                            <b>{{number_format(round($third/$count,2),2)}}</b>
                             @endif
                         </td>
                         <td>
                             @if(round($fourth/$count,2) != 0)
-                            <b>{{round($fourth/$count,2)}}</b>
+                            <b>{{number_format(round($fourth/$count,2),2)}}</b>
                             @endif
                         </td>
-                        <td>
+                        <td><b>
                             @if(round($fourth/$count,2) != 0)
-                            {{round($final/$count,2)}}
+                            {{number_format(round($final/$count,2),2)}}
                             @endif
+			</b>
                         </td>
                         </tr>
                     </table>
@@ -214,7 +216,7 @@
                         <td>@if($curr_month->jan != 0){{round($attend->Jan,1)}}@endif</td>
                         <td>@if($curr_month->feb != 0){{round($attend->Feb,1)}}@endif</td>
                         <td>@if($curr_month->mar != 0){{round($attend->Mar,1)}}@endif</td>                        
-                        <td>@if($curr_month->mar != 0){{round($attend->Nov+$attend->Dece+$attend->Jan+$attend->Feb+$attend->Mar+$attend->Jun+$attend->Jul+$attend->Aug+$attend->Sep+$attend->Oct,1)}}@endif</td>
+                        <td>@if($curr_month->mar != 0){{round($attend->Nov+$attend->Dece+$attend->Jan+$attend->Feb+$attend->Mar+$attend->Jun+$attend->Jul+$attend->Aug+$attend->Sept+$attend->Oct,1)}}@endif</td>
                         
                     </tr>
                     @endforeach
@@ -246,7 +248,7 @@
                             <td>{{$conducts->points}}</td>
                         <td>
                             @if(!round($conducts->first_grading,2)==0)
-                            {{round($conducts->first_grading,2)}}
+                            {{round($conducts->first_grading)}}
                             @endif
                             {{--*/$first = $first + round($conducts->first_grading,2)/*--}}
                         </td>
@@ -266,6 +268,7 @@
                             @if(!round($conducts->fourth_grading,2)==0)
                             {{round($conducts->fourth_grading,2)}}
                             @endif
+
                             {{--*/$fourth = $fourth + round($conducts->fourth_grading,2)/*--}}
                         </td>
                         </tr>
@@ -283,7 +286,7 @@
                         </tr>
                             <tr>
                                 <td><b>FINAL GRADE</b></td>
-                                <td colspan="5">@if($fourth != 0){{round(($first+$second+$third+$fourth)/4,2)}}@endif</td>
+                                <td colspan="5">@if($fourth != 0){{number_format(round(($first+$second+$third+$fourth)/4,2),2)}}@endif</td>
                             </tr>
                     </table>
                         <br>
@@ -482,7 +485,7 @@
                         
                         
                     </table>
-                        @if($quarter == 2)
+                        @elseif($quarter == 2)
                     <table border="1" width="100%" cellpadding="0" cellspacing="0">
                         <tr style="text-align:center"><td colspan="2"><b>MATHEMATICS</b></td></tr>
                         <tr>
@@ -548,7 +551,7 @@
         </div>
 
         <div class="front">
-        <table style="margin-top: 55px;margin-bottom:30px;margin-left: .5cm;margin-right:.5cm" align="center">
+        <table style="margin-top: 40px;margin-bottom:30px;margin-left: .5cm;margin-right:.5cm" align="center">
                     <tr>
                         <td style="width:8.33cm" id="com3_{{$info['info']->idno}}">
                             <div id="cert_{{$info['info']->idno}}">
@@ -609,7 +612,7 @@
                                         <td class="print-size" style="text-align: center">Mrs. Ma. Dolores F. Bayocboc</td>
                                     </tr>
                                     <tr>
-                                        <td class="print-size" style="text-align: center">Grade  School Principal</td>
+                                        <td class="print-size" style="text-align: center">Elementary Principal</td>
                                     </tr>                                    
                                 </table>
                             </div>
@@ -627,7 +630,7 @@
                                 <br>
                                 
                                 <br>
-                                <span style="font-size: 10pt;font-weight: bold;text-align: center">GRADE SCHOOL DEPARTMENT</span><br>
+                                <span style="font-size: 10pt;font-weight: bold;text-align: center">ELEMENTARY DEPARTMENT</span><br>
                                 <span style="font-size: 10pt;font-weight: bold;text-align: center">{{$schoolyear->schoolyear}} - {{intval($schoolyear->schoolyear)+1}}</span>
                                 </div><br>
                                 <div style="font-size: 10pt;font-weight: bold">DEVELOPMENTAL CHECKLIST</div>
@@ -682,14 +685,14 @@
             @endif
             @if($quarter == 4)
                
-               $("#math_{{$info['info']->idno}}").prependTo("#com3_{{$info['info']->idno}}"); 
-               $("#phy_{{$info['info']->idno}}").prependTo("#com3_{{$info['info']->idno}}"); 
-               //$("#fil_{{$info['info']->idno}}").appendTo("#com3_{{$info['info']->idno}}");
-               $("#eng_{{$info['info']->idno}}").appendTo("#com1_{{$info['info']->idno}}"); 
-               //$("#chr_{{$info['info']->idno}}").appendTo("#com3_{{$info['info']->idno}}"); 
-               $("#con_{{$info['info']->idno}}").appendTo("#init_{{$info['info']->idno}}"); 
-               $("#art_{{$info['info']->idno}}").appendTo("#com1_{{$info['info']->idno}}"); 
-               $("#cert_{{$info['info']->idno}}").appendTo("#com4_{{$info['info']->idno}}"); 
+               $("#math_{{$info['info']->idno}}").appendTo("#com2_{{$info['info']->idno}}");
+               $("#phy_{{$info['info']->idno}}").prependTo("#com3_{{$info['info']->idno}}");
+               $("#fil_{{$info['info']->idno}}").appendTo("#com3_{{$info['info']->idno}}");
+               $("#eng_{{$info['info']->idno}}").appendTo("#com1_{{$info['info']->idno}}");
+               //$("#chr_{{$info['info']->idno}}").appendTo("#com3_{{$info['info']->idno}}");
+               $("#con_{{$info['info']->idno}}").appendTo("#init_{{$info['info']->idno}}");
+               $("#art_{{$info['info']->idno}}").appendTo("#com1_{{$info['info']->idno}}");
+               $("#cert_{{$info['info']->idno}}").appendTo("#com4_{{$info['info']->idno}}");
                
             @endif
         </script>

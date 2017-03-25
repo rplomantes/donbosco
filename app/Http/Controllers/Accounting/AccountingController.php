@@ -537,7 +537,7 @@ function collectionreport($datefrom, $dateto){
         return $pdf->stream();  
     }
 
- function summarymain($schoolyer){ 
+ function summarymain($schoolyear){ 
      return view('accounting.showsummarymain',compact('schoolyear'));
      
  }   

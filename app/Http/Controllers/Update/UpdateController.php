@@ -523,4 +523,8 @@ class UpdateController extends Controller
         
             return "done";
         }
+        
+        function updateacctcode(){
+            
+        }
 }

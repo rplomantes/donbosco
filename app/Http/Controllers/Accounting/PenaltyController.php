@@ -73,13 +73,8 @@ class PenaltyController extends Controller
                     $newpenalty->amount=$this->addpenalties($value,$plan);
                     $newpenalty->schoolyear=$status->schoolyear;
                     $newpenalty->period=$status->period;
-                    if($status->department == 'Elementary' || $status->department == 'Kindergarten'){
-                        $newpenalty->acct_department='Elementary Department';
-                        $newpenalty->sub_department='Elementary Department';
-                    }elseif($status->department == 'Junior High School' || $status->department == 'Senior High School'){
-                        $newpenalty->acct_department='High School Department';    
-                        $newpenalty->sub_department='High School Department';    
-                    }
+                    $newpenalty->acct_department='Administration Department';
+                    $newpenalty->sub_department='Accounting Office';
                     $newpenalty->duedate=Carbon::now();
                     $newpenalty->duetype='0';
                     $newpenalty->postedby=\Auth::user()->idno;
