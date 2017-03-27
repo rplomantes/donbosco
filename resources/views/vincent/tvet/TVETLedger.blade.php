@@ -1,5 +1,8 @@
 @extends('appcashier')
 @section('content') 
+<style>
+
+</style>
 <div class="col-md-4">
     <div class="form form-group">
         <label for ="batch">Select Batch</label>
@@ -50,9 +53,9 @@
             <td>{{$student->class_no}}</td>
             <td>{{$student->lastname}}, {{$student->firstname}} {{$student->middlename}} {{$student->extensionname}}</td>
             <td>{{number_format($student->payment, 2, '.', ', ')}}</td>
-            <td>{{number_format($student->sponsor+$student->subsidy+$student->discount+$student->amount,2, '.', ', ')}}</td>
+            <td>{{number_format($student->sponsor+$student->subsidy+$student->amount,2, '.', ', ')}}</td>
             <td>{{number_format($student->sponsor,2, '.', ', ')}}</td>
-            <td>{{number_format($student->subsidy+$student->discount,2, '.', ', ')}}</td>
+            <td>{{number_format($student->subsidy,2, '.', ', ')}}</td>
             <td>{{number_format($student->amount,2, '.', ', ')}}</td>
             <td>{{$student->remarks}}</td>
         </tr>
@@ -79,7 +82,7 @@
         <td>Total Payment</td>
         <td>Total Training Fee</td>
         <td>Sponsor's Contribution</td>
-        <td>Discount</td>
+
         <td>TVET Subsidy</td>
         <td>Trainees Contribution</td>
         <td>Remarks</td>
@@ -91,10 +94,12 @@
             <td>{{$student->class_no}}<input type="hidden" name="idno{{$count}}" value="{{$student->idno}}"></td>
             <td>{{$student->lastname}}, {{$student->firstname}} {{$student->middlename}} {{$student->extensionname}}</td>
             <td><input readonly="readonly" style="width: 100px" type="text" class=" no-edit payment" name="payment{{$count}}" id="payment{{$count}}" value="{{number_format($student->payment, 2, '.', ', ')}}"></td>
-            <td class="total" style="display:none;">{{$student->sponsor+$student->subsidy+$student->amount+$student->discount}}</td>            
-            <td>{{number_format($student->sponsor+$student->subsidy+$student->amount+$student->discount, 2, '.', ', ')}}</td>            
+            
+            <td class="total" style="display:none;">{{$student->sponsor+$student->subsidy+$student->amount}}</td>
+            <td>{{number_format($student->sponsor+$student->subsidy+$student->amount, 2, '.', ', ')}}</td>            
+            
             <td><input  type="text" style="width: 100px" class="sponsors" name="sponsor{{$count}}" id="sponsor{{$count}}" value="{{$student->sponsor}}"></td>
-            <td><input type="text" style="width: 100px" class="no-edit subsidy" name="subsidy{{$count}}" id="subsidy{{$count}}" value="{{number_format($student->subsidy+$student->discount, 2, '.', ', ')}}" ></td>
+            <td><input type="text" readonly="readonly" style="width: 100px" class="no-edit subsidy" name="subsidy{{$count}}" id="subsidy{{$count}}" value="{{number_format($student->subsidy, 2, '.', ', ')}}" ></td>
             <td><input type="text" style="width: 100px" class="amount" name="trainees{{$count}}" id="trainees{{$count}}" value="{{$student->amount}}"></td>
             <td><input type="text" style="width: 100px" class="desc" name="desc{{$count}}" id="desc{{$count}}" value="{{$student->remarks}}" ></td>
         </tr>
@@ -118,39 +123,15 @@ $('.sponsors').keyup(function(){
     if(subsidy == ""){
         subsidy = 0;
     }
-    if(discount == ""){
-        discount = 0;
-    }
+
     
-    var newcontribution = parseInt(total)-(parseFloat($(this).val()) + parseFloat($('#'+subsidy).val())+ parseFloat($('#'+discount).val()));
+    var newcontribution = parseInt(total)-(parseFloat($(this).val()) + parseFloat($('#'+subsidy).val()));
     
     $('#'+trainees).val(newcontribution.toFixed(2))
     $(this).val().toFixed(2);
 });
 
-$('.discount').keyup(function(){
-    var trainees = $(this).closest("td").siblings().find('.amount').attr('id');
-    var subsidy = $(this).closest("td").siblings().find('.subsidy').attr('id');
-    var sponsor = $(this).closest("td").siblings().find('.sponsors').attr('id');
-    var total = $(this).closest("td").siblings('.total').html();
-    
-    if(trainees == ""){
-        trainees = 0;
-    }
-    if(subsidy == ""){
-        subsidy = 0;
-    }
-    if(sponsor == ""){
-        sponsor = 0;
-    }
 
-    var newcontribution = parseInt(total)-(parseFloat($(this).val()) 
-            + parseFloat($('#'+subsidy).val())+ parseFloat($('#'+sponsor).val())
-            + parseFloat($('#'+trainees).val()));
-    
-    $('#'+trainees).val(newcontribution.toFixed(2))
-    $(this).val().toFixed(2);
-});
 
 $('.amount').keyup(function(){
     var sponsor = $(this).closest("td").siblings().find('.sponsors').attr('id');
@@ -163,11 +144,6 @@ $('.amount').keyup(function(){
     if(subsidy == ""){
         subsidy = 0;
     }
-    if(discount == ""){
-        discount = 0;
-    }
-    
-    
     
     var newcontribution = parseInt(total)-(parseFloat($(this).val()));
     

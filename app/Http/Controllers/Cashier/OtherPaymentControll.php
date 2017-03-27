@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use DB;
 class OtherPaymentControll extends Controller
 {
     function nonstudent(){
@@ -17,7 +17,7 @@ class OtherPaymentControll extends Controller
     }
     
     function postnonstudent(Request $request){
-        
+       $fiscal = \App\CtrFiscalyear::first()->fiscalyear;
        $refno = $this->getRefno();
        $or = $this->getOR(); 
        $payee = strtoupper(str_replace(' ', '', $request->name));
@@ -49,6 +49,7 @@ class OtherPaymentControll extends Controller
             $creditreservation->description=$request->particular1;
             $creditreservation->receipt_details = $request->particular1;
             $creditreservation->amount = $request->amount1;
+            $creditreservation->fiscalyear = $fiscal;
             $creditreservation->postedby = \Auth::user()->idno;
             $creditreservation->save(); 
         }
@@ -65,6 +66,7 @@ class OtherPaymentControll extends Controller
             $creditreservation->description=$request->particular2;
             $creditreservation->receipt_details = $request->particular2;
             $creditreservation->amount = $request->amount2;
+            $creditreservation->fiscalyear = $fiscal;
             $creditreservation->postedby = \Auth::user()->idno;
             $creditreservation->save(); 
         }
@@ -81,6 +83,7 @@ class OtherPaymentControll extends Controller
             $creditreservation->description=$request->particular3;
             $creditreservation->receipt_details = $request->particular3;
             $creditreservation->amount = $request->amount3;
+            $creditreservation->fiscalyear = $fiscal;
             $creditreservation->postedby = \Auth::user()->idno;
 
             $creditreservation->save(); 
@@ -98,6 +101,7 @@ class OtherPaymentControll extends Controller
             $creditreservation->description=$request->particular4;
             $creditreservation->receipt_details = $request->particular4;
             $creditreservation->amount = $request->amount4;
+            $creditreservation->fiscalyear = $fiscal;
             $creditreservation->postedby = \Auth::user()->idno;
 
             $creditreservation->save(); 
@@ -127,6 +131,7 @@ class OtherPaymentControll extends Controller
         $debit->check_number=$request->check_number;
         $debit->description = 'Cash';
         $debit->amount = $request->totalcredit;
+        $debit->fiscalyear = $fiscal;
         $debit->checkamount=$request->check;
         $debit->receiveamount = $request->cash;
         $debit->receivefrom=$name;

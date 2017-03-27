@@ -525,6 +525,7 @@ class UpdateController extends Controller
         }
         
         function updateacctcode(){
+            $totaldebit = DB::Select("select * from chart_of_accounts");
             
         }
 }

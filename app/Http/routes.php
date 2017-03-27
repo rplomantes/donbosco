@@ -61,8 +61,8 @@
     Route::get('actualcashcheck/{batch}/{transactiondate}','Cashier\CashierController@actualcashcheck');
     Route::get('printencashment/{idno}','Cashier\CashierController@printencashment');
     Route::get('printcollection/{idno}/{transactiondate}','Cashier\CashierController@printcollection');
-    Route::get('nonstudent','Cashier\NonStudentController@nonstudent');
-    Route::post('nonstudent','Cashier\NonStudentController@postnonstudent');
+    Route::get('nonstudent','Cashier\OtherPaymentControll@nonstudent');
+    Route::post('nonstudent','Cashier\OtherPaymentControll@postnonstudent');
     Route::get('checklist/{trandate}','Cashier\CashierController@checklist');
     Route::post('postactual','Cashier\CashierController@postactual');
     Route::get('printactualcash/{transactiondate}','Cashier\CashierController@printactualcash');

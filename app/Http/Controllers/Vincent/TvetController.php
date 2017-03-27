@@ -14,6 +14,7 @@ use Excel;
 
 class TvetController extends Controller
 {
+    //View
     function tvetledger(){
         $schoolyear = \App\CtrRefSchoolyear::first();
 /*        $ledgers = DB::Select("select amount,sponsor,subsidy,lastname,firstname,middlename,extensionname,tvet_subsidies.batch,course "
@@ -27,7 +28,7 @@ class TvetController extends Controller
           $courses = DB::Select("select distinct course from ctr_subjects where department = 'TVET'");
         return view('vincent.tvet.TVETLedger',compact('batches','courses'));
     }
-    
+    //View
     function getsectionstudent($batch,$cours,$section){
         $schoolyear = \App\CtrRefSchoolyear::first();
         $students = $this->studentlist($batch,$cours,$section);
@@ -98,7 +99,7 @@ class TvetController extends Controller
         */
         for($index = 1;$nos>=$index;$index++){
             $student = $request['idno'.$index];
-            $new_subsidy = $request['subsidy'.$index];
+            $new_subsidy = str_replace(', ', '', $request['subsidy'.$index]);
             $new_sponsor = $request['sponsor'.$index];
             $new_trainee = $request['trainees'.$index];
             $desc = $request['desc'.$index];

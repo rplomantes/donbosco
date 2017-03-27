@@ -1,5 +1,5 @@
 <?php
-
+//Module Checked and Verified by John Vincent "Status OK"
 namespace App\Http\Controllers\Cashier;
 
 use Illuminate\Http\Request;
@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use DB;
 use Carbon\Carbon;
 use App\Http\Controllers\Cashier\CashierController;
+use Illuminate\Support\Facades\Input;
 
 class AddtoAccountController extends Controller
 {
@@ -63,7 +64,7 @@ class AddtoAccountController extends Controller
         $newledger->duetype="0";
         $newledger->duedate=Carbon::now();
         $newledger->amount=$request['amount'];
-        $newledger->sub_department=  CashierController::mainDepartment($request['department']);
+        $newledger->acct_department=  CashierController::mainDepartment($request['department']);
         $newledger->sub_department=$request['department'];
         $newledger->remark=$request['remark'];
         $newledger->save();

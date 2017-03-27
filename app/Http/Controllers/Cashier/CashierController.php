@@ -404,12 +404,15 @@ class CashierController extends Controller
         }
         $addcredit->postedby=\Auth::user()->idno;
         $addcredit->save();
-
+        
+        $student = \App\User::where('idno',$idno)->first();
+        
         $adddebit = new \App\Dedit;
         $adddebit->idno = $idno;
         $adddebit->transactiondate = Carbon::now();
         $adddebit->paymenttype = '5';
-        $adddebit->paymenttype = '5';
+        $adddebit->entry_type = '1';
+        $adddebit->receivefrom = $student->lastname . ", " . $student->firstname . " " . $student->extensionname . " " .$student->middlename;
         $adddebit->amount = "1000.00";
         $adddebit->accountingcode = '210400';
         $adddebit->acctcode = " Enrollment Reservation";
@@ -555,6 +558,9 @@ class CashierController extends Controller
                 $debitaccount->sub_department = "TVET";
             }
             $debitaccount->schoolyear=$status->schoolyear;
+        }else{
+                $debitaccount->acct_department = "None";
+                $debitaccount->sub_department = "None";
         }
         $debitaccount->postedby = \Auth::user()->idno;
         $debitaccount->save();
