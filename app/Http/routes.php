@@ -126,7 +126,7 @@
     Route::get('viewdebitmemo/{idno}','Accounting\DebitMemoController@viewdebitmemo');
     Route::get('disbursement/{datefrom}/{dateto}','Accounting\DisbursementController@disbursement');
     Route::get('generaljournal/{trandate}','Accounting\JournalController@generaljournal');
-    Route::get('restorecanceldm/{refno}','Accounting\DebitMemoController@restorecanceldm');
+    Route::get('restorecanceldm/{iscancel}/{refno}','Accounting\DebitMemoController@restorecanceldm');
     //update module
     //Elective submitted by registrar on STEM
     //Route::get('updateelective','Registrar\AssessmentController@updateelective');

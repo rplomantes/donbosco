@@ -3,25 +3,26 @@ $journal =  \App\DebitMemo::where('refno',$refno)->first();
 $accountings = \App\Accounting::where('refno',$refno)->get();
 $totaldebit=0;
 $totalcredit=0;
-$iscancel = 0;
+$iscancel = "Cancel";
 if($journal->isreverse =="1"){
-    $iscancel = 1;
+    $iscancel = "Restore";
 }
 ?>
 
 @extends('appaccounting')
 @section('content')
 <div class="container">
-   
-    <div class="col-md-12">
-      <div class=" form form-group">    
-        <a href="{{url('restorecanceldm',$refno)}}" class =" btn btn-danger navbar-right">@if($iscancel==0) CANCEL @else RESTORE @endif</a>
-      </div>
+    <div class="col-md-2 col-md-offset-8">
+        <a href="{{url('accounting',$journal->idno)}}" class="btn btn-primary form-control">View Ledger</a>
     </div>
-    
-    
+    <div class="col-md-2">
+        @if($journal->transactiondate == date('Y-m-d',strtotime(\Carbon\Carbon::now())) && \Auth::user()->accesslevel != env('USER_ACCOUNTING_HEAD') || \Auth::user()->accesslevel == env('USER_ACCOUNTING_HEAD') )
+        <a href="{{url('restorecanceldm',array($iscancel,$refno))}}" class =" btn btn-danger  form-control">{{$iscancel}}</a>
+        @endif
+    </div>
+    <div class="col-md-12"> &nbsp;
+    </div>  
     <div class="col-md-12">
-    <div class="form form-group">  
     <table class="table table-bordered table-striped">
     <tr><td><b>Debit Voucher No<b> </td><td colspan="5"><span style="font-weight: bold;color:blue">{{$journal->voucherno}}</span></td></tr>
     <tr><td><b>Date<b> </td><td colspan="5"><span style="font-weight: bold;color:blue">{{$journal->transactiondate}}</span></td></tr>
@@ -52,20 +53,13 @@ if($journal->isreverse =="1"){
     </tr><td colspan="4"> Total</td><td align="right"><b>{{number_format($totaldebit,2)}}</b></td><td align="right"><b>{{number_format($totalcredit,2)}}</b></td></tr>
     </table>
     </div>
-    </div>    
         
-    <div class="form form-group">
-        <div class="col-md-8">
-        </div>  
         
-        <div class="col-md-2">    
-        </div> 
-        
-        <div class="col-md-2">
+        <div class="col-md-2 col-md-offset-10">
             <a href="{{url('printdm',$refno)}}" class="btn btn-primary form-control" target="_blank">Print DM Voucher</a>
         </div> 
-    </div>    
-</div>
+    </div>
+          
 @stop
 
 

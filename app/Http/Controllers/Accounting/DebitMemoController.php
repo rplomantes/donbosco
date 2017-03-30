@@ -421,27 +421,44 @@ class DebitMemoController extends Controller
        return $pdf->stream();
      }
      
-     function restorecanceldm($refno,$reversecancel){
-         if($reversecancel == "0"){
+     function restorecanceldm($iscancel,$refno){
+         $idno = \App\DebitMemo::where('refno',$refno)->first()->idno;
          $credits =  \App\Credit::where("refno",$refno)->get();
-         foreach($credits as $credit){
-             $record=  \App\Ledger::find($credit->referenceno);
-             if($record->amount-$record->payment-$record->plandiscount->$record->otherdiscount->$record->debitmemo == 0){
-               $reverseamount = $credit->amount - $record->plandiscount - $record->otherdiscount;  
-             } else {
-               $reverseamount = $credit->amount;  
-             }
-            $record->debitmemo = $record->debitmemo - $reverseamount; 
-            $record->update();
-         }
-         \App\Credit::where('refno',$refno)->update(["isreverese",'1']);
-         \App\Dedit::where('refno',$refno)->update(["isreverse",'1']);
-         \App\Accounting::where('refno',$refno)->update(["isreversed","1"]);
-         \App\DebitMemo::where('refno',$refno)->update(["isreverse","a"]);
+         
+         if($iscancel == "Cancel"){
+            foreach($credits as $credit){
+                $record =  \App\Ledger::find($credit->referenceid);
+                    if($record->amount-$record->payment-$record->plandiscount-$record->otherdiscount-$record->debitmemo == 0){
+                        $reverseamount = $credit->amount - $record->plandiscount - $record->otherdiscount;  
+                    } else {
+                        $reverseamount = $credit->amount;  
+                    }
+                $record->debitmemo = $record->debitmemo - $reverseamount; 
+                $record->update();
+            }
+                \App\Credit::where('refno',$refno)->update(["isreverse"=>'1']);
+                \App\Dedit::where('refno',$refno)->update(["isreverse"=>'1']);
+                \App\Accounting::where('refno',$refno)->update(["isreversed"=>"1"]);
+                \App\DebitMemo::where('refno',$refno)->update(["isreverse"=>"1"]);
          }
          else{
              
+            foreach($credits as $credit){
+                $record=  \App\Ledger::find($credit->referenceid);
+                $amountdiff = $record->amount - $record->payment - $record->plandiscount- $record->otherdiscount- $record->debitmemo;
+                if($amountdiff < $credit->amount){
+                    $record->debitmemo = $record->debitmemo + $amountdiff;
+                } else {
+                    $record->debitmemo = $record->debitmemo + $credit->amount;
+                }
+             $record->update();   
+            }
+             \App\Credit::where('refno',$refno)->update(["isreverse"=>'0']);
+             \App\Dedit::where('refno',$refno)->update(["isreverse"=>'0']);
+             \App\Accounting::where('refno',$refno)->update(["isreversed"=>"0"]);
+             \App\DebitMemo::where('refno',$refno)->update(["isreverse"=>"0"]);
          }
          
+        return view('accounting.viewdm',compact('refno','idno'));
      }
 }
