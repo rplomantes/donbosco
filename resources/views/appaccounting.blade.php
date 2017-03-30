@@ -135,7 +135,7 @@
                                
                                         <ul class="dropdown-menu" role="menu">
                                        
-                                       @if(Auth::user()->accesslevel == env('USER_ACCOUNTING_HEAD'))
+                                       @if(\Auth::user()->accesslevel == env('USER_ACCOUNTING_HEAD'))
                                        
                                        <li>
                                            
