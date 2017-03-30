@@ -291,12 +291,18 @@ class CashierController extends Controller
                 $creditstudentdeposit->acct_department = 'None';
                 $creditstudentdeposit->sub_department = 'None';
                 $creditstudentdeposit->save(); 
-
-                $deposit = new \App\StudentDeposit;
-                $deposit->amount = $remainingbalance; 
-                $deposit->idno = $request->idno;
-                $deposit->transactiondate = Carbon::now();
-                $deposit->postedby = \Auth::user()->idno;
+                
+                $hasdeposit = \App\StudentDeposit::where('id',$request->idno)->exists();
+                if($hasdeposit){
+                    $deposit = \App\StudentDeposit::where('id',$request->idno)->first();
+                    $deposit->amount = $deposit->amount + $remainingbalance; 
+                }else{
+                    $deposit = new \App\StudentDeposit;
+                    $deposit->amount = $remainingbalance;
+                    $deposit->idno = $request->idno;
+                    $deposit->transactiondate = Carbon::now();
+                    $deposit->postedby = \Auth::user()->idno;
+                }
                 $deposit->save();
             }
         }
@@ -470,6 +476,7 @@ class CashierController extends Controller
         $addreservation->save();
 
     } 
+    
     static function reset_or(){
         $resetor = \App\User::where('idno', \Auth::user()->idno)->first();
         $resetor->receiptno = $resetor->receiptno + 1;
@@ -750,11 +757,17 @@ class CashierController extends Controller
         }
         
         if($request->deposit > 0 ){
-            $deposit = new \App\StudentDeposit;
-            $deposit->amount = $request->deposit;
-            $deposit->idno = $request->idno;
-            $deposit->transactiondate = Carbon::now();
-            $deposit->postedby = \Auth::user()->idno;
+            $hasdeposit = \App\StudentDeposit::where('id',$request->idno)->exists();
+            if($hasdeposit){
+                $deposit = \App\StudentDeposit::where('id',$request->idno)->first();
+                $deposit->amount = $deposit->amount + $remainingbalance; 
+            }else{
+                $deposit = new \App\StudentDeposit;
+                $deposit->amount = $remainingbalance;
+                $deposit->idno = $request->idno;
+                $deposit->transactiondate = Carbon::now();
+                $deposit->postedby = \Auth::user()->idno;
+            }
             $deposit->save();
             
             $creditreservation = new \App\Credit;
@@ -1049,21 +1062,26 @@ class CashierController extends Controller
         $credits = \App\Credit::where('refno',$refno)->get();
         foreach($credits as $credit){
           
-         
          $ledger = \App\Ledger::find($credit->referenceid);
         
-         if(isset($ledger->payment)){
-         $ledger->payment = $ledger->payment - $credit->amount + $ledger->plandiscount + $ledger->otherdiscount;
-         $ledger->save();
-         }
+            if(isset($ledger->payment)){
+                $ledger->payment = $ledger->payment - $credit->amount + $ledger->plandiscount + $ledger->otherdiscount;
+                $ledger->save();
+            }
          
          
-         if($credit->description == "Reservation"){
-             \App\AdvancePayment::where('refno',$refno)->delete();
-         }
-         }
-        
+            if($credit->description == "Reservation"){
+                \App\AdvancePayment::where('refno',$refno)->delete();
+            }
+
+            if($credit->description == "Student Deposit"){
+                    $deposit = \App\StudentDeposit::where('id',$request->idno)->first();
+                    $deposit->amount = $deposit->amount + $credit->description;
+                    $deposit->save();
+            }
          
+         }
+
         $matchfield=["refno"=>$refno,"paymenttype"=>"5"];
         $debitreservation = \App\Dedit::where($matchfield)->first();
         if(count($debitreservation)>0){
