@@ -473,6 +473,8 @@ class UpdateController extends Controller
                                 $firstsched=false;
                             }
                         }
+                        $newsched->sub_department->$paymentschedule->sub_department;
+                        $newsched->acct_department ->paymentschedule->acct_department;
                         $newsched->schoolyear = $schoolyear->schoolyear;
                         $newsched->duetype = $installment->duetype;
                         $newsched->duedate = $installment->duedate;
@@ -504,6 +506,8 @@ class UpdateController extends Controller
                             if($request->plan == "Annual" && $paymentschedule->acctcode =="110100"){
                                 $newsched->discount = round($paymentschedule->amount * .03,2);
                             }
+                        $newsched->sub_department->$paymentschedule->sub_department;
+                        $newsched->acct_department ->paymentschedule->acct_department;    
                         $newsched->schoolyear = $schoolyear->schoolyear;
                         $newsched->duetype = "0";
                         $newsched->duedate = "2017-04-01";
@@ -523,9 +527,69 @@ class UpdateController extends Controller
         
             return "done";
         }
+        function updatedmtoaccounting(){
+            $credits = \App\Credit::where('entry_type','2')->get();
+            foreach($credits as $credit){
+                $addcredit = new \App\Accounting;
+                $addcredit->refno = $credit->refno;
+                $addcredit->referenceid = $credit->receiptno;
+                $addcredit->transactiondate = $credit->transactiondate;
+                $addcredit->accountname = $credit->acctcode;
+                $addcredit->accountcode = $credit->accountingcode;
+                $addcredit->subsidiary = $credit->description;
+                $addcredit->sub_department = $credit->sub_department;
+                $addcredit->acct_department = $credit->acct_department;
+                $addcredit->credit = $credit->amount;
+                $addcredit->fiscalyear=$credit->fiscalyear;
+                $addcredit->isreversed=$credit->isreverse;
+                $addcredit->posted_by = $credit->postedby;
+                $addcredit->cr_db_indic = "1";
+                $addcredit->isfinal = "1";
+                $addcredit->type="2";
+                $addcredit->save();
+            }
+            $credits = \App\Dedit::where('entry_type','2')->get();
+            foreach($credits as $credit){
+                $addcredit = new \App\Accounting;
+                $addcredit->refno = $credit->refno;
+                $addcredit->referenceid = $credit->receiptno;
+                $addcredit->transactiondate = $credit->transactiondate;
+                $addcredit->accountname = $credit->acctcode;
+                $addcredit->accountcode = $credit->accountingcode;
+                $addcredit->subsidiary = $credit->description;
+                $addcredit->sub_department = $credit->sub_department;
+                $addcredit->acct_department = $credit->acct_department;
+                $addcredit->debit = $credit->amount;
+                $addcredit->isreversed=$credit->isreverse;
+                $addcredit->fiscalyear=$credit->fiscalyear;
+                $addcredit->posted_by = $credit->postedby;
+                $addcredit->cr_db_indic = "0";
+                $addcredit->isfinal = "1";
+                $addcredit->type="2";
+                $addcredit->save();
+            }
+            return "Done";
+        }
         
-        function updateacctcode(){
-            $totaldebit = DB::Select("select * from chart_of_accounts");
-            
+        function updatedebitmemo(){
+            $debits = DB::Select("Select idno, transactiondate, refno,  isreverse, "
+                    . "remarks, fiscalyear, schoolyear, postedby, receivefrom, entry_type,  sum(amount) as amount "
+                    . "from dedits group by  idno, transactiondate, refno, receiptno, "
+                    . "remarks, fiscalyear, schoolyear, postedby, receivefrom, isreverse, entry_type having entry_type = '2'");
+            foreach($debits as $debit){
+            $adddm = new \App\DebitMemo;
+            $adddm->fullname = $debit->receivefrom;
+            $adddm->idno = $debit->idno;
+            $adddm->refno = $debit->refno;
+            $adddm->transactiondate = $debit->transactiondate;
+            $adddm->amount = $debit->amount;
+            $adddm->remarks=$debit->remarks;
+            $adddm->isreverse = $debit->isreverse;
+            $adddm->fiscalyear = $debit->fiscalyear;
+            $adddm->schoolyear = $debit->schoolyear;
+            $adddm->postedby = $debit->postedby;
+            $adddm->save();
+            }        
+            return "Done DM";
         }
 }

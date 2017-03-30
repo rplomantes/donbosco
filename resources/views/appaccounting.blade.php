@@ -93,13 +93,13 @@
                                         <span class="caret"></span></a>
                                         <ul class="dropdown-menu" role="menu">
                                             <li>
-                                                <a href ="#"><i class="fa fa-btn"></i>Cash Disbursement</a>
+                                                <a href ="{{url('disbursement', array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Cash Disbursement</a>
                                                 <a href="{{url('maincollection/4',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Cash Disbursement Debit/Credit Summary </a>
                                                 <a href ="{{url('cashreceipts', date('Y-m-d'))}}"><i class="fa fa-btn"></i>Cash Receipts</a>
                                                 <a href="{{url('maincollection/1',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Cash Receipt Debit/Credit Summary</a>
-                                                <a href ="{{url('generalledger/0/0',array(date('Y-m-d')))}}"><i class="fa fa-btn"></i>General Journal</a>
+                                                <a href ="#"><i class="fa fa-btn"></i>General Journal</a>
                                                  <a href="{{url('maincollection/3',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>General Journal Debit/Credit Summary </a>
-                                                <a href ="{{url('dmsummary',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Debit Memo Journal</a>
+                                                <a href ="#"><i class="fa fa-btn"></i>Debit Memo Journal</a>
                                                 <a href="{{url('maincollection/2',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Debit Memo  Debit/Credit Summary </a>
                                             </li>  
                                         </ul></li>
@@ -109,7 +109,7 @@
                                         <span class="caret"></span></a>
                                         <ul class="dropdown-menu" role="menu">
                                             <li>
-                                                <a href ="#"><i class="fa fa-btn"></i>General Ledger</a>
+                                                <a href ="{{url('generalledger/0/0',array(date('Y-m-d')))}}"><i class="fa fa-btn"></i>General Ledger</a>
                                                 <a href ="{{url('trialbalance',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Trial Balance</a>
                                                 
                                             </li>  
@@ -142,18 +142,17 @@
                                            
                                           
                                            
-                                           <a href="{{url('summarymain')}}"><i class="fa fa-btn"></i>Account Summary</a>
+                                           <a href="{{url('summarymain',\App\CtrSchoolYear::first()->schoolyear)}}"><i class="fa fa-btn"></i>Account Summary</a>
                                            <a href="{{url('studentledger','all')}}"><i class="fa fa-btn"></i>Student Ledger Summary</a>
                                            
                                            <a href="{{url('cashcollection',date('Y-m-d'))}}"><i class="fa fa-btn"></i>Actual Deposit</a>
-                                           <a href="{{url('overallcollection',date('Y-m-d'))}}"><i class="fa fa-btn"></i>Collection Report</a>
                                            
-                                           <a href="{{url('dmcmallreport',date('Y-m-d'))}}"><i class="fa fa-btn"></i>DM Issued</a>
-                                           <a href ="{{url('subsidiary')}}"><i class="fa fa-btn"></i>Individual Account Summary</a>
+                                           
+                                          
                                        </li>  
-                                       
+                                       <li><a href="{{url('statementofaccount')}}"><i class="fa fa-btn fa-sign-out"></i>Statement of Account</a></li>
                                         @endif
-                                        <li><a href="{{url('statementofaccount')}}"><i class="fa fa-btn fa-sign-out"></i>Statement of Account</a></li>
+                                        
                                         </ul>
                                          </li>
                                          
@@ -164,6 +163,15 @@
                                         <ul class="dropdown-menu" role="menu">
                                        <li><a href="{{url('penalties')}}"><i class="fa fa-btn"></i>Over Due Charges </a>
                                         <a href="{{url('searchor')}}"><i class="fa fa-btn fa-sign-out"></i>Search OR</a></li>
+                                       <hr>
+                                       <li>
+                                           <a href="{{url('overallcollection',date('Y-m-d'))}}"><i class="fa fa-btn"></i>Collection Report</a>
+                                          <a href="{{url('dmsummary',date('Y-m-d'))}}"><i class="fa fa-btn"></i>Debit Memo Details</a>
+                                           <a href="{{url('dmcmallreport',array(date('Y-m-d'),date('Y-m-d') ))}}"><i class="fa fa-btn"></i>Debit Memo Summary</a>
+                                           <a href="{{url('generaljournal',date('Y-m-d'))}}"><i class="fa fa-btn"></i>Journal Entry Details</a>
+                                           <a href="{{url('dailyalljournallist',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Journal Entry List</a>
+                                           <a href ="{{url('subsidiary')}}"><i class="fa fa-btn"></i>Individual Account Summary</a>
+                                       </li>
                                         </ul>
                                          </li>
                                          

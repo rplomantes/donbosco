@@ -14,12 +14,13 @@ class TrialBalanceController extends Controller
 	$this->middleware(['auth','acct']);
     }
     function gettrialBalance($fromtran,$totran){
+       
         $trials = DB::Select("select r.accountingcode,accountname,sum(if( type='credit', amount, 0 ))  as credits,sum(if( type='debit', amount, 0 )) as debit from chart_of_accounts coa join "
-                . "(select accountingcode,'credit' as type,sum(amount) as amount from credits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' group by accountingcode "
+                . "(select accountingcode,'credit' as type,sum(amount) as amount from credits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0'  group by accountingcode "
                 . "UNION ALL "
-                . "select accountingcode,'debit',sum(amount)+sum(checkamount) as amount from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' group by accountingcode) r "
+                . "select accountingcode,'debit',sum(amount)+sum(checkamount) as amount from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0'  group by accountingcode) r "
                 . "on coa.acctcode = r.accountingcode group by accountingcode order by coa.id");
-        
+       
         return $trials;
         
     }

@@ -26,14 +26,14 @@
         ?>
         <span class="subtitle">ACCOUNTING ENTRIES</span>
         <table width="100%" border="1" cellspacing="0" class="content">
-            <tr><td>Accounting Code</td><td>Accounting Title</td><td align="center">Debit</td><td align="center">Credit</td></tr>
+            <tr><td>Accounting Code</td><td>Accounting Title</td><td>Office</td><td align="center">Debit</td><td align="center">Credit</td></tr>
             @foreach($accountings as $accounting)
             <?php
             $debit = $debit+$accounting->debit;$credit=$credit+$accounting->credit;
             ?>
-            <tr><td>{{$accounting->accountcode}}</td><td>{{$accounting->accountname}}</td><td align="right">{{number_format($accounting->debit,2)}}</td><td align="right">{{number_format($accounting->credit,2)}}</td></tr>
+            <tr><td>{{$accounting->accountcode}}</td><td>{{$accounting->accountname}}</td><td>{{$accounting->sub_department}}</td><td align="right">{{number_format($accounting->debit,2)}}</td><td align="right">{{number_format($accounting->credit,2)}}</td></tr>
             @endforeach
-            <tr><td colspan="2">Total</td><td align="right">{{number_format($debit,2)}}</td><td align="right">{{number_format($credit,2)}}</td></tr>
+            <tr><td colspan="3">Total</td><td align="right">{{number_format($debit,2)}}</td><td align="right">{{number_format($credit,2)}}</td></tr>
          </table>
         <br/>
         <table width="100%" border="1" cellspacing="0" cellpadding="5">

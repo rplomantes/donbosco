@@ -35,7 +35,7 @@ class AjaxController extends Controller
             }
               //$intval = $intval%9;
               $varrefno = $value . strval($intval%9); 
-            
+             //   $varrefno = $value.$intval;
          // return $user->idref;  
         return $varrefno;
         }else{
@@ -983,6 +983,7 @@ class AjaxController extends Controller
                     $newpartial->accountname = $accountname;
                     $newpartial->subsidiary = $subsidiary;
                     $newpartial->sub_department = $department;
+                    $newpartial->acct_department = $this->getAcctDepartment($department);
                     if($entrytype=="cr"){
                         $newpartial->credit = $amount;
                         $newpartial->cr_db_indic="1";
@@ -1005,6 +1006,14 @@ class AjaxController extends Controller
                 $remove->forceDelete();
                 return $this->getpartialentry($refno);
             }
+            function getAcctDepartment($subDepartment){
+                $department="";
+                $acctdepartment = \App\CtrAcctDep::where('sub_department',$subDepartment)->first();
+                if(count($acctdepartment)>0){
+                  $department = $acctdepartment->main_department;  
+                }
+                return $department;
+            }
             
             function getpartialentry($refno){
                     
@@ -1019,18 +1028,22 @@ class AjaxController extends Controller
                                 . "<td>" . $display->subsidiary . "</td>"
                                 . "<td>" . $display->sub_department . "</td>"
                                 . "<td align=\"right\">" . $display->debit . "</td>";
-                        //if($display->type=="3"){
+                        if($display->type=="3" || $display->type=="4"){
                          $data= $data . "<td align=\"right\">" . $display->credit. "</td>";
-                        //}
+                        }
                         $data = $data. "<td> <button class=\"btn btn-default form-control\" onclick=\"removeacctgpost(" . $display->id . ")\">Remove</button></td> </tr>";
                     $totalcredit = $totalcredit + $display->credit;
                     $totaldebit = $totaldebit + $display->debit;    
                     }
                     if($totalcredit == $totaldebit){
-                    $data = $data. "<td colspan=\"4\">Total<input type=\"hidden\" id=\"balance\" value=\"yes\"><input type=\"hidden\" id=\"crdrdiff\" value=\"" . ($totaldebit-$totalcredit) . "\"></td><td align=\"right\" style=\"font-weight:bold\">".number_format($totaldebit,2)."</td><td align=\"right\" style=\"font-weight:bold\">". number_format($totalcredit,2)."<input type=\"hidden\" value=\"$totalcredit\" name=\"totalcredit\" id=\"totalcredit\"></td><td><button id=\"removeall\"class=\"btn btn-danger form-control removeall\" onclick=\"removeall()\">Remove All</button></td></tr>";
-                    }else{                     
-                    $data = $data. "<td colspan=\"4\">Total<input type=\"hidden\" id=\"balance\" value=\"no\"><input type=\"hidden\" id=\"crdrdiff\" value=\"" . ($totaldebit-$totalcredit) . "\"></td><td align=\"right\" style=\"font-weight:bold;color:red\">".number_format($totaldebit,2)."</td><td align=\"right\" style=\"font-weight:bold;color:red\">". number_format($totalcredit,2)."</td><td><button id=\"removeall\"class=\"btn btn-danger form-control removeall\" onclick=\"removeall()\">Remove All</button></td></tr>";    
-                    }}
+                     $data = $data. "<td colspan=\"4\">Total<input type=\"hidden\" id=\"balance\" value=\"yes\"><input type=\"hidden\" id=\"crdrdiff\" value=\"" . ($totaldebit-$totalcredit) . "\"></td><td align=\"right\" style=\"font-weight:bold\">".number_format($totaldebit,2)."</td><td align=\"right\" style=\"font-weight:bold\">". number_format($totalcredit,2)."<input type=\"hidden\" value=\"$totalcredit\" name=\"totalcredit\" id=\"totalcredit\"></td><td><button id=\"removeall\"class=\"btn btn-danger form-control removeall\" onclick=\"removeall()\">Remove All</button></td></tr>";
+                    }else{
+                     if($display->type == '2'){
+                     $data = $data. "<td colspan=\"4\">Total<input type=\"hidden\" id=\"balance\" value=\"no\"><input type=\"hidden\" id=\"crdrdiff\" value=\"" . ($totaldebit-$totalcredit) . "\"></td><td align=\"right\" style=\"font-weight:bold;color:red\">".number_format($totaldebit,2)."</td><td><button id=\"removeall\"class=\"btn btn-danger form-control removeall\" onclick=\"removeall()\">Remove All</button></td></tr>";    
+                     }
+                     else{
+                     $data = $data. "<td colspan=\"4\">Total<input type=\"hidden\" id=\"balance\" value=\"no\"><input type=\"hidden\" id=\"crdrdiff\" value=\"" . ($totaldebit-$totalcredit) . "\"></td><td align=\"right\" style=\"font-weight:bold;color:red\">".number_format($totaldebit,2)."</td><td align=\"right\" style=\"font-weight:bold;color:red\">". number_format($totalcredit,2)."</td><td><button id=\"removeall\"class=\"btn btn-danger form-control removeall\" onclick=\"removeall()\">Remove All</button></td></tr>";    
+                    }}}
                     return $data;    
             }
             
@@ -1147,6 +1160,7 @@ class AjaxController extends Controller
                          $add->acctcode = $update->accountname;
                          $add->description = $update->subsidiary;
                          $add->entry_type = $entry_type;
+                         $add->acct_department = $update->acct_department;
                          $add->sub_department = $update->sub_department;
                          $add->fiscalyear = $update->fiscalyear;
                          $add->postedby = $idno;

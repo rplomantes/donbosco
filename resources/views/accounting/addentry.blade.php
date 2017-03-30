@@ -21,7 +21,7 @@ $voucherno= $voucheruserid.$vouchzero.$voucherno;
 //$voucherid->update();
 $uniqid = uniqid();
 }
-$departments = DB::Select("Select * from ctr_acct_dept");
+$departments = DB::Select("Select * from ctr_acct_dept order by sub_department");
 ?>
 <style>
     .form-control{

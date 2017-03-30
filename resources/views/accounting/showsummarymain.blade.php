@@ -7,13 +7,11 @@
 <div class="container">
 <h4>Summary of Main Account</h4>
 
-@foreach($sys as $sy)
-@if($sy->department != "TVET")
-<h5><b>{{$sy->department}}</b></h5>
+
 <?php 
-    $totalmains = DB::Select("select accountname, sum(amount) as amount, sum(payment) as payment, sum(debitmemo) as debitmemo, "
+    $totalmains = DB::Select("select acctcode as accountname, sum(amount) as amount, sum(payment) as payment, sum(debitmemo) as debitmemo, "
      . " sum(plandiscount) as plandiscount, "
-     . " sum(otherdiscount) as otherdiscount from ledgers join chart_of_accounts as coa on coa.acctcode = ledgers.accountingcode where categoryswitch < '10' and department = '$sy->department' and schoolyear ='$sy->schoolyear' group by accountingcode");
+     . " sum(otherdiscount) as otherdiscount from ledgers where categoryswitch <= '6' and schoolyear = '$schoolyear' group by acctcode");
     
     $allamount = 0;
     $allpayment = 0;
@@ -42,10 +40,7 @@
     <tr><td>Total</td><td align="right">{{number_format($totalamount,2)}}</td><td align="right">{{number_format($totalpayment,2)}}</td><td align="right">{{number_format($totaldebitmemo,2)}}</td>
         <td align="right">{{number_format($totalplandiscount,2)}}</td><td align="right">{{number_format($totalotherdiscount,2)}}</td><td align="right">{{number_format($totalamount-$totalpayment-$totaldebitmemo-$totalotherdiscount-$totalplandiscount,2)}}</td></tr>
 </table>    
-<br>
 
-@endif
-@endforeach
 
 </div>    
 @stop

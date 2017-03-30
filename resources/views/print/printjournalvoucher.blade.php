@@ -8,16 +8,24 @@ $totalcredit=0;
 <html>
     <head>
         <style>
-            div.header{font-size:14pt;font-weight: bold}
-            div.title{font-size:14pt}
+            span.header{font-size:14pt;font-weight: bold}
+            span.title{font-size:16pt; font-style: italic; text-decoration: underline}
         </style>
     </head>
     <body>
-        <div class="header">Don Bosco Technical Institute of Makati</div>
-        <div class="title">Journal Voucher</div>
-        <div class="voucherno">Journal Voucher No : <b>{{$remarks->referenceid}}</b> </div>
-        <div class = "entrydate">Date Entered : {{date('M d, Y',strtotime($remarks->trandate))}}</div>
-        <div class = "postedby"> Posted By : {{strtoupper($user->firstname)}} {{strtoupper($user->lastname)}}</div>
+        <table width="100%"><tr><td>
+        <span class="header">Don Bosco Technical Institute of Makati</span>
+        </td>
+        <td align="right">
+        <span class="title">Journal Voucher</span>
+        </td></tr>
+            <tr><td><span class = "entrydate">Date Entered : {{date('M d, Y',strtotime($remarks->trandate))}}</span></td>
+         <td align="right">       
+        <span class="voucherno">JV No : <b>{{$remarks->referenceid}}</b> </span>
+         </td></tr>
+            <tr><td colspan="2">
+        <span class = "postedby"> Posted By : {{strtoupper($user->firstname)}} {{strtoupper($user->lastname)}}</span>
+        </td></tr></table>
         <hr>
         <table border = '1' cellspacing = '0' cellpadding = '1' width="100%"><tr><th>Account Title</th><th>Subsidiary</th><th>Office</th><th>Debit</th><th>Credit</th></tr>
             @foreach($entries as $entry)

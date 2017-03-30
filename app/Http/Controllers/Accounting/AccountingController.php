@@ -473,7 +473,7 @@ class AccountingController extends Controller
        return view("accounting.viewdm",compact('posted','tdate','student','debits','credits','status','debit_discount','debit_dm'));
        
   }
-  
+ /* 
   function printdmcm($refno, $idno){
        $student = \App\User::where('idno',$idno)->first();
        $status= \App\Status::where('idno',$idno)->first();
@@ -498,7 +498,7 @@ function dmcmallreport($transactiondate){
 
               return view('accounting.dmcmreport', compact('collections','transactiondate'));
 }
-
+*/
 function dmcmreport($transactiondate){
 $matchfields = ['postedby'=>\Auth::user()->idno, 'transactiondate'=>$transactiondate];
 //$matchfields = ['transactiondate'=>$transactiondate];
@@ -507,7 +507,7 @@ $matchfields = ['postedby'=>\Auth::user()->idno, 'transactiondate'=>$transaction
         $collections = DB::Select("select sum(dedits.amount) as amount, sum(dedits.checkamount) as checkamount, users.idno, users.lastname, users.firstname,"
                 . " dedits.transactiondate, dedits.isreverse,  dedits.refno, dedits.acctcode from users, dedits where users.idno = dedits.idno and"
                 . " dedits.postedby = '".\Auth::user()->idno."' and dedits.transactiondate = '" 
-                . $transactiondate . "' and dedits.paymenttype = '3' group by users.idno, dedits.transactiondate, users.lastname, users.firstname, dedits.isreverse,dedits.refno, dedits.acctcode order by dedits.refno" );
+                . $transactiondate . "' and dedits.entry_type = '2' group by users.idno, dedits.transactiondate, users.lastname, users.firstname, dedits.isreverse,dedits.refno, dedits.acctcode order by dedits.refno" );
         //$collections = \App\User::where('postedby',\Auth::user()->idno)->first()->dedits->where('transactiondate',date('Y-m-d'))->get();
 
         return view('accounting.dmcmreport', compact('collections','transactiondate'));
@@ -542,25 +542,40 @@ function collectionreport($datefrom, $dateto){
      
  }   
  function maincollection($entry,$fromtran,$totran){
-     $credits = DB::Select("select sum(amount) as amount,acctcode from credits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and entry_type = '$entry' group by acctcode");
-      $debitcashchecks = DB::Select("select sum(amount)+sum(checkamount) as totalamount, acctcode, depositto from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and entry_type = '$entry' group by acctcode, depositto");
+     
+      $trials = DB::Select("select r.accountingcode,accountname,sum(if( type='credit', amount, 0 ))  as credits,sum(if( type='debit', amount, 0 )) as debit from chart_of_accounts coa join "
+                . "(select accountingcode,'credit' as type,sum(amount) as amount from credits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0'  and entry_type = '$entry' group by accountingcode "
+                . "UNION ALL "
+                . "select accountingcode,'debit',sum(amount)+sum(checkamount) as amount from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0'  and entry_type = '$entry' group by accountingcode) r "
+                . "on coa.acctcode = r.accountingcode group by accountingcode order by coa.id");
+     
+     //$credits = DB::Select("select sum(amount) as amount,acctcode from credits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and entry_type = '$entry' group by acctcode");
+     // $debitcashchecks = DB::Select("select sum(amount)+sum(checkamount) as totalamount, acctcode, depositto from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and entry_type = '$entry' group by acctcode, depositto");
      //$debitcashchecks = DB::Select("select sum(amount)+sum(checkamount) as totalamount, depositto from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and (paymenttype = '1' or paymenttype = '2') group by depositto");
      //$debitdebitmemos = DB::Select("select sum(amount)+sum(checkamount) as totalamount, acctcode from dedits where (transactiondate between '$fromtran' and '$totran') and paymenttype = '3' and isreverse = '0' group by acctcode");
      //$debitdiscounts = DB::Select("select sum(amount)+sum(checkamount) as totalamount from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and paymenttype = '4'");
      //$debitreservations = DB::Select("select sum(amount)+sum(checkamount) as totalamount from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and paymenttype = '5'");
    
-    return view('accounting.maincollection',compact('credits','debitcashchecks','fromtran','totran','entry')); 
+    //return view('accounting.maincollection',compact('credits','debitcashchecks','fromtran','totran','entry')); 
+      
+      return view('accounting.debitcreditsummary',compact('trials','entry','fromtran','totran'));
  }
  
   function printmaincollection($entry,$fromtran,$totran){
-     $credits = DB::Select("select sum(amount) as amount,acctcode from credits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and entry_type = '$entry' group by acctcode");
-      $debitcashchecks = DB::Select("select sum(amount)+sum(checkamount) as totalamount, acctcode, depositto from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and entry_type = '$entry' group by acctcode, depositto");
+      $trials = DB::Select("select r.accountingcode,accountname,sum(if( type='credit', amount, 0 ))  as credits,sum(if( type='debit', amount, 0 )) as debit from chart_of_accounts coa join "
+                . "(select accountingcode,'credit' as type,sum(amount) as amount from credits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0'  and entry_type = '$entry' group by accountingcode "
+                . "UNION ALL "
+                . "select accountingcode,'debit',sum(amount)+sum(checkamount) as amount from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0'  and entry_type = '$entry' group by accountingcode) r "
+                . "on coa.acctcode = r.accountingcode group by accountingcode order by coa.id");
+     
+     //$credits = DB::Select("select sum(amount) as amount,acctcode from credits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and entry_type = '$entry' group by acctcode");
+      //$debitcashchecks = DB::Select("select sum(amount)+sum(checkamount) as totalamount, acctcode, depositto from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and entry_type = '$entry' group by acctcode, depositto");
      //$debitcashchecks = DB::Select("select sum(amount)+sum(checkamount) as totalamount, depositto from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and (paymenttype = '1' or paymenttype = '2') group by depositto");
      //$debitdebitmemos = DB::Select("select sum(amount)+sum(checkamount) as totalamount, acctcode from dedits where (transactiondate between '$fromtran' and '$totran') and paymenttype = '3' and isreverse = '0' group by acctcode");
      //$debitdiscounts = DB::Select("select sum(amount)+sum(checkamount) as totalamount from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and paymenttype = '4'");
      //$debitreservations = DB::Select("select sum(amount)+sum(checkamount) as totalamount from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and paymenttype = '5'");
         $pdf = \App::make('dompdf.wrapper');
-        $pdf->loadView('print.printcashentry',compact('credits','debitcashchecks','fromtran','totran','entry')); 
+        $pdf->loadView('print.printcashentry',compact('trials','fromtran','totran','entry')); 
         return $pdf->stream();  
 
  }

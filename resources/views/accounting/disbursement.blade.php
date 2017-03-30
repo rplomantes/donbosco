@@ -1,29 +1,43 @@
-<?php
-$accountings = \App\Accounting::where('refno',$refno)->get();
-$disbursement = \App\Disbursement::where('refno',$refno)->first();
-$totaldebit=0;
-$totalcredit=0;
-$cancel = "Cancel";
-if($disbursement->isreverse=='1'){
-$cancel = "Restore";    
-}
-
-?>
 @extends('appaccounting')
 @section('content')
+<style>
+    .header{font-size: 16pt; font-weight: bold}
+    .date{font-size:12pt;}
+</style>
 <div class="container">
-    <div class="col-md-8">
-    <h3>DISBURSEMENT DETAILS</h3>
-    </div>
-    <div class="col-md-4">
-        @if($disbursement->transactiondate == date('Y-m-d',strtotime(\Carbon\Carbon::now())) && \Auth::user()->accesslevel == "4" || \Auth::user()->accesslevel=="5"))
-        <a href="{{url('restorecanceldisbursement',array($cancel,$refno))}}" class="btn btn-danger navbar-right" id="cancelRestore">{{$cancel}}</a>
-        @endif
-    </div>    
-    <table class="table table-bordered table-striped">
+  <h3>CASH DISBURSEMENT REPORT</h3>
     
+<div class="col-md-3">
+<div class class="form form-group">
+<label>From :</label>
+    <input type="text" id="fromtran" class="form-control" value="{{$datefrom}}">
+</div>   
+</div>    
+<div class="col-md-3">
+<div class="form form-group">
+    <label>To :</label>
+    <input type="text" id="totran"  value="{{$dateto}}" class="form-control">
+</div>
+</div>
+<div class="col-md-3">
+<div class="form form-group">
+    <br>    
+    <button onclick="showtran()" class="btn btn-primary form-control">View Transaction</button>
+</div>    
+</div>
+    
+    
+    <?php
+    foreach($rangereports as $rangereport){
+    $accountings = \App\Accounting::where('refno',$rangereport->refno)->get();
+    $disbursement = \App\Disbursement::where('refno',$rangereport->refno)->first();
+    $totaldebit=0;
+    $totalcredit=0;
+    ?>
+    
+    <table class="table table-bordered table-striped">
     <tr><td><b>Voucher Number<b> </td><td colspan="5"><span style="font-weight: bold;color:blue">{{$disbursement->voucherno}}</span></td></tr>
-    <tr><td><b>Date</b> </td><td colspan="5">{{$disbursement->transactiondate}}</td></tr>
+    
     <tr><td><b>Payee</b></td><td colspan="5"><b>{{$disbursement->payee}}</b></td></tr> 
     <tr><td><b>Bank Account<b></td><td colspan="5">{{$disbursement->bank}}</td></tr>    
     <tr><td><b>Check Number</b></td><td colspan="5">{{$disbursement->checkno}}</td></tr>    
@@ -33,6 +47,7 @@ $cancel = "Restore";
     <tr><td><b>Account Code</b></td><td><b>Account Title</b></td><td><b>Subsidiary</b></td><td><b>Office</b></td><td><b>Debit</b></td><td><b>Credit</b></td></tr>
     @foreach($accountings as $accounting)
     <tr><td>{{$accounting->accountcode}}</td><td>{{$accounting->accountname}}</td><td>{{$accounting->subsidiary}}</td><td>{{$accounting->sub_department}}</td><td align="right">{{number_format($accounting->debit,2)}}</td><td align="right">{{number_format($accounting->credit,2)}}</td></tr>
+    
     <?php
     $totaldebit = $totaldebit + $accounting->debit;
     $totalcredit = $totalcredit + $accounting->credit; 
@@ -40,11 +55,16 @@ $cancel = "Restore";
     @endforeach
     </tr><td colspan="4"> Total</td><td align="right"><b>{{number_format($totaldebit,2)}}</b></td><td align="right"><b>{{number_format($totalcredit,2)}}</b></td></tr>
     </table>
-    <div class="col-md-6">
-        <a href="{{url('printcheckdetails',$refno)}}" class="btn btn-primary form-control" target="_blank">Print Check Details</a>
-    </div>    
-    <div class="col-md-6">
-        <a href="{{url('printcheckvoucher',$refno)}}" class="btn btn-primary form-control" target="_blank">Print Voucher</a>
-    </div>    
+    <?php
+    }
+    ?>
 </div>
+
+<script>
+    function showtran(){
+        fromtran = document.getElementById("fromtran").value
+        totran = document.getElementById("totran").value
+        document.location = "/disbursement/" + fromtran + "/" + totran 
+     }
+</script>    
 @stop

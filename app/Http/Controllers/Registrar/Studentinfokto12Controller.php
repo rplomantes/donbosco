@@ -335,17 +335,5 @@ public function updateSibling(array $request,$idno){
     return null;
 }
 
-function addstatus($idno){
-    $schoolyear = \App\RegistrarSchoolyear::first();
-    
-    $status = new \App\Status;
-    $status->idno = $idno;
-    $status->date_registered = Carbon::now();
-    $status->schoolyear = $schoolyear->schoolyear;
-    $status->isnew = '1';
-    $status->save();
-    
-    
-    
-}
+
 }

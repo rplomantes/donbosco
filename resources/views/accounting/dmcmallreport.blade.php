@@ -1,5 +1,5 @@
 <?php
-$dmcmlists = \App\DebitMemo::where('transactiondate',$trandate)->where('postedby',\Auth::user()->idno)->get();
+$dmcmlists = \App\DebitMemo::whereBetween('transactiondate',array($fromtran,$totran))->get();
 $totaldm=0;
 $totalcancel =0;
 ?>
@@ -7,7 +7,24 @@ $totalcancel =0;
 @extends('appaccounting')
 @section('content')
 <div class="container">
-    <h3>DEBIT MEMO DAILY REPORT</H3>
+    <h3>DEBIT MEMO SUMMARY</H3>
+    <div class="form-group">
+        
+        <div class="col-md-2">
+            <label>From</label>    
+        <input type="text" name="fromtran" id="fromtran" class="form-control" value="{{$fromtran}}">
+        </div>
+        <div class="col-md-2">
+            <label>From</label>    
+        <input type="text" name="totran" id="totran" class="form-control" value="{{$totran}}">
+        </div>
+        <br>
+        <div class="col-md-2">
+        <button class="btn btn-primary form-control" id="processbtn">View</button>
+        </div>
+    </div>    
+    <br>
+    <hr>
     <table class="table table-striped table-bordered">
         <tr><th>Debit Memo No.</th><th>Student No</th><th>Student Name</th><th>Explanation</th><th>Amount</th><th>Status</th><th>View</th></tr>
         @foreach($dmcmlists as $dmcmlist)
@@ -33,5 +50,13 @@ $totalcancel =0;
         
     
 </div>
+<script>
+    
+    $("#processbtn").click(function(){
+        document.location = "{{url('dmcmallreport')}}" + "/" + $("#fromtran").val() + "/" + $("#totran").val();
+    })
+    
+</script>    
 @stop
+
 

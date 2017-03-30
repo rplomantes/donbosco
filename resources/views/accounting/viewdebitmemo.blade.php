@@ -19,6 +19,12 @@ $others = DB::Select("SELECT amount - payment-plandiscount-otherdiscount as bala
         . " where categoryswitch > '6'  and categoryswitch < '10' and  idno = $idno ");
 $level = \App\Status::where('idno',$idno)->first()->level;
 $student=\App\User::where('idno',$idno)->first();
+$initialentry = \App\Accounting::where("posted_by",\Auth::user()->idno)->where('isfinal','0')->where('type','2')->first();
+if(count($initialentry)>0){
+$uniqid = $initialentry->refno;    
+$debitmemono = $initialentry->referenceid;
+
+}else{
 $debitmemozero="";
 $debitmemoid =  \App\User::where('idno',\Auth::user()->idno)->first();
 $debitmemono = $debitmemoid->debitmemono;
@@ -28,7 +34,8 @@ for($i=strlen($debitmemono);$i<=5;$i++ ){
 }
 $debitmemono= $debitmemouserid.$debitmemozero.$debitmemono;
 $uniqid = uniqid();
-$departments = DB::Select("Select * from ctr_acct_dept");
+}
+$departments = DB::Select("Select * from ctr_acct_dept order by sub_department");
 ?>
 
 @extends('appaccounting')
@@ -112,8 +119,8 @@ $departments = DB::Select("Select * from ctr_acct_dept");
                 <div class="col-md-3">
                     <label for="accountname">Account Name</label>
                     <input type="hidden" value="{{$uniqid}}" name="refno" id="refno">  
-                    <input type="hidden" value="{{$debitmemono}}" name="receiptno" id="receiptno">
-                    <input type="hidden" value="5" name="entry_type" id="entry_type">
+                    <input type="hidden" value="{{$debitmemono}}" name="debitmemono" id="debitmemono">
+                    <input type="hidden" value="2" name="entry_type" id="entry_type">
                     <input type="text" class="form-control coa" id="accountname" name="accountname" onkeypress="nosubmit(event)">
                 </div>
                 <div class="amountdetails" id="amountdetails">
@@ -153,10 +160,12 @@ $departments = DB::Select("Select * from ctr_acct_dept");
                 <hr>
             <h5>Debit</h5>    
             <table class="table table-bordered table-striped" id="debitentry">
-                <tbody>
+                <thead>
                 <tr><td>Acct Code</td><td>Account Name</td><td>Subsidiary</td><td>Department</td><td>Amount</td><td></td></tr>
-                </tbody>
-                 
+                </thead>
+                <tbody id ="partialentry">
+                       
+                </tbody> 
             </table>
            </div>     
         </div>    
@@ -177,6 +186,8 @@ $departments = DB::Select("Select * from ctr_acct_dept");
   $("#amountdetails").fadeOut(); 
   $("#processbtn").fadeOut();
   $("#remarks").fadeOut();
+  partialtable();
+  
   $("#amount").keypress(function(e){
       if(e.keyCode==13){
           e.returnValue=false
@@ -184,17 +195,40 @@ $departments = DB::Select("Select * from ctr_acct_dept");
        if($('#amount').val()==""){
            alert("Please Fill-in the Amount!!!")
        }   else{
-           string = "<tr><td><input type=\"text\" name=\"acctcodedebit[]\" "
-           string = string + " value = \"" + $("#acctcode").val() + "\"></td><td>" + $("#accountname").val()
-           string = string + " </td><td>" + "<input type=\"text\" name=\"subsidiary[]\" value=\"" + $("#subsidiary").val() + "\"></td><td> <input type = \"text\" name=\"department[]\" value=\"" + $("#department").val() 
-           string = string + "\"></td><td><input type=\"text\" class=\"debitamount\" name=\"debitamount[]\" value=\"" + $("#amount").val() + "\"></td><td><a href=\"#\" onclick = \"remove(this)\" id=\"remove\">Remove</a></tr>"     
-           //$("#debitentry").append(string);
-           $("#assess").children().append(string);
-           $("#amount").val("")
-           $("#amountdetails").fadeOut();
-           $("#acctcode").val("")
-           $("#accountname").val("");
-           checkifbalance()
+               var arrays={}
+               arrays['acctcode']=$("#acctcode").val();
+               arrays['accountname']=$("#accountname").val();
+               arrays['subsidiary']=$("#subsidiary").val();
+               arrays['department']=$("#department").val();
+               arrays['entrytype']=$("#entrytype").val();
+               arrays['entry_type']=$("#entry_type").val();
+               arrays['amount']=$("#amount").val();
+               arrays['refno']=$("#refno").val();
+               arrays['referenceid'] = $('#debitmemono').val();
+               arrays['idno']= "{{Auth::user()->idno}}";
+               
+               $.ajax({
+                  type:"GET",
+                  url:"/postpartialentry",
+                  data:arrays,
+                    success:function(data){
+                        $("#partialentry").html(data);
+                        $("#acctcode").val("");
+                        $("#accountname").val("");
+                        $("#subsidiary").html("<option value=\"None\">Select Subsidiary If Any</option>");
+                        $("#amount").val("");
+                        $("#accountname").focus();
+                        partialtable()
+                        checkifbalance()
+                        if($("#balance").val() == "yes"){
+                         $("#forsubmit").fadeIn();   
+                        }else{
+                         $("#forsubmit").fadeOut();
+                        }
+                        $("#amountdetails").fadeOut();
+                    }
+               });
+           
        }
       }
   })
@@ -203,11 +237,7 @@ $departments = DB::Select("Select * from ctr_acct_dept");
   
   function checkifbalance(){
   totalcredit = parseFloat($("#totalamount").val());
-  totaldebit=0;
-  
-  $('.debitamount').each(function(index,element){
-       totaldebit = parseFloat(totaldebit) + parseFloat(element.value); 
-    });
+  totaldebit=parseFloat(document.getElementById('crdrdiff').value);
    if(totalcredit == 0 ){
        alert("Please fill-in the credit side!")
    } else{
@@ -264,6 +294,7 @@ function computetotal(){
     });
     var total = totaldue + totalother + totalprevious;
     document.getElementById('totalamount').value = total.toFixed(2);
+    checkifbalance();
     //alert(total);
     
 }
@@ -314,6 +345,47 @@ function popsubsidiary(acctcode){
          return false;
      }
  }
+ 
+ 
+  function partialtable(){
+   $.ajax({
+        type:"GET",
+        url:"/getpartialentry/" + $("#refno").val(),
+            success:function(data){
+               $("#partialentry").html(data);
+                       
+                        if($("#balance").val() == "yes"){
+                         $("#forsubmit").fadeIn();   
+                        } else{
+                         $("#forsubmit").fadeOut();
+                        }
+                        
+                    }
+            
+     });
+   
+  
+ } 
+ function removeacctgpost(id){     
+         var arrays={};
+         arrays['id']=id;
+         arrays['refno']=$("#refno").val();
+     $.ajax({
+         type:"GET",
+         url:"/removeacctgpost",
+         data:arrays,
+         success:function(data){
+             $("#partialentry").html(data);
+             if($("#balance").val() == "yes"){
+                $("#forsubmit").fadeIn();   
+             }else{
+                 $("#forsubmit").fadeOut();
+                   }
+         }
+     });
+ 
+    
+    }
 </script>    
 
 @stop

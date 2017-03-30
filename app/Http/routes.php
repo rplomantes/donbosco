@@ -76,10 +76,10 @@
     //accounting module
     Route::get('accounting/{idno}','Accounting\AccountingController@view');
     Route::post('debitcredit','Accounting\DebitMemoController@debitcredit');
-    Route::get('viewdm/{refno}/{idno}','Accounting\AccountingController@viewdm');
-    Route::get('printdmcm/{refno}/{idno}','Accounting\AccountingController@printdmcm');
-    Route::get('dmcmreport/{transationdate}','Accounting\AccountingController@dmcmreport');
-    Route::get('dmcmallreport/{transactiondate}','Accounting\AccountingController@dmcmallreport');
+    Route::get('viewdm/{refno}/{idno}','Accounting\DebitMemoController@viewdm');
+    Route::get('printdm/{refno}','Accounting\DebitMemoController@printdm');
+    Route::get('dmcmreport/{transationdate}','Accounting\DebitMemoController@dmcmreport');
+    Route::get('dmcmallreport/{fromtran}/{totran}','Accounting\DebitMemoController@dmcmallreport');
     Route::get('collectionreport/{datefrom}/{dateto}','Accounting\AccountingController@collectionreport');
     Route::get('printdmcmreport/{idno}/{transactiondate}','Accounting\AccountingController@printdmcmreport');
     Route::get('summarymain/{schoolyear}','Accounting\AccountingController@summarymain');
@@ -111,6 +111,7 @@
     Route::get('showjournallist','Accounting\JournalController@ShowJournalList');
     Route::get('printjournalvoucher/{referenceid}','Accounting\JournalController@printjournalvoucher');
     Route::get('dailyjournallist/{trandate}','Accounting\JournalController@dailyjournallist');
+    Route::get('dailyalljournallist/{fromtran}/{totran}','Accounting\JournalController@dailyalljournallist');
     Route::get('printpdfjournalvoucher/{refno}','Accounting\JournalController@printpdfjournalvoucher');
     Route::get('restorecanceljournal/{kind}/{refno}','Accounting\JournalController@restorecanceljournal');
     Route::get('adddisbursement','Accounting\DisbursementController@adddisbursement');
@@ -122,6 +123,9 @@
     Route::get('printdisbursementlistpdf/{trandate}','Accounting\DisbursementController@printdisbursementlistpdf');
     Route::get('printjournallistpdf/{trandate}','Accounting\JournalController@printjournallistpdf');
     Route::get('viewdebitmemo/{idno}','Accounting\DebitMemoController@viewdebitmemo');
+    Route::get('disbursement/{datefrom}/{dateto}','Accounting\DisbursementController@disbursement');
+    Route::get('generaljournal/{trandate}','Accounting\JournalController@generaljournal');
+    Route::get('restorecanceldm/{refno}','Accounting\DebitMemoController@restorecanceldm');
     //update module
     //Elective submitted by registrar on STEM
     //Route::get('updateelective','Registrar\AssessmentController@updateelective');
@@ -134,7 +138,9 @@
     //Route::get('updatehsattendance','Update\UpdateController@updatehsattendance');
     //Route::get('updatecashdiscount','Update\UpdateController@updatecashdiscount');
     //Route::get('updateacctcode','Update\UpdateController@updateacctcode');
-    Route::get('/updateentrytype','Update\UpdateController@updateentrytype');
+    //Route::get('/updateentrytype','Update\UpdateController@updateentrytype');
+    //Route::get('/updatedmtoaccounting','Update\UpdateController@updatedmtoaccounting');
+    Route::get('updatedebitmemo','Update\UpdateController@updatedebitmemo');
     Route::get('makepaymentschedule',function(){
         return view("update.makepaymentschedule");
     });
@@ -203,7 +209,7 @@
     Route::get('generalledger/{basic}/{title}/{todate?}','Accounting\GenLedgerController@index');
     Route::get('balancesheet','Vincent\BalanceSheetController@index');
     
-    Route::get('dmsummary/{fromtran}/{totran}','Accounting\DebitDCSummaryController@index');
+    Route::get('dmsummary/{trandate}','Accounting\DebitDCSummaryController@index');
     Route::get('printdmjournal/{fromtran}/{totran}','Accounting\DebitDCSummaryController@printsummary');
     
     

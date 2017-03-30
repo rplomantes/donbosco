@@ -18,7 +18,7 @@ $voucherno= $voucheruserid.$vouchzero.$voucherno;
 //$voucherid->update();
 $uniqid = uniqid();
 }
-$departments = DB::Select("Select * from ctr_acct_dept");
+$departments = DB::Select("Select * from ctr_acct_dept order by sub_department");
 $bankaccounts = \App\ChartOfAccount::where('acctcode','>','110010')->where('acctcode','<=','110029')->get();
 ?>
 @extends('appaccounting')

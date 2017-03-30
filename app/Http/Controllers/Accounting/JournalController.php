@@ -33,6 +33,9 @@ class JournalController extends Controller
             //$trandate = date('Y-m-d',strtotime(Carbon::now()));
             return view('accounting.dailyjournallist',compact('trandate'));
         }
+        function dailyalljournallist($fromtran,$totran){
+            return view('accounting.dailyalljournallist',compact('fromtran','totran'));
+        }
         function restorecanceljournal($kind, $refno){
             if($kind=="Cancel"){
                $cr = 1;
@@ -57,4 +60,8 @@ class JournalController extends Controller
             $pdf->loadView('print.printjournallistpdf',compact('trandate'));
             return $pdf->stream();
         } 
+        function generaljournal($trandate){
+            $rangereports = DB::Select("Select distinct refno from accountings where type = '3' and transactiondate ='$trandate'");
+           return view("accounting.generaljournal",compact('rangereports','trandate'));
+        }
 }
