@@ -3,6 +3,7 @@
     Route::auth();
     Route::get('/', 'MainController@index');
     //Book Store Module
+    Route::get('deptincome/{fromtran}/{totran}', 'Accounting\DeptIncomeController@index');
     Route::get('books/{idno}', 'Miscellaneous\BookController@index');
     Route::post('/books/update', 'Miscellaneous\BookController@updatebooks');
     Route::get('/getsearchbookstore/{student}','Miscellaneous\AjaxController@getsearchbookstore');
@@ -89,8 +90,8 @@
     Route::get('cashcollection/{transactiondate}','Accounting\AccountingController@cashcollection');
     Route::get('overallcollection/{transactiondate}','Accounting\AccountingController@overallcollection');
     Route::get('printactualoverall/{transactiondate}','Accounting\AccountingController@printactualoverall');
-    Route::get('cashreceipts/{transactiondate}','Accounting\AccountingController@cashreceipts');
-    Route::get('printcashreceipts/{transactiondate}','Accounting\AccountingController@printcashreceipts');
+    Route::get('cashreceipts/{transactiondate}','Accounting\CashReceiptController@cashreceipts');
+    Route::get('printcashreceipts/{transactiondate}','Accounting\CashReceiptController@printcashreceipts');
     Route::get('statementofaccount','Accounting\AccountingController@statementofaccount');
     Route::get('tvetsoa','Accounting\TvetSoaController@tvetsoa');
     Route::post('gettvetsoasummary','Accounting\TvetSoaController@gettvetsoasummary');
@@ -207,7 +208,9 @@
     Route::get('trialbalance/{fromtran}/{totran}','Vincent\TrialBalanceController@viewtrilaBalance');
     Route::get('printtrialbalance/{fromtran}/{totran}','Vincent\TrialBalanceController@printtrilaBalance');
     Route::get('generalledger/{basic}/{title}/{todate?}','Accounting\GenLedgerController@index');
+    Route::get('generalledger/print/{basic}/{title}/{todate?}','Accounting\GenLedgerController@printledger');
     Route::get('balancesheet','Vincent\BalanceSheetController@index');
+    Route::get('dmreport/{trandate}','Accounting\DMReportController@index');
     
     Route::get('dmsummary/{trandate}','Accounting\DebitDCSummaryController@index');
     Route::get('printdmjournal/{fromtran}/{totran}','Accounting\DebitDCSummaryController@printsummary');

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use DB;
 class DeptIncomeController extends Controller
 {
     public function __construct(){
@@ -14,9 +14,13 @@ class DeptIncomeController extends Controller
     }
     
     function index($fromtran,$totran){
-                $consolidated = DB::Select("Select c.acctcode,c.description,c.none,c.elem,c.hs,c.tvet,c.service,c.admin,c.pastoral from creditconsolidated c where (transactiondate between '2016-05-01' and '2017-01-01')"
-                        . "UNION ALL "
-                        . "Select d.acctcode,d.description,d.none,d.elem,d.hs,d.tvet,d.service,d.admin,d.pastoral from debitconsolidated d where (transactiondate between '2016-05-01' and '2017-01-01')");
+                $consolidated = DB::Select("Select * from ("
+                        . "Select accountingcode,acctcode,description,sum(none) as 'none',sum(rector) as 'rector',sum(elem) as 'elem',sum(hs) as 'hs',sum(tvet) as 'tvet',sum(service) as 'service',sum(admin) as 'admin',sum(pastoral) as 'pastoral' from creditconsolidated c where (transactiondate between '$fromtran' and '$totran') group by acctcode"
+                        . " UNION ALL "
+                        . "Select accountingcode,acctcode,description,sum(none),sum(rector),sum(elem),sum(hs),sum(tvet),sum(service),sum(admin),sum(pastoral) from debitconsolidated d where (transactiondate between '$fromtran' and '$totran') group by acctcode"
+                        . ")consol group by acctcode");
+                
+                return view("accounting.deptIncome",compact('consolidated'));
         
     }
 }

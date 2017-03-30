@@ -16,7 +16,7 @@ class BookController extends Controller
     }
     
     function index($idno){
-        $books = DB::Select("Select id,status,description from ledgers where idno='$idno' and accountingcode = '440400'");
+        $books = DB::Select("Select * from ledgers where idno='$idno' and accountingcode = '440400'");
         
         return view("book.studentbooks",compact('books','idno'));
     }

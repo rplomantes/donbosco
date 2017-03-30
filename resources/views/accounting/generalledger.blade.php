@@ -11,6 +11,7 @@
     }
 </style>
 <div class='container'>
+    <div class="col-md-12">
     <div class='col-md-6'>
         <dl class="dl-horizontal">
             <dt>Accounts</dt>
@@ -26,9 +27,8 @@
             </dd>
         </dl>
     </div>
-</div>
-
-<div class='container'>
+        </div>
+        <div class="col-md-12">
     <div class='col-md-6'>
         <dl class="dl-horizontal">
             <dt>Account Title</dt>
@@ -38,9 +38,8 @@
             </dd>
         </dl>
     </div>
-</div>
-
-<div class='container'>
+            </div>
+    <div class="col-md-12">
     <div class='col-md-6'>
         <dl class="dl-horizontal">
             <dt>Covered Period: </dt>
@@ -54,9 +53,10 @@
         </dl>
         <a href="#" onclick="gotopage()" class="btn btn-primary navbar-right">View Report</a>
     </div>
+        
 </div>
 
-<div class="container col-md-offset-2 col-md-8">
+<div class="col-md-offset-1 col-md-10">
     @if($basic > 0)
         <?php
             if($title == "All"){
@@ -91,23 +91,41 @@
             $monthlygrandcredit = 0;
             $monthlygranddebit = 0;
             ?>
-            <table width="100%" class="table table-borderless">
+            <table width="100%" class="table">
                 <thead>
-                    <tr style="text-align: right"><td width="25%"></td><td width="25%"><u>DEBIT</u></td><td width="25%"><u>CREDIT</u></td><td width="25%"><u>BALANCE</u></td></tr>
+                    <tr style="text-align: right">
+                        <td width="16.6%"></td>
+                        <td width="16.6%"><u>DEBIT</u></td>
+                        <td width="16.6%"></td>
+                        <td width="16.6%"><u>CREDIT</u></td>
+                        <td width="16.6%"></td>
+                        <td width="16.6%"><u>BALANCE</u></td>
+                    </tr>
                 </thead>
                 @if($basic == 1 || $basic == 2 || $basic == 3)
-                <tr style="text-align: right"><td style="text-align: left">Beginning Balance: </td><td>{{number_format($beginningdebit,2,'.',',')}}</td><td>{{number_format($beginningcredit,2,'.',',')}}</td><td>{{number_format($beginningtotal,2,'.',',')}}</td></tr>
+                <tr style="text-align: right">
+                    <td style="text-align: left" width="16.6%"><b>Beginning Balance: </b></td>
+                    <td width="16.6%">{{number_format($beginningdebit,2,'.',',')}}</td>
+                    <td width="16.6%"></td>
+                    <td width="16.6%">{{number_format($beginningcredit,2,'.',',')}}</td>
+                    <td width="16.6%"></td>
+                    <td width="16.6%">{{number_format($beginningtotal,2,'.',',')}}</td>
+                    </tr>
                 @endif
             </table>
             <?php 
-            $date = $fiscalyear->fiscalyear."-";
+            $date = $fiscalyear->fiscalyear;
             $endOfCycle = $diff;
             $count = 0;
             $startmonth = 5;
+            $monthlytotal = 0;
+
+            $monthlytotal = $monthlytotal+$beginningtotal;
             ?>
             <?php 
+            
             do{ 
-                $currmonth = $date.$startmonth;
+                $currmonth = $date."-".$startmonth;
                 $getmonth = date("Y-m",strtotime($currmonth));
 
                 $debitentry = DB::Select("SELECT entry_type,sum(if( type='debit', amount, 0 )) as debit,sum(if( type='credit', amount, 0 )) as credit FROM "
@@ -121,28 +139,60 @@
                         . "AND transactiondate LIKE  '".$getmonth."-%' and (transactiondate BETWEEN '$from' AND '$to') "
                         . "GROUP BY entry_type) s group by entry_type");
                 
-                $monthlydebit = 0;
-                $monthlycredit = 0;
-                $monthlytotal = 0;
-                
-                $monthlytotal = $monthlytotal+$beginningtotal;
+            $monthlydebit = 0;
+            $monthlycredit = 0;
                 
             ?>
                 
                 @if(count($debitentry)>0)
-                <div><h5><u><i>{{date("F Y",strtotime($currmonth))}}</i></u></h5></div>
-                <table width="100%" class="table table-borderless">
+                <div><h5><u><i><b>{{date("F Y",strtotime($currmonth))}}</b></i></u></h5></div>
+                <table width="100%" class="table table-bordered">
                     @foreach($debitentry as $entry)
                         @if($entry->entry_type == 1)
-                        <tr  style="text-align: right"><td  style="text-align: left;font-weight:bold;" width="25%">Receipts</td><td width="25%">{{number_format($entry->debit,2,'.',',')}}</td><td width="25%">{{number_format($entry->credit,2,'.',',')}}</td><td width="25%"></td></tr>
+                        <tr  style="text-align: right">
+                            <td  style="text-align: left;font-weight:bold;" width="16.6%">Receipts</td>
+                            <td width="16.6%">{{number_format($entry->debit,2,'.',',')}}</td>
+                            <td width="16.6%"></td>
+                            <td width="16.6%">{{number_format($entry->credit,2,'.',',')}}</td>
+                            <td width="16.6%"></td>
+                            <td width="16.6%"></td>
+                        </tr>
                         @elseif($entry->entry_type == 2)
-                        <tr style="text-align: right"><td  style="text-align: left;font-weight:bold;" width="25%">Debit Memo</td><td width="25%">{{number_format($entry->debit,2,'.',',')}}</td><td width="25%">{{number_format($entry->credit,2,'.',',')}}</td><td width="25%"></td></tr>
+                        <tr style="text-align: right">
+                            <td  style="text-align: left;font-weight:bold;" width="16.6%">Debit Memo</td>
+                            <td width="16.6%">{{number_format($entry->debit,2,'.',',')}}</td>
+                            <td width="16.6%"></td>
+                            <td width="16.6%">{{number_format($entry->credit,2,'.',',')}}</td>
+                            <td width="16.6%"></td>
+                            <td width="16.6%"></td>
+                        </tr>
                         @elseif($entry->entry_type == 3)
-                        <tr style="text-align: right"><td  style="text-align: left;font-weight:bold;" width="25%">Journal Entry</td><td width="25%">{{number_format($entry->debit,2,'.',',')}}</td><td width="25%">{{number_format($entry->credit,2,'.',',')}}</td><td width="25%"></td></tr>
+                        <tr style="text-align: right">
+                            <td  style="text-align: left;font-weight:bold;" width="16.6%">Journal Entry</td>
+                            <td width="16.6%">{{number_format($entry->debit,2,'.',',')}}</td>
+                            <td width="16.6%"></td>
+                            <td width="16.6%">{{number_format($entry->credit,2,'.',',')}}</td>
+                            <td width="16.6%"></td>
+                            <td width="16.6%"></td>
+                        </tr>
                         @elseif($entry->entry_type == 4)
-                        <tr style="text-align: right"><td  style="text-align: left;font-weight:bold;" width="25%">Disbursement</td><td width="25%">{{number_format($entry->debit,2,'.',',')}}</td><td width="25%">{{number_format($entry->credit,2,'.',',')}}</td><td width="25%"></td></tr>
+                        <tr style="text-align: right">
+                            <td  style="text-align: left;font-weight:bold;" width="16.6%">Disbursement</td>
+                            <td width="16.6%">{{number_format($entry->debit,2,'.',',')}}</td>
+                            <td width="16.6%"></td>
+                            <td width="16.6%">{{number_format($entry->credit,2,'.',',')}}</td>
+                            <td width="16.6%"></td>
+                            <td width="16.6%"></td>
+                        </tr>
                         @elseif($entry->entry_type == 5)
-                        <tr style="text-align: right"><td  style="text-align: left;font-weight:bold;" width="25%">System Generated</td><td width="25%">{{number_format($entry->debit,2,'.',',')}}</td><td width="25%">{{number_format($entry->credit,2,'.',',')}}</td><td width="25%"></td></tr>
+                        <tr style="text-align: right">
+                            <td  style="text-align: left;font-weight:bold;" width="16.6%">System Generated</td>
+                            <td width="16.6%">{{number_format($entry->debit,2,'.',',')}}</td>
+                            <td width="16.6%"></td>
+                            <td width="16.6%">{{number_format($entry->credit,2,'.',',')}}</td>
+                            <td width="16.6%"></td>
+                            <td width="16.6%"></td>
+                        </tr>
                         @endif
                         <?php
                           
@@ -159,10 +209,10 @@
                             $monthlytotal = $monthlytotal + ($monthlycredit-$monthlydebit);
                             }
                             elseif($basic == 3){
-                            $monthlytotal = $monthlytotal + ($monthlycredit-$monthlydebit);
+                            $monthlytotal = $monthlytotal + ($monthlydebit-$monthlycredit);
                             }
                             elseif($basic == 4){
-                            $monthlytotal = $monthlytotal + ($monthlycredit-$monthlydebit);
+                            $monthlytotal = $monthlytotal + ($monthlydebit-$monthlycredit);
                             }
                             elseif($basic == 5){
                             $monthlytotal = $monthlytotal + ($monthlydebit-$monthlycredit);
@@ -172,7 +222,14 @@
                             $monthlygranddebit = $monthlygranddebit +$monthlydebit;
                             
                         ?>
-                    <tr style="text-align: right"><td  style="text-align: left">Monthly Sub Total</td><td>{{number_format($monthlydebit,2,'.',',')}}</td><td>{{number_format($monthlycredit,2,'.',',')}}</td><td>{{number_format($monthlytotal,2,'.',',')}}</td></tr>
+                    <tr style="text-align: right;background-color: #dae9f7;">
+                        <td  style="text-align: left">Monthly Sub Total</td>
+                        <td></td>
+                        <td><b>{{number_format($monthlydebit,2,'.',',')}}</b></td>
+                        <td></td>
+                        <td><b>{{number_format($monthlycredit,2,'.',',')}}</b></td>
+                        <td>{{number_format($monthlytotal,2,'.',',')}}</td>
+                    </tr>
                 </table>
 
                 <ta>
@@ -180,41 +237,47 @@
                 <?php 
                 if($startmonth == 12){
                     $startmonth = 1;
+                    $date++;
                 }else{
                     $startmonth = $startmonth+1;
                 }
 
                 $count++;
-             }while($count< $diff+1); ?>
+             }while($count< $diff); ?>
                 <table width="100%" class="table">
                     
                         <?php
                             if($basic == 1){
-                            $totalbalance = $monthlygranddebit-$monthlycredit;
+                                $totalbalance = $monthlygranddebit-$monthlygrandcredit;
                             }
                             elseif($basic == 2){
-                            $totalbalance = $monthlycredit-$monthlygranddebit;
+                                $totalbalance = $monthlygrandcredit-$monthlygranddebit;
                             }
                             elseif($basic == 3){
-                            $totalbalance = $monthlytotal + ($monthlygrandcredit-$monthlydebit);
+                                $totalbalance = $monthlygranddebit-$monthlygrandcredit;
                             }
                             elseif($basic == 4){
-                            $totalbalance = $monthlytotal + ($monthlycredit-$monthlydebit);
+                                $totalbalance = $monthlygranddebit-$monthlygrandcredit;
                             }
                             elseif($basic == 5){
-                            $totalbalance = $monthlytotal + ($monthlydebit-$monthlycredit);
+                                $totalbalance = $monthlygranddebit-$monthlygrandcredit;
                             }  
                         ?>
                     @if($basic == 1 || $basic == 2 || $basic == 3)
                         <tr  style="text-align: right"><td width="25%"  style="text-align: left">Monthly Grand Total</td><td width="25%"><u>{{number_format($monthlygranddebit,2)}}</u></td><td width="25%"><u>{{number_format($monthlygrandcredit,2)}}</u></td><td width="25%"></td></tr>
                     @endif
-                    <tr  style="text-align: right"><td width="25%"  style="text-align: left">Monthly Grand Total</td><td width="25%"><u>{{number_format($monthlygranddebit,2)}}</u></td><td width="25%"><u>{{number_format($monthlygrandcredit,2)}}</u></td><td width="25%"></td></tr>
+                    <tr  style="text-align: right"><td width="25%"  style="text-align: left"><b>Balance as of</b> {{date("M d Y",strtotime($to))}}</td><td width="25%"><u>{{number_format($monthlygranddebit,2)}}</u></td><td width="25%"><u>{{number_format($monthlygrandcredit,2)}}</u></td><td width="25%"><u>{{number_format($totalbalance,2)}}</u></td></tr>
                 </table>
         @endforeach
-
+        <a href="{{url("generalledger/print",array($basic,$title,$to))}}" class="btn btn-primary col-md-12">Print</a>
     @endif
+    
+    
+    
 </div>
 
+</div>
+    
 <script>
     
     function getAccount(group){

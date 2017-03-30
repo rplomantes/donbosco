@@ -259,6 +259,8 @@ function assess(Request $request){
                        $newbook->description = $paidbook->subsidiary;
                        $newbook->receipt_details = $paidbook->receipt_details;
                        $newbook->amount = $paidbook->amount;
+                       $newbook->acct_department = $paidbook->acct_department;
+                       $newbook->sub_department = $paidbook->sub_department;
                        $newbook->schoolyear = $schoolperiod->schoolyear;
                        $newbook->duetype = 0;
                        $newbook->period = $schoolperiod->period;
@@ -381,6 +383,8 @@ function assess(Request $request){
                        $newbook->description = $paidbook->subsidiary;
                        $newbook->receipt_details = $paidbook->receipt_details;
                        $newbook->amount = $paidbook->amount;
+                       $newbook->acct_department = $paidbook->acct_department;
+                       $newbook->sub_department = $paidbook->sub_department;
                        $newbook->schoolyear = $schoolperiod->schoolyear;
                        $newbook->duetype = 0;
                        $newbook->period = $schoolperiod->period;

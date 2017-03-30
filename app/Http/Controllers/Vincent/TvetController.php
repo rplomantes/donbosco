@@ -126,7 +126,7 @@ class TvetController extends Controller
             if($check1->isEmpty()){
                $log = new \App\TvetRecordChange;
                $log->idno = $student;
-               $log->new_subsidy = $new_subsidy;
+               $log->new_subsidy = intval(str_replace(", ","",$new_subsidy));
                $log->new_sponsor = $new_sponsor;
                $log->new_contribution = $new_trainee;
                $log->old_subsidy = $subsidies->subsidy;

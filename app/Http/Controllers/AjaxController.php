@@ -219,14 +219,14 @@ class AjaxController extends Controller
                  $value=$value."<td align=\"center\"><input name=\"paidby_tuitionfee\" id =\"tuitionfee_trainee\" checked value=\"trainee\" type=\"radio\" onclick=\"computetvet()\"></td></tr>";
                  
                  $value=$value."<tr><td>Miscellaneous</td>";
-                 $value=$value."<td> <input style=\"text-align:right\" id=\"misc\"  value=\"$misc\" name = \"misc\" type=\"text\" readonly class=\"form form-control\"></td>";
+                 $value=$value."<td> <input style=\"text-align:right\" id=\"misc\"  value=\"0\" name = \"misc\" type=\"text\" readonly class=\"form form-control\"></td>";
                  $value=$value."<td> ";
                  $value=$value."</td>";
                  $value=$value."<td align=\"center\"><input id=\"misc_sponsor\"  name=\"paidby_misc\" value=\"sponsor\" type=\"radio\" onclick=\"computetvet()\"></td>";
                  $value=$value."<td align=\"center\"><input id=\"misc_trainee\" name=\"paidby_misc\" checked value=\"trainee\" type=\"radio\" onclick=\"computetvet()\"></td></tr>";
                  
                  $value=$value."<tr><td>Graduation Fee</td>";
-                 $value=$value."<td> <input style=\"text-align:right\" id=\"gradfee\"  value=\"$grad\"name = \"gradfee\" type=\"text\" readonly class=\"form form-control\"></td>";
+                 $value=$value."<td> <input style=\"text-align:right\" id=\"gradfee\"  value=\"0\"name = \"gradfee\" type=\"text\" readonly class=\"form form-control\"></td>";
                  $value=$value."<td> ";
                  $value=$value."</td>";
                  $value=$value."<td align=\"center\"><input name=\"paidby_gradfee\" id=\"gradfee_sponsor\" value=\"sponsor\" type=\"radio\" onclick=\"computetvet()\"></td>";

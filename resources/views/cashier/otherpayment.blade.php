@@ -74,6 +74,7 @@
                     
                     <div class="form-group col-md-12">
                         <h5>Reservation : </h5> <input class="form-control" style="text-align:right" type="text" name="reservation" onkeypress = "validateother(event,'reservation')"   placeholder="0.00" id="reservation" onblur="ctotal()">
+                        <h5>Student Deposit : </h5> <input class="form-control" style="text-align:right" type="text" name="deposit" onkeypress = "validateother(event,'deposit')"   placeholder="0.00" id="deposit" onblur="ctotal()">
                     </div>
                     
                     <h5>Other Collection</h5>
@@ -513,6 +514,9 @@
             if(varcontrol == "reservation"){
             document.getElementById('cash').focus();   
             }
+            if(varcontrol == "deposit"){
+            document.getElementById('cash').focus();   
+            }
             else if(varcontrol=="cash"){
                 /*
                 var totalcredit = eval(document.getElementById('totalcredit').value);
@@ -593,6 +597,7 @@
         function ctotal(){
  // alert(document.getElementById('reservation').value)
             var r = document.getElementById('reservation').value != "" ? eval(document.getElementById('reservation').value):0;
+            var deposit = document.getElementById('deposit').value != "" ? eval(document.getElementById('deposit').value):0;
             var amount1 = document.getElementById('amount1').value != "" ? eval(document.getElementById('amount1').value):0;
             var amount2 = document.getElementById('amount2').value != "" ? eval(document.getElementById('amount2').value):0;
             var amount3 = document.getElementById('amount3').value != "" ? eval(document.getElementById('amount3').value):0;
@@ -600,7 +605,7 @@
             var amount5 = document.getElementById('amount5').value != "" ? eval(document.getElementById('amount5').value):0;
             var amount6 = document.getElementById('amount6').value != "" ? eval(document.getElementById('amount6').value):0;
             var amount7 = document.getElementById('amount7').value != "" ? eval(document.getElementById('amount7').value):0;
-            document.getElementById('totalcredit').value = (r + amount1 + amount2 + amount3 + amount4 + amount5 + amount6 + amount7).toFixed(2);
+            document.getElementById('totalcredit').value = (r + deposit + amount1 + amount2 + amount3 + amount4 + amount5 + amount6 + amount7).toFixed(2);
             var totalcredit = eval(document.getElementById('totalcredit').value);
                 var totalcash = document.getElementById('cash').value != "" ? eval(document.getElementById('cash').value):0;
                 var totalcheck = document.getElementById('receivecheck').value  != "" ? eval(document.getElementById('receivecheck').value):0;

@@ -120,7 +120,11 @@ th {
          @if($due->duetype == '0')
                 <td style="background-color:#ccc">
                 <strong style="font-size: 12pt;">Upon Enrollment</strong>
-                </td><td align="right" style="background-color:#ccc"><strong style="font-size: 12pt;">{{number_format($due->amount - $due->plandiscount - $reserve - $due->otherdiscount,2)}}</strong></td></tr>
+                @if(($due->amount - $due->plandiscount - $reserve - $due->otherdiscount-$deposit) < 0)
+                </td><td align="right" style="background-color:#ccc"><strong style="font-size: 12pt;">0</strong></td></tr>
+                @else
+                </td><td align="right" style="background-color:#ccc"><strong style="font-size: 12pt;">{{number_format($due->amount - $due->plandiscount - $reserve - $due->otherdiscount-$deposit,2)}}</strong></td></tr>
+                @endif
          @else
          
           @if($status->plan =="Monthly 1" || $status->plan=="Monthly 2")

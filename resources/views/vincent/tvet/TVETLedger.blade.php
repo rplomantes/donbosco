@@ -96,7 +96,7 @@
             <td><input readonly="readonly" style="width: 100px" type="text" class=" no-edit payment" name="payment{{$count}}" id="payment{{$count}}" value="{{number_format($student->payment, 2, '.', ', ')}}"></td>
             
             <td class="total" style="display:none;">{{$student->sponsor+$student->subsidy+$student->amount}}</td>
-            <td>{{number_format($student->sponsor+$student->subsidy+$student->amount, 2, '.', ', ')}}</td>            
+            <td>{{number_format($student->sponsor+$student->subsidy+$student->amount, 2, '.', ', ')}}</td>
             
             <td><input  type="text" style="width: 100px" class="sponsors" name="sponsor{{$count}}" id="sponsor{{$count}}" value="{{$student->sponsor}}"></td>
             <td><input type="text" readonly="readonly" style="width: 100px" class="no-edit subsidy" name="subsidy{{$count}}" id="subsidy{{$count}}" value="{{number_format($student->subsidy, 2, '.', ', ')}}" ></td>
@@ -131,8 +131,6 @@ $('.sponsors').keyup(function(){
     $(this).val().toFixed(2);
 });
 
-
-
 $('.amount').keyup(function(){
     var sponsor = $(this).closest("td").siblings().find('.sponsors').attr('id');
     var subsidy = $(this).closest("td").siblings().find('.subsidy').attr('id');
@@ -145,7 +143,7 @@ $('.amount').keyup(function(){
         subsidy = 0;
     }
     
-    var newcontribution = parseInt(total)-(parseFloat($(this).val()));
+    var newcontribution = parseInt(total)-(parseFloat($(this).val()) + parseFloat($("#"+sponsor).val()));
     
     $('#'+subsidy).val(newcontribution.toFixed(2))
     $(this).val().toFixed(2);

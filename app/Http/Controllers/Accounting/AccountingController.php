@@ -639,87 +639,11 @@ function cashcollection($transactiondate){
  }   
   
 
-function overallcollection($transactiondate){
-  $matchfields = ['transactiondate'=>$transactiondate];
-        //$collections = \App\Dedit::where($matchfields)->get();
-        $collections = DB::Select("select sum(dedits.amount) as amount, sum(dedits.checkamount) as checkamount, users.idno, users.lastname, users.firstname,"
-                . " dedits.transactiondate, dedits.isreverse, dedits.receiptno, dedits.refno, dedits.postedby,non_students.fullname from dedits left join users on users.idno = dedits.idno left join non_students on non_students.idno = dedits.idno where"
-                . " dedits.transactiondate = '" 
-                . $transactiondate . "' and dedits.paymenttype = '1' group by users.idno, dedits.transactiondate, dedits.postedby, users.lastname, users.firstname, dedits.isreverse,dedits.receiptno,dedits.refno order by dedits.refno" );
-        
-    return view('accounting.overallcollection',compact('collections','transactiondate'));
-    
-} 
 
-    function getDiscount($refno){
-        $discount = \App\Dedit::where('refno',$refno)->where('paymenttype','4')->first();
-        $mt=0;
-        if(count($discount)>0){
-          $mt=$discount->amount;  
-        }
-        return $mt;
-    }
     
-    function getcrmonthmain($cswitch, $monthdate, $trandate){
-        $total = DB::Select("Select sum(Amount) as amount from credits where categoryswitch = '$cswitch' and "
-                . "isreverse = '0' and transactiondate like '$monthdate' and transactiondate < '$trandate'");
-        if(count($total)> 0){
-            $credit = $total[0]->amount;
-        } else {
-            $credit=0;
-        }
-        return $credit;
-    }
+    
 
-    function getReservationCredit($refno){
-        $mt=0;
-        $amount=  \App\Credit::where('refno',$refno)->where('acctcode','Reservation')->first();
-        if(count($amount)>0){
-            $mt = $amount->amount;
-        }
-        return $mt;
-    }
-    function getReservationDebit($refno){
-        $mt=0;
-        $amount = \App\Dedit::where('refno',$refno)->where('paymenttype','5')->first();
-        if(count($amount)>0){
-            $mt = $amount->amount;
-        }
-        return $mt;
-        }
-    function getFapeDebit($refno){
-        $mt=0;
-        $amount = \App\Dedit::where('refno',$refno)->where('paymenttype','7')->first();
-        if(count($amount)>0){
-            $mt = $amount->amount;
-        }
-        return $mt;
-        }
-    function getcreditamount($refno,$categoryswitch){
-        $amount = DB::Select("select sum(amount) as amount from credits where refno = '$refno' and categoryswitch = '$categoryswitch'");
-        
-        foreach($amount as $mnt){
-            $mt = $mnt->amount;
-        }
-        
-        if(!isset($mt)){
-            $mt=0;
-        }
-        return $mt;
-    }
-    
-    function getcreditamount1($refno,$categoryswitch){
-        $amount = DB::Select("select sum(amount) as amount from credits where refno = '$refno' and categoryswitch >= '$categoryswitch' and acctcode != 'Reservation'");
-        
-        foreach($amount as $mnt){
-            $mt = $mnt->amount;
-        }
-        
-        if(!isset($mt)){
-            $mt=0;
-        }
-        return $mt;
-    }
+
 
     //Grade School Batch Print for SOA
     function statementofaccount(){
@@ -950,4 +874,16 @@ function overallcollection($transactiondate){
     return $this->getsoasummary($level,$strand,$section,$trandate,$plan,$amtover);
 
     }
+    
+    function overallcollection($transactiondate){
+        $matchfields = ['transactiondate'=>$transactiondate];
+        //$collections = \App\Dedit::where($matchfields)->get();
+        $collections = DB::Select("select sum(dedits.amount) as amount, sum(dedits.checkamount) as checkamount, users.idno, users.lastname, users.firstname,"
+                . " dedits.transactiondate, dedits.isreverse, dedits.receiptno, dedits.refno, dedits.postedby,non_students.fullname from dedits left join users on users.idno = dedits.idno left join non_students on non_students.idno = dedits.idno where"
+                . " dedits.transactiondate = '" 
+                . $transactiondate . "' and dedits.paymenttype = '1' group by users.idno, dedits.transactiondate, dedits.postedby, users.lastname, users.firstname, dedits.isreverse,dedits.receiptno,dedits.refno order by dedits.refno" );
+        
+        return view('accounting.overallcollection',compact('collections','transactiondate'));
+    
+} 
 }

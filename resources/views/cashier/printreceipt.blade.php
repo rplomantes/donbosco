@@ -37,7 +37,7 @@ body { margin: 0px; }
      <tr><td colspan="2" height="190"  valign="top" style="padding-left:20px">
            <table width="280" cellpadding = "0" cellspacing = "0" border="0">        
                 @foreach($credits as $credit)
-                <tr><td>{{$credit->receipt_details}}-{{$credit->sub_department}}</td><td align="right">{{number_format($credit->amount,2)}}</td></tr>
+                <tr><td>{{$credit->receipt_details}}</td><td align="right">{{number_format($credit->amount,2)}}</td></tr>
                 @endforeach
            
                 @if(count($debit_discount)>0)

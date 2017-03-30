@@ -440,6 +440,7 @@ class UpdateController extends Controller
             $schoolyear = \App\ctrSchoolYear::where('department',$department)->first();
             $schedules = \App\CtrRefSchedule::where('plan',$request->plan)->get();
             $firstsched =true;
+            $count = 1;
             foreach($schedules as $schedule){
                if($schedule->duetype == "1"){
                     $installments= \App\CtrRefInstallment::where('plan', $request->plan)->get();
@@ -466,7 +467,18 @@ class UpdateController extends Controller
                         $newsched->acctcode = $paymentschedule->acctname;
                         $newsched->description = $paymentschedule->subsidiary;
                         $newsched->receipt_details = $paymentschedule->acctname;
-                        $newsched->amount= round($paymentschedule->amount/count($installments),2);
+                        if($request->plan == "Quarterly" && $paymentschedule->acctcode =="110100"){
+                            if($count % 2 == 0){
+                                $newsched->amount= round($paymentschedule->amount*.2,2);
+                            }else{
+                                $newsched->amount= round($paymentschedule->amount*.3,2);
+                            }
+                            
+                        }
+                        else{
+                            $newsched->amount= round($paymentschedule->amount/count($installments),2);
+                        }
+                        
                         if($request->plan == "Semi Annual" && $paymentschedule->acctcode =="110100"){
                             if($firstsched){
                                 $newsched->discount = round(($paymentschedule->amount/count($installments)) * .015 ,2);
@@ -481,8 +493,10 @@ class UpdateController extends Controller
                         $newsched->save();
                         
                     }
-                 
+                        $count++;
                     }
+                    
+                    
                 }
                 elseif($schedule->duetype=='0'){
                     if($request->strand != null){  
