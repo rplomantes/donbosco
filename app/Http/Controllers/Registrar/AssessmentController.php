@@ -86,7 +86,7 @@ function assess(Request $request){
     $contribution="0";
     $batch="0";
     if($request->department=="TVET"){
-    $schoolperiod = \App\ctrSchoolYear::where('period', $request->batch)->first();    
+    $schoolperiod = \App\ctrSchoolYear::where('period', $request->batch)->first();
     }else{
     $schoolperiod = \App\ctrSchoolYear::where("department",$request->department)->first();
     }
@@ -110,27 +110,21 @@ function assess(Request $request){
 
                 if($paidby_tuitionfee=="sponsor"){
                     $sponsor=$sponsor + ($tf - ($discount/100) * $tf);
-                } else {
-                    $subsidy=$subsidy + ($tf - ($discount/100) * $tf);
                 }
 
                 if($paidby_misc=="sponsor"){
                     $sponsor=$sponsor + $misc; 
-                } else {
-                    $subsidy=$subsidy + $misc;
                 }
 
                 if($paidby_gradfee=="sponsor"){
                     $sponsor=$sponsor + $gradfee; 
-                } else {
-                    $subsidy=$subsidy + $gradfee;
                 }
 
                 $addtvet = new \App\TvetSubsidy;
                 $addtvet->idno=$request->idno;
                 $addtvet->sponsor=$sponsor;
-                $addtvet->subsidy=$subsidy-$contribution;
-                $addtvet->discount=$tf*$discount/100;
+                $addtvet->subsidy=$tf*$discount/100;
+                $addtvet->discount=0;
                 $addtvet->batch=$batch;
                 $addtvet->save();      
             }
@@ -480,8 +474,8 @@ function assess(Request $request){
             $newledger->description = "Trainees Contribution";
             $newledger->receipt_details = "Trainees Contribution";
             $newledger->amount = $contribution;
-            $newledger->acct_department = $ledger->acct_department;
-            $newledger->sub_department = $ledger->sub_department;
+            $newledger->acct_department = "TVET";
+            $newledger->sub_department = "TVET";
             //$newledger->plandiscount = $ledger->discount;
             $newledger->schoolyear = $schoolperiod->schoolyear;
             $newledger->duetype = "1";

@@ -123,6 +123,7 @@
                                     <td class="others">{{number_format($crothers,2)}}</td>
                                     <td class="stat"></td>
                                 </tr>
+
                             </thead>
     <?php             
         $cashtotal=0;

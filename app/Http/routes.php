@@ -5,6 +5,7 @@
     //Book Store Module
     Route::get('deptincome/{fromtran}/{totran}', 'Accounting\DeptIncomeController@index');
     Route::get('books/{idno}', 'Miscellaneous\BookController@index');
+    Route::get('unclaim/{idno}', 'Miscellaneous\AjaxController@unclaim');
     Route::post('/books/update', 'Miscellaneous\BookController@updatebooks');
     Route::get('/getsearchbookstore/{student}','Miscellaneous\AjaxController@getsearchbookstore');
     //Registrar module

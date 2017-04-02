@@ -11,7 +11,7 @@ use DB;
 class AjaxController extends Controller{
     function getaccount($group){
         if(Request::ajax()){
-            $accounts = DB::Select("select distinct accountname,acctcode from chart_of_accounts where acctcode like '$group%'");
+            $accounts = DB::Select("select distinct accountname,acctcode from chart_of_accounts where acctcode like '$group%' order by accountname");
             $data = "";
             if(count($accounts)>0){
                 $data = $data."<option value='' hidden='hidden'>-- Select Account Group--</option>";
@@ -26,7 +26,7 @@ class AjaxController extends Controller{
     
     function getaccount2($group){
         if(Request::ajax()){
-            $accounts = DB::Select("select distinct accountname,acctcode from chart_of_accounts where acctcode like '$group%'");
+            $accounts = DB::Select("select distinct accountname,acctcode from chart_of_accounts where acctcode like '$group%' order by accountname");
             $data = "";
             if(count($accounts)>0){
                 $data = $data."<option value='' hidden='hidden'>-- Select Account Group--</option>";

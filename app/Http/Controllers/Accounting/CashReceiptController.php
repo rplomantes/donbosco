@@ -17,10 +17,10 @@ class CashReceiptController extends Controller
     $rangedate = date("Y-m",strtotime($transactiondate));
     $asOf = date("l, F d, Y",strtotime($transactiondate));
     $wilddate = $rangedate."-%";
-    $collections = DB::Select("select sum(dedits.amount) as amount, sum(dedits.checkamount) as checkamount, users.idno, users.lastname, users.firstname,"
-                . " dedits.transactiondate, dedits.isreverse, dedits.receiptno, dedits.refno, dedits.postedby from users, dedits,non_students where (users.idno = dedits.idno OR dedits.idno=non_students.idno)  and "
+    $collections = DB::Select("select sum(dedits.amount) as amount, sum(dedits.checkamount) as checkamount, dedits.idno,dedits.receivefrom,"
+                . " dedits.transactiondate, dedits.isreverse, dedits.receiptno, dedits.refno, dedits.postedby from dedits where "
                 . " dedits.transactiondate = '" 
-                . $transactiondate . "' and dedits.paymenttype = '1' group by users.idno, dedits.transactiondate, dedits.postedby, users.lastname, users.firstname, dedits.isreverse,dedits.receiptno,dedits.refno order by dedits.refno" );
+                . $transactiondate . "' and dedits.paymenttype = '1' group by dedits.idno, dedits.transactiondate, dedits.postedby, dedits.isreverse,dedits.receiptno,dedits.refno order by dedits.refno" );
       
      $otheraccounts = DB::Select("select sum(credits.amount) as amount, credits.receipt_details, users.idno, users.lastname, users.firstname,"
                 . " dedits.transactiondate, dedits.isreverse, dedits.receiptno, dedits.refno, dedits.postedby from users, dedits, credits where users.idno = dedits.idno and"
@@ -35,6 +35,10 @@ class CashReceiptController extends Controller
                 . " credits.acctcode order by credits.acctcode" );
      
    //FORWARDED BALANCE  
+     
+    $totalmonthbal = DB::Select("SELECT sum(cash) as cash,sum(discount) as discount,sum(d.reservation) as dreserve,sum(fape) as fape, sum(student_deposit) as deposit,sum(books) as books,sum(elearning) as elearning,sum(misc) as misc,sum(dept) as dept,sum(registration) as registration,sum(tuition) as tuition,sum(c.reservation) as creservation,sum(others) as others FROM `receiptdedits` d join receiptcredits c on d.refno = c.refno where "
+                . "d.isreverse = '0' and d.transactiondate like '$wilddate' and d.transactiondate < '$transactiondate'");
+    
    $totalcashdb = DB::Select("select sum(amount) as amount, sum(checkamount) as checkamount "
                 . "from dedits where "
                 . " dedits.transactiondate LIKE '" 
@@ -114,7 +118,7 @@ class CashReceiptController extends Controller
 foreach ($collections as $collection){
     $allcollections[$int] = array(
         $collection->receiptno,
-        $collection->lastname." ,".$collection->firstname,
+        $collection->receivefrom,
         $collection->amount+$collection->checkamount, 
         $this->getReservationDebit($collection->refno),
         $this->getcreditamount($collection->refno,1),
@@ -135,7 +139,7 @@ foreach ($collections as $collection){
 }
     
     //return $othersummaries;
-    return view('accounting.cashreceiptdetails',compact('elearningcr','misccr','bookcr','departmentcr','registrationcr','tuitioncr','crreservation','crothers','totalcash','totaldiscount','drreservation','allcollections','transactiondate','otheraccounts','othersummaries','forwardbal','asOf','totalfape'));
+    return view('accounting.cashreceiptdetails',compact('elearningcr','misccr','bookcr','departmentcr','registrationcr','tuitioncr','crreservation','crothers','totalcash','totaldiscount','drreservation','allcollections','transactiondate','otheraccounts','othersummaries','forwardbal','asOf','totalfape','totalmonthbal'));
     //return $forwardbal;
 }
 
@@ -143,13 +147,17 @@ foreach ($collections as $collection){
     $rangedate = date("Y-m",strtotime($transactiondate));
     $asOf = date("l, F d, Y",strtotime($transactiondate));
     $wilddate = $rangedate."-%";
-    $collections = DB::Select("select sum(dedits.amount) as amount, sum(dedits.checkamount) as checkamount, users.idno, users.lastname, users.firstname,"
-                . " dedits.transactiondate, dedits.isreverse, dedits.receiptno, dedits.refno, dedits.postedby from users, dedits where users.idno = dedits.idno and"
+    $collections = DB::Select("select sum(dedits.amount) as amount, sum(dedits.checkamount) as checkamount, dedits.idno,dedits.receivefrom,"
+                . " dedits.transactiondate, dedits.isreverse, dedits.receiptno, dedits.refno, dedits.postedby from dedits where "
                 . " dedits.transactiondate = '" 
-                . $transactiondate . "' and dedits.paymenttype = '1' group by users.idno, dedits.transactiondate, dedits.postedby, users.lastname, users.firstname, dedits.isreverse,dedits.receiptno,dedits.refno order by dedits.refno" );
+                . $transactiondate . "' and dedits.paymenttype = '1' group by dedits.idno, dedits.transactiondate, dedits.postedby, dedits.isreverse,dedits.receiptno,dedits.refno order by dedits.refno" );
   
     
     //FORWARD BALANCE
+    $totalmonthbal = DB::Select("SELECT sum(cash) as cash,sum(discount) as discount,sum(d.reservation) as dreserve,sum(fape) as fape, sum(student_deposit) as deposit,sum(elearning) as elearning,sum() as misc,sum(dept) as dept,sum(registration) as registration,sum(tuition) as tuition,sum(reservation) as reservation,sum(others) as others FROM `receiptdedits` d join receiptcredits c on d.refno = c.refno where "
+                . "d.isreverse = '0' and d.transactiondate like '$wilddate' and d.transactiondate < '$transactiondate'");
+    
+    
    $totalcashdb = DB::Select("select sum(amount) as amount, sum(checkamount) as checkamount "
                 . "from dedits where "
                 . " dedits.transactiondate LIKE '" 
@@ -213,7 +221,7 @@ foreach ($collections as $collection){
    } else {
        $crothers = 0;
    }
-   
+  
    //END FORWARD BALANCE
    
    
@@ -230,7 +238,7 @@ foreach ($collections as $collection){
 foreach ($collections as $collection){
     $allcollections[$int] = array(
         $collection->receiptno,
-        $collection->lastname." ,".$collection->firstname,
+        $collection->receivefrom,
         $collection->amount+$collection->checkamount, 
         $this->getReservationDebit($collection->refno),
         $this->getcreditamount($collection->refno,1),
@@ -249,7 +257,7 @@ foreach ($collections as $collection){
 }
        $pdf = \App::make('dompdf.wrapper');
        $pdf->setPaper('legal','landscape');
-       $pdf->loadView('print.printcashreceipt',compact('elearningcr','misccr','bookcr','departmentcr','registrationcr','tuitioncr','crreservation','crothers','totalcash','totaldiscount','drreservation','allcollections','transactiondate','otheraccounts','othersummaries','forwardbal','asOf','totalfape'));
+       $pdf->loadView('print.printcashreceipt',compact('elearningcr','misccr','bookcr','departmentcr','registrationcr','tuitioncr','crreservation','crothers','totalcash','totaldiscount','drreservation','allcollections','transactiondate','otheraccounts','othersummaries','forwardbal','asOf','totalfape','totalmonthbal'));
        return $pdf->stream();
     //return $forwardbal;
 }

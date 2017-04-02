@@ -19,6 +19,12 @@ class AjaxController extends Controller
         
         return view("ajax.bookStudentSearch",compact('students'));
     }
+    
+    function unclaim($id){
+            $book = \App\Ledger::find($id);
+            $book->status = 0;
+            $book->save();
+    }
 }
 
                 

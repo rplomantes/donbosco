@@ -17,22 +17,25 @@
             {!!csrf_field()!!}
             <table class="tbl table">
                 @foreach($books as $book)
-                    @if($book->status == 0)
+                    @if($book->amount-($book->payment + $book->debitmemo) != 0 && $book->status != 2)
                     <tr style="background-color: #ececec;color:#989494;">
                         <td ></td>
                         <td>{{$book->description}}</td>
+                        <td></td>
                         <td>Unpaid</td>
                     </tr>
-                    @elseif($book->status == 1)
+                    @elseif($book->amount-($book->payment + $book->debitmemo) == 0 && $book->status != 2)
                     <tr class="clickable-row">
                         <td><input type="checkbox" name="book[{{$book->id}}]" id="{{$book->id}}"></td>
                         <td>{{$book->description}}</td>
+                        <td></td>
                         <td>Ok</td>
                     </tr>
                     @else
                     <tr style="background-color: #ececec;color:#989494;">
                         <td></td>
                         <td>{{$book->description}}</td>
+                        <td><a href="#" onclick="unclaim({{$book->id}})">Unclaim</a></td>
                         <td>Claimed</td>
                     </tr>
                     @endif
@@ -54,5 +57,15 @@ $(document).ready(function($) {
         }
     });
 });
+
+function unclaim(id){
+             $.ajax({
+            type: "GET", 
+            url: "/unclaim/" +  id, 
+            success:function(data){
+                location.reload();
+                }
+            });
+}
     </script>
 @stop
