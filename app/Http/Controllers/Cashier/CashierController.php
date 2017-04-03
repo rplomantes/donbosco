@@ -1075,7 +1075,7 @@ class CashierController extends Controller
             }
 
             if($credit->description == "Student Deposit"){
-                    $deposit = \App\StudentDeposit::where('id',$request->idno)->first();
+                    $deposit = \App\StudentDeposit::where('id',$idno)->first();
                     $deposit->amount = $deposit->amount + $credit->description;
                     $deposit->save();
             }
