@@ -93,7 +93,7 @@
                                         <span class="caret"></span></a>
                                         <ul class="dropdown-menu" role="menu">
                                             <li>
-                                                <a href ="{{url('disbursement', array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Cash Disbursement</a>
+                                                <a href ="{{url('disbursementbook',date('Y-m-d'))}}"><i class="fa fa-btn"></i>Cash Disbursement</a>
                                                 <a href="{{url('maincollection/4',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Cash Disbursement Debit/Credit Summary </a>
                                                 <a href ="{{url('cashreceipts', date('Y-m-d'))}}"><i class="fa fa-btn"></i>Cash Receipts</a>
                                                 <a href="{{url('maincollection/1',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Cash Receipt Debit/Credit Summary</a>
@@ -166,6 +166,8 @@
                                        <hr>
                                        <li>
                                            <a href="{{url('overallcollection',date('Y-m-d'))}}"><i class="fa fa-btn"></i>Collection Report</a>
+                                           <a href="{{url('disbursement', date('Y-m-d'))}}"><i class="fa fa-btn"></i>Disbursement Details</a>
+                                           <a href="{{url('dailydisbursementalllist',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Disbursement Summary</a>
                                           <a href="{{url('dmsummary',date('Y-m-d'))}}"><i class="fa fa-btn"></i>Debit Memo Details</a>
                                            <a href="{{url('dmcmallreport',array(date('Y-m-d'),date('Y-m-d') ))}}"><i class="fa fa-btn"></i>Debit Memo Summary</a>
                                            <a href="{{url('generaljournal',date('Y-m-d'))}}"><i class="fa fa-btn"></i>Journal Entry Details</a>

@@ -21,9 +21,9 @@ $lists = \App\AccountingRemark::whereBetween('trandate', array($fromtran,$totran
         </div>
     </div>
 <br><hr>    
-        <table class="table table-bordered table-striped"><tr><td>Journal Voucher No</td><td>Remarks</td><td>Amount</td><td>View</td><td>Status</td></tr>
+        <table class="table table-bordered table-striped"><tr><td>Date</td><td>Journal Voucher No</td><td>Remarks</td><td>Amount</td><td>View</td><td>Status</td></tr>
            @foreach($lists as $list)
-           <tr><td>{{$list->referenceid}}</td><td>{{$list->remarks}}</td><td>{{$list->amount}}</td><td><a href="{{url('printjournalvoucher',$list->refno)}}"> View Voucher </a></td>
+           <tr><td>{{$trandate}}</td><td>{{$list->referenceid}}</td><td>{{$list->remarks}}</td><td>{{$list->amount}}</td><td><a href="{{url('printjournalvoucher',$list->refno)}}"> View Voucher </a></td>
            <td>@if($list->isreverse == "0")
                OK
                @else

@@ -606,4 +606,127 @@ class UpdateController extends Controller
             }        
             return "Done DM";
         }
+        function updatecdb(){
+            
+            $forwardeds = \App\ForwardedCbd::get();
+            
+            foreach($forwardeds as $forwarded){
+                $entrycode = \App\UploadCbccode::where('accountname',$forwarded->accounttitle)->first();
+                //$entryreturn = $entrycode->accountcode;
+                if(count($entrycode)>0){
+                $forwarded->acctcode = $entrycode->accountcode;
+                $forwarded->update();  
+                }
+               // $testing = \App\UploadCbccode::get();
+            }
+            return "done";
+        }
+        
+        function updatecdbdepartment(){
+            $departments = \App\ForwardedCbd::get();
+            foreach($departments as $department){
+                $department_cdb = \App\DepartmentCdb::where('department',$department->UNIT_NAME)->first();
+                if(count($department_cdb)>0){
+                $department->acct_department = $department_cdb->acct_department;
+                $department->sub_department = $department_cdb->sub_department;
+                $department->update(); 
+                }else{
+                $department->acct_department = "None";
+                $department->sub_department = "None";
+                $department->update();
+                }
+            }
+            return "done";
+        }
+        function updatecdbaccountname(){
+            $cdbs = \App\ForwardedCbd::get();
+            $notncluded="";
+            foreach($cdbs as $cdb){
+                $fromchart = \App\ChartOfAccount::where('acctcode',$cdb->acctcode)->first();
+                if(count($fromchart)>0){
+                $cdb->acctname = $fromchart->accountname;
+                $cdb->update();
+                }else
+                {
+                   $notncluded = $notncluded. " " . $cdb->acctcode; 
+                }
+            }
+            return $notncluded;
+        }
+        
+        function updatecdbmain(){
+            $populates = \App\ForwardedCbd::where('acctcode','<','110030')->where('acctcode','>','110010')->where('DEBIT','false')->get();
+            foreach($populates as $populate){
+                $newd = new \App\Disbursement;
+                $newd->transactiondate = $populate->TR_DATE;
+                $newd->bank=$populate->acctname;
+                $newd->refno = $populate->VOUCHER_NO;
+                $newd->payee = $populate->PAYEE;
+                $newd->voucherno = $populate->VOUCHER_NO;
+                $newd->checkno = $populate->BANK_CHECK_NO;
+                $newd->amount = $populate->ACCOUNT_AMOUNT;
+                $newd->remarks = $populate->EXPLANATION;
+                $newd->postedby = "larabelle";
+                $newd->save();
+            }
+        }
+            function updatecdbaccounting(){
+                 $populates = \App\ForwardedCbd::get();
+            foreach($populates as $populate){
+                $newacct = new \App\Accounting;
+                $newacct->refno = $populate->VOUCHER_NO;
+                $newacct->transactiondate = $populate->TR_DATE;
+                $newacct->referenceid = $populate->VOUCHER_NO;
+                $newacct->accountname = $populate->acctname;
+                $newacct->accountcode = $populate->acctcode;
+                $newacct->acct_department = $populate->acct_department;
+                $newacct->sub_department = $populate->sub_department;
+                $newacct->fiscalyear = '2016';
+                $newacct->isfinal = '1';
+                $newacct->type = '4';
+                if($populate->DEBIT == "FALSE"){
+                    $newacct->cr_db_indic = '1';
+                    $newacct->credit=$populate->ACCOUNT_AMOUNT;
+                }else{
+                    $newacct->cr_db_indic = '0';
+                    $newacct->debit=$populate->ACCOUNT_AMOUNT;
+                }
+                $newacct->save();
+                
+            }
+            return "Done!!!!!!!!!";
+            }
+            
+            function updatecdbdrcr(){
+                $entry_type = "4";
+                $updates = \App\Accounting::where('type','4')->get();
+                    foreach ($updates as $update){
+                        if($update->cr_db_indic == '1'){
+                            $add = new \App\Credit;
+                            $add->amount = $update->credit;
+                        }else{
+                            $add = new \App\Dedit;
+                            $add->amount=$update->debit;
+                        }
+                         $add->transactiondate = $update->transactiondate;
+                         $add->refno = $update->refno;
+                         $add->receiptno = $update->referenceid;
+                         $add->accountingcode = $update->accountcode;
+                         $add->acctcode = $update->accountname;
+                         $add->description = $update->subsidiary;
+                         $add->entry_type = $entry_type;
+                         $add->acct_department = $update->acct_department;
+                         $add->sub_department = $update->sub_department;
+                         $add->fiscalyear = $update->fiscalyear;
+                         $add->postedby = 'larabelle';
+                         $add->save();
+                         
+                    }
+                    
+                    return "Finally Done!!!";
+            }
+                
+            
+        
+        
 }

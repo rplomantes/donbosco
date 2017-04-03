@@ -10,15 +10,10 @@
 <div class="col-md-3">
 <div class class="form form-group">
 <label>From :</label>
-    <input type="text" id="fromtran" class="form-control" value="{{$datefrom}}">
+    <input type="text" id="trandate" class="form-control" value="{{$trandate}}">
 </div>   
 </div>    
-<div class="col-md-3">
-<div class="form form-group">
-    <label>To :</label>
-    <input type="text" id="totran"  value="{{$dateto}}" class="form-control">
-</div>
-</div>
+
 <div class="col-md-3">
 <div class="form form-group">
     <br>    
@@ -62,9 +57,8 @@
 
 <script>
     function showtran(){
-        fromtran = document.getElementById("fromtran").value
-        totran = document.getElementById("totran").value
-        document.location = "/disbursement/" + fromtran + "/" + totran 
+        trandate = document.getElementById("trandate").value
+        document.location = "/disbursement/" + trandate; 
      }
 </script>    
 @stop

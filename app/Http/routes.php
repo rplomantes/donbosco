@@ -122,12 +122,14 @@
     Route::get('printcheckdetails/{refno}','Accounting\DisbursementController@printcheckdetails');
     Route::get('printcheckvoucher/{refno}','Accounting\DisbursementController@printcheckvoucher');
     Route::get('dailydisbursementlist/{trandate}','Accounting\DisbursementController@dailydisbursementlist');
+    Route::get('dailydisbursementalllist/{fromdate}/{todate}','Accounting\DisbursementController@dailydisbursementalllist');
     Route::get('printdisbursementlistpdf/{trandate}','Accounting\DisbursementController@printdisbursementlistpdf');
     Route::get('printjournallistpdf/{trandate}','Accounting\JournalController@printjournallistpdf');
     Route::get('viewdebitmemo/{idno}','Accounting\DebitMemoController@viewdebitmemo');
-    Route::get('disbursement/{datefrom}/{dateto}','Accounting\DisbursementController@disbursement');
+    Route::get('disbursement/{trandate}','Accounting\DisbursementController@disbursement');
     Route::get('generaljournal/{trandate}','Accounting\JournalController@generaljournal');
     Route::get('restorecanceldm/{iscancel}/{refno}','Accounting\DebitMemoController@restorecanceldm');
+    Route::get('disbursementbook/{trandate}','Accounting\DisbursementController@disbursementbook');
     //update module
     //Elective submitted by registrar on STEM
     //Route::get('updateelective','Registrar\AssessmentController@updateelective');
@@ -142,7 +144,13 @@
     //Route::get('updateacctcode','Update\UpdateController@updateacctcode');
     //Route::get('/updateentrytype','Update\UpdateController@updateentrytype');
     //Route::get('/updatedmtoaccounting','Update\UpdateController@updatedmtoaccounting');
-    Route::get('updatedebitmemo','Update\UpdateController@updatedebitmemo');
+    //Route::get('updatedebitmemo','Update\UpdateController@updatedebitmemo');
+    Route::get('updateforwardedcdb','Update\UpdateController@updatecdb');
+    Route::get('updatecdbdepartment','Update\UpdateController@updatecdbdepartment');
+    Route::get('updatecdbaccountname','Update\UpdateController@updatecdbaccountname');
+    Route::get('updatecdbmain','Update\UpdateController@updatecdbmain');
+    Route::get('updatecdbaccounting','Update\UpdateController@updatecdbaccounting');
+    Route::get('updatecdbdrcr','Update\UpdateController@updatecdbdrcr');
     Route::get('makepaymentschedule',function(){
         return view("update.makepaymentschedule");
     });

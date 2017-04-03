@@ -26,9 +26,9 @@ $totalcancel =0;
     <br>
     <hr>
     <table class="table table-striped table-bordered">
-        <tr><th>Debit Memo No.</th><th>Student No</th><th>Student Name</th><th>Explanation</th><th>Amount</th><th>Status</th><th>View</th></tr>
+        <tr><th>Date</th><th>Debit Memo No.</th><th>Student No</th><th>Student Name</th><th>Explanation</th><th>Amount</th><th>Status</th><th>View</th></tr>
         @foreach($dmcmlists as $dmcmlist)
-        <tr><td>{{$dmcmlist->voucherno}}</td><td>{{$dmcmlist->idno}}</td><td>{{$dmcmlist->fullname}}</td>
+        <tr><td>{{$dmcmlist->transactiondate}}</td><td>{{$dmcmlist->voucherno}}</td><td>{{$dmcmlist->idno}}</td><td>{{$dmcmlist->fullname}}</td>
             <td>{{$dmcmlist->remarks}}</td><td align="right">{{number_format($dmcmlist->amount,2)}}</td><td>
                 @if($dmcmlist->isreverse == "0")
                 <?php $totaldm = $totaldm + $dmcmlist->amount; ?>
