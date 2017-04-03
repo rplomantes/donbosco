@@ -130,6 +130,7 @@
     Route::get('generaljournal/{trandate}','Accounting\JournalController@generaljournal');
     Route::get('restorecanceldm/{iscancel}/{refno}','Accounting\DebitMemoController@restorecanceldm');
     Route::get('disbursementbook/{trandate}','Accounting\DisbursementController@disbursementbook');
+    Route::get('printdisbursementpdf/{trandate}','Accounting\DisbursementController@printdisbursementpdf');
     //update module
     //Elective submitted by registrar on STEM
     //Route::get('updateelective','Registrar\AssessmentController@updateelective');

@@ -34,39 +34,43 @@ $stvoucher=0;$stadvances=0;$stcost=0;$stinstructional=0;
 $stsalaries=0;$stdev=0;$stbenefit=0;$stsupplies=0;
 $sttravel=0;$stdebit=0;$stcredit=0;
 
-$nooflines=20;
+$nooflines=19;
 $countline=0;
 
 ?>
-@extends('appaccounting')
-@section('content')
+<html>
+    <head>
+        
+        <style>
+            
+
+            @page { margin: 0px; }
+            body { margin: 30px; }
+            table td{font-size:9pt;  border-width: 1px;padding: 5px} 
+            table th {border-width: 1px}
+            table tr.total{font-weight: bold}
+            #header{font-size: 16pt; font-weight: bold}
+            #title{font-size:14pt}
+       </style>
+    </head>
+<body>    
 <div class="container_fluid">
 <div class="col-md-12">    
-<h3>CASH DISBURSEMENT BOOK</h3>
-    <div class="col-md-2">
-        <label>From</label>
-        <input type="text" class="form-control" value="{{substr_replace($trandate, "01", 8)}}" readonly>
-    </div>
-    <div class="col-md-2">
-        <label>To</label>
-        <input type="text" class="form-control" id="trandate" value="{{$trandate}}">
-    </div> 
-    <div class="col-md-2">
-        <label></label>
-        <button id="processbtn" class="btn btn-primary form-control">View</button>
-    </div>     
+<p align="center"><span id="header"> Don Bosco Institute of Makati</span><br><span id ="title">CASH DISBURSEMENT BOOK</span>
+<br>as of {{date('M d, Y',strtotime($trandate))}}</p>
+        
 </div>  
 <div class="col-md-12"> 
     <div class="col-md-12">
         <hr>
     </div>    
-        <table class="table table-bordered table-striped">
+        <table border="0" cellspacing="0" cellpadding="2">
         <tr><th>Voucher No</th><th>Payee</th><th>Voucher Amount</th><th>Advance To Employee</th><th>Cost of Sales</th>
         <th>Instructional  Materials</th><th>Salaries / Allowances</th><th>Personnel <br>Development</th>
         <th>Other Employee Benefit</th><th>Office Supplies</th><th>Travel Expenses</th>
         <th>Sundries Debit</th><th>Sundies Credit</th><th>Status</th></tr>
 
-        <tr><td colspan="2">Beg. Balance ({{date('M Y',strtotime($trandate))}}) :</td><td align="right">{{number_format($totalvoucher,2)}}</td>
+        <tr class="total"><td colspan="2" align="center">Begining Balance :</td><td align="right">{{number_format($totalvoucher,2)}}</td>
         <td align="right"> {{number_format($totaladvances,2)}}</td><td align="right">{{number_format($totalcost,2)}}</td>
         <td align="right">{{number_format($totalinstructional,2)}}</td><td align="right">{{number_format($totalsalaries,2)}}</td><td align="right">{{number_format($totaldev,2)}}</td>
         <td align="right">{{number_format($totalbenefit,2)}}</td><td align="right">{{number_format($totalsupplies,2)}}</td><td align="right">{{number_format($totaltravel,2)}}</td>
@@ -74,29 +78,38 @@ $countline=0;
 
 @foreach($disbursements as $disbursement)
     @if($countline == $nooflines)
-    <td colspan="2"> Sub Total</td><td align="right">{{number_format($stvoucher,2)}}</td>
+    <tr class="total"><td colspan="2" align="center"> Sub Total</td><td align="right">{{number_format($stvoucher,2)}}</td>
             <td align="right"> {{number_format($stadvances,2)}}</td><td align="right">{{number_format($stcost,2)}}</td>
         <td align="right">{{number_format($stinstructional,2)}}</td><td align="right">{{number_format($stsalaries,2)}}</td><td align="right">{{number_format($stdev,2)}}</td>
         <td align="right">{{number_format($stbenefit,2)}}</td><td align="right">{{number_format($stsupplies,2)}}</td><td align="right">{{number_format($sttravel,2)}}</td>
         <td align="right">{{number_format($stdebit,2)}}</td><td align="right">{{number_format($stcredit,2)}}</td><td></td></tr>
      </table>
-        <table class="table table-bordered table-striped">
+    <div style="page-break-before: always;"></div>
+        <table border="0" cellpadding="2" cellspacing="0">
         <tr><th>Voucher No</th><th>Payee</th><th>Voucher Amount</th><th>Advance To Employee</th><th>Cost of Sales</th>
         <th>Instructional  Materials</th><th>Salaries / Allowances</th><th>Personnel <br>Development</th>
         <th>Other Employee Benefit</th><th>Office Supplies</th><th>Travel Expenses</th>
         <th>Sundries Debit</th><th>Sundies Credit</th><th>Status</th></tr>
-        <?php $countline = 0;
+        <?php $countline = 0;$nooflines=25;
         
         $stvoucher=0;$stadvances=0;$stcost=0;$stinstructional=0;
         $stsalaries=0;$stdev=0;$stbenefit=0;$stsupplies=0;
         $sttravel=0;$stdebit=0;$stcredit=0;
         ?>
     @else
-        <tr><td>{{$disbursement->voucherno}}</td><td>{{$disbursement->payee}}</td><td align="right">{{number_format($disbursement->voucheramount,2)}}</td>
+        <tr><td>{{$disbursement->voucherno}}</td><td  width="100">
+            <?php
+                if(strlen($disbursement->payee)>15){
+                    echo substr($disbursement->payee, 0 , 13) . "...";
+                } else {
+                    echo substr($disbursement->payee, 0 , 15);
+                }
+            ?>
+            </td><td align="right">{{number_format($disbursement->voucheramount,2)}}</td>
             <td align="right"> {{number_format($disbursement->advances,2)}}</td><td align="right">{{number_format($disbursement->cost,2)}}</td>
         <td align="right">{{number_format($disbursement->instructional,2)}}</td><td align="right">{{number_format($disbursement->salaries,2)}}</td><td align="right">{{number_format($disbursement->dev,2)}}</td>
         <td align="right">{{number_format($disbursement->benefit,2)}}</td><td align="right">{{number_format($disbursement->supplies,2)}}</td><td align="right">{{number_format($disbursement->travel,2)}}</td>
-        <td align="right">{{number_format($disbursement->sundrydebit,2)}}</td><td align="right">{{number_format($disbursement->sundrycredit,2)}}</td><td>@if($disbursement->isreverse=='0') OK @else Cancelled @endif</td></tr>
+        <td align="right">{{number_format($disbursement->sundrydebit,2)}}</td><td align="right">{{number_format($disbursement->sundrycredit,2)}}</td><td align="center">@if($disbursement->isreverse=='0') OK @else Cancelled @endif</td></tr>
 <?php
 if($disbursement->isreverse == '0'){
 $tvoucher=$tvoucher + $disbursement->voucheramount;$tadvances=$tadvances+$disbursement->advances;
@@ -122,40 +135,26 @@ $countline=$countline+1;
 ?>
 @endif
 @endforeach 
-<td colspan="2"> Sub Total</td><td align="right">{{number_format($stvoucher,2)}}</td>
+<tr class="total"><td colspan="2" align="center"> Sub Total</td><td align="right">{{number_format($stvoucher,2)}}</td>
             <td align="right"> {{number_format($stadvances,2)}}</td><td align="right">{{number_format($stcost,2)}}</td>
         <td align="right">{{number_format($stinstructional,2)}}</td><td align="right">{{number_format($stsalaries,2)}}</td><td align="right">{{number_format($stdev,2)}}</td>
         <td align="right">{{number_format($stbenefit,2)}}</td><td align="right">{{number_format($stsupplies,2)}}</td><td align="right">{{number_format($sttravel,2)}}</td>
         <td align="right">{{number_format($stdebit,2)}}</td><td align="right">{{number_format($stcredit,2)}}</td><td></td></tr>
-</table>
-<table class="table table-bordered table-striped">
-    <tr><th colspan="2"></th><th>Voucher Amount</th><th>Advance To Employee</th><th>Cost of Sales</th>
-        <th>Instructional  Materials</th><th>Salaries / Allowances</th><th>Personnel <br>Development</th>
-        <th>Other Employee Benefit</th><th>Office Supplies</th><th>Travel Expenses</th>
-        <th>Sundries Debit</th><th>Sundies Credit</th><th></th></tr>
-  <tr>
-      <td colspan="2"> Total</td><td align="right">{{number_format($tvoucher,2)}}</td>
+
+  <tr class="total">
+      <td colspan="2" align="center"> Total</td><td align="right">{{number_format($tvoucher,2)}}</td>
             <td align="right"> {{number_format($tadvances,2)}}</td><td align="right">{{number_format($tcost,2)}}</td>
         <td align="right">{{number_format($tinstructional,2)}}</td><td align="right">{{number_format($tsalaries,2)}}</td><td align="right">{{number_format($tdev,2)}}</td>
         <td align="right">{{number_format($tbenefit,2)}}</td><td align="right">{{number_format($tsupplies,2)}}</td><td align="right">{{number_format($ttravel,2)}}</td>
         <td align="right">{{number_format($tdebit,2)}}</td><td align="right">{{number_format($tcredit,2)}}</td><td></td></tr>
-<tr>
-      <td colspan="2">Grand Total</td><td align="right"><b>{{number_format($tvoucher+$totalvoucher,2)}}</b></td>
+<tr class="total">
+      <td colspan="2" align="center">Grand Total</td><td align="right"><b>{{number_format($tvoucher+$totalvoucher,2)}}</b></td>
             <td align="right"> <b>{{number_format($tadvances+$totaladvances,2)}}</b></td><td align="right"><b>{{number_format($tcost+$totalcost,2)}}</b></td>
         <td align="right"><b>{{number_format($tinstructional+$totalinstructional,2)}}</b></td><td align="right"><b>{{number_format($tsalaries+$totalsalaries,2)}}</b></td><td align="right"><b>{{number_format($tdev+$totaldev,2)}}</b></td>
         <td align="right"><b>{{number_format($tbenefit+$totalbenefit,2)}}</b></td><td align="right"><b>{{number_format($tsupplies+$totalsupplies,2)}}</b></td><td align="right"><b>{{number_format($ttravel+$totaltravel,2)}}</b></td>
         <td align="right"><b>{{number_format($tdebit+$totaldebit,2)}}</b></td><td align="right"><b>{{number_format($tcredit+$totalcredit,2)}}</b></td><td></td></tr>
 </table>
 </div> 
-    <div class="col-md-12">
-        <a href="{{url('printdisbursementpdf',$trandate)}}" class="btn btn-primary" target="_blank">Print Disbursement Book</a>
-    </div>    
+       
 </div>    
-<script>
-     $("#processbtn").click(function(){
-        //alert("hello")
-        document.location = "{{url('disbursementbook')}}" + "/" + $("#trandate").val();
-    })
-    
-</script>    
-@stop
+</html>

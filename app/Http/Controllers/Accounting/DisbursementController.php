@@ -88,7 +88,7 @@ class DisbursementController extends Controller
                     $addrpt->payee = $disbursement->payee;
                     $addrpt->transactiondate = $disbursement->transactiondate;
                     $addrpt->voucherno = $disbursement->voucherno;
-                    $addrpt->voucheramount = $disbursement->amount;
+                    //$addrpt->voucheramount = $disbursement->amount;
                     $addrpt->isreverse = $disbursement->isreverse;
                     $addrpt->totalindic = $totalindic;
                         if($acctentry->cr_db_indic=="0"){
@@ -121,11 +121,23 @@ class DisbursementController extends Controller
                                     $addrpt->sundry_debit = $acctentry->debit;                                   
                             }                       
                         } else{
+                            if($acctentry->accountcode > 110010 && $acctentry->accountcode < 110022){
+                                $addrpt->voucheramount = $acctentry->credit;
+                            }else{
                                     $addrpt->sundry_credit =$acctentry->credit;
+                            }      
                         }   
                             $addrpt->save();
                 }
            }
+           
+       }
+       function printdisbursementpdf($trandate){
+          $pdf= \App::make('dompdf.wrapper');
+            $pdf->setPaper('folio','landscape');
+            $pdf->loadView('accounting.printdisbursementpdf',compact('trandate'));
+            return $pdf->stream();
+           //return view('accounting.printdisbursementpdf',compact('trandate'));
            
        }
        function disbursementbook($trandate){
@@ -168,7 +180,12 @@ class DisbursementController extends Controller
                                     $addrpt->sundry_debit = $acctentry->debit;                                   
                             }                       
                         } else{
+                            
+                                   if($acctentry->accountcode > 110010 && $acctentry->accountcode < 110022){
+                                $addrpt->voucheramount = $acctentry->credit;
+                            }else{
                                     $addrpt->sundry_credit =$acctentry->credit;
+                            }      
                         }   
                             $addrpt->save();
                 }
