@@ -83,7 +83,7 @@ $totalothers=0;
     <tr><td>Cancelled Encashment</td><td  style="text-align: right; color: red;font-weight: bold"><?php echo number_format($totalcancell,2);?></td></tr>
 </table>
 <div class="form form-group">
-    <a href = "{{url('printencashment',\Auth::user()->idno)}}" class="btn btn-primary"> Print Encashment Report</a>
+    <a href = "{{url('printencashment',array(\Auth::user()->idno,$date))}}" class="btn btn-primary"> Print Encashment Report</a>
 </div>    
 </div>
 

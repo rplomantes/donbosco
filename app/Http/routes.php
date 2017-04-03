@@ -54,14 +54,14 @@
     Route::get('restore/{refno}/{idno}','Cashier\CashierController@restore');
     Route::get('encashment','Cashier\CashierController@encashment');
     Route::post('encashment','Cashier\CashierController@postencashment');
-    Route::get('encashmentreport','Cashier\CashierController@encashmentreport');
+    Route::get('encashmentreport/{date}','Cashier\CashierController@encashmentreport');
     Route::get('viewencashmentdetail/{refno}', 'Cashier\CashierController@viewencashmentdetail');
     Route::get('reverseencashment/{refno}', 'Cashier\CashierController@reverseencashment');
     Route::get('printregistration/{idno}','Registrar\AssessmentController@printregistration');
     Route::get('printreceipt/{refno}/{idno}','Cashier\CashierController@printreceipt');
     Route::get('previous/{idno}','Cashier\CashierController@previous');
     Route::get('actualcashcheck/{batch}/{transactiondate}','Cashier\CashierController@actualcashcheck');
-    Route::get('printencashment/{idno}','Cashier\CashierController@printencashment');
+    Route::get('printencashment/{idno}/{date}','Cashier\CashierController@printencashment');
     Route::get('printcollection/{idno}/{transactiondate}','Cashier\CashierController@printcollection');
     Route::get('nonstudent','Cashier\OtherPaymentControll@nonstudent');
     Route::post('nonstudent','Cashier\OtherPaymentControll@postnonstudent');
@@ -136,7 +136,7 @@
     //Update grades of students
     //Route::get('updategrades','Registrar\AssessmentController@updategrades');
     //Route::get('updatemapeh','Registrar\AssessmentController@updatemapeh');
-    //Route::get('updatehsconduct','Update\UpdateController@updatehsconduct');
+    Route::get('updatehsconduct','Update\UpdateController@updatehsconduct');
     //Route::get('updatehsgrade','Update\UpdateController@updatehsgrade');
     //Route::get('checkno','Update\UpdateController@checkno');
     //Route::get('updatehsattendance','Update\UpdateController@updatehsattendance');

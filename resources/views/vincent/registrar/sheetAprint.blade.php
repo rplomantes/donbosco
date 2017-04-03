@@ -152,7 +152,7 @@
                                     {{round($grades,0)}}
                                     
                                 @else
-                                    {{round($grades,2)}}
+                                    {{number_format(round($grades,2),2)}}
                                     
                                 @endif
                             @endif</td>

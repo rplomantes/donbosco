@@ -760,10 +760,10 @@ class CashierController extends Controller
             $hasdeposit = \App\StudentDeposit::where('id',$request->idno)->exists();
             if($hasdeposit){
                 $deposit = \App\StudentDeposit::where('id',$request->idno)->first();
-                $deposit->amount = $deposit->amount + $remainingbalance; 
+                $deposit->amount = $deposit->amount + $request->deposit; 
             }else{
                 $deposit = new \App\StudentDeposit;
-                $deposit->amount = $remainingbalance;
+                $deposit->amount = $request->deposit;
                 $deposit->idno = $request->idno;
                 $deposit->transactiondate = Carbon::now();
                 $deposit->postedby = \Auth::user()->idno;
@@ -1204,15 +1204,15 @@ class CashierController extends Controller
         return view('cashier.encashment');
     }
     
-    function encashmentreport(){
-        $matchfields=['postedby'=>\Auth::user()->idno, 'transactiondate' => date('Y-m-d')];
+    function encashmentreport($date){
+        $matchfields=['postedby'=>\Auth::user()->idno, 'transactiondate' => date('Y-m-d',strtotime($date))];
         $encashmentreports = \App\Encashment::where($matchfields)->get();
-        return view('cashier.viewencashmentreport',compact('encashmentreports'));
+        return view('cashier.viewencashmentreport',compact('encashmentreports','date'));
     }
     
-    function printencashment($idno){
+    function printencashment($idno,$date){
         
-        $matchfields=['postedby'=>$idno, 'transactiondate' => date('Y-m-d')];
+        $matchfields=['postedby'=>$idno, 'transactiondate' => date('Y-m-d',strtotime($date))];
         $encashmentreports = \App\Encashment::where($matchfields)->get();
         $pdf = \App::make('dompdf.wrapper');
       

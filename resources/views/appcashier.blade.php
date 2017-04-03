@@ -81,7 +81,7 @@
                                         <ul class="dropdown-menu" role="menu">
                                        
                                         <li><a href="{{url('collectionreport',date('Y-m-d'))}}"><i class="fa fa-btn fa-sign-out"></i>Collection Report</a></li>
-                                        <li><a href="{{url('encashmentreport')}}"><i class="fa fa-btn fa-sign-out"></i>Encashment Report</a></li>
+                                        <li><a href="{{url('encashmentreport',date('Y-m-d'))}}"><i class="fa fa-btn fa-sign-out"></i>Encashment Report</a></li>
                                         <li><a href="{{url('actualdeposit',date('Y-m-d'))}}"><i class="fa fa-btn fa-sign-out"></i> Actual Deposit</a>
                                         <li><a href="{{url('checklist',date('Y-m-d'))}}"><i class="fa fa-btn fa-sign-out"></i>List Of Checks </a></li>
                                         <li><a href="{{url('/tvetledger')}}"><i class="fa fa-btn fa-sign-out"></i>TVET Plans </a></li>

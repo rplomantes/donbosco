@@ -12,27 +12,28 @@ class UpdateController extends Controller
 {
     function updatehsconduct(){
         $quarters = \App\CtrQuarter::first();
-        
-        $hsgrades = DB::Select("select * from grade1 where SY_EFFECTIVE = '2016' and QTR = $quarters->qtrperiod");
+
+        $hsgrades = DB::Select("select * from conduct where SY_EFFECTIVE = '2016' and QTR = $quarters->qtrperiod");
         foreach($hsgrades as $hsgrade){
             $newconduct = new \App\ConductRepo;
-            $newconduct->OSR = $hsgrade->obedience;
-            $newconduct->DPT = $hsgrade->deportment;
-            $newconduct->PTY =$hsgrade->piety;
-            $newconduct->DI = $hsgrade->diligence;
-            $newconduct->PG = $hsgrade->positive;
-            $newconduct->SIS = $hsgrade->sociability;
-            $newconduct->qtrperiod = $hsgrade->QTR;
+            $newconduct->OSR = $hsgrade->COM1;
+            $newconduct->DPT = $hsgrade->COM2;
+            $newconduct->PTY =$hsgrade->COM3;
+            $newconduct->DI = $hsgrade->COM4;
+            $newconduct->PG = $hsgrade->COM5;
+            $newconduct->SIS = $hsgrade->COM6;
+            $newconduct->qtrperiod = $quarters->qtrperiod;
             $newconduct->schoolyear = $hsgrade->SY_EFFECTIVE;
             $newconduct->idno=$hsgrade->SCODE;
             $newconduct->save();
-            $this->updateconduct($hsgrade->SCODE, 'OSR', $hsgrade->obedience, $hsgrade->QTR, '2016');
-            $this->updateconduct($hsgrade->SCODE, 'DPT', $hsgrade->deportment, $hsgrade->QTR, '2016');
-            $this->updateconduct($hsgrade->SCODE, 'PTY', $hsgrade->piety, $hsgrade->QTR, '2016');
-            $this->updateconduct($hsgrade->SCODE, 'DI', $hsgrade->diligence, $hsgrade->QTR, '2016');
-            $this->updateconduct($hsgrade->SCODE, 'PG', $hsgrade->positive, $hsgrade->QTR, '2016');
-            $this->updateconduct($hsgrade->SCODE, 'SIS', $hsgrade->sociability, $hsgrade->QTR, '2016');
+            $this->updateconduct($hsgrade->SCODE, 'OSR', $hsgrade->COM1, $hsgrade->QTR, '2016');
+            $this->updateconduct($hsgrade->SCODE, 'DPT', $hsgrade->COM2, $hsgrade->QTR, '2016');
+            $this->updateconduct($hsgrade->SCODE, 'PTY', $hsgrade->COM3, $hsgrade->QTR, '2016');
+            $this->updateconduct($hsgrade->SCODE, 'DI' , $hsgrade->COM4, $hsgrade->QTR, '2016');
+            $this->updateconduct($hsgrade->SCODE, 'PG' , $hsgrade->COM5, $hsgrade->QTR, '2016');
+            $this->updateconduct($hsgrade->SCODE, 'SIS', $hsgrade->COM6, $hsgrade->QTR, '2016');
         }
+
     }
    
     public function updateconduct($idno,$ctype,$cvalue,$qtrperiod,$schoolyear){

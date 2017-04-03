@@ -109,36 +109,39 @@
                             </span>
                             @endif                            
                             </td>
+                            
                             @if((($level == "Grade 11" || $level == "Grade 12") && ($quarter ==1 || $quarter ==2)))
                             <td style="text-align: center">
-                                @if(!round($student->first,2) == 0)
-                                    {{round($student->first,2)}}
+                                @if(!round($student->first,0) == 0)
+                                    {{round($student->first,0)}}
                                 @endif
                             </td>
                             <td style="text-align: center">
-                                @if(!round($student->second,2) == 0)
-                                    {{round($student->second,2)}}
+                                @if(!round($student->second,0) == 0)
+                                    {{round($student->second,0)}}
                                 @endif
-                            </td>d
+                            </td>
                             @endif
                             
                             @if((($level == "Grade 11" || $level == "Grade 12") && ($quarter ==3 || $quarter ==4)))
                             <td style="text-align: center">
-                                @if(!round($student->third,2) == 0)
-                                    {{round($student->third,2)}}
+                                @if(!round($student->third,0) == 0)
+                                    {{round($student->third,0)}}
                                 @endif
                             </td>
                             <td style="text-align: center">
-                                @if(!round($student->fourth,2) == 0)
-                                    {{round($student->fourth,2)}}
+                                @if(!round($student->fourth,0) == 0)
+                                    {{round($student->fourth,0)}}
                                 @endif
                             </td>  
                             @endif
-                            @if($level != "Grade 11" || $level != "Grade 12")
+                            
+                            @if(($level != "Grade 11"))
                             <td style="text-align: center">
                                 @if(!round($student->first,2) == 0)
                                     {{round($student->first,2)}}
                                 @endif
+                                
                             </td>
                             <td style="text-align: center">
                                 @if(!round($student->second,2) == 0)
@@ -183,7 +186,7 @@
                                 $grades = $grades/$count;
                                 }
                             }
-                            if($level != "Grade 11" || $level != "Grade 12"){
+                            if($level != "Grade 11"){
                                 if(!round($student->first,2) == 0){
                                     $grades = $grades+round($student->first,2);
                                     $count++;
@@ -200,10 +203,11 @@
                                     $grades = $grades+round($student->fourth,2);
                                     $count++;
                                 }
-                            }
                                 if(!$count == 0){
-                                $grades = $grades/$count;
+                                    $grades = $grades/$count;
                                 }
+                            }
+
                             
                             ?>                                
                             @if(!$grades == 0)
@@ -211,7 +215,7 @@
                                     {{round($grades,0)}}
                                     
                                 @else
-                                    {{round($grades,2)}}
+                                    {{number_format(round($grades,2),2)}}
                                     
                                 @endif
                             @endif                                
