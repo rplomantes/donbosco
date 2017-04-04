@@ -21,7 +21,7 @@
             padding-right: .8cm;            
             }
             .greyed{
-                background-color: rgba(201, 201, 201, 0.79) !important;;
+                background-color: rgba(201, 201, 201, 0.79) !important;
                 -webkit-print-color-adjust: exact; 
             }            
         </style>    
