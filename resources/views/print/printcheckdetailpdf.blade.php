@@ -8,7 +8,7 @@
         </style>
     </head>    
     <body>
-        <table border ="0" width="95%">
+        <table border ="0" width="95%" style="margin-top:auto;margin-bottom:auto;">
             <tr><td width="50" colspan="3">&nbsp;</td><td  align="left"><span class="date">{{date('M d, Y',strtotime($date))}}</span></td></tr>
             <tr><td></td><td></td><td height ="20" width="340" valign="bottom"><span class="payee">{{strtoupper($payee)}}</span></td><td valign="bottom" align="left"><span class="amount">*{{number_format($amount,2)}}*</span></td></tr>
             <tr><td></td><td height="20" colspan="3" valign="bottom"><span class="words">**{{$amountinwords}} Only**</span></td></tr>

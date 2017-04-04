@@ -11,7 +11,7 @@ body { margin: 0px; }
 </style>
 </head> 
 <body>   
-<div style="margin-left: 20px ;font-size: 10pt; width: 311">
+<div style="margin-left: 15px ;font-size: 10pt; width: 311">
  <table width="311" cellpadding = "0" cellspacing = "0" border = "0">
    <tr><td colspan="2" height="78"  valign="top"></td></tr>
    @if(count($student)> 0)

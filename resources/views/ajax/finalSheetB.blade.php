@@ -4,9 +4,21 @@
         <td style='width:50px;text-align:center;'>CN</td>
         <td style='width:400px;text-align:center;'>Student Name</td>
         @foreach($subjects as $subject)
-        @if($subject->subjecttype == 0)
-            <td td style='width:50px;text-align:center;'>{{$subject->subjectcode}}</td>
-        @endif
+            @if($subject->subjecttype == 0)
+                <td td style='width:50px;text-align:center;'>{{$subject->subjectcode}}</td>
+            @endif
+        @endforeach
+        
+        @foreach($subjects as $subject)
+            @if($subject->subjecttype == 5 && ( $subject->semester == 2))
+                <td td style='width:50px;text-align:center;'>{{$subject->subjectcode}}</td>
+            @endif
+        @endforeach
+        
+        @foreach($subjects as $subject)
+            @if($subject->subjecttype == 6 && ($subject->semester == 2))
+                <td td style='width:50px;text-align:center;'>{{$subject->subjectcode}}</td>
+            @endif
         @endforeach
         <td><b>ACAD GEN AVE</b></td>
       
@@ -17,8 +29,12 @@
                 <td td style='width:50px;text-align:center;'>{{$subject->subjectcode}}</td>
             @endif
         @endforeach
-        <td><b>TECH GEN AVE</b></td>  
-        <td style='width:50px;font-weight: bold;text-align:center;'><button class="btn btn-default" onclick="setTechRank()" >TECH<br>RANK</button></td>
+        
+        @if($level == "Grade 7" || $level == "Grade 8" || $level == "Grade 9" || $level == "Grade 10")
+            <td><b>TECH GEN AVE</b></td>  
+            <td style='width:50px;font-weight: bold;text-align:center;'><button class="btn btn-default" onclick="setTechRank()" >TECH<br>RANK</button></td>
+        @endif
+        
         <td><b>GMRC</b></td>    
         @foreach($subjects as $subject)
             @if($subject->subjecttype == 2)
@@ -38,8 +54,9 @@
         @endif
         </td>
         
-        <?php 
-            $grades = \App\Grade::where('idno',$student->idno)->where('isdisplaycard',1)->orderBy('sortto')->get(); 
+        <?php
+            $sy = App\CtrRefSchoolyear::first();
+            $grades = \App\Grade::where('idno',$student->idno)->where('isdisplaycard',1)->where('schoolyear',$sy->schoolyear)->orderBy('sortto')->get(); 
             $divby = 0;
             $totalave = 0;
         ?>
@@ -54,9 +71,51 @@
                 <td>{{number_format(round($total,2),2)}}</td>
             @endif
         @endforeach
+        @if($level != "Grade 11")
+        <td style='text-align:center;font-weight: bold;'>
+            @if($totalave > 0)
+            {{number_format(round($totalave/$divby,2),2)}}
+            @endif
+        </td>
+        @endif
         
-        <td style='text-align:center;font-weight: bold;'>{{number_format(round($totalave/$divby,2),2)}}</td>
         <!--END ACADEMIC-->
+        
+        <!--CORE ACADEMIC-->
+        @foreach($grades as $grade)
+            @if($grade->subjecttype == 5 && $grade->semester == 2)
+                <?php 
+
+                    $total = round(($grade->third_grading+$grade->fourth_grading)/2,0);
+                    $divby++;
+                    $totalave = $totalave+$total;
+                ?>
+                <td>{{round($total,0)}}</td>
+            @endif
+        @endforeach
+
+        <!--END CORE ACADEMIC-->
+        
+        <!--SPECIFIC ACADEMIC-->
+        @foreach($grades as $grade)
+            @if($grade->subjecttype == 6 && $grade->semester == 2)
+                <?php 
+                    $total = round(($grade->third_grading+$grade->fourth_grading)/2,0);
+                    $divby++;
+                    $totalave = $totalave+$total;
+                ?>
+                <td>{{round($total,0)}}</td>
+            @endif
+        @endforeach
+        
+        <td style='text-align:center;font-weight: bold;'>
+            @if($totalave > 0)
+            {{round($totalave/$divby,0)}}
+            @endif
+        </td>
+        <!--END SPECIFIC ACADEMIC-->
+        
+
         
         <!--ACADEMIC RANK-->
         <?php $rankings = App\Ranking::where('idno',$student->idno)->first();?>
@@ -69,6 +128,7 @@
         </td>
         <!-- END ACADEMIC RANK-->
         
+        @if($level == "Grade 7" || $level == "Grade 8" || $level == "Grade 9" || $level == "Grade 10")
         <!-- TECH-->
         <?php $totalweight = 0;?>
         @foreach($grades as $grade)
@@ -85,8 +145,8 @@
         
         <td style='text-align:center;font-weight: bold;'>{{round($totalweight,0)}}</td>
         <!-- END TECH-->
-
-        <!--ACADEMIC RANK-->
+        
+        <!--TECH RANK-->
         <?php $techrankings = App\Ranking::where('idno',$student->idno)->first();?>
         <td >
             @if($techrankings->tech_final == 0)
@@ -95,8 +155,8 @@
             {{$techrankings->tech_final}}
             @endif
         </td>
-        <!-- END ACADEMIC RANK-->
-        
+        <!-- END TECH RANK-->
+        @endif
         <!--CONDUCT-->
         <?php             
         $divby = 0;
@@ -128,14 +188,21 @@
         
         
         <!--ATTENDANCE-->
-        <?php $atts = \App\Attendance::where('idno',$student->idno)->get(); ?>
-        @foreach($atts as $att)
-                <?php $total = $att->Jul+$att->Aug+$att->Sept+$att->Oct+$att->Nov+$att->Dece+$att->Jan+$att->Feb+$att->Mar+$att->Jun;
-                $divby++;
-                $totalave = $totalave+$total;
-                ?>
-                <td>{{round($total,1)}}</td>
-        @endforeach
+
+            <?php $atts = \App\Attendance::where('idno',$student->idno)->get(); ?>
+            @foreach($atts as $att)
+                    <?php 
+                    if($level != 'Grade 11'){
+                            $total = $att->Jul+$att->Aug+$att->Sept+$att->Oct+$att->Nov+$att->Dece+$att->Jan+$att->Feb+$att->Mar+$att->Jun;
+                    }else{
+                            $total =$att->Nov+$att->Dece+$att->Jan+$att->Feb+$att->Mar;
+                    }
+                    
+                    $divby++;
+                    $totalave = $totalave+$total;
+                    ?>
+                    <td>{{round($total,1)}}</td>
+            @endforeach
         <!--END ATTENDANCE-->
 
         
@@ -143,3 +210,4 @@
     
     @endforeach
 </table>
+

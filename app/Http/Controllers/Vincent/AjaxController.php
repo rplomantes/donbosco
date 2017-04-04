@@ -690,7 +690,7 @@ class AjaxController extends Controller
             break; 
             case 5;
                 $averages = DB::Select("SELECT grades.idno, ROUND((ROUND( SUM( first_grading ) / COUNT( grades.idno ) , 2 ) + ROUND( SUM( second_grading ) / COUNT( grades.idno ) , 2 ) + ROUND( SUM( third_grading ) / COUNT( grades.idno ) , 2 ) + ROUND( SUM( fourth_grading ) / COUNT( grades.idno ) , 2 ) ) /4, 2 )  AS average "
-                        . "FROM `grades` left join statuses on statuses.idno = grades.idno WHERE subjecttype IN (0,5,6) AND grades.level = '$level' AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear->schoolyear' AND isdisplaycard = 1 GROUP BY idno ORDER BY `average` DESC");
+                        . "FROM `grades` left join statuses on statuses.idno = grades.idno WHERE subjecttype IN (0,5,6) AND grades.level = '$level' AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear->schoolyear' AND isdisplaycard = 1 AND semester = 2 GROUP BY idno ORDER BY `average` DESC");
            break;
         }            
         }

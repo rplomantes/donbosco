@@ -1,3 +1,4 @@
+<!--FINAL AND FINISHED NO CHANGES SHOULD BE MADE-->
 <html>
     <head>
         <style type='text/css'>
@@ -215,8 +216,11 @@
                                     {{round($grades,0)}}
                                     
                                 @else
-                                    {{number_format(round($grades,2),2)}}
-                                    
+                                    @if($grades == 100)
+                                        {{round($grades,2)}}
+                                    @else
+                                        {{number_format(round($grades,2),2)}}
+                                    @endif
                                 @endif
                             @endif                                
                             </td>                            

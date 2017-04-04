@@ -57,95 +57,95 @@
             <td rowspan="2" style="color:#000;" width="29px">
                 Complete Address of Provider/Training Venue (for Mobile Training)
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 Type of Provider
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 Classification of Provider
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 Industry Sector of Qualification
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 TVET Program Registration Status
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 Qualification/ Program Title
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 CoPR Number (for WTR/NTR)
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 Training Calendar Code (for TTIs only)
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 Delivery Mode
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 Family/ Last Name
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 First Name
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 Middle Name
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 Contact Number (landline and/ or cellphone
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 E-mail Address/ Facebook Account/ Twitter/ Instagram
             </td>
-            <td colspan="5">
+            <td colspan="5" width="6.06px">
                 Complete Permanent Mailing Address
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 Sex
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 Date of Birth<br>(mm-dd-yy)
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 Age
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 Civil<br>Status
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 Highest Grade Completed
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 Nationality
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 Classification of Clients
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 Training Status
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 Type of Scholarships
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 Voucher Number (for TWSP, STEP and PESFA)
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 Date Started (mm-dd-yy)
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 Date Finished (mm-dd-yy)
             </td>
-            <td rowspan="2">
+            <td rowspan="2" width="6.06px">
                 Training Results  
             </td>
             <td>
             </td> 
             <td>
             </td>
-            <td rowspan="2" style="background-color: #dcd8c2;">
+            <td rowspan="2" style="background-color: #dcd8c2;" width="6.06px">
                 Employment Status Before the Training
             </td>
-            <td colspan="6" style="background-color: #dcd8c2;">
+            <td colspan="6" style="background-color: #dcd8c2;" width="6.06px">
                 Employment Status After the Training
             </td>
         </tr>

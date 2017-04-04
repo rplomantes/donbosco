@@ -155,7 +155,7 @@ class UpdateController extends Controller
             }
         }
         function prevgrade(){
-            $sy = "2013";
+            $sy = "2014";
             $students = DB::connection('dbti2test')->select("select distinct scode from grade_report where SY_EFFECTIVE = '$sy'");
             foreach($students as $student){
                 $this->migrategrade($student->scode,$sy);

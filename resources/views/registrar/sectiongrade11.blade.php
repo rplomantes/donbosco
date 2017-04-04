@@ -32,7 +32,7 @@
             font-family: calibri;
             width:100%;
             padding-left: .5cm;
-            padding-right: .5cm;
+            padding-right: 5.4cm;
             }            
             body{
                 font-family: calibri;
@@ -186,9 +186,10 @@
                     </tr>
                     {{--*/$first=0/*--}}
                     {{--*/$second=0/*--}}                    
-                    {{--*/$final=0/*--}}
                     {{--*/$count=0/*--}}
+                    {{--*/$totalacad=0/*--}}
                     @foreach($info['core'] as $key=>$core)
+                    {{--*/$final=0/*--}}
                     <tr style="text-align: center;font-size: 8pt;">
                         <td style="text-align: left;padding-left: 10px">
                             {{$core->subjectname}}
@@ -212,8 +213,8 @@
                                 @endif
                                 {{--*/$second = $second + round($core->second_grading,2)/*--}}
                             @else
-                                @if(round($core->second_grading,2) != 0)
-                                {{round($core->second_grading,2)}}
+                                @if(round($core->fourth_grading,2) != 0)
+                                {{round($core->fourth_grading,2)}}
                                 @endif
                                 {{--*/$second = $second + round($core->fourth_grading,2)/*--}}
                             @endif
@@ -222,7 +223,15 @@
                             @if(round($core->second_grading,2) != 0)
                             {{round((round($core->second_grading,2)+round($core->first_grading,2))/2,0)}}
                             @endif
-                            <?php $final = $final + round((round($core->second_grading,2)+round($core->first_grading,2))/2,0)?>
+                            @if($sem ==1)
+                                <?php $final = $final + round((round($core->first_grading,2)+round($core->second_grading,2))/2,0);
+                                ?>
+                            @else
+                                <?php $final = $final + round((round($core->third_grading,2)+round($core->fourth_grading,2))/2,0);
+                                ?>
+                            @endif
+                                <?php $totalacad = $totalacad + $final;?>
+                            {{$final}}
                         </td>
 
                             {{--*/$count ++/*--}}                        
@@ -235,6 +244,7 @@
                     </tr>                    
                     
                     @foreach($info['spec'] as $key=>$spec)
+                    {{--*/$final=0/*--}}
                     <tr style="text-align: center;font-size: 8pt;">
                         <td style="text-align: left;padding-left: 10px">
                             {{$spec->subjectname}}
@@ -252,6 +262,7 @@
                                 {{--*/$first = $first + round($spec->third_grading,2)/*--}}
                             @endif
                         </td>
+                        
                         <td>@if($sem ==1)
                                 @if(round($spec->second_grading,2) != 0)
                                 {{round($spec->second_grading,2)}}
@@ -268,7 +279,15 @@
                             @if(round($spec->second_grading,2) != 0)
                             {{round((round($spec->second_grading,2)+round($spec->first_grading,2))/2,0)}}
                             @endif
-                            <?php $final = $final + round((round($spec->second_grading,2)+round($spec->first_grading,2))/2,0)?>
+                            @if($sem ==1)
+                                <?php $final = $final + round((round($spec->first_grading,2)+round($spec->second_grading,2))/2,0);
+                                ?>
+                            @else
+                                <?php $final = $final + round((round($spec->third_grading,2)+round($spec->fourth_grading,2))/2,0);
+                                ?>
+                            @endif
+                                <?php $totalacad = $totalacad + $final;?>
+                            {{$final}}
                         </td>
 
                             {{--*/$count ++/*--}}                        
@@ -279,8 +298,8 @@
                         <td colspan="2" style="text-align: right;padding-right: 10px">
                             <b>GENERAL AVERAGE for the Semester</b>
                         </td>
-                        <td>@if(round($final/$count,0) != 0)
-                            <b>{{round($final/$count,0)}}</b>
+                        <td>@if(round($totalacad/$count,0) != 0)
+                            <b>{{round($totalacad/$count,0)}}</b>
                             @endif
                         </td>
                     </tr>
@@ -451,7 +470,7 @@
                             <td style="border:1px solid"><b>100</b></td>
                             <td style="border:1px solid"><b>@if(!$first == 0){{$first}}@endif</b></td>
                             <td style="border:1px solid"><b>@if(!$second == 0){{$second}}@endif</b></td>
-                            <td style="border:1px solid"><b>@if($second != 0){{round(($first+$second)/2,2)}}@endif</b></td>
+                            <td style="border:1px solid"><b>@if($second != 0){{round(($first+$second)/2,0)}}@endif</b></td>
                             
                         </tr>
                 </table>

@@ -136,7 +136,7 @@ $bankaccounts = \App\ChartOfAccount::where('acctcode','>','110010')->where('acct
           <div class="form-group col-md-6">
               <label>Payee</label>
               <input type="text" class="form form-control" name="payee" id="payee">
-          </div>  
+          </div>
           <div class="form-group col-md-12">
               <label>Description</label>
               <input type="text" class="form form-control" name="remarks" id="remarks">
