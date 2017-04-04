@@ -55,7 +55,12 @@ $bankaccounts = \App\ChartOfAccount::where('acctcode','>','110010')->where('acct
     <div class=" col-md-6 form form-group" >
         <a href="{{url('dailyjournallist',date('Y-m-d',strtotime(\Carbon\Carbon::now())))}}" class="btn btn-primary navbar-right"> Daily Journal Summary</a>
     </div> 
-    
+    <div class="col-md-12">  
+      <div class="form-group col-md-6">
+          <label>Payee</label>
+          <input type="text" class="form form-control" name="payee" id="payee">
+      </div>    
+    </div>
     <div style="padding-top: 10px; padding-bottom: auto;background: #fff5cc;height: 100px" class="col-md-12 panel panel-default">
         <div class="col-md-1">
             <label for = "acctcode">Account Code</label>
@@ -133,10 +138,7 @@ $bankaccounts = \App\ChartOfAccount::where('acctcode','>','110010')->where('acct
               <label>Check Number</label>
               <input type = "text" name="checkno" id="checkno" class="form form-control">
           </div>
-          <div class="form-group col-md-6">
-              <label>Payee</label>
-              <input type="text" class="form form-control" name="payee" id="payee">
-          </div>
+
           <div class="form-group col-md-12">
               <label>Description</label>
               <input type="text" class="form form-control" name="remarks" id="remarks">

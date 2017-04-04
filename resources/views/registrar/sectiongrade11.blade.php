@@ -32,7 +32,7 @@
             font-family: calibri;
             width:100%;
             padding-left: .5cm;
-            padding-right: 5.4cm;
+            padding-right: .54cm;
             }            
             body{
                 font-family: calibri;
@@ -310,60 +310,7 @@
             <tr><td><br></td></tr>
             <tr>
                 <td style="padding-left: 0px;">
-                    @if(count($info['tech']) != 0)
-                    <table border = '1' cellspacing="0" cellpadding = "0" width="100%" class="reports" style="font-size:12px;">
-                        <tr style="font-weight: bold;font-size: 10pt;text-align:center;">
-                            <td class="print-size" width="40%" style="padding: 2px 2px 2px 2px;">SUBJECTS</td>
-                            <td class="print-size" width="10%">1</td>
-                            <td class="print-size" width="10%">2</td>
-                            <td class="print-size" width="10%">3</td>
-                            <td class="print-size" width="10%">4</td>
-                            <td class="print-size" width="10%">FINAL RATING</td>
-                            <td class="print-size" width="10%">REMARKS</td>
-                        </tr>
-                        {{--*/$first=0/*--}}
-                        {{--*/$second=0/*--}}
-                        {{--*/$third=0/*--}}
-                        {{--*/$fourth=0/*--}}
-                        {{--*/$final=0/*--}}
-
-                        @foreach($info['tech'] as $key=>$tech)
-                        <?php $weight=$tech->weighted / 100;?>
-                        <tr style="text-align: center">
-                            <td style="text-align: left" class="print-size">
-                                <div style="width:70%;display:inline-block;" width="70%">{{$tech->subjectname}}</div><span>({{$tech->weighted}}%)</span>
-                            </td>
-                            <td class="print-size">
-                                {{round($tech->first_grading,2)}}
-                                {{--*/$first = $first + round($tech->first_grading,2)*$weight/*--}}
-                            </td>
-                            <td class="print-size">
-                                {{round($tech->second_grading,2)}}
-                                {{--*/$second = $second + round($tech->second_grading,2)*$weight/*--}}
-                            </td>
-                            <td class="print-size">
-                                {{round($tech->third_grading,2)}}
-                                {{--*/$third = $third + round($tech->third_grading,2)*$weight/*--}}
-                            </td>
-                            <td class="print-size">
-                                {{round($tech->fourth_grading,2)}}
-                                {{--*/$fourth = $fourth + round($tech->fourth_grading,2)*$weight/*--}}
-                            </td>
-                            <td class="print-size">
-                                {{round($tech->final_grade,2)}}
-                                {{--*/$final = $final + round($tech->final_grade,2)*$weight/*--}}
-                            </td>
-                            <td class="print-size">
-                                {{$tech->remarks}}
-                            </td>                         
-                        </tr>
-                        @endforeach
-                        <tr style="text-align: center"><td class="print-size" style="text-align: right"><b>TECHNICAL AVERAGE</b></td><td class="print-size">{{round($first,0)}}</td><td class="print-size">{{$second}}</td><td class="print-size">{{$third}}</td><td class="print-size">{{$fourth}}</td><td class="print-size">{{$final}}</td>
-                            <td class="print-size">
-                            {{round($final/$count,2) >= 75 ? "Passed":"Failed"}}    
-                            </td></tr>
-                    </table>        
-                    @endif                    
+                   
                 </td>
             </tr>
             <tr><td><span style="height:10pt"></td></tr>
@@ -655,7 +602,14 @@
                         </td>                                                    
                     </tr>
                     <tr>
+                        @if(round($totalacad/$count,0) >= 75)
+                        <?php  $levelup = intval(str_replace("Grade","",$level));
+                                $newlevel = $levelup + 1;
+                        ?>
+                        <td class="print-size" >admission to:<div style="display: inline-block;border-bottom: 1px solid;height: 16px;width: 145px;text-align: center;"><i>Grade {{$newlevel}}</i></div></td>
+                        @else
                         <td class="print-size" >admission to:___________________</td>
+                        @endif
                         <td class="print-size" >Grade:__________________________</td>
                     </tr>
                     <tr>
@@ -663,7 +617,11 @@
                         <td class="print-size" >Date ___________________________</td>
                     </tr>
                     <tr>
-                        <td class="print-size" >Date ___________________________</td>
+			@if(round($totalacad/$count,0) >= 75)
+                         <td class="print-size" >Date of Issue:<div style="display: inline-block;border-bottom: 1px solid;height: 16px;width: 145px;text-align: center;"><i>April 11, 2017</i></div></td>
+                        @else
+                        <td class="print-size" >Date of Issue:__________________</td>
+                        @endif
                         <td></td>
                     </tr>
                     <tr>

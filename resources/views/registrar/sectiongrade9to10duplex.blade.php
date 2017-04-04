@@ -681,7 +681,7 @@
                     <tr>
                         <td colspan="2"><br><br></td>                                                    
                     </tr>
-                                                                    <tr style="text-align: center">
+                        <tr style="text-align: center">
                         <td class="print-size"></td>
                         <td class="print-size"><div style="border-bottom: 1px solid;width: 80%;margin-left: auto;margin-right: auto;height:25px"><img src="{{asset('images/HS_PRINCIPAL.png')}}"  style="display: inline-block;width:180px"></div></td>
                     </tr>
