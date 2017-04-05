@@ -396,14 +396,47 @@
                         <tr>
                             <td style="border: 1px solid"><b>CONDUCT GRADE</b></td>
                             <td style="border: 1px solid"><b>100</b></td>
-                            <td style="border: 1px solid"><b>@if(!$first == 0){{$first}}@endif</b></td>
-                            <td style="border: 1px solid"><b>@if(!$second == 0){{$second}}@endif</b></td>
-                            <td style="border: 1px solid"><b>@if(!$third == 0){{$third}}@endif</b></td>
-                            <td style="border: 1px solid"><b>@if(!$fourth == 0){{$fourth}}@endif</b></td>
+                            <td style="border: 1px solid"><b>
+                                    @if(!$first == 0)
+                                        @if($first == 100)
+                                        {{$first}}
+                                        @else
+                                        {{number_format(round($first,2),2)}}
+                                        @endif
+                                    @endif</b></td>
+                            <td style="border: 1px solid"><b>
+                                    @if(!$second == 0)
+                                        @if($second == 100)
+                                        {{$second}}
+                                        @else
+                                        {{number_format(round($second,2),2)}}
+                                        @endif
+                                    @endif</b></td>
+                            <td style="border: 1px solid"><b>
+                                    @if(!$third == 0)
+                                        @if($third == 100)
+                                            {{$third}}
+                                        @else
+                                            {{number_format(round($third,2),2)}}
+                                        @endif
+                                    @endif</b></td>
+                            <td style="border: 1px solid"><b>
+                                    @if(!$fourth == 0)
+                                        @if($fourth == 100)
+                                            {{$fourth}}
+                                        @else
+                                            {{number_format(round($fourth,2),2)}}
+                                        @endif
+                                    @endif</b></td>
                             
                             <td style="border: 1px solid"><b>
                                 @if(!$fourth == 0)
-                                {{round(($first+$second+$third+$fourth)/4,2)}}
+                                    @if(round(($first+$second+$third+$fourth)/4,2) == 100)
+                                        {{round(($first+$second+$third+$fourth)/4,2)}}
+                                    @else
+                                        {{number_format(round(($first+$second+$third+$fourth)/4,2),2)}}
+                                    @endif
+                                
                             @endif</b></td>
                             
                         </tr>

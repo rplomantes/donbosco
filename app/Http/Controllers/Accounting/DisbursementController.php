@@ -141,7 +141,8 @@ class DisbursementController extends Controller
            
        }
        function disbursementbook($trandate){
-           DB::Select("Delete from rpt_disbursement_books where idno ='" . \Auth::user()->idno ."'");
+           //DB::Select("Delete from rpt_disbursement_books where idno ='" . \Auth::user()->idno ."'");
+           DB::table('rpt_disbursement_books')->where('idno', '>', \Auth::user()->idno)->delete();
            $disbursements = \App\Disbursement::where('transactiondate',$trandate)->get();
            $this->processdisbursementbook($disbursements,"0");
            $acctentries = \App\Accounting::where('type','4')->whereBetween('transactiondate', array(substr_replace($trandate, "01", 8),$trandate))->get();

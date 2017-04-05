@@ -15,7 +15,7 @@ class SheetBController extends Controller
     
     function finalSheetB($quarter,$level,$section,$strand = null){
         $strands = Input::get('strand');
-        if($strands == null || $strands == ''){
+        if($strands == null || $strands == '' || $level == 'Grade 7' || $level == 'Grade 8' || $level == 'Grade 9' || $level == 'Grade 10'){
             $subjects = \App\CtrSubjects::where('level',$level)->where('isdisplaycard',1)->orderBy('sortto','ASC')->get();
             $students = \App\Status::where('level',$level)->where('section',$section)->orderBy('class_no','ASC')->get();
         }else{

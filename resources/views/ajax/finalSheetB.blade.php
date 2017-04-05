@@ -68,13 +68,22 @@
                 $divby++;
                 $totalave = $totalave+$total;
                 ?>
-                <td>{{number_format(round($total,2),2)}}</td>
+                @if($level == "Grade 7" || $level == "Grade 8" || $level == "Grade 9" || $level == "Grade 10")
+                    <td>{{round($total,0)}}</td>
+                @else
+                    <td>{{number_format(round($total,2),2)}}</td>
+                @endif
+                
             @endif
         @endforeach
         @if($level != "Grade 11")
         <td style='text-align:center;font-weight: bold;'>
             @if($totalave > 0)
-            {{number_format(round($totalave/$divby,2),2)}}
+                @if($level == "Grade 7" || $level == "Grade 8" || $level == "Grade 9" || $level == "Grade 10")
+                    {{round($totalave/$divby,0)}}
+                @else
+                    {{number_format(round($totalave/$divby,2),2)}}
+                @endif
             @endif
         </td>
         @endif
@@ -107,12 +116,13 @@
                 <td>{{round($total,0)}}</td>
             @endif
         @endforeach
-        
+        @if($level == "Grade 11")
         <td style='text-align:center;font-weight: bold;'>
             @if($totalave > 0)
             {{round($totalave/$divby,0)}}
             @endif
         </td>
+        @endif
         <!--END SPECIFIC ACADEMIC-->
         
 
@@ -130,20 +140,32 @@
         
         @if($level == "Grade 7" || $level == "Grade 8" || $level == "Grade 9" || $level == "Grade 10")
         <!-- TECH-->
-        <?php $totalweight = 0;?>
+        <?php 
+        $totalweight = 1;
+        $divby=0;
+        ?>
         @foreach($grades as $grade)
             @if($grade->subjecttype == 1)
-                <?php $weight=$grade->weighted / 100;?>
-                <?php $totaltech = ($grade->first_grading+$grade->second_grading+$grade->third_grading+$grade->fourth_grading)/4;
-                
-                $totalweight = $totalweight+(round($totaltech,2) * $weight);
-                ?>            
             
-                <td>{{number_format(round($totaltech,0),0)}}</td>
+                <?php $weight=$grade->weighted / 100;
+                $totaltech = ($grade->first_grading+$grade->second_grading+$grade->third_grading+$grade->fourth_grading)/4;
+                if($level == "Grade 9" || $level == "Grade 10"){
+                    $totalweight = $totalweight+(round($totaltech,2) * $weight);
+                }else{
+                    $totalweight = $totalweight+$totaltech;
+                    $divby++;
+                }
+                
+                ?>            
+                    <td>{{number_format(round($totaltech,0),0)}}</td>
+
             @endif
         @endforeach
-        
+        @if($level == "Grade 9" || $level == "Grade 10")
         <td style='text-align:center;font-weight: bold;'>{{round($totalweight,0)}}</td>
+        @else
+        <td style='text-align:center;font-weight: bold;'>{{round($totalweight/$divby,0)}}</td>
+        @endif
         <!-- END TECH-->
         
         <!--TECH RANK-->
