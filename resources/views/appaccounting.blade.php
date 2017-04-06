@@ -99,7 +99,7 @@
                                                 <a href="{{url('maincollection/1',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Cash Receipt Debit/Credit Summary</a>
                                                 <a href ="#"><i class="fa fa-btn"></i>General Journal</a>
                                                  <a href="{{url('maincollection/3',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>General Journal Debit/Credit Summary </a>
-                                                <a href ="#"><i class="fa fa-btn"></i>Debit Memo Journal</a>
+                                                <a href ="{{url(('dmreport'),date('Y-m-d'))}}"><i class="fa fa-btn"></i>Debit Memo Journal</a>
                                                 <a href="{{url('maincollection/2',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Debit Memo  Debit/Credit Summary </a>
                                             </li>  
                                         </ul></li>
