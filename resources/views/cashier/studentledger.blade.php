@@ -73,7 +73,7 @@
                  @elseif($status->status == "2")
                  Enrolled
                  @elseif($status->status == "3")
-                 <b>Dropped</b>
+                 <b>Dropped</b> - {{$status->dropdate}}
                  @endif
                  @else
                  Registered

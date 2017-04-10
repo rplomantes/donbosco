@@ -693,6 +693,8 @@ function cashcollection($transactiondate){
                   }
               }
           }
+          
+          
           $otherbalance = 0;
           if(count($others)>0){
               foreach($others as $ot){

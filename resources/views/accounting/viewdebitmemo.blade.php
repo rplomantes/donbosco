@@ -76,13 +76,13 @@ $departments = DB::Select("Select * from ctr_acct_dept order by sub_department")
             
              <table class="table table-responsive table-bordered">
                @if($mainbalance > 0 )
-                <tr><td>Main Account<br>{{$mainbalance}}</td><td align="right"><input onkeypress = "validate(event)"  max="{{$mainbalance}}"  type="number" name="totaldue" id="totaldue" style="text-align:right" class="form-control"></td></tr>
+                <tr><td>Main Account<br>{{$mainbalance}}</td><td align="right"><input onkeypress = "validate(event)"  max="{{$mainbalance}}"  name="totaldue" id="totaldue" style="text-align:right" class="form-control"></td></tr>
                @else
                <input type="hidden" name="totaldue" id="totaldue" value="0">
                @endif
                 
                 @if($previousbalance > 0 )   
-                <tr><td>Previous Balance<br>{{$totalprevious}}</td><td><input type="number" onkeypress = "validate(event)" max="{{$totalprevious}}" name="previous" id="previous" style="text-align:right" class="form-control" ></td></tr>
+                <tr><td>Previous Balance<br>{{$totalprevious}}</td><td><input  onkeypress = "validate(event)" max="{{$totalprevious}}" name="previous" id="previous" style="text-align:right" class="form-control" ></td></tr>
                 @else   
                 <input type="hidden" name="previous" id="previous" value="0">
                 @endif
@@ -90,7 +90,7 @@ $departments = DB::Select("Select * from ctr_acct_dept order by sub_department")
                 @if(count($others)>0)
                 @foreach($others as $coll)
                     @if($coll->balance  > 0)
-                         <tr><td>{{$coll->description}} <br>{{$coll->balance}}</td><td><input type="hidden" name="othermax[{{$coll->id}}]" value="{{$coll->balance}}"> <input type="number"  max="{{$coll->balance}}" name="others[{{$coll->id}}]"  id="others"  style="text-align:right" class="form-control others" onkeypress = "validate(event)" onkeydown = "submitother(event,this.value,'{{$coll->balance}}','{{$coll->id}}')" value=""></td></tr>
+                         <tr><td>{{$coll->description}} <br>{{$coll->balance}}</td><td><input type="hidden" name="othermax[{{$coll->id}}]" value="{{$coll->balance}}"> <input max="{{$coll->balance}}" name="others[{{$coll->id}}]"  id="others"  style="text-align:right" class="form-control others" onkeypress = "validate(event)" onkeydown = "submitother(event,this.value,'{{$coll->balance}}','{{$coll->id}}')" value=""></td></tr>
                     @endif
                 @endforeach
                 @endif

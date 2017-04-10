@@ -64,7 +64,12 @@
         <!--ACADEMIC-->
         @foreach($grades as $grade)
             @if($grade->subjecttype == 0)
-                <?php $total = ($grade->first_grading+$grade->second_grading+$grade->third_grading+$grade->fourth_grading)/4;
+		<?php
+                if($level == "Grade 7" || $level == "Grade 8" || $level == "Grade 9" || $level == "Grade 10"){
+			$total = round(($grade->first_grading+$grade->second_grading+$grade->third_grading+$grade->fourth_grading)/4,0);
+		}else{
+			$total = round($grade->first_grading+$grade->second_grading+$grade->third_grading+$grade->fourth_grading)/4;
+		}
                 $divby++;
                 $totalave = $totalave+$total;
                 ?>
@@ -139,20 +144,21 @@
         <!-- END ACADEMIC RANK-->
         
         @if($level == "Grade 7" || $level == "Grade 8" || $level == "Grade 9" || $level == "Grade 10")
+
         <!-- TECH-->
         <?php 
-        $totalweight = 1;
+        $totalweight = 0;
         $divby=0;
         ?>
         @foreach($grades as $grade)
             @if($grade->subjecttype == 1)
             
                 <?php $weight=$grade->weighted / 100;
-                $totaltech = ($grade->first_grading+$grade->second_grading+$grade->third_grading+$grade->fourth_grading)/4;
+                $totaltech = round(($grade->first_grading+$grade->second_grading+$grade->third_grading+$grade->fourth_grading)/4,0);
                 if($level == "Grade 9" || $level == "Grade 10"){
-                    $totalweight = $totalweight+(round($totaltech,2) * $weight);
+		 $totalweight = $totalweight+(round($totaltech,0) * $weight);
                 }else{
-                    $totalweight = $totalweight+$totaltech;
+                    $totalweight = $totalweight+round($totaltech,0);
                     $divby++;
                 }
                 
@@ -190,7 +196,23 @@
         ?>
         @foreach($grades as $grade)
             @if($grade->subjecttype == 3)
-                <?php $conduct = ($grade->first_grading+$grade->second_grading+$grade->third_grading+$grade->fourth_grading)/4;
+                <?php $conduct = round(($grade->first_grading+$grade->second_grading+$grade->third_grading+$grade->fourth_grading)/4,0);
+                
+                $first = $first+$grade->first_grading;
+                $second = $second+$grade->second_grading;
+                $third = $third+$grade->third_grading;
+                $fourth = $fourth+$grade->fourth_grading;
+                
+                ?>
+            @endif
+	
+        @endforeach
+	
+        <?php $overrideconduct = App\GradeOverRide::where('schoolyear',$sy->schoolyear)->where('idno',$student->idno)->get();?>
+	@if(count($overrideconduct)>0)
+        @foreach($overrideconduct as $grade)
+            @if($grade->subjecttype == 3)
+                <?php 
                 
                 $first = $first+$grade->first_grading;
                 $second = $second+$grade->second_grading;
@@ -200,7 +222,7 @@
                 ?>
             @endif
         @endforeach
-        
+        @endif
         @if($level == 'Grade 7'||$level == 'Grade 8'||$level == 'Grade 9'||$level == 'Grade 10'||$level == 'Grade 11'||$level == 'Grade 12')
                 <td style='text-align:center;font-weight: bold;'>{{number_format(round(($first+$second+$third+$fourth)/4,0),0)}}</td>
         @else
@@ -211,7 +233,7 @@
         
         <!--ATTENDANCE-->
 
-            <?php $atts = \App\Attendance::where('idno',$student->idno)->get(); ?>
+            <?php $atts = \App\Attendance::where('idno',$student->idno)->orderBy('sortto')->get(); ?>
             @foreach($atts as $att)
                     <?php 
                     if($level != 'Grade 11'){
@@ -232,4 +254,5 @@
     
     @endforeach
 </table>
+
 

@@ -202,6 +202,10 @@
                     {{--*/$fourth=0/*--}}
                     {{--*/$final=0/*--}}
                     {{--*/$count=0/*--}}
+                    {{--*/$counter1=0/*--}}
+                    {{--*/$counter2=0/*--}}
+                    {{--*/$counter3=0/*--}}
+                    {{--*/$counter4=0/*--}}
 		    {{--*/$isup = 0/*--}}
                     @foreach($info['aca'] as $key=>$academics)
                     <tr style="text-align: center;font-size: 8pt;">
@@ -211,30 +215,54 @@
                         <td>
                             @if(round($academics->first_grading,2) != 0)
                                 {{round($academics->first_grading,2)}}
+                                <?php $counter1 ++; ?>
                             @endif
                             {{--*/$first = $first + round($academics->first_grading,2)/*--}}
+                            
                         </td>
                         <td>
                             @if(round($academics->second_grading,2) != 0)
                                 {{round($academics->second_grading,2)}}
+                                <?php $counter2++; ?>
                             @endif
                             {{--*/$second = $second + round($academics->second_grading,2)/*--}}
+                            
                         </td >
                         <td>
                             @if(round($academics->third_grading,2) != 0)
                                 {{round($academics->third_grading,2)}}
+                                <?php $counter3 ++; ?>
                             @endif
                             {{--*/$third = $third + round($academics->third_grading,2)/*--}}
+                            
                         </td>
                         <td>
                             @if(round($academics->fourth_grading,2) != 0)
                                 {{round($academics->fourth_grading,2)}}
+                                <?php $counter4 ++; ?>
                             @endif
                             {{--*/$fourth = $fourth + round($academics->fourth_grading,2)/*--}}
+                            
                         </td>
                         <td><b>
                             @if(round($academics->fourth_grading,2) != 0)
-                            <?php $final_grade = ($academics->first_grading+$academics->second_grading+$academics->third_grading+$academics->fourth_grading)/4; ?>
+                            <?php 
+                            $divideby = 0;
+                            
+                            if($academics->first_grading > 0){
+                                $divideby++;
+                            }
+                            if($academics->second_grading > 0){
+                                $divideby++;
+                            }
+                            if($academics->third_grading > 0){
+                                $divideby++;
+                            }
+                            if($academics->fourth_grading > 0){
+                                $divideby++;
+                            }
+                            $final_grade = ($academics->first_grading+$academics->second_grading+$academics->third_grading+$academics->fourth_grading)/$divideby;
+                            ?>
                                 {{number_format(round($final_grade,2),2)}}
                             @endif
                             {{--*/$final = $final + round($final_grade,2)/*--}}
@@ -246,33 +274,50 @@
                         @endif
 
                           
-                            {{--*/$count ++/*--}}
+                            
                         </b></td>                         
                     </tr>
+                    {{--*/$count ++/*--}}
                     @endforeach
                     <tr style="text-align: center">
                         <td style="text-align: right;">
                             <b>GENERAL AVERAGE&nbsp;&nbsp;&nbsp;</b>
                         </td>
                         <td><b>
-                            @if(round($first/$count,2) != 0)
+                            @if(round($first) != 0)
+                                @if($counter1 != 0)
+                                {{number_format(round($first/$counter1,2),2)}}
+                                @else
                                 {{number_format(round($first/$count,2),2)}}
+                                @endif
                             @endif</b>
                         </td>
                         <td><b>
-                            @if(round($second/$count,2) != 0)
+                            @if(round($second) != 0)
+                                @if($counter2 != 0)
+                                {{number_format(round($second/$counter2,2),2)}}
+                                @else
                                 {{number_format(round($second/$count,2),2)}}
+                                @endif
                             @endif
                             </b>
                         </td>
                         <td><b>
-                            @if(round($third/$count,2) != 0)
-                            {{number_format(round($third/$count,2),2)}}
+                            @if(round($third) != 0)
+                                @if($counter3 != 0)
+                                {{number_format(round($third/$counter3,2),2)}}
+                                @else
+                                {{number_format(round($third/$count,2),2)}}
+                                @endif
                             @endif</b>
                         </td>
                         <td><b>
-                            @if(round($fourth/$count,2) != 0)
-                            {{number_format(round($fourth/$count,2),2)}}
+                            @if(round($fourth) != 0)
+                                @if($counter4 != 0)
+                                {{number_format(round($fourth/$counter4,2),2)}}
+                                @else
+                                {{number_format(round($fourth/$count,2),2)}}
+                                @endif
                             @endif</b>
                         </td>
                         <td><b>
@@ -395,6 +440,7 @@
                             {{--*/$fourth=0/*--}}
                             {{--*/$counter = 0/*--}}
                             {{--*/$length = count($info['con'])/*--}}
+
                             @foreach($info['con'] as $key=>$conducts)
                             {{--*/$counter ++/*--}}                    
                         <tr>
@@ -431,13 +477,45 @@
 
                         </tr>
                             @endforeach                    
+                            <?php 
+                                $isoverrides = App\GradeOverRide::where('idno',$info['info']->idno)->where('schoolyear',$schoolyear->schoolyear)->where('subjecttype',3)->exists();
+                                $overrides = App\GradeOverRide::where('idno',$info['info']->idno)->where('schoolyear',$schoolyear->schoolyear)->where('subjecttype',3)->first();
+                                ?>
                             <tr>
                                 <td style="border: 1px solid"><b>CONDUCT GRADE</b></td>
                                 <td style="border: 1px solid"><b>100</b></td>
-                                <td style="border: 1px solid"><b>@if(!$first  == 0){{number_format($first,2)}}@endif</b></td>
-                                <td style="border: 1px solid"><b>@if(!$second == 0){{number_format($second,2)}}@endif</b></td>
-                                <td style="border: 1px solid"><b>@if(!$third  == 0){{number_format($third,2)}}@endif</b></td>
-                                <td style="border: 1px solid"><b>@if(!$fourth == 0){{number_format($fourth,2)}}@endif</b></td>
+                                <td style="border: 1px solid"><b>
+                                        @if(!$first  == 0)
+                                            {{number_format($first,2)}}
+                                        @elseif($isoverrides)
+                                            @if(($overrides->first_grading > 0))
+                                                {{number_format($overrides->first_grading,2)}}
+                                                <?php $first = round($overrides->first_grading,2); ?>
+                                            @endif
+                                        @endif</b>
+                                </td>
+                                <td style="border: 1px solid"><b>
+                                        @if(!$second == 0)
+                                        {{number_format($second,2)}}
+                                        @elseif($isoverrides && ($overrides->second_grading > 0))
+                                            {{number_format($overrides->second_grading,2)}}
+                                            <?php $second = round($overrides->second_grading,2); ?>
+                                        @endif
+                                    </b></td>
+                                <td style="border: 1px solid"><b>
+                                        @if(!$third  == 0)
+                                        {{number_format($third,2)}}
+                                        @elseif($isoverrides && ($overrides->third_grading > 0))
+                                            {{number_format($overrides->third_grading,2)}}
+                                            <?php $third = round($overrides->third_grading,2); ?>
+                                        @endif</b></td>
+                                <td style="border: 1px solid"><b>
+                                        @if(!$fourth == 0)
+                                        {{number_format($fourth,2)}}
+                                        @elseif($isoverrides && ($overrides->fourth_grading > 0))
+                                            {{number_format($overrides->fourth_grading,2)}}
+                                            <?php $fourth = round($overrides->fourth_grading,2); ?>
+                                        @endif</b></td>
 
                                 <td style="border: 1px solid"><b>
                                     @if(!$fourth == 0)
@@ -600,7 +678,7 @@
             var bodywidth = document.getElementById('body').offsetWidth;
             
             bodywidth = bodywidth/2
-            widths = (widths+155)/2
+            widths = (widths+120)/2
             
             var placement = bodywidth - widths;
             document.getElementById("cardHeader{{$card}}").style.marginLeft = placement+"px";
@@ -626,3 +704,4 @@
         </script-->
     </body>
 </html>
+

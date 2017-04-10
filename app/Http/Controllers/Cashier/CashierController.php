@@ -112,11 +112,11 @@ class CashierController extends Controller
         } 
            
            //history of payments
-           $debits = DB::SELECT("select * from dedits where idno = '" . $idno . "' and "
-                   . "paymenttype <= '2' order by transactiondate");
+           $debits = DB::SELECT("select * from dedits d join credits c on c.refno = d.refno where d.idno = '" . $idno . "' and "
+                   . "d.paymenttype <= '2' and iscurrent=1 order by d.transactiondate");
         
-           $debitdms = DB::SELECT("select * from dedits where idno = '" . $idno . "' and "
-                   . "paymenttype = '3' order by transactiondate");
+           $debitdms = DB::SELECT("select * from dedits d join credits c on c.refno = d.refno  where d.idno = '" . $idno . "' and "
+                   . "d.paymenttype = '3' and iscurrent=1 order by d.transactiondate");
            return view('cashier.studentledger',  compact('debitdms','debits','penalty','totalmain','totalprevious','previousbalances','othercollections','student','status','ledgers','reservation','dues','totalothers','deposit'));
            
        }   
