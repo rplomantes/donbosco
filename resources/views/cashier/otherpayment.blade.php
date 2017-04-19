@@ -384,8 +384,8 @@
         </div>
         <div class="form-group" style="background-color: #C6C6FF;">
              <div style="padding: 10px;">
-                 
-                   
+                        
+                       
                      <div class="form-group">
                       <label>Cash Rendered : </label> <input type="text" style="text-align:right" placeholder = "0.00" onkeypress = "validateother(event,'cashrendered')" class="form-control" id = "cash" name="cash">
                     

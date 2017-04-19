@@ -61,6 +61,7 @@ return array(
     'CreatePaymentsTable' => $baseDir . '/database/migratin_backup/2016_01_28_054855_create_payments_table.php',
     'CreatePenaltyPostingsTable' => $baseDir . '/database/migratin_backup/2016_07_19_161815_create_penalty_postings_table.php',
     'CreatePrevSchoolRecsTable' => $baseDir . '/database/migratin_backup/2017_01_23_130340_create_prev_school_recs_table.php',
+    'CreateRptCashreceiptBooksTable' => $baseDir . '/database/migrations/2017_04_12_132806_create_rpt_cashreceipt_books_table.php',
     'CreateRptDisbursementBooksTable' => $baseDir . '/database/migratin_backup/2017_04_02_193544_create_rpt_disbursement_books_table.php',
     'CreateStatusesTable' => $baseDir . '/database/migratin_backup/2016_02_05_064523_create_statuses_table.php',
     'CreateStudentDepositsTable' => $baseDir . '/database/migratin_backup/2017_03_06_142832_create_student_deposits_table_1.php',

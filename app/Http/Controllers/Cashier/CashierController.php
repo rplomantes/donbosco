@@ -112,11 +112,11 @@ class CashierController extends Controller
         } 
            
            //history of payments
-           $debits = DB::SELECT("select * from dedits d join credits c on c.refno = d.refno where d.idno = '" . $idno . "' and "
-                   . "d.paymenttype <= '2' and iscurrent=1 order by d.transactiondate");
+           $debits = DB::SELECT("select * from dedits d  where d.idno = '" . $idno . "' and "
+                   . "d.paymenttype <= '2' order by d.transactiondate");
         
-           $debitdms = DB::SELECT("select * from dedits d join credits c on c.refno = d.refno  where d.idno = '" . $idno . "' and "
-                   . "d.paymenttype = '3' and iscurrent=1 order by d.transactiondate");
+           $debitdms = DB::SELECT("select * from dedits d where d.idno = '" . $idno . "' and "
+                   . "d.paymenttype = '3' order by d.transactiondate");
            return view('cashier.studentledger',  compact('debitdms','debits','penalty','totalmain','totalprevious','previousbalances','othercollections','student','status','ledgers','reservation','dues','totalothers','deposit'));
            
        }   
@@ -203,7 +203,9 @@ class CashierController extends Controller
                     $this->consumereservation($request->idno);
                     }
         }   
-
+        
+        $prevdiscount = 0;
+        
         if($request->previous > 0 ){
             $previous = $request->previous;
             $updateprevious = DB::SELECT("select * from ledgers where idno = '".$request->idno."' and categoryswitch >= '11' "
@@ -211,21 +213,51 @@ class CashierController extends Controller
                 foreach($updateprevious as $up){
                 $balance = $up->amount - $up->payment - $up->plandiscount - $up->otherdiscount - $up->debitmemo;
                     if($balance < $previous ){
-                    $updatepay = \App\Ledger::where('id',$up->id)->first();
-                    $updatepay->payment = $updatepay->payment + $balance;
-                    $updatepay->save();
-                    $previous = $previous - $balance;
-                    $this->credit($request->idno, $up->id, $refno, $orno, $up->amount);
+                        $prevdiscount = $prevdiscount + $up->plandiscount + $up->otherdiscount;
+                        $updatepay = \App\Ledger::where('id',$up->id)->first();
+                        $updatepay->payment = $updatepay->payment + $balance;
+                        $updatepay->save();
+                        $previous = $previous - $balance;
+                        $this->credit($request->idno, $up->id, $refno, $orno, $up->amount-$up->payment-$up->debitmemo);
                     } else {
-                    $updatepay = \App\Ledger::where('id',$up->id)->first();
-                    $updatepay->payment = $updatepay->payment + $previous;
-                    $updatepay->save();
-                    $this->credit($request->idno, $up->id, $refno, $orno, $previous);
+                        $updatepay = \App\Ledger::where('id',$up->id)->first();
+                        $updatepay->payment = $updatepay->payment + $previous;
+                        $updatepay->save();
+                        if($previous==$balance){
+                            $prevdiscount = $prevdiscount + $up->plandiscount + $up->otherdiscount;    
+                            $this->credit($request->idno, $up->id, $refno, $orno, $up->amount - $up->payment - $up->debitmemo);
+                        }else{      
+                            $this->credit($request->idno, $up->id, $refno, $orno, $previous);
+                        }
+                    //$this->credit($request->idno, $up->id, $refno, $orno, $previous);
                     $previous = 0;
                     break;
                     }
                 }   
             }
+
+//        if($request->previous > 0 ){
+//            $previous = $request->previous;
+//            $updateprevious = DB::SELECT("select * from ledgers where idno = '".$request->idno."' and categoryswitch >= '11' "
+//                     . " and amount - payment - debitmemo - plandiscount - otherdiscount > 0 order By categoryswitch");
+//                foreach($updateprevious as $up){
+//                $balance = $up->amount - $up->payment - $up->plandiscount - $up->otherdiscount - $up->debitmemo;
+//                    if($balance < $previous ){
+//                    $updatepay = \App\Ledger::where('id',$up->id)->first();
+//                    $updatepay->payment = $updatepay->payment + $balance;
+//                    $updatepay->save();
+//                    $previous = $previous - $balance;
+//                    $this->credit($request->idno, $up->id, $refno, $orno, $up->amount);
+//                    } else {
+//                    $updatepay = \App\Ledger::where('id',$up->id)->first();
+//                    $updatepay->payment = $updatepay->payment + $previous;
+//                    $updatepay->save();
+//                    $this->credit($request->idno, $up->id, $refno, $orno, $previous);
+//                    $previous = 0;
+//                    break;
+//                    }
+//                }   
+//            }
 
         if(isset($request->other)){
                 foreach($request->other as $key=>$value){
@@ -351,6 +383,7 @@ class CashierController extends Controller
       //return redirect(url('/viewreceipt',array($refno,$request->idno)));  
       //return view("cashier.payment", compact('previous','idno','reservation','totaldue','totalother','totalprevious','totalpenalty'));
    }
+
 
    function changestatatus($idno, $reservation){
    $status = \App\Status::where('idno',$idno)->first();    
@@ -999,30 +1032,30 @@ class CashierController extends Controller
                 break;
         }
         
-        $debit = new \App\Dedit;
-        $debit->idno = $request->idno;
-        $debit->transactiondate = Carbon::now();
-        $debit->refno = $refno;
-        $debit->acctcode = $acctcode;
-        $debit->receiptno = $or;
-        $debit->paymenttype= "1";
-        $debit->entry_type="1";
-        $debit->accountingcode=$accountingcode->acctcode;
-        $debit->bank_branch=$request->bank_branch;
-        $debit->check_number=$request->check_number;
-        $debit->iscbc=$iscbc;
+            $debit = new \App\Dedit;
+            $debit->idno = $request->idno;
+            $debit->transactiondate = Carbon::now();
+            $debit->refno = $refno;
+            $debit->acctcode = $acctcode;
+            $debit->receiptno = $or;
+            $debit->paymenttype= "1";
+            $debit->entry_type="1";
+            $debit->accountingcode=$accountingcode->acctcode;
+            $debit->bank_branch=$request->bank_branch;
+            $debit->check_number=$request->check_number;
+            $debit->iscbc=$iscbc;
         $debit->amount = $request->totalcredit - $request->check;
-        $debit->receiveamount = $request->cash;
-        $debit->checkamount=$request->check;
-        $debit->receivefrom=$student->lastname . ", " . $student->firstname . " " . $student->extensionname . " " .$student->middlename;
-        $debit->depositto=$request->depositto;
-        $debit->remarks=$request->remarks;
-        $debit->schoolyear=$sy;
-        $debit->fiscalyear=$fiscal->fiscalyear;
-        $debit->acct_department = "None";
-        $debit->sub_department = "None";
-        $debit->postedby= \Auth::user()->idno;
-        $debit->save();
+            $debit->receiveamount = $request->cash;
+            $debit->checkamount=$request->check;
+            $debit->receivefrom=$student->lastname . ", " . $student->firstname . " " . $student->extensionname . " " .$student->middlename;
+            $debit->depositto=$request->depositto;
+            $debit->remarks=$request->remarks;
+            $debit->schoolyear=$sy;
+            $debit->fiscalyear=$fiscal->fiscalyear;
+            $debit->acct_department = "None";
+            $debit->sub_department = "None";
+            $debit->postedby= \Auth::user()->idno;
+            $debit->save();
         
         
         return $this->viewreceipt($refno, $request->idno);

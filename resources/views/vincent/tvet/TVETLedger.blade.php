@@ -143,6 +143,7 @@ $('.amount').keyup(function(){
         subsidy = 0;
     }
     
+    
     var newcontribution = parseInt(total)-(parseFloat($(this).val()) + parseFloat($("#"+sponsor).val()));
     
     $('#'+subsidy).val(newcontribution.toFixed(2))

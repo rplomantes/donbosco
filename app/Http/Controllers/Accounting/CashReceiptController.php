@@ -13,6 +13,101 @@ class CashReceiptController extends Controller
 	$this->middleware(['auth','acct']);
     }
     
+    function cashreceiptbook($transactiondate){
+        $rangedate = date("Y-m",strtotime($transactiondate));
+        DB::table('rpt_cashreceipt_books')->where('idno', \Auth::user()->idno)->delete();
+        $receipts = \App\Dedit::where('transactiondate',$transactiondate)->where('entry_type',1)->get();
+        $this->debitcashreceipts($receipts,0);
+        $this->creditcashreceipts($receipts);
+        $forwarded = \App\Dedit::whereBetween('transactiondate', array($rangedate."-01",date ( 'Y-m-j' ,strtotime ( '-1 day' , strtotime ( $transactiondate ) ))))->where('entry_type',1)->get();
+        $this->debitcashreceipts($forwarded,1);
+        $this->creditcashreceipts($forwarded);
+        $currTran = \App\RptCashreceiptBook::where('idno', \Auth::user()->idno)->where('totalindic',0)->get();
+        $forwarder = \App\RptCashreceiptBook::where('idno', \Auth::user()->idno)->where('totalindic',1)->where('isreverse',0)->get();
+        return view('accounting.cashreceipts',compact('transactiondate','currTran','forwarder'));
+    }
+    
+    function debitcashreceipts($receipts,$indic){
+        foreach($receipts as $receipt){
+            $existing = \App\RptCashreceiptBook::where('refno',$receipt->refno)->exists();
+            if($existing){
+                $record = \App\RptCashreceiptBook::where('refno',$receipt->refno)->first();
+            }else{
+                $record =new \App\RptCashreceiptBook;
+                $record->idno = \Auth::user()->idno;
+                $record->from = $receipt->receivefrom;
+                $record->receiptno = $receipt->receiptno;
+                $record->refno = $receipt->refno;
+                $record->transactiondate = $receipt->transactiondate;
+                $record->isreverse = $receipt->isreverse;
+                $record->totalindic = $indic;
+            }
+
+            switch($receipt->paymenttype){
+                case 1:
+                    $record->cash = $receipt->amount + $receipt->checkamount;
+                    break;
+                case 4:
+                    $record->discount = $receipt->amount + $receipt->checkamount;
+                    break;
+                case 5:
+                    $record->dreservation = $receipt->amount + $receipt->checkamount;
+                    break;
+                case 7:
+                    $record->fape = $receipt->amount + $receipt->checkamount;
+                    break;
+                case 8:
+                    $record->deposit = $receipt->amount + $receipt->checkamount;
+                    break;
+            }
+            $record->save();
+        }
+        
+        return null;
+    }
+    
+    function creditcashreceipts($receipts){
+        foreach($receipts as $receipt){
+            $existing = \App\Credit::where('refno',$receipt->refno)->exists();
+            if($existing){
+                $credits = \App\Credit::where('refno',$receipt->refno)->get();
+                foreach($credits as $credit){
+                    $record = \App\RptCashreceiptBook::where('refno',$receipt->refno)->first();
+                    switch($credit->accountingcode){
+                        case 420200:
+                            $record->elearning = $record->elearning + $credit->amount;
+                            break;
+                        case 420400:
+                            $record->misc = $record->misc + $credit->amount;
+                            break;
+                        case 440400:
+                            $record->book = $record->book + $credit->amount;
+                            break;
+                        case 420100:
+                            $record->dept = $record->dept + $credit->amount;
+                            break;
+                        case 420000:
+                            $record->registration = $record->registration + $credit->amount;
+                            break;
+                        case 410100:
+                            $record->tuition = $record->tuition + $credit->amount;
+                            break;
+                        case 410000:
+                            $record->tuition =  $record->tuition + $credit->amount;
+                            break;
+                        case 210400:
+                            $record->creservation = $record->creservation + $credit->amount;
+                            break;
+                        default:
+                            $record->csundry = $record->csundry + $credit->amount;
+                            break;
+                    }
+                    $record->save();
+                }
+            }
+        }
+    }
+    
     function cashreceipts($transactiondate){
     $rangedate = date("Y-m",strtotime($transactiondate));
     $asOf = date("l, F d, Y",strtotime($transactiondate));
