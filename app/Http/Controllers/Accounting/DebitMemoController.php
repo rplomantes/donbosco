@@ -1,4 +1,4 @@
-<?php
+<?php   
 
 namespace App\Http\Controllers\Accounting;
 
@@ -51,7 +51,7 @@ class DebitMemoController extends Controller
             if($previous > 0){
             $sql = "Select * from ledgers where categoryswitch >= '10'  and categoryswitch < '19'"
                . "and idno = '$idno' and amount-payment-plandiscount-otherdiscount-debitmemo > 0 order by duedate, categoryswitch";
-            $this->addcredit($idno, $previous, $refno, $receiptno, $entry_type,$sql);
+            $this->addcredit($idno, $previous, $refno, $debitmemono, $entry_type,$sql);
             }
             //others//
             if(isset($request->others)){

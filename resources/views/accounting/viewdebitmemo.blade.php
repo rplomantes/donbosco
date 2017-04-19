@@ -82,7 +82,7 @@ $departments = DB::Select("Select * from ctr_acct_dept order by sub_department")
                @endif
                 
                 @if($previousbalance > 0 )   
-                <tr><td>Previous Balance<br>{{$totalprevious}}</td><td><input  onkeypress = "validate(event)" max="{{$totalprevious}}" name="previous" id="previous" style="text-align:right" class="form-control" ></td></tr>
+                <tr><td>Previous Balance<br>{{$previousbalance}}</td><td><input  onkeypress = "validate(event)" type="number" step="any" max="{{$previousbalance}}" name="previous" id="previous" style="text-align:right" class="form-control" ></td></tr>
                 @else   
                 <input type="hidden" name="previous" id="previous" value="0">
                 @endif
@@ -275,6 +275,7 @@ $departments = DB::Select("Select * from ctr_acct_dept order by sub_department")
 }
 
 function computetotal(){
+    
     if(document.getElementById('totaldue').value==""){
      totaldue = 0; }
     else { 
