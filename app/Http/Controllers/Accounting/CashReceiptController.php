@@ -18,13 +18,15 @@ class CashReceiptController extends Controller
         DB::table('rpt_cashreceipt_books')->where('idno', \Auth::user()->idno)->delete();
         $receipts = \App\Dedit::where('transactiondate',$transactiondate)->where('entry_type',1)->get();
         $this->debitcashreceipts($receipts,0);
-        $this->creditcashreceipts($receipts);
-        $forwarded = \App\Dedit::whereBetween('transactiondate', array($rangedate."-01",date ( 'Y-m-j' ,strtotime ( '-1 day' , strtotime ( $transactiondate ) ))))->where('entry_type',1)->get();
+        $creceipts = \App\Dedit::where('transactiondate',$transactiondate)->where('entry_type',1)->groupBy('refno')->get();
+        $this->creditcashreceipts($creceipts);
+        $forwarded = \App\Dedit::whereBetween('transationdate', array($rangedate."-01",date ( 'Y-m-j' ,strtotime ( '-1 day' , strtotime ( $transactiondate ) ))))->where('entry_type',1)->get();
         $this->debitcashreceipts($forwarded,1);
-        $this->creditcashreceipts($forwarded);
-        $currTran = \App\RptCashreceiptBook::where('idno', \Auth::user()->idno)->where('totalindic',0)->get();
+        $cforwarded = \App\Dedit::whereBetween('transactiondate', array($rangedate."-01",date ( 'Y-m-j' ,strtotime ( '-1 day' , strtotime ( $transactiondate ) ))))->where('entry_type',1)->groupBy('refno')->get();
+        $this->creditcashreceipts($cforwarded);
+        $currTrans = \App\RptCashreceiptBook::where('idno', \Auth::user()->idno)->where('totalindic',0)->get();
         $forwarder = \App\RptCashreceiptBook::where('idno', \Auth::user()->idno)->where('totalindic',1)->where('isreverse',0)->get();
-        return view('accounting.cashreceipts',compact('transactiondate','currTran','forwarder'));
+        return view('accounting.cashreceipts',compact('transactiondate','currTrans','forwarder'));
     }
     
     function debitcashreceipts($receipts,$indic){

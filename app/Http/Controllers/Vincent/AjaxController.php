@@ -46,14 +46,15 @@ class AjaxController extends Controller
         $strand = Input::get('strand');
         $department = Input::get('department');
         $quarters = Input::get('quarter');
-        $sy = \App\CtrRefSchoolyear::first()->schoolyear;
+        //$sy = \App\CtrRefSchoolyear::first()->schoolyear;
+        $sy = 2016;
 
         $this->acadRank($section,$level,$quarters);
         if(Input::get('department') == 'Junior High School'){
         $this->techRank($section,$level,$quarters,$strand);
         }
         
-        $students = DB::Select("Select statuses.idno,class_no,gender,lastname,firstname,middlename,extensionname,statuses.status from users left join statuses on users.idno = statuses.idno where statuses.status IN (2,3) and statuses.level = '$level' and statuses.section = '$section' AND statuses.strand = '$strand' and statuses.schoolyear ='$sy' order by class_no ASC");
+        $students = DB::Select("Select statuses.idno,class_no,gender,lastname,firstname,middlename,extensionname,statuses.status from users left join status_histories as statuses on users.idno = statuses.idno where statuses.status IN (2,3) and statuses.level = '$level' and statuses.section = '$section' AND statuses.strand = '$strand' and statuses.schoolyear ='$sy' order by class_no ASC");
         //$students = DB::Select("Select statuses.idno,gender,lastname,firstname,middlename,extensionname from users left join statuses on users.idno = statuses.idno where statuses.status= 2 and statuses.level = 'Grade 10' and statuses.section = 'Saint Callisto Caravario' AND statuses.strand = 'Industrial Drafting Technology' order by gender DESC,lastname ASC,firstname ASC");
         if(Input::get('department') != 'Senior High School'){
             $strand = '';
@@ -71,7 +72,7 @@ class AjaxController extends Controller
             //$subjects = \App\CtrSubjects::where('level',Input::get('level'))->where('strand',$strand)->orderBy('subjecttype','ASC')->orderBy('sortto','ASC')->get();
         $schoolyear = \App\CtrRefSchoolyear::first();
         $count = 1;
-        $sy = $schoolyear->schoolyear;
+        //$sy = $schoolyear->schoolyear;
         $data = "";
         
         $data = $data."<table border='1' cellpadding='1' cellspacing='2' width='100%'>";
@@ -766,21 +767,21 @@ class AjaxController extends Controller
     
     function techRank($section,$level,$quarter,$strand){
         
-        $schoolyear = \App\CtrRefSchoolyear::first();
+        $schoolyear = 2016;
         
         switch ($quarter){
             case 1;
                 //$averages = DB::Select("SELECT idno,weighted, ROUND( SUM( first_grading ) / count( idno ) , 0 ) AS average FROM `grades` WHERE subjecttype =0 AND level = '$level' AND section LIKE '$section' AND schoolyear = '$schoolyear->schoolyear' GROUP BY idno ORDER BY `average` DESC");
-                $averages = DB::Select("SELECT grades.idno,weighted, ROUND( SUM( first_grading ) / count( grades.idno ) , 2 ) AS average FROM `grades` left join statuses on statuses.idno = grades.idno WHERE subjecttype =1 AND grades.level = '$level' AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear->schoolyear' AND statuses.strand = '$strand' GROUP BY idno ORDER BY `average` DESC");
+                $averages = DB::Select("SELECT grades.idno,weighted, ROUND( SUM( first_grading ) / count( grades.idno ) , 2 ) AS average FROM `grades` left join statuses on statuses.idno = grades.idno WHERE subjecttype =1 AND grades.level = '$level' AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear' AND statuses.strand = '$strand' GROUP BY idno ORDER BY `average` DESC");
             break;
             case 2;
-                $averages = DB::Select("SELECT grades.idno,weighted, ROUND( SUM( second_grading ) / count( grades.idno ) , 2 ) AS average FROM `grades` left join statuses on statuses.idno = grades.idno WHERE subjecttype =1 AND grades.level = '$level' AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear->schoolyear' AND statuses.strand = '$strand' GROUP BY idno ORDER BY `average` DESC");
+                $averages = DB::Select("SELECT grades.idno,weighted, ROUND( SUM( second_grading ) / count( grades.idno ) , 2 ) AS average FROM `grades` left join statuses on statuses.idno = grades.idno WHERE subjecttype =1 AND grades.level = '$level' AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear' AND statuses.strand = '$strand' GROUP BY idno ORDER BY `average` DESC");
             break;                
            case 3;
-                $averages = DB::Select("SELECT grades.idno,weighted, ROUND( SUM( third_grading ) / count( grades.idno ) , 2 ) AS average FROM `grades` left join statuses on statuses.idno = grades.idno WHERE subjecttype =1 AND grades.level = '$level' AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear->schoolyear' AND statuses.strand = '$strand' GROUP BY idno ORDER BY `average` DESC");
+                $averages = DB::Select("SELECT grades.idno,weighted, ROUND( SUM( third_grading ) / count( grades.idno ) , 2 ) AS average FROM `grades` left join statuses on statuses.idno = grades.idno WHERE subjecttype =1 AND grades.level = '$level' AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear' AND statuses.strand = '$strand' GROUP BY idno ORDER BY `average` DESC");
             break;
             case 4;
-                $averages = DB::Select("SELECT grades.idno,weighted, ROUND( SUM( fourth_grading ) / count( grades.idno ) , 2 ) AS average FROM `grades` left join statuses on statuses.idno = grades.idno WHERE subjecttype =1 AND grades.level = '$level' AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear->schoolyear' AND statuses.strand = '$strand' GROUP BY idno ORDER BY `average` DESC");
+                $averages = DB::Select("SELECT grades.idno,weighted, ROUND( SUM( fourth_grading ) / count( grades.idno ) , 2 ) AS average FROM `grades` left join statuses on statuses.idno = grades.idno WHERE subjecttype =1 AND grades.level = '$level' AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear' AND statuses.strand = '$strand' GROUP BY idno ORDER BY `average` DESC");
            break;
             case 5;
                 $averages = DB::Select("SELECT grades.idno,weighted,ROUND("
@@ -788,13 +789,13 @@ class AjaxController extends Controller
                         . "+ (SUM( third_grading ) / count( grades.idno )) "
                         . "+ (SUM( second_grading ) / count( grades.idno )) "
                         . "+ (SUM( first_grading ) / count( grades.idno )))/4 , 0 ) AS average "
-                        . "FROM `grades` left join statuses on statuses.idno = grades.idno "
+                        . "FROM `grades` left join status_histories as statuses on statuses.idno = grades.idno "
                         . "WHERE subjecttype =1 AND grades.level = '$level' "
-                        . "AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear->schoolyear' AND statuses.strand = '$strand' GROUP BY idno ORDER BY `average` DESC");
+                        . "AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear' AND statuses.strand = '$strand' GROUP BY idno ORDER BY `average` DESC");
            break;
         }
                 if($averages[0]->weighted != 0){
-                    $averages = $this->weightedRank($quarter,$schoolyear->schoolyear,$strand,$level,$section);
+                    $averages = $this->weightedRank($quarter,$schoolyear,$strand,$level,$section);
                 }
                 
         $ranking = 0;
@@ -1887,9 +1888,36 @@ class AjaxController extends Controller
     function gettvetsections($action=null){
         $batch = Input::get('batch');
         $course = Input::get('course');
+        $allavailable = 1;
         $sections = DB::Select("Select distinct section from  ctr_sections where level = '$batch' and course = '$course'");
         
-        return view('ajax.selectsection',compact('sections','action'));
+        return view('ajax.selectsection',compact('sections','action','allavailable'));
+    }
+    
+    function getlevelsections($action=null){
+        $level = Input::get('level');
+        $sy = Input::get('sy');
+        $course = Input::get('course');
+        $allavailable = 0;
+        $sections = DB::Select("Select distinct section from  ctr_sections where level = '$level' and schoolyear = $sy and strand='$course'");
+        return view('ajax.selectsection',compact('sections','action','allavailable'));
+               
+    }
+    
+    function getlevelsubjects($action=null){
+        $level = Input::get('level');
+        $sy = Input::get('sy');
+        $course = Input::get('course');
+        $allavailable = 1;
+        $subjects = DB::Select("Select distinct subjectcode,subjectname from  grades where level = '$level' and schoolyear = $sy and strand='$course' and subjecttype IN(0,1,5,6) and isdisplaycard = 1 order by sortto");
+        return view('ajax.selectsubjects',compact('subjects','action','allavailable'));
+    }
+    
+    function getlevelstrands($action=null){
+        $level = Input::get('level');
+        $sy = Input::get('sy');
+        $strands = DB::Select("select distinct strand from ctr_sections where level = '$level' and schoolyear = $sy");
+        return view('ajax.selectstrand',compact('strands','action'));
     }
     
     function getsubsidiary(){

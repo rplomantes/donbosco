@@ -10,6 +10,9 @@
     Route::post('/books/update', 'Miscellaneous\BookController@updatebooks');
     Route::get('/getsearchbookstore/{student}','Miscellaneous\AjaxController@getsearchbookstore');
     //Registrar module
+    Route::get('sheeta','Registrar\SheetAController@index');
+    
+    
     Route::get('studentlist','Registrar\StudentlistController@studentlist');
     Route::get('enrollmentstat','Registrar\EnrollmentstatController@enrollmentstat');
     Route::get('registrar/assessment','Registrar\AssessmentController@index');
@@ -231,6 +234,11 @@
 });
 
 //Ajax route
+    Route::get('/getsections/{action?}','Vincent\AjaxController@getsections');
+    Route::get('/getlevelsections/{action?}','Vincent\AjaxController@getlevelsections');
+    Route::get('/getlevelstrands/{action?}','Vincent\AjaxController@getlevelstrands');
+    Route::get('/getlevelsubjects/{action?}','Vincent\AjaxController@getlevelsubjects');
+
     Route::get('/myDeposit','AjaxController@myDeposit');
     Route::get('/getid/{varid}','AjaxController@getid');
     Route::get('/getlevel/{vardepartment}','AjaxController@getlevel');

@@ -23,7 +23,7 @@ class AddtoAccountController extends Controller
         $statuses = \App\Status::where('idno',$studentid)->first();
         $acct_departments = DB::Select('Select * from ctr_acct_dept order by sub_department');
         $deletes = DB::Select("Select * from deleted_accounts where idno='$studentid' AND categoryswitch = '7'");
-        $ledgers = DB::Select("Select * from ledgers where idno='$studentid' AND categoryswitch = '7' and amount > payment ");
+        $ledgers = DB::Select("Select * from ledgers where idno='$studentid' AND categoryswitch = '7' and amount > payment and acctcode = 'Sales Non-VAT Books'");
         return view('cashier.addtoaccount',compact('studentid','accounts','studentdetails','statuses','ledgers','deletes','acct_departments'));
         
     }

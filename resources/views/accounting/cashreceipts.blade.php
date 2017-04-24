@@ -43,7 +43,7 @@
                 $fape = $fape + $forward->fape;
                 $dreservation = $dreservation + $forward->dreservation;
                 $deposit = $deposit + $forward->deposit;
-                $elearning = $elearning + $forward->elearnig;
+                $elearning = $elearning + $forward->elearning;
                 $misc = $misc + $forward-> misc;
                 $book = $book + $forward->book;
                 $department = $department + $forward->dept;
@@ -72,6 +72,32 @@
                 <td>{{$others}}</td>
                 <td></td>
             </tr>
+            @foreach($currTrans as $trans)
+            <tr>
+                <td>{{$trans->receiptno}}</td>
+                <td>{{$trans->from}}</td>
+                <td>{{$trans->cash}}</td>
+                <td>{{$trans->discount}}</td>
+                <td>{{$trans->fape}}</td>
+                <td>{{$trans->dreservation}}</td>
+                <td>{{$trans->deposit}}</td>
+                <td>{{$trans->elearning}}</td>
+                <td>{{$trans->misc}}</td>
+                <td>{{$trans->book}}</td>
+                <td>{{$trans->dept}}</td>
+                <td>{{$trans->registration}}</td>
+                <td>{{$trans->tuition}}</td>
+                <td>{{$trans->creservation}}</td>
+                <td>{{$trans->csundry}}</td>
+                <td>
+                    @if($trans->isreverse == 0)
+                        OK
+                    @else
+                        Cancelled
+                    @endif
+                </td>
+            </tr>
+            @endforeach
         </tbody>
     </table>
 </div>

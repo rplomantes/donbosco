@@ -44,7 +44,7 @@ class CashierController extends Controller
        //get previous balance
        $previousbalances = DB::Select("select schoolyear, sum(amount)- sum(plandiscount)- sum(otherdiscount)
                - sum(debitmemo) - sum(payment) as amount from ledgers where idno = '$idno' 
-               and categoryswitch >= '"  .env('PREVIOUS_ELEARNING_FEE') ."' group by schoolyear");
+               and categoryswitch >= 10 group by schoolyear");
        if(count($previousbalances)>0){ 
        foreach($previousbalances as $prev){
             $totalprevious = $totalprevious + $prev->amount;
@@ -63,6 +63,8 @@ class CashierController extends Controller
        }
        
                }
+               
+        $oldreceipts = \App\OldReceipt::where('idno',$idno)->get();
                
                $studentdeposit = DB::Select("select amount from student_deposits where idno = '$idno' and status=1");
                if(count($studentdeposit)>0 ){
@@ -117,7 +119,7 @@ class CashierController extends Controller
         
            $debitdms = DB::SELECT("select * from dedits d where d.idno = '" . $idno . "' and "
                    . "d.paymenttype = '3' order by d.transactiondate");
-           return view('cashier.studentledger',  compact('debitdms','debits','penalty','totalmain','totalprevious','previousbalances','othercollections','student','status','ledgers','reservation','dues','totalothers','deposit'));
+           return view('cashier.studentledger',  compact('debitdms','debits','penalty','totalmain','totalprevious','previousbalances','othercollections','student','status','ledgers','reservation','dues','totalothers','deposit','oldreceipts'));
            
        }   
        
@@ -229,7 +231,7 @@ class CashierController extends Controller
                         }else{      
                             $this->credit($request->idno, $up->id, $refno, $orno, $previous);
                         }
-                    //$this->credit($request->idno, $up->id, $refno, $orno, $previous);
+
                     $previous = 0;
                     break;
                     }
@@ -332,6 +334,7 @@ class CashierController extends Controller
                     $deposit = new \App\StudentDeposit;
                     $deposit->amount = $remainingbalance;
                     $deposit->idno = $request->idno;
+                    $deposit->refno = $refno;
                     $deposit->transactiondate = Carbon::now();
                     $deposit->postedby = \Auth::user()->idno;
                 }
@@ -798,6 +801,8 @@ class CashierController extends Controller
                 $deposit = new \App\StudentDeposit;
                 $deposit->amount = $request->deposit;
                 $deposit->idno = $request->idno;
+                $deposit->refno = $refno;
+                $deposit->status = 1;
                 $deposit->transactiondate = Carbon::now();
                 $deposit->postedby = \Auth::user()->idno;
             }
@@ -1090,6 +1095,7 @@ class CashierController extends Controller
         $pdf->loadView("print.printcollection",compact('collections','transactiondate','teller'));
         return $pdf->stream();  
     }
+    
     function cancell($refno,$idno){
         
         $credits = \App\Credit::where('refno',$refno)->get();
@@ -1103,12 +1109,12 @@ class CashierController extends Controller
             }
          
          
-            if($credit->description == "Reservation"){
+            if($credit->description == "Enrollment Reservation"){
                 \App\AdvancePayment::where('refno',$refno)->delete();
             }
 
             if($credit->description == "Student Deposit"){
-                    $deposit = \App\StudentDeposit::where('idno',$idno)->first();
+                    $deposit = \App\StudentDeposit::where('idno',$idno)->where('refno',$credit->refno)->first();
                     $deposit->amount = $deposit->amount - $credit->amount;
                     $deposit->save();
             }
@@ -1157,7 +1163,7 @@ class CashierController extends Controller
         $ledger->payment = $ledger->payment + $credit->amount - $ledger->plandiscount - $ledger->otherdiscount;
         $ledger->save();
         }
-         if($credit->description == "Reservation"){
+         if($credit->description == "Enrollment Reservation"){
             $res = new \App\AdvancePayment;
             $res->idno = $idno;
             $res->transactiondate = Carbon::now();
@@ -1172,6 +1178,11 @@ class CashierController extends Controller
             $res->postedby = \Auth::user()->idno;
             $res->save();
          }
+            if($credit->description == "Student Deposit"){
+                $deposit = \App\StudentDeposit::where('idno',$idno)->where('refno',$credit->refno)->first();
+                $deposit->amount = $deposit->amount + $credit->amount;
+                $deposit->save();
+            }
         }
         
        $debitreservation = \App\Dedit::where('refno',$refno)->where('paymenttype','5')->first();

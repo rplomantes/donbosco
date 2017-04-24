@@ -104,7 +104,7 @@
                 ?>
                 <tr><td>{{$ledger->receipt_details}}</td><td align="right">{{number_format($ledger->amount,2)}}</td><td align="right">{{number_format($ledger->plandiscount+$ledger->otherdiscount,2)}}</td>
                     <td align="right">{{number_format($ledger->debitmemo,2)}}</td><td align="right" style="color:red">{{number_format($ledger->payment,2)}}</td>
-                    <td align="right">{{number_format($ledger->amount-$ledger->debitmemo-$ledger->plandiscount-$ledger->otherdiscount-$ledger->payment,2)}}</td></tr>
+                    <td align="right">{{number_format($ledger->amount-($ledger->debitmemo+$ledger->plandiscount+$ledger->otherdiscount+$ledger->payment),2)}}</td></tr>
                 @endforeach
                 @endif
                 <tr><td>Total</td><td align="right">{{number_format($totalamount,2)}}</td>
@@ -113,9 +113,7 @@
                                   <td align="right" style="color:red">{{number_format($totalpayment,2)}}</td>
                                   <td align="right"><strong>{{number_format($totalamount-$totaldiscount-$totaldebitmemo-$totalpayment,2)}}</strong></td></tr>
             </table>
-              <h5>Payment History 
-                  <span>
-              </h5>
+              <h5>Payment History</h5>
               <table class="table table-striped" id="ph"><tr><td>Date</td><td>Ref Number</td><td>OR Number</td><td align="right">Amount</td><td>Payment Type</td><td>Details</td><td>Status</td></tr>
                   @if(count($debits)>0)
                   @foreach($debits as $debit)
@@ -138,6 +136,19 @@
                   @endforeach
                   @endif
               </table>
+              @if(count($oldreceipts)>0)
+              <h5>Old Transactions</h5>
+              <table class="table table-stripped">
+                  <thead>
+                      <tr><th>Date</th><th>Receipt No.</th><th>Amount</th></tr>
+                  </thead>
+                  <tbody>
+                      @foreach($oldreceipts as $oldreceipt)
+                      <tr><td>{{$oldreceipt->transactiondate}}</td><td>{{$oldreceipt->receiptno}}</td><td>{{$oldreceipt->amount}}</td></tr>
+                      @endforeach
+                  </tbody>
+              </table>
+              @endif
               
                <h5>Debit Memo</h5>
               <table class="table table-striped"><tr><td>Date</td><td>Ref Number</td><td>Account</td><td align="right">Amount</td><td>Payment Type</td><td>Details</td><td>Status</td></tr>

@@ -47,7 +47,7 @@ class DisbursementController extends Controller
            $voucherno = $disbursement->voucherno;
            $checkno = $disbursement->checkno;
            $pdfprint = \App::make('dompdf.wrapper');
-           $pdfprint->setPaper('Letter','landscape');
+           $pdfprint->setPaper([0,0,1092,612],'portrait');
            $pdfprint->loadView('print.printcheckdetailpdf',compact('payee','amount','date','amountinwords','voucherno','checkno'));
            return $pdfprint->stream();
        }
