@@ -91,13 +91,53 @@ class DisbursementController extends Controller
                     //$addrpt->voucheramount = $disbursement->amount;
                     $addrpt->isreverse = $disbursement->isreverse;
                     $addrpt->totalindic = $totalindic;
+//                        if($acctentry->cr_db_indic=="0"){
+//                            switch ($acctentry->accountcode){
+//                                case "110103":
+//                                    $addrpt->advances_employee = $acctentry->debit;
+//                                    break;
+//                                case "590800":
+//                                    $addrpt->cost_of_goods = $acctentry->debit;
+//                                    break;
+//                                case "580000":
+//                                    $addrpt->instructional_materials = $acctentry->debit;
+//                                    break;
+//                                case "500000":
+//                                    $addrpt->salaries_allowances = $acctentry->debit;
+//                                    break;
+//                                case "500500":
+//                                    $addrpt->personnel_dev = $acctentry->debit;
+//                                    break;
+//                                case "500300":
+//                                    $addrpt->other_emp_benefit =$acctentry->debit;
+//                                    break;
+//                                case "110201":
+//                                    $addrpt->office_supplies = $acctentry->debit;
+//                                    break;
+//                                case "590200":
+//                                    $addrpt->travel_expenses = $acctentry->debit;
+//                                    break;
+//                                default:
+//                                    $addrpt->sundry_debit = $acctentry->debit;                                   
+//                            }                       
+//                        } 
+//                        else{
+//                            if($acctentry->accountcode > 110010 && $acctentry->accountcode < 110022){
+//                                $addrpt->voucheramount = $acctentry->credit;
+//                            }else{
+//                                    $addrpt->sundry_credit =$acctentry->credit;
+//                            }      
+//                        }   
                         if($acctentry->cr_db_indic=="0"){
                             switch ($acctentry->accountcode){
-                                case "110103":
+                                case "120103":
                                     $addrpt->advances_employee = $acctentry->debit;
                                     break;
-                                case "590800":
-                                    $addrpt->cost_of_goods = $acctentry->debit;
+                                case "440601":
+                                    $addrpt->cost_of_goods = $acctentry->debit + $addrpt->cost_of_goods;
+                                    break;
+                                case "440701":
+                                    $addrpt->cost_of_goods = $acctentry->debit + $addrpt->cost_of_goods;
                                     break;
                                 case "580000":
                                     $addrpt->instructional_materials = $acctentry->debit;
@@ -111,7 +151,7 @@ class DisbursementController extends Controller
                                 case "500300":
                                     $addrpt->other_emp_benefit =$acctentry->debit;
                                     break;
-                                case "110201":
+                                case "120201":
                                     $addrpt->office_supplies = $acctentry->debit;
                                     break;
                                 case "590200":
@@ -120,13 +160,14 @@ class DisbursementController extends Controller
                                 default:
                                     $addrpt->sundry_debit = $acctentry->debit;                                   
                             }                       
-                        } else{
-                            if($acctentry->accountcode > 110010 && $acctentry->accountcode < 110022){
+                        } 
+                        else{
+                            if($acctentry->accountcode > 110011 && $acctentry->accountcode < 110022){
                                 $addrpt->voucheramount = $acctentry->credit;
                             }else{
                                     $addrpt->sundry_credit =$acctentry->credit;
                             }      
-                        }   
+                        }
                             $addrpt->save();
                 }
            }
@@ -151,13 +192,53 @@ class DisbursementController extends Controller
                     $addrpt->idno = \Auth::user()->idno;
                     $addrpt->transactiondate = $acctentry->transactiondate;
                     $addrpt->totalindic = '1';
+//                        if($acctentry->cr_db_indic=="0"){
+//                            switch ($acctentry->accountcode){
+//                                case "110103":
+//                                    $addrpt->advances_employee = $acctentry->debit;
+//                                    break;
+//                                case "590800":
+//                                    $addrpt->cost_of_goods = $acctentry->debit;
+//                                    break;
+//                                case "580000":
+//                                    $addrpt->instructional_materials = $acctentry->debit;
+//                                    break;
+//                                case "500000":
+//                                    $addrpt->salaries_allowances = $acctentry->debit;
+//                                    break;
+//                                case "500500":
+//                                    $addrpt->personnel_dev = $acctentry->debit;
+//                                    break;
+//                                case "500300":
+//                                    $addrpt->other_emp_benefit =$acctentry->debit;
+//                                    break;
+//                                case "110201":
+//                                    $addrpt->office_supplies = $acctentry->debit;
+//                                    break;
+//                                case "590200":
+//                                    $addrpt->travel_expenses = $acctentry->debit;
+//                                    break;
+//                                default:
+//                                    $addrpt->sundry_debit = $acctentry->debit;                                   
+//                            }                       
+//                        } else{
+//                            
+//                                   if($acctentry->accountcode > 110010 && $acctentry->accountcode < 110022){
+//                                $addrpt->voucheramount = $acctentry->credit;
+//                            }else{
+//                                    $addrpt->sundry_credit =$acctentry->credit;
+//                            }      
+//                        }   
                         if($acctentry->cr_db_indic=="0"){
                             switch ($acctentry->accountcode){
-                                case "110103":
+                                case "120103":
                                     $addrpt->advances_employee = $acctentry->debit;
                                     break;
-                                case "590800":
-                                    $addrpt->cost_of_goods = $acctentry->debit;
+                                case "440601":
+                                    $addrpt->cost_of_goods = $acctentry->debit + $addrpt->cost_of_goods;
+                                    break;
+                                case "440701":
+                                    $addrpt->cost_of_goods = $acctentry->debit + $addrpt->cost_of_goods;
                                     break;
                                 case "580000":
                                     $addrpt->instructional_materials = $acctentry->debit;
@@ -171,7 +252,7 @@ class DisbursementController extends Controller
                                 case "500300":
                                     $addrpt->other_emp_benefit =$acctentry->debit;
                                     break;
-                                case "110201":
+                                case "120201":
                                     $addrpt->office_supplies = $acctentry->debit;
                                     break;
                                 case "590200":
@@ -180,14 +261,14 @@ class DisbursementController extends Controller
                                 default:
                                     $addrpt->sundry_debit = $acctentry->debit;                                   
                             }                       
-                        } else{
-                            
-                                   if($acctentry->accountcode > 110010 && $acctentry->accountcode < 110022){
+                        } 
+                        else{
+                            if($acctentry->accountcode > 110011 && $acctentry->accountcode < 110022){
                                 $addrpt->voucheramount = $acctentry->credit;
                             }else{
                                     $addrpt->sundry_credit =$acctentry->credit;
                             }      
-                        }   
+                        }
                             $addrpt->save();
                 }
                  
