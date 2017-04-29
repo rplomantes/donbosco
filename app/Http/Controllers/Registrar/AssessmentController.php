@@ -511,7 +511,16 @@ function assess(Request $request){
                             $newledger->discountcode = $discounts->discountcode;
                            }
 
-                     }
+                    }
+                    if($ledger->categoryswitch == env('DEPARTMENT_FEE')){
+                        if(isset($discounts->discountcode)){    
+        //if(count($discounts)> 0){
+                            $totaldiscount = (($ledger->amount-$ledger->discount) * ($discounts->departmentfee/100));    
+                            $newledger->otherdiscount = $totaldiscount;
+                            $newledger->discountcode = $discounts->discountcode;
+                           }
+
+                    }
                 $newledger->plandiscount = $ledger->discount;
                 $newledger->schoolyear = $schoolperiod->schoolyear;
                 $newledger->duetype = $ledger->duetype;

@@ -95,7 +95,7 @@
                                             <li>
                                                 <a href ="{{url('disbursementbook',date('Y-m-d'))}}"><i class="fa fa-btn"></i>Cash Disbursement</a>
                                                 <a href="{{url('maincollection/4',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Cash Disbursement Debit/Credit Summary </a>
-                                                <a href ="{{url('cashreceipts', date('Y-m-d'))}}"><i class="fa fa-btn"></i>Cash Receipts</a>
+                                                <a href ="{{url('cashreceipt', date('Y-m-d'))}}"><i class="fa fa-btn"></i>Cash Receipts</a>
                                                 <a href="{{url('maincollection/1',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Cash Receipt Debit/Credit Summary</a>
                                                 <a href ="#"><i class="fa fa-btn"></i>General Journal</a>
                                                  <a href="{{url('maincollection/3',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>General Journal Debit/Credit Summary </a>

@@ -15,18 +15,43 @@ class CashReceiptController extends Controller
     
     function cashreceiptbook($transactiondate){
         $rangedate = date("Y-m",strtotime($transactiondate));
+        $prevdate = date ( 'Y-m-j' ,strtotime ( '-1 day' , strtotime ( $transactiondate ) ));
+        
         DB::table('rpt_cashreceipt_books')->where('idno', \Auth::user()->idno)->delete();
+        
         $receipts = \App\Dedit::where('transactiondate',$transactiondate)->where('entry_type',1)->get();
         $this->debitcashreceipts($receipts,0);
-        $creceipts = \App\Dedit::where('transactiondate',$transactiondate)->where('entry_type',1)->groupBy('refno')->get();
-        $this->creditcashreceipts($creceipts);
-        $forwarded = \App\Dedit::whereBetween('transationdate', array($rangedate."-01",date ( 'Y-m-j' ,strtotime ( '-1 day' , strtotime ( $transactiondate ) ))))->where('entry_type',1)->get();
+        
+        $forwarded = \App\Dedit::whereBetween('transactiondate', array($rangedate."-01",date ( 'Y-m-j' ,strtotime ( '-1 day' , strtotime ( $transactiondate ) ))))->where('entry_type',1)->get();
         $this->debitcashreceipts($forwarded,1);
-        $cforwarded = \App\Dedit::whereBetween('transactiondate', array($rangedate."-01",date ( 'Y-m-j' ,strtotime ( '-1 day' , strtotime ( $transactiondate ) ))))->where('entry_type',1)->groupBy('refno')->get();
-        $this->creditcashreceipts($cforwarded);
+        
+        $creceipts = DB::Select("select d.refno, sum( if( accountingcode =420200, amount, 0 ) ) AS `elearning`, "
+                . "sum( if( accountingcode =420400, amount, 0 ) ) AS `misc` , "
+                . "sum( if( accountingcode =440400, amount, 0 ) ) AS `books` , "
+                . "sum( if( accountingcode =420100, amount, 0 ) ) AS `dept` , "
+                . "sum( if( accountingcode =420000, amount, 0 ) ) AS `registration` ,"
+                . "sum( if( accountingcode IN(120100,410000), amount, 0 ) )  AS `tuition`,"
+                . "sum( if( accountingcode =210400, amount, 0 ) )  AS `creservation`,"
+                . "sum( if( accountingcode NOT IN (120100,410000,420000,420100,440400,420400,420200,210400), "
+                . "amount, 0 ) )  AS others from credits join rpt_cashreceipt_books d "
+                . "on credits.refno = d.refno where d.idno = '".\Auth::user()->idno."'"
+                . "group by credits.refno");
+        $this->creditcashreceipts($creceipts);
+        
         $currTrans = \App\RptCashreceiptBook::where('idno', \Auth::user()->idno)->where('totalindic',0)->get();
         $forwarder = \App\RptCashreceiptBook::where('idno', \Auth::user()->idno)->where('totalindic',1)->where('isreverse',0)->get();
         return view('accounting.cashreceipts',compact('transactiondate','currTrans','forwarder'));
+    }
+    
+    function cashreceiptpdf(){
+        $currTrans = \App\RptCashreceiptBook::where('idno', \Auth::user()->idno)->where('totalindic',0)->get();
+        $forwarder = \App\RptCashreceiptBook::where('idno', \Auth::user()->idno)->where('totalindic',1)->where('isreverse',0)->get();
+        $date = \App\RptCashreceiptBook::where('idno', \Auth::user()->idno)->where('totalindic',0)->first()->transactiondate;
+        
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->setPaper('legal','landscape');
+        $pdf->loadView('print.cashreceiptspdf',compact('currTrans','forwarder','date'));
+        return $pdf->stream();
     }
     
     function debitcashreceipts($receipts,$indic){
@@ -72,41 +97,20 @@ class CashReceiptController extends Controller
         foreach($receipts as $receipt){
             $existing = \App\Credit::where('refno',$receipt->refno)->exists();
             if($existing){
-                $credits = \App\Credit::where('refno',$receipt->refno)->get();
-                foreach($credits as $credit){
-                    $record = \App\RptCashreceiptBook::where('refno',$receipt->refno)->first();
-                    switch($credit->accountingcode){
-                        case 420200:
-                            $record->elearning = $record->elearning + $credit->amount;
-                            break;
-                        case 420400:
-                            $record->misc = $record->misc + $credit->amount;
-                            break;
-                        case 440400:
-                            $record->book = $record->book + $credit->amount;
-                            break;
-                        case 420100:
-                            $record->dept = $record->dept + $credit->amount;
-                            break;
-                        case 420000:
-                            $record->registration = $record->registration + $credit->amount;
-                            break;
-                        case 410100:
-                            $record->tuition = $record->tuition + $credit->amount;
-                            break;
-                        case 410000:
-                            $record->tuition =  $record->tuition + $credit->amount;
-                            break;
-                        case 210400:
-                            $record->creservation = $record->creservation + $credit->amount;
-                            break;
-                        default:
-                            $record->csundry = $record->csundry + $credit->amount;
-                            break;
-                    }
-                    $record->save();
-                }
+                $record = \App\RptCashreceiptBook::where('refno',$receipt->refno)->first();
+                $record->elearning = $receipt->elearning;
+                $record->misc = $receipt->misc;
+                $record->book =$receipt->books;
+                $record->dept = $receipt->dept;
+                $record->registration = $receipt->registration;
+                $record->tuition =  $receipt->tuition;
+                $record->creservation = $receipt->creservation;
+                $record->csundry =$receipt->others;
+                $record->save();
+                
             }
+            
+            
         }
     }
     
@@ -251,7 +255,7 @@ foreach ($collections as $collection){
   
     
     //FORWARD BALANCE
-    $totalmonthbal = DB::Select("SELECT sum(cash) as cash,sum(discount) as discount,sum(d.reservation) as dreserve,sum(fape) as fape, sum(student_deposit) as deposit,sum(elearning) as elearning,sum() as misc,sum(dept) as dept,sum(registration) as registration,sum(tuition) as tuition,sum(reservation) as reservation,sum(others) as others FROM `receiptdedits` d join receiptcredits c on d.refno = c.refno where "
+    $totalmonthbal = DB::Select("SELECT sum(cash) as cash,sum(discount) as discount,sum(d.reservation) as dreserve,sum(fape) as fape, sum(student_deposit) as deposit,sum(books) as books,sum(elearning) as elearning,sum(misc) as misc,sum(dept) as dept,sum(registration) as registration,sum(tuition) as tuition,sum(c.reservation) as creservation,sum(others) as others FROM `receiptdedits` d join receiptcredits c on d.refno = c.refno where "
                 . "d.isreverse = '0' and d.transactiondate like '$wilddate' and d.transactiondate < '$transactiondate'");
     
     

@@ -7,6 +7,9 @@
             .payee{font-size:10pt;font-weight: bold}
 	    body{height:100%;}
 		html{margin:0px;}
+            @page { 
+              size: portrait; 
+            }
         </style>
     </head>
     <body style="vertical-align:middle;margin-left:372.8px">

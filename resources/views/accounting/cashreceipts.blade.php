@@ -1,6 +1,14 @@
 @extends('appaccounting')
 @section('content')
 <div class="container-fluid">
+    <h3>Cash Receipt Report</h3>
+    
+    <div class="form-group">
+        <div class="col-md-2">
+            <label>For : </label>
+            <input type="text" id="fromtran" class="form-control" value="{{$transactiondate}}" readonly="readonly">
+        </div>    
+    </div>
     <table class="table table-borderless">
         <thead>
             <tr>
@@ -53,42 +61,74 @@
                 $others = $others + $forward->csundry;
             }
         }
+        
+        $totalcash = 0;
+        $totaldiscount = 0;
+        $totalfape = 0;
+        $totaldreservation = 0;
+        $totaldeposit = 0;
+        $totalelearning = 0;
+        $totalmisc = 0;
+        $totalbook = 0;
+        $totaldepartment = 0;
+        $totalregistration = 0;
+        $totaltuition = 0;
+        $totalcreservation = 0;
+        $totalothers = 0;
         ?>
         <tbody>
             <tr>
                 <td colspan="2">Balance brought forward</td>
-                <td>{{$cash}}</td>
-                <td>{{$discount}}</td>
-                <td>{{$fape}}</td>
-                <td>{{$dreservation}}</td>
-                <td>{{$deposit}}</td>
-                <td>{{$elearning}}</td>
-                <td>{{$misc}}</td>
-                <td>{{$book}}</td>
-                <td>{{$department}}</td>
-                <td>{{$registration}}</td>
-                <td>{{$tuition}}</td>
-                <td>{{$creservation}}</td>
-                <td>{{$others}}</td>
+                <td>{{number_format($cash, 2, '.', ',')}}</td>
+                <td>{{number_format($discount, 2, '.', ',')}}</td>
+                <td>{{number_format($fape, 2, '.', ',')}}</td>
+                <td>{{number_format($dreservation, 2, '.', ',')}}</td>
+                <td>{{number_format($deposit, 2, '.', ',')}}</td>
+                <td>{{number_format($elearning, 2, '.', ',')}}</td>
+                <td>{{number_format($misc, 2, '.', ',')}}</td>
+                <td>{{number_format($book, 2, '.', ',')}}</td>
+                <td>{{number_format($department, 2, '.', ',')}}</td>
+                <td>{{number_format($registration, 2, '.', ',')}}</td>
+                <td>{{number_format($tuition, 2, '.', ',')}}</td>
+                <td>{{number_format($creservation, 2, '.', ',')}}</td>
+                <td>{{number_format($others, 2, '.', ',')}}</td>
                 <td></td>
             </tr>
             @foreach($currTrans as $trans)
+            <?php
+                if($trans->isreverse == 0){
+                    $totalcash = $totalcash + $trans->cash;
+                    $totaldiscount = $totaldiscount + $trans->discount;
+                    $totalfape = $totalfape + $trans->fape;
+                    $totaldreservation = $totaldreservation + $trans->dreservation;
+                    $totaldeposit = $totaldeposit + $trans->deposit;
+                    $totalelearning = $totalelearning + $trans->elearning;
+                    $totalmisc = $totalmisc + $trans->misc;
+                    $totalbook = $totalbook + $trans->book;
+                    $totaldepartment = $totaldepartment + $trans->dept;
+                    $totalregistration = $totalregistration + $trans->registration;
+                    $totaltuition = $totaltuition + $trans->tuition;
+                    $totalcreservation = $totalcreservation + $trans->creservation;
+                    $totalothers = $totalothers + $trans->csundry;
+                }
+            ?>
+            
             <tr>
                 <td>{{$trans->receiptno}}</td>
                 <td>{{$trans->from}}</td>
-                <td>{{$trans->cash}}</td>
-                <td>{{$trans->discount}}</td>
-                <td>{{$trans->fape}}</td>
-                <td>{{$trans->dreservation}}</td>
-                <td>{{$trans->deposit}}</td>
-                <td>{{$trans->elearning}}</td>
-                <td>{{$trans->misc}}</td>
-                <td>{{$trans->book}}</td>
-                <td>{{$trans->dept}}</td>
-                <td>{{$trans->registration}}</td>
-                <td>{{$trans->tuition}}</td>
-                <td>{{$trans->creservation}}</td>
-                <td>{{$trans->csundry}}</td>
+                <td>{{number_format($trans->cash, 2, '.', ',')}}</td>
+                <td>{{number_format($trans->discount, 2, '.', ',')}}</td>
+                <td>{{number_format($trans->fape, 2, '.', ',')}}</td>
+                <td>{{number_format($trans->dreservation, 2, '.', ',')}}</td>
+                <td>{{number_format($trans->deposit, 2, '.', ',')}}</td>
+                <td>{{number_format($trans->elearning, 2, '.', ',')}}</td>
+                <td>{{number_format($trans->misc, 2, '.', ',')}}</td>
+                <td>{{number_format($trans->book, 2, '.', ',')}}</td>
+                <td>{{number_format($trans->dept, 2, '.', ',')}}</td>
+                <td>{{number_format($trans->registration, 2, '.', ',')}}</td>
+                <td>{{number_format($trans->tuition, 2, '.', ',')}}</td>
+                <td>{{number_format($trans->creservation, 2, '.', ',')}}</td>
+                <td>{{number_format($trans->csundry, 2, '.', ',')}}</td>
                 <td>
                     @if($trans->isreverse == 0)
                         OK
@@ -98,7 +138,43 @@
                 </td>
             </tr>
             @endforeach
+            <tr>
+                <td colspan="2">Total</td>
+                <td>{{number_format($totalcash, 2, '.', ',')}}</td>
+                <td>{{number_format($totaldiscount, 2, '.', ',')}}</td>
+                <td>{{number_format($totalfape, 2, '.', ',')}}</td>
+                <td>{{number_format($totaldreservation, 2, '.', ',')}}</td>
+                <td>{{number_format($totaldeposit, 2, '.', ',')}}</td>
+                <td>{{number_format($totalelearning, 2, '.', ',')}}</td>
+                <td>{{number_format($totalmisc, 2, '.', ',')}}</td>
+                <td>{{number_format($totalbook, 2, '.', ',')}}</td>
+                <td>{{number_format($totaldepartment, 2, '.', ',')}}</td>
+                <td>{{number_format($totalregistration, 2, '.', ',')}}</td>
+                <td>{{number_format($totaltuition, 2, '.', ',')}}</td>
+                <td>{{number_format($totalcreservation, 2, '.', ',')}}</td>
+                <td>{{number_format($totalothers, 2, '.', ',')}}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="2">Current Balance</td>
+                <td>{{number_format($totalcash+$cash, 2, '.', ',')}}</td>
+                <td>{{number_format($totaldiscount+$discount, 2, '.', ',')}}</td>
+                <td>{{number_format($totalfape+$fape, 2, '.', ',')}}</td>
+                <td>{{number_format($totaldreservation+$dreservation, 2, '.', ',')}}</td>
+                <td>{{number_format($totaldeposit+$deposit, 2, '.', ',')}}</td>
+                <td>{{number_format($totalelearning+$elearning, 2, '.', ',')}}</td>
+                <td>{{number_format($totalmisc+$misc, 2, '.', ',')}}</td>
+                <td>{{number_format($totalbook+$book, 2, '.', ',')}}</td>
+                <td>{{number_format($totaldepartment+$department, 2, '.', ',')}}</td>
+                <td>{{number_format($totalregistration+$registration, 2, '.', ',')}}</td>
+                <td>{{number_format($totaltuition+$tuition, 2, '.', ',')}}</td>
+                <td>{{number_format($totalcreservation+$creservation, 2, '.', ',')}}</td>
+                <td>{{number_format($totalothers+$others, 2, '.', ',')}}</td>
+                <td></td>
+            </tr>
         </tbody>
     </table>
+    
+    <a href="/printcashreceipt" class="btn btn-primary col-md-12">Print</a>
 </div>
 @stop
