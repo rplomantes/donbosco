@@ -14,6 +14,7 @@ class CashReceiptController extends Controller
     }
     
     function cashreceiptbook($transactiondate){
+        session()->put('cashdate', $transactiondate);
         $rangedate = date("Y-m",strtotime($transactiondate));
         $prevdate = date ( 'Y-m-j' ,strtotime ( '-1 day' , strtotime ( $transactiondate ) ));
         
@@ -46,7 +47,11 @@ class CashReceiptController extends Controller
     function cashreceiptpdf(){
         $currTrans = \App\RptCashreceiptBook::where('idno', \Auth::user()->idno)->where('totalindic',0)->get();
         $forwarder = \App\RptCashreceiptBook::where('idno', \Auth::user()->idno)->where('totalindic',1)->where('isreverse',0)->get();
-        $date = \App\RptCashreceiptBook::where('idno', \Auth::user()->idno)->where('totalindic',0)->first()->transactiondate;
+        if(count($currTrans)> 0){
+            $date = \App\RptCashreceiptBook::where('idno', \Auth::user()->idno)->where('totalindic',0)->first()->transactiondate;
+        }else{
+            $date = session('cashdate');
+        }
         
         $pdf = \App::make('dompdf.wrapper');
         $pdf->setPaper('legal','landscape');

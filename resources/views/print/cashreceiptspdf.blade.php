@@ -90,7 +90,8 @@
             <h4 style="text-align: center;margin-top:5px;margin-bottom: 0px;padding-bottom: 0px;font-size: 15pt;">Cash Receipt</h4>
             <p style="text-align: center;margin-top:5px;margin-bottom: 0px;padding-bottom: 0px;font-size: 12pt;">For <span id="dates" >{{date("l, F d, Y",strtotime($date))}}</span></p>
         </div>
-        <div id="footer">Page <span class="pagenum"></span></div>
+        <div id="footer">Page <span class="pagenum"></span></div>    
+        @if(count($currTrans)> 0 )
         @while($index <= count($currTrans)-1)
         <?php
         $tablecash = 0;
@@ -112,7 +113,6 @@
      style="page-break-before: always"
      @endif
      >
-     
             <table cellspacing="0" border="0" width="100%" style="font-size: 13px;page-break-inside: auto;">
                 <thead>
                     <tr>
@@ -268,7 +268,93 @@
                 @endif
             </table>
         </div>
-        @endwhile      
+        @endwhile   
+    @else
+    
+    <div id="content" width="100%"  
+     @if($index != 0)
+     style="page-break-before: always"
+     @endif
+     >
+            <table cellspacing="0" border="0" width="100%" style="font-size: 13px;page-break-inside: auto;">
+                <thead>
+                    <tr>
+                        <th>Receipt No.</th>
+                        <th width="150px">Name</th>
+                        <th>Debit <br> Cash/Checks</th>
+                        <th>Debit <br> Discount</th>
+                        <th>Debit <br> FAPE</th>
+                        <th>Debit <br> Reservation</th>
+                        <th>Debit <br> Deposit</th>
+                        <th>E-learning</th>
+                        <th>Misc</th>
+                        <th>Books</th>
+                        <th>Department <br> Facilities</th>
+                        <th>Registration</th>
+                        <th>Tuition</th>
+                        <th>Reservation</th>
+                        <th>Others</th>
+                        <th>Status</th>
+                    </tr>
+                    
+                    <tr style="text-align: right">
+                        <td colspan="2" style="text-align: left">Balance brought forward</td>
+                        <td>{{number_format($cash, 2, '.', ',')}}</td>
+                        <td>{{number_format($discount, 2, '.', ',')}}</td>
+                        <td>{{number_format($fape, 2, '.', ',')}}</td>
+                        <td>{{number_format($dreservation, 2, '.', ',')}}</td>
+                        <td>{{number_format($deposit, 2, '.', ',')}}</td>
+                        <td>{{number_format($elearning, 2, '.', ',')}}</td>
+                        <td>{{number_format($misc, 2, '.', ',')}}</td>
+                        <td>{{number_format($book, 2, '.', ',')}}</td>
+                        <td>{{number_format($department, 2, '.', ',')}}</td>
+                        <td>{{number_format($registration, 2, '.', ',')}}</td>
+                        <td>{{number_format($tuition, 2, '.', ',')}}</td>
+                        <td>{{number_format($creservation, 2, '.', ',')}}</td>
+                        <td>{{number_format($others, 2, '.', ',')}}</td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr><td colspan='16' height="50px">&nbsp;</td></tr>
+                    <tr>
+                        <td colspan='2'><b>Total</b></td>
+                        <td class="cash">{{number_format($totalcash, 2, '.', ',')}}</td>
+                        <td class="cash">{{number_format($totaldiscount, 2, '.', ',')}}</td>
+                        <td class="cash">{{number_format($totalfape, 2, '.', ',')}}</td>
+                        <td class="cash">{{number_format($totaldreservation, 2, '.', ',')}}</td>
+                        <td class="cash">{{number_format($totaldeposit, 2, '.', ',')}}</td>
+                        <td class="cash">{{number_format($totalelearning, 2, '.', ',')}}</td>
+                        <td class="cash">{{number_format($totalmisc, 2, '.', ',')}}</td>
+                        <td class="cash">{{number_format($totalbook, 2, '.', ',')}}</td>
+                        <td class="cash">{{number_format($totaldepartment, 2, '.', ',')}}</td>
+                        <td class="cash">{{number_format($totalregistration, 2, '.', ',')}}</td>
+                        <td class="cash">{{number_format($totaltuition, 2, '.', ',')}}</td>
+                        <td class="cash">{{number_format($totalcreservation, 2, '.', ',')}}</td>
+                        <td class="cash">{{number_format($totalothers, 2, '.', ',')}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan='2'><b>Current Balance</b></td>
+                        <td class="cash">{{number_format($totalcash + $cash, 2, '.', ',')}}</td>
+                        <td class="cash">{{number_format($totaldiscount + $discount, 2, '.', ',')}}</td>
+                        <td class="cash">{{number_format($totalfape + $fape, 2, '.', ',')}}</td>
+                        <td class="cash">{{number_format($totaldreservation + $dreservation, 2, '.', ',')}}</td>
+                        <td class="cash">{{number_format($totaldeposit + $deposit, 2, '.', ',')}}</td>
+                        <td class="cash">{{number_format($totalelearning +$elearning, 2, '.', ',')}}</td>
+                        <td class="cash">{{number_format($totalmisc + $misc, 2, '.', ',')}}</td>
+                        <td class="cash">{{number_format($totalbook + $book, 2, '.', ',')}}</td>
+                        <td class="cash">{{number_format($totaldepartment + $department, 2, '.', ',')}}</td>
+                        <td class="cash">{{number_format($totalregistration + $registration, 2, '.', ',')}}</td>
+                        <td class="cash">{{number_format($totaltuition + $tuition, 2, '.', ',')}}</td>
+                        <td class="cash">{{number_format($totalcreservation + $creservation, 2, '.', ',')}}</td>
+                        <td class="cash">{{number_format($totalothers + $others, 2, '.', ',')}}</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+        </table>
+</div>
+    @endif
         
 
 
