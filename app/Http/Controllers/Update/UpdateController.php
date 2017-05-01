@@ -11,12 +11,12 @@ use Carbon\Carbon;
 class UpdateController extends Controller
 {
     function updateDiscount(){
-        $discounts = DB::Select("SELECT * FROM  `discounts` WHERE  `description` !=  '3rd Sibling' AND  `schoolyear` LIKE  '2017' and discountcode = '004' GROUP BY idno");
+        $discounts = DB::Select("SELECT * FROM  `discounts` WHERE  `description` !=  '3rd Sibling' AND  `schoolyear` LIKE  '2017' and tuitionfee = 100 GROUP BY idno");
         
         foreach ($discounts as $discount){
             if($discount->tuitionfee > 0){
-                $this->makecredit($discount->idno,120100,$discount->discountcode);
-                echo $discount->idno."<br>";
+                $disc = $this->makecredit($discount->idno,120100,$discount->discountcode);
+                echo $discount->idno." - ".$disc." - ".$discount->discountcode."<br>";
             }
 
         }
@@ -25,58 +25,64 @@ class UpdateController extends Controller
     }
     
     function makecredit($idno,$acctcode,$discountcode){
-        $ledgers = DB::Select("Select * from ledgers where idno = '$idno' and accountingcode = '$acctcode' and schoolyear= '2017' and discountcode = '$discountcode'"); 
-        $creds = \App\Credit::where('schoolyear','2017')->where('accountingcode','420400')->first();
-        $student = \App\Dedit::where('refno',$creds->refno)->first();
-        $discount = 0;
-        foreach($ledgers as $ledger){
-            $discount = $discount + $ledger->amount;
-            
-            $credit = new \App\Credit;
-               $credit->idno=$idno;
-               $credit->transactiondate = $creds->transactiondate;
-               $credit->referenceid = $ledger->id;
-               $credit->refno = $creds->refno;
-               $credit->receiptno = $creds->receiptno;
-               $credit->accountingcode = $ledger->accountingcode;
-               $credit->categoryswitch = $ledger->categoryswitch;
-               $credit->acctcode = $ledger->acctcode;
-               $credit->description = $ledger->description;
-               $credit->receipt_details = $ledger->receipt_details;
-               $credit->duedate=$ledger->duedate;
-               $credit->amount=$ledger->amount;
-               $credit->entry_type='1';
-               $credit->acct_department=$ledger->acct_department;
-               $credit->sub_department=$ledger->sub_department;
-               $credit->fiscalyear=2016;
-               $credit->schoolyear=$ledger->schoolyear;
-               $credit->period=$ledger->period;
-               $credit->postedby=$creds->postedby;
-               $credit->save();
-               
-        }
+        $ledgers = DB::Select("Select * from ledgers where idno = '$idno' and accountingcode = '$acctcode' and schoolyear= '2017' and discountcode = '$discountcode' and amount-otherdiscount = 0"); 
+        $creds = \App\Credit::where('idno',$idno)->where('schoolyear','2017')->where('accountingcode','420400')->orderBy('id','desc')->first();
+        if(count($creds)>0){
+            $student = \App\Dedit::where('refno',$creds->refno)->first();
+            $discount = 0;
+            foreach($ledgers as $ledger){
+                $discount = $discount + $ledger->amount;
 
-            $debit = new \App\Dedit;
-            $debit->idno = $idno;
-            $debit->transactiondate = $creds->transactiondate;
-            $debit->refno = $creds->refno;
-            $debit->receiptno = $creds->receiptno;
-            $debit->paymenttype= "4";
-            $debit->entry_type="1";
-        if($discountcode == '004'){
-            $debit->acctcode = "Other Employees Benefits";
-            $debit->accountingcode='500300';
+                $credit = new \App\Credit;
+                   $credit->idno=$idno;
+                   $credit->transactiondate = $creds->transactiondate;
+                   $credit->referenceid = $ledger->id;
+                   $credit->refno = $creds->refno;
+                   $credit->receiptno = $creds->receiptno;
+                   $credit->accountingcode = $ledger->accountingcode;
+                   $credit->categoryswitch = $ledger->categoryswitch;
+                   $credit->acctcode = $ledger->acctcode;
+                   $credit->description = $ledger->description;
+                   $credit->receipt_details = $ledger->receipt_details;
+                   $credit->duedate=$ledger->duedate;
+                   $credit->amount=$ledger->amount;
+                   $credit->entry_type='1';
+                   $credit->acct_department=$ledger->acct_department;
+                   $credit->sub_department=$ledger->sub_department;
+                   $credit->fiscalyear=2016;
+                   $credit->schoolyear=$ledger->schoolyear;
+                   $credit->period=$ledger->period;
+                   $credit->postedby=$creds->postedby;
+                   $credit->save();
+
+            }
+
+                $debit = new \App\Dedit;
+                $debit->idno = $idno;
+                $debit->transactiondate = $creds->transactiondate;
+                $debit->refno = $creds->refno;
+                $debit->receiptno = $creds->receiptno;
+                $debit->paymenttype= "4";
+                $debit->entry_type="1";
+            if($discountcode == '004'){
+                $debit->acctcode = "Other Employees Benefits";
+                $debit->accountingcode='500300';
+            }else{
+                $debit->acctcode = "Youth Assistance";
+                $debit->accountingcode='530200';
+            }
+                $debit->amount = $discount;
+                $debit->receivefrom=$student->receivefrom;
+                $debit->remarks=$student->remarks;
+                $debit->schoolyear=$creds->schoolyear;
+                $debit->fiscalyear=$creds->fiscalyear;
+                $debit->postedby= $creds->postedby;
+                $debit->save();
+
+                return $discount;
         }else{
-            $debit->acctcode = "Youth Assistance";
-            $debit->accountingcode='530200';
+            return "No Record";
         }
-            $debit->amount = $discount;
-            $debit->receivefrom=$student->receivefrom;
-            $debit->remarks=$student->remarks;
-            $debit->schoolyear=$creds->schoolyear;
-            $debit->fiscalyear=$creds->fiscalyear;
-            $debit->postedby= $creds->postedby;
-            $debit->save();
     }
     
     function updatehsconduct(){

@@ -47,11 +47,13 @@ class CashReceiptController extends Controller
     function cashreceiptpdf(){
         $currTrans = \App\RptCashreceiptBook::where('idno', \Auth::user()->idno)->where('totalindic',0)->get();
         $forwarder = \App\RptCashreceiptBook::where('idno', \Auth::user()->idno)->where('totalindic',1)->where('isreverse',0)->get();
+        //$forwarder = DB::Select("select sum(`cash`) as cash,sum(`discount`) as discount,sum(`fape`) as fape,sum(`dreservation`) as dreservation,sum(`deposit`) as deposit,sum(`elearning`) as elearning,sum(`book`) as book,sum(`dept`) as department,sum(`registration`) as registration,sum(`tuition`) as tuition,sum(`creservation`) as creservation,sum(`csundry`) as csundry,sum(`misc`) as misc from `rpt_cashreceipt_books` where `idno` = '".\Auth::user()->idno."' and `totalindic` = 1 and `isreverse` = 0");
         if(count($currTrans)> 0){
             $date = \App\RptCashreceiptBook::where('idno', \Auth::user()->idno)->where('totalindic',0)->first()->transactiondate;
         }else{
             $date = session('cashdate');
         }
+        
         
         $pdf = \App::make('dompdf.wrapper');
         $pdf->setPaper('legal','landscape');

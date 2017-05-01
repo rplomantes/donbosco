@@ -15,7 +15,7 @@
     <?php
         $repeatrot = true;
         $noOfrecords = count($currTrans);
-        $rows = 33;
+        $rows = 32;
         $index = 0;
         
         
@@ -117,7 +117,7 @@
                 <thead>
                     <tr>
                         <th>Receipt No.</th>
-                        <th width="150px">Name</th>
+                        <th width="200px">Name</th>
                         <th>Debit <br> Cash/Checks</th>
                         <th>Debit <br> Discount</th>
                         <th>Debit <br> FAPE</th>
@@ -152,7 +152,7 @@
                         <td></td>
                     </tr>
                 </thead>
-                <?php $currrows = 1; ?>
+                <?php $currrows = 0; ?>
                 @while($currrows < $rows && $index <= count($currTrans)-1)
                         @if($currTrans[$index]['isreverse'] == 0)
                         <tr>
@@ -175,6 +175,17 @@
                         </tr>
                         
                         <?php
+	                    if(strlen($currTrans[$index]['from'])<=27){
+        	                $currrows++;
+                	    }elseif(strlen($currTrans[$index]['from'])<=54){
+	                        $currrows=$currrows+2;
+        	            }elseif(strlen($currTrans[$index]['from'])<=81){
+                	        $currrows=$currrows+3;
+	                    }else{
+        	                $currrows=$currrows+4;
+	                    }
+
+
                         $tablecash = $tablecash + $currTrans[$index]['cash'];
                         $tablediscount = $tablecash + $currTrans[$index]['discount'];
                         $tablefape = $tablefape + $currTrans[$index]['fape'];
@@ -194,20 +205,12 @@
                         <tr>
                             <td>{{$currTrans[$index]['receiptno']}}</td>
                             <td colspan="15" style="text-align: center">Cancelled</td>
+			<?php
+				$currrows++;
+			?>
                         </tr>
                         @endif
                 <?php 
-                    
-                    if(strlen($currTrans[$index]['from'])<=17){
-                        $currrows++;
-                    }elseif(strlen($currTrans[$index]['from'])<=34){
-                        $currrows=$currrows+2;
-                    }elseif(strlen($currTrans[$index]['from'])<=51){
-                        $currrows=$currrows+3;
-                    }else{
-                        $currrows=$currrows+4;
-                    }
-                    
                     $index++;
                 ?>
                 @endwhile
@@ -357,4 +360,5 @@
     @endif
 </body>
 </html>
+
 
