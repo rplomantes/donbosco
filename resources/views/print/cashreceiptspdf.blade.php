@@ -15,7 +15,7 @@
     <?php
         $repeatrot = true;
         $noOfrecords = count($currTrans);
-        $rows = 32;
+        $rows = 25;
         $index = 0;
         
         
@@ -109,9 +109,7 @@
         $tableothers = 0;
         ?>
 <div id="content" width="100%"  
-     @if($index != 0)
-     style="page-break-before: always"
-     @endif
+     style="page-break-after: always"
      >
             <table cellspacing="0" border="0" width="100%" style="font-size: 13px;page-break-inside: auto;">
                 <thead>
@@ -131,7 +129,6 @@
                         <th>Tuition</th>
                         <th>Reservation</th>
                         <th>Others</th>
-                        <th>Status</th>
                     </tr>
                     
                     <tr style="text-align: right">
@@ -149,7 +146,6 @@
                         <td>{{number_format($tuition, 2, '.', ',')}}</td>
                         <td>{{number_format($creservation, 2, '.', ',')}}</td>
                         <td>{{number_format($others, 2, '.', ',')}}</td>
-                        <td></td>
                     </tr>
                 </thead>
                 <?php $currrows = 0; ?>
@@ -157,7 +153,40 @@
                         @if($currTrans[$index]['isreverse'] == 0)
                         <tr>
                             <td>{{$currTrans[$index]['receiptno']}}</td>
+
+			    @if(strlen($currTrans[$index]['from'])>0)
                             <td>{{$currTrans[$index]['from']}}</td>
+				<?php
+                            if(strlen($currTrans[$index]['from'])<=28){
+                                $currrows++;
+                            }elseif(strlen($currTrans[$index]['from'])<=56){
+                                $currrows=$currrows+2;
+                            }elseif(strlen($currTrans[$index]['from'])<=84){
+                                $currrows=$currrows+3;
+                            }else{
+                                $currrows=$currrows+4;
+                            }
+				?>
+			    @else
+				<?php
+					$refno = $currTrans[$index]['refno'];
+					$idno = \App\Credit::where('refno',$refno)->first()->idno;
+					$student = \App\User::where('idno',$idno)->first();
+					$name = $student->lastname.", ".$student->firstname." ".$student->middlename;
+
+                            if(strlen($name)<=28){
+                                $currrows++;
+                            }elseif(strlen($name)<=56){
+                                $currrows=$currrows+2;
+                            }elseif(strlen($name)<=84){
+                                $currrows=$currrows+3;
+                            }else{
+                                $currrows=$currrows+4;
+                            }
+
+				?>
+				<td>{{$student->lastname}}, {{$student->firstname}} {{$student->middlename}}</td>
+			    @endif
                             <td class="cash">{{number_format($currTrans[$index]['cash'], 2, '.', ',')}}</td>
                             <td class="cash">{{number_format($currTrans[$index]['discount'], 2, '.', ',')}}</td>
                             <td class="cash">{{number_format($currTrans[$index]['fape'], 2, '.', ',')}}</td>
@@ -171,23 +200,11 @@
                             <td class="cash">{{number_format($currTrans[$index]['tuition'], 2, '.', ',')}}</td>
                             <td class="cash">{{number_format($currTrans[$index]['creservation'], 2, '.', ',')}}</td>
                             <td class="cash">{{number_format($currTrans[$index]['csundry'], 2, '.', ',')}}</td>
-                            <td style='text-align: center'>OK</td>
                         </tr>
                         
                         <?php
-	                    if(strlen($currTrans[$index]['from'])<=27){
-        	                $currrows++;
-                	    }elseif(strlen($currTrans[$index]['from'])<=54){
-	                        $currrows=$currrows+2;
-        	            }elseif(strlen($currTrans[$index]['from'])<=81){
-                	        $currrows=$currrows+3;
-	                    }else{
-        	                $currrows=$currrows+4;
-	                    }
-
-
                         $tablecash = $tablecash + $currTrans[$index]['cash'];
-                        $tablediscount = $tablecash + $currTrans[$index]['discount'];
+                        $tablediscount = $tablediscount + $currTrans[$index]['discount'];
                         $tablefape = $tablefape + $currTrans[$index]['fape'];
                         $tabledreservation = $tabledreservation + $currTrans[$index]['dreservation'];
                         $tabledeposit = $tabledeposit + $currTrans[$index]['deposit'];
@@ -204,7 +221,7 @@
                         @else
                         <tr>
                             <td>{{$currTrans[$index]['receiptno']}}</td>
-                            <td colspan="15" style="text-align: center">Cancelled</td>
+                            <td colspan="14" style="text-align: left">Cancelled</td>
 			<?php
 				$currrows++;
 			?>
@@ -229,10 +246,8 @@
                         <td class="cash">{{number_format($tabletuition, 2, '.', ',')}}</td>
                         <td class="cash">{{number_format($tablecreservation, 2, '.', ',')}}</td>
                         <td class="cash">{{number_format($tableothers, 2, '.', ',')}}</td>
-                        <td></td>
                 </tr>
-                
-                @if($index >= count($currTrans)-1)
+                @if($index >= count($currTrans))
                 <tr><td colspan='16' height="50px">&nbsp;</td></tr>
                     <tr>
                         <td colspan='2'><b>Total</b></td>
@@ -275,9 +290,7 @@
     @else
     
     <div id="content" width="100%"  
-     @if($index != 0)
-     style="page-break-before: always"
-     @endif
+     style="page-break-after: always"
      >
             <table cellspacing="0" border="0" width="100%" style="font-size: 13px;page-break-inside: auto;">
                 <thead>
@@ -297,7 +310,6 @@
                         <th>Tuition</th>
                         <th>Reservation</th>
                         <th>Others</th>
-                        <th>Status</th>
                     </tr>
                     
                     <tr style="text-align: right">
@@ -315,7 +327,6 @@
                         <td>{{number_format($tuition, 2, '.', ',')}}</td>
                         <td>{{number_format($creservation, 2, '.', ',')}}</td>
                         <td>{{number_format($others, 2, '.', ',')}}</td>
-                        <td></td>
                     </tr>
                 </thead>
                 <tbody>
@@ -335,7 +346,6 @@
                         <td class="cash">{{number_format($totaltuition, 2, '.', ',')}}</td>
                         <td class="cash">{{number_format($totalcreservation, 2, '.', ',')}}</td>
                         <td class="cash">{{number_format($totalothers, 2, '.', ',')}}</td>
-                        <td></td>
                     </tr>
                     <tr>
                         <td colspan='2'><b>Current Balance</b></td>
@@ -352,7 +362,6 @@
                         <td class="cash">{{number_format($totaltuition + $tuition, 2, '.', ',')}}</td>
                         <td class="cash">{{number_format($totalcreservation + $creservation, 2, '.', ',')}}</td>
                         <td class="cash">{{number_format($totalothers + $others, 2, '.', ',')}}</td>
-                        <td></td>
                     </tr>
                 </tbody>
         </table>

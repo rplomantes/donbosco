@@ -6,6 +6,7 @@
     Route::get('/', 'MainController@index');
     Route::get('cashreceipt/{transactiondate}','Accounting\CashReceiptController@cashreceiptbook');
     Route::get('printcashreceipt','Accounting\CashReceiptController@cashreceiptpdf');
+    Route::get('printcashbreakdown/{fromtran}/{totran}','Accounting\CashReceiptController@breakdownpdf');
     //Book Store Module
     Route::get('deptincome/{fromtran}/{totran}', 'Accounting\DeptIncomeController@index');
     Route::get('books/{idno}', 'Miscellaneous\BookController@index');

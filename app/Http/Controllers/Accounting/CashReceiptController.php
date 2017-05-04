@@ -38,10 +38,10 @@ class CashReceiptController extends Controller
                 . "on credits.refno = d.refno where d.idno = '".\Auth::user()->idno."'"
                 . "group by credits.refno");
         $this->creditcashreceipts($creceipts);
-        
+        $breakdown = DB::Select("Select accountingcode, acctcode, sum(amount) as amount from credits where accountingcode NOT IN (120100,410000,420000,420100,440400,420400,420200,210400) and transactiondate = '$transactiondate' and entry_type = 1 and isreverse = 0 group by accountingcode order by accountingcode");
         $currTrans = \App\RptCashreceiptBook::where('idno', \Auth::user()->idno)->where('totalindic',0)->get();
         $forwarder = \App\RptCashreceiptBook::where('idno', \Auth::user()->idno)->where('totalindic',1)->where('isreverse',0)->get();
-        return view('accounting.cashreceipts',compact('transactiondate','currTrans','forwarder'));
+        return view('accounting.cashreceipts',compact('transactiondate','currTrans','forwarder','breakdown'));
     }
     
     function cashreceiptpdf(){
@@ -58,6 +58,15 @@ class CashReceiptController extends Controller
         $pdf = \App::make('dompdf.wrapper');
         $pdf->setPaper('legal','landscape');
         $pdf->loadView('print.cashreceiptspdf',compact('currTrans','forwarder','date'));
+        return $pdf->stream();
+    }
+
+    function breakdownpdf($fromtran,$totran){
+        $breakdown = DB::Select("Select accountingcode, acctcode, sum(amount) as amount from credits where accountingcode NOT IN (120100,410000,420000,420100,440400,420400,420200,210400) and (transactiondate between '$fromtran' and '$totran') and entry_type = 1 and isreverse = 0 group by accountingcode order by accountingcode");
+
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->setPaper('legal','portrait');
+        $pdf->loadView('print.printbreakdownpdf',compact('breakdown','fromtran','totran'));
         return $pdf->stream();
     }
     

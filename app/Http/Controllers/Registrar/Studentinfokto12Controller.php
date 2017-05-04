@@ -25,7 +25,7 @@ class Studentinfokto12Controller extends Controller
     }
 
     public function studentinfokto12edit($idno){
-        $sy = \App\CtrRefSchoolyear::first()->schoolyear;
+        $sy = \App\CtrSchoolYear::first()->schoolyear;
         $status = \App\Status::where('idno',$idno)->where('schoolyear',$sy)->orderBy('id','DESC')->first();
         $student = \App\User::where('idno',$idno)->first();
         $studentcount = \App\User::where('idno',$idno)->count();

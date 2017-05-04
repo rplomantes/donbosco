@@ -176,5 +176,27 @@
     </table>
     
     <a href="/printcashreceipt" class="btn btn-primary col-md-12">Print</a>
+<div class="col-md-12">
+    <h4>Sundry Accounts Breakdown</h4>
+    <table class="table table-stripped col-md-4">
+	<thead>
+	  <tr>
+		<td>Acct. No</td>
+		<td>Account Name</td>
+		<td>Amount</td>
+	  </tr>
+	</thead>
+	<tbody>
+	@foreach($breakdown as $breakd)
+	 <tr>
+		<td>{{$breakd->accountingcode}}</td>
+		<td>{{$breakd->acctcode}}</td>
+		<td>{{$breakd->amount}}</td>
+	 </tr>
+	@endforeach
+	</tbody>
+    </table>
+    <a href="/printcashbreakdown/{{$transactiondate}}" class="btn btn-primary col-md-12">Print</a>
+</div>
 </div>
 @stop

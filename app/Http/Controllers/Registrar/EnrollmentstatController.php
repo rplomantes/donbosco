@@ -13,7 +13,8 @@ class EnrollmentstatController extends Controller
     
 public function enrollmentstat()
 { 
-    $stats=DB::Select("select count(id ) as count, department, level, strand, course from statuses where status = '2'"
+    $sy = \App\CtrSchoolYear::first()->schoolyear;
+    $stats=DB::Select("select count(id) as count, department, level, strand, course from statuses where status = '2' and schoolyear = '$sy'"
         . " group by level, strand, department, course");
         
     return view('registrar/enrollmentstat', compact('stats'));

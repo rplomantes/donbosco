@@ -58,7 +58,7 @@ class DisbursementController extends Controller
            $accountings = \App\Accounting::where('refno',$refno)->get();
            $amountinwords = $this->convert_number_to_words($disbursement->amount);
            $pdf = \App::make('dompdf.wrapper');
-           $pdf->setPaper("Letter",'portrait');
+           $pdf->setPaper([0,0,1092,612],'portrait');
            $pdf->loadView('print.printcheckvoucher',compact('disbursement','accountings','amountinwords'));
            return $pdf->stream();
        }
@@ -306,7 +306,7 @@ class DisbursementController extends Controller
         19                  => 'Nineteen',
         20                  => 'Twenty',
         30                  => 'Thirty',
-        40                  => 'Fourty',
+        40                  => 'Forty',
         50                  => 'Fifty',
         60                  => 'Sixty',
         70                  => 'Seventy',

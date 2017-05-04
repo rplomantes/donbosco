@@ -512,10 +512,19 @@ function assess(Request $request){
                            }
 
                     }
-                    if($ledger->categoryswitch == env('DEPARTMENT_FEE')){
+                    if($ledger->categoryswitch == 4){
                         if(isset($discounts->discountcode)){    
         //if(count($discounts)> 0){
                             $totaldiscount = (($ledger->amount-$ledger->discount) * ($discounts->departmentfee/100));    
+                            $newledger->otherdiscount = $totaldiscount;
+                            $newledger->discountcode = $discounts->discountcode;
+                           }
+
+                    }
+                    if($ledger->categoryswitch == 5){
+                        if(isset($discounts->discountcode)){    
+        //if(count($discounts)> 0){
+                            $totaldiscount = (($ledger->amount-$ledger->discount) * ($discounts->registrationfee/100));    
                             $newledger->otherdiscount = $totaldiscount;
                             $newledger->discountcode = $discounts->discountcode;
                            }

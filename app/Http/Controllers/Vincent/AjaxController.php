@@ -1252,13 +1252,14 @@ class AjaxController extends Controller
     }
     
     function dropStudent($idno){
-        $sy = \App\CtrRefSchoolyear::first(); 
+        $sy = \App\CtrSchoolYear::first(); 
         
         $status = \App\Status::where('idno',$idno)->where('schoolyear',$sy->schoolyear)->first();
         $status->status = 3;
         $status->dropdate = date("Y-m-d");
         $status->save();
         
+        \App\Ledger::where('idno',$idno)->where('schoolyear',$sy->schoolyear)->update(['amount' => 0]);
         return "Dropped";
     }
     

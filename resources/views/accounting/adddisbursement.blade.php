@@ -1,19 +1,31 @@
 <?php
 $coa = \App\ChartOfAccount::pluck('accountname')->toArray();
+$payees = \App\Disbursement::distinct('payee')->pluck('payee')->toArray();
+$remarks =  \App\Disbursement::distinct('remarks')->pluck('remarks')->toArray();
+foreach($payees as $key=>$value){
+  $payees[$key]=str_replace('"','\"',$value);
+}
+
+foreach($remarks as $key=>$value){
+  $remarks[$key]=str_replace('"','\"',$value);
+}
+
+
 $initialentry = \App\Accounting::where("posted_by",\Auth::user()->idno)->where('isfinal','0')->where('type','4')->first();
+$voucherid =  \App\User::where('idno',\Auth::user()->idno)->first();
 if(count($initialentry)>0){
 $uniqid = $initialentry->refno;    
-$voucherno = $initialentry->referenceid;
+$voucherno = $voucherid->disbursementno;
+
 
 }else{
 $vouchzero="";    
-$voucherid =  \App\User::where('idno',\Auth::user()->idno)->first();
 $voucherno = $voucherid->disbursementno;
 $voucheruserid = $voucherid->reference_number;
 for($i=strlen($voucherno);$i<=5;$i++ ){
    $vouchzero = $vouchzero."0"; 
 }
-$voucherno= $voucheruserid.$vouchzero.$voucherno;
+//$voucherno= $voucheruserid.$vouchzero.$voucherno;
 //$voucherid->receiptno = $voucherid->receiptno+1;
 //$voucherid->update();
 $uniqid = uniqid();
@@ -39,6 +51,21 @@ $bankaccounts = \App\ChartOfAccount::where('acctcode','>','110010')->where('acct
       source: coa
     });
     });
+    
+   $( function() {
+    var payee = [<?php echo '"'.implode('","', $payees).'"' ?>];
+    $( "#payee" ).autocomplete({
+      source: payee
+    });
+    });
+    
+   $( function() {
+    var remark = [<?php echo '"'.implode('","', $remarks).'"' ?>];
+    $( "#remarks" ).autocomplete({
+      source: remark
+    });
+    });
+
   </script>
   <div class="container-fluid">
       <div class="col-md-2">
@@ -126,7 +153,11 @@ $bankaccounts = \App\ChartOfAccount::where('acctcode','>','110010')->where('acct
               <label>Bank Account</label>
               <select name = "account" id="account" class="form-control">
                   @foreach($bankaccounts as $bankaccount)
-                        <option value="{{$bankaccount->acctcode}}">{{$bankaccount->accountname}}</option>
+                        <option value="{{$bankaccount->acctcode}}"
+                        @if($bankaccount->acctcode == 110013)
+                        selected= "selected"
+                        @endif
+                        >{{$bankaccount->accountname}}</option>
                   @endforeach
               </select>      
           </div>
