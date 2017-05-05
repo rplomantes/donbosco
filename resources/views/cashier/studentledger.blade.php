@@ -1,6 +1,20 @@
+<?php
+$banks = \App\Dedit::distinct('bank_branch')->pluck('bank_branch')->toArray();
+?>
+
 @extends("appcashier")
 
 @section("content")
+  <link href="{{ asset('/css/jquery-ui.css') }}" rel="stylesheet">
+  <script src="{{asset('/js/jquery-ui.js')}}"></script>
+<script>
+   $( function() {
+    var bank = [<?php echo '"'.implode('","', $banks).'"' ?>];
+    $( "#bank_branch" ).autocomplete({
+      source: bank
+    });
+    });
+</script>
   <div class="container_fluid">  
       <div class="col-md-12">
              

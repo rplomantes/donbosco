@@ -16,7 +16,7 @@ class CashierController extends \App\Http\Controllers\Cashier\CashierController
     }
 
     function searchor(){
-        if((\Auth::user()->accesslevel==env('USER_CASHIER'))||(\Auth::user()->accesslevel==env('USER_ACCOUNTING_HEAD'))){
+        if((\Auth::user()->accesslevel==env('USER_CASHIER'))||(\Auth::user()->accesslevel==env('USER_ACCOUNTING_HEAD'))||(\Auth::user()->accesslevel==env('USER_CASHIER_HEAD'))){
             return view('vincent.cashier.searchor');
         }
     }

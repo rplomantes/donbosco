@@ -59,13 +59,6 @@ $bankaccounts = \App\ChartOfAccount::where('acctcode','>','110010')->where('acct
     });
     });
     
-   $( function() {
-    var remark = [<?php echo '"'.implode('","', $remarks).'"' ?>];
-    $( "#remarks" ).autocomplete({
-      source: remark
-    });
-    });
-
   </script>
   <div class="container-fluid">
       <div class="col-md-2">
@@ -103,14 +96,14 @@ $bankaccounts = \App\ChartOfAccount::where('acctcode','>','110010')->where('acct
             <div class="amountdetails" id="amountdetails">
             <div class="col-md-2">
                 <label for ="subsidiary">Subsidiary</label>
-                <select class="form-control" name="subsidiary" id="subsidiary">
+                <select class="form-control" name="subsidiary" id="subsidiary" onkeydown="changed(event,'department')">
                     <option value="" selected="selected" hidden="hidden">select Subsidiary if any</option>
                        
-                </select>    
+                </select>
             </div>   
             <div class="col-md-2">
                 <label for ="department">Department</label>
-                <select class="form-control" name="department" id="department">
+                <select class="form-control" name="department" id="department" onkeydown="changed(event,'entrytype')">
                   <option>None</option>
                   @foreach($departments as $department)
                   <option value="{{$department->sub_department}}">{{$department->sub_department}}</option>
@@ -119,7 +112,7 @@ $bankaccounts = \App\ChartOfAccount::where('acctcode','>','110010')->where('acct
             </div> 
             <div class="col-md-2">
                 <label for ="entrytype">Debit/Credit</label>
-                <select class="form-control" name="entrytype" id ="entrytype">
+                <select class="form-control" name="entrytype" id ="entrytype" onkeydown="changed(event,'amount')">
                     <option value="dr">Debit</option>
                     <option value="cr">Credit</option>
                 </select>    
@@ -185,31 +178,39 @@ $bankaccounts = \App\ChartOfAccount::where('acctcode','>','110010')->where('acct
 $(document).ready(function(){ 
    $("#forsubmit").fadeOut();
    $("#amountdetails").fadeOut();
+   
    $("#checkno").keypress(function(e){
       if(e.keyCode==13){
           if($("#checkno").val()==""){
               alert("Please Enter Check Number");
-          } else {
-              $("#payee").focus();
-          }
-      } 
-   });
-   
-   $("#payee").keypress(function(e){
-      if(e.keyCode==13){
-          if($("#payee").val()==""){
-              alert("Please Type Explanation/Remarks");
           } else {
               $("#remarks").focus();
           }
       } 
    });
    
+   $("#remarks").keypress(function(e){
+      if(e.keyCode==13){
+          $("#btnprocess").focus();
+      } 
+   });
+
+   $("#payee").keypress(function(e){
+      if(e.keyCode==13){
+          if($("#payee").val()==""){
+              alert("Please Type Explanation/Remarks");
+          } else {
+              $("#accountname").focus();
+          }
+      } 
+   });
+
     partialtable();
    $("#accountname").keypress(function(e){
        if(e.keyCode==13){
            if($("#accountname").val()==""){
-               alert("Please Fill-up Account Name");
+               //alert("Please Fill-up Account Name");
+               document.getElementById('checkno').focus();   
            } else{              
                 var arrays={};
                 arrays['accountname']=$("#accountname").val();
@@ -221,6 +222,7 @@ $(document).ready(function(){
                     $("#acctcode").val(data)
                     popsubsidiary(data)
                     $("#amountdetails").fadeIn();
+                    document.getElementById('subsidiary').focus();   
                     }    
                 })
             }
@@ -393,7 +395,12 @@ $(document).ready(function(){
           }
       });
   }
- 
+  
+  function changed(event,to){
+      if(event.keyCode == 13) {
+          $("#"+to).focus();
+      }
+  }
 </script>
 
 

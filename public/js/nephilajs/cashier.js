@@ -292,6 +292,7 @@ function submitcheck(event, amount){
             var diff =  eval(document.getElementById("totalamount").value)-eval(amount)-eval(receivedcash)-eval(fape);
             document.getElementById('submit').style.visibility="hidden";
             document.getElementById('cashdiff').innerHTML = "DIFFERENCE : " + diff.toFixed(2);
+            document.getElementById('fape').focus();
         }
      event.preventDefault();
      return false;

@@ -17,7 +17,7 @@ foreach($mainaccount as $main){
 }}
 $others = DB::Select("SELECT amount - payment-plandiscount-otherdiscount as balance, id, description from ledgers"
         . " where categoryswitch > '6'  and categoryswitch < '10' and  idno = $idno ");
-$level = \App\Status::where('idno',$idno)->first()->level;
+$level = \App\Status::where('idno',$idno)->first();
 $student=\App\User::where('idno',$idno)->first();
 $initialentry = \App\Accounting::where("posted_by",\Auth::user()->idno)->where('isfinal','0')->where('type','2')->first();
 if(count($initialentry)>0){
@@ -105,7 +105,11 @@ $departments = DB::Select("Select * from ctr_acct_dept order by sub_department")
                 <table class="table table-striped">
                     <tr><td>Student ID</td><td>:</td><td>{{$idno}}</td></tr>
                     <tr><td>Student Name</td><td>:</td><td>{{$student->lastname}}, {{$student->firstname}}</td></tr>
-                    <tr><td>Grade/Level</td><td>:</td><td>{{$level}}</td></tr>
+                    <tr><td>Grade/Level</td><td>:</td><td>
+                            @if(count($level)>0)
+                            {{$level->level}}
+                            @endif
+                            </td></tr>
                 </table>    
             </div>    
         </div>    

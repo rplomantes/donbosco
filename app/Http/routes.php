@@ -3,6 +3,7 @@
     Route::auth();
     
     Route::get('/discounting', 'Update\UpdateController@updateDiscount');
+    Route::get('/disbursementreport/{voucherno?}', 'Miscellaneous\DisburstmentReportController@index');
     Route::get('/', 'MainController@index');
     Route::get('cashreceipt/{transactiondate}','Accounting\CashReceiptController@cashreceiptbook');
     Route::get('printcashreceipt','Accounting\CashReceiptController@cashreceiptpdf');

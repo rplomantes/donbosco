@@ -1,5 +1,19 @@
 @extends('appcashier')
 @section('content')
+<style media="print">
+    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td{
+        padding-top: 2px;
+        padding-bottom: 2px;
+        font-size: 11px;
+    }
+    .btn-primary{
+        display:none;
+    }
+    #footer{
+        display:none;
+    }
+
+</style>
 <div class = "container">
     <div class="col-md-2">
     </div>
