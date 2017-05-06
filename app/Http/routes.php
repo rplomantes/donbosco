@@ -2,12 +2,9 @@
     Route::group(['middleware' => 'web'], function () {
     Route::auth();
     
-    Route::get('/discounting', 'Update\UpdateController@updateDiscount');
-    Route::get('/disbursementreport/{voucherno?}', 'Miscellaneous\DisburstmentReportController@index');
+
     Route::get('/', 'MainController@index');
-    Route::get('cashreceipt/{transactiondate}','Accounting\CashReceiptController@cashreceiptbook');
-    Route::get('printcashreceipt','Accounting\CashReceiptController@cashreceiptpdf');
-    Route::get('printcashbreakdown/{fromtran}/{totran}','Accounting\CashReceiptController@breakdownpdf');
+    
     //Book Store Module
     Route::get('deptincome/{fromtran}/{totran}', 'Accounting\DeptIncomeController@index');
     Route::get('books/{idno}', 'Miscellaneous\BookController@index');
@@ -199,6 +196,15 @@
     Route::post('/searchor','Vincent\CashierController@findor');
     
     //Accounting VINCENT (10-13-2016)
+    Route::get('/discounting', 'Update\UpdateController@updateDiscount');
+    
+    Route::get('/disbursementreport/{voucherno?}', 'Miscellaneous\DisburstmentReportController@index');
+    
+    Route::get('cashreceipt/{transactiondate}','Accounting\CashReceiptController@cashreceiptbook');
+    Route::get('printcashreceipt','Accounting\CashReceiptController@cashreceiptpdf');
+    Route::get('printcashbreakdown/{fromtran}/{totran}','Accounting\CashReceiptController@breakdownpdf');
+    
+    
     Route::get('/tvetledger','Vincent\TvetController@tvetledger');
     Route::get('/studentsledger/{batch}/{cours}/{section}','Vincent\TvetController@getsectionstudent');
     Route::get('/studentsledger/{batch}/{cours}/{section}/edit','Vincent\TvetController@edittvetcontribution');
@@ -217,6 +223,7 @@
     Route::get('/addoldstudent','DBFixer@addOldStudent');
     Route::get('/gensubj','DBFixer@gensubjects');
     Route::get('/updateentrytype','DBFixer@updateentrytype');
+    Route::get('/updatetvet','DBFixer@updatetvet');
     
     
     //ACADEMIC
@@ -230,6 +237,7 @@
     Route::get('generalledger/print/{basic}/{title}/{todate?}','Accounting\GenLedgerController@printledger');
     Route::get('balancesheet','Vincent\BalanceSheetController@index');
     Route::get('dmreport/{trandate}','Accounting\DMReportController@index');
+    Route::get('printdmreport/{trandate}','Accounting\DMReportController@printreport');
     
     Route::get('dmsummary/{trandate}','Accounting\DebitDCSummaryController@index');
     Route::get('printdmjournal/{fromtran}/{totran}','Accounting\DebitDCSummaryController@printsummary');
