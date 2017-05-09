@@ -2,7 +2,6 @@
     Route::group(['middleware' => 'web'], function () {
     Route::auth();
     
-
     Route::get('/', 'MainController@index');
     
     //Book Store Module
@@ -332,11 +331,13 @@
     
     
     Route::get('/pullrecords','Update\UpdateController@prevgrade');
+    Route::get('/studentslist/{level}/{sy}', 'Registrar\AjaxController@levelStudent');
     
     
     
 // Registrar Group
 Route::group(['middleware' => ['web','registrar']], function () {
+    Route::get('/kto12sectioning/{sy}', 'Registrar\SectionController@sectioning');
    Route::get('/sheetA/{record}',function($record){
        $levels = \App\CtrLevel::get();
        return view('vincent.registrar.sheetAv2',compact('levels','record'));

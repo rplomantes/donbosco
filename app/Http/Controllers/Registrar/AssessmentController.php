@@ -530,6 +530,7 @@ function assess(Request $request){
                            }
 
                     }
+                    
                 $newledger->plandiscount = $ledger->discount;
                 $newledger->schoolyear = $schoolperiod->schoolyear;
                 $newledger->duetype = $ledger->duetype;

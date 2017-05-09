@@ -21,6 +21,12 @@ class SectionController extends Controller
          //return $levels;
          return view('registrar.sectionkpage',compact('levels'));
      }   
+    
+     function sectioning($sy){
+         $levels = \App\CtrLevel::all();
+         return view('registrar.sectioning',compact('levels','sy'));   
+     }
+    
     function printsection($level, $section){
         $sy = \App\CtrRefSchoolyear::first();
         $schoolyear=$sy->schoolyear;

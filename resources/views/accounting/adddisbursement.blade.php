@@ -112,7 +112,7 @@ $bankaccounts = \App\ChartOfAccount::where('acctcode','>','110010')->where('acct
             </div> 
             <div class="col-md-2">
                 <label for ="entrytype">Debit/Credit</label>
-                <select class="form-control" name="entrytype" id ="entrytype" onkeydown="changed(event,'amount')">
+                <select class="form-control" name="entrytype" id ="entrytype" >
                     <option value="dr">Debit</option>
                     <option value="cr">Credit</option>
                 </select>    
@@ -277,7 +277,7 @@ $(document).ready(function(){
         //return false;
     }    
     else{
-       
+        document.getElementById("btnprocess").disabled = true;
          var arrays={};
          arrays['refno'] = $("#refno").val();
          arrays['voucherno'] = $("#referenceid").val();
@@ -401,6 +401,10 @@ $(document).ready(function(){
           $("#"+to).focus();
       }
   }
+  
+  $("#entrytype").click(function(){
+          $("#amount").focus();
+  });
 </script>
 
 
