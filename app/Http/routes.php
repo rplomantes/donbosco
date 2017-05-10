@@ -196,6 +196,8 @@
     
     //Accounting VINCENT (10-13-2016)
     Route::get('/discounting', 'Update\UpdateController@updateDiscount');
+    Route::get('checksummary/{from}/{to}','Accounting\DisbursementController@checkSummary');
+    Route::get('printchecksummary/{from}/{to}','Accounting\DisbursementController@printcheckSummary');
     
     Route::get('/disbursementreport/{voucherno?}', 'Miscellaneous\DisburstmentReportController@index');
     

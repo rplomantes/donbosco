@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Excel;
+use Carbon\Carbon;
 
 class DisburstmentReportController extends Controller
 {
@@ -15,15 +16,18 @@ class DisburstmentReportController extends Controller
     }
     
     function index($voucherno=null){
-        if($voucherno == null){
-            $vouchers = \App\Disbursement::where('isreverse',0)->orderBy('id','DESC')->get();
-        }else{
+	if($voucherno == null){
+	    $voucherno = \App\Disbursement::where('isreverse',0)->orderBy('id','DESC')->first()->voucherno;
+	}
+//        if($voucherno == null){
+//            $vouchers = \App\Disbursement::where('isreverse',0)->orderBy('id','DESC')->get();
+//        }else{
             $vouchers = \App\Disbursement::where('isreverse',0)->where('voucherno','>=',$voucherno)->orderBy('id','DESC')->get();
-        }
+//        }
         
         
         
-        return view('accounting.disbursementReport',compact('vouchers'));
+        return view('accounting.disbursementReport',compact('vouchers','voucherno'));
     }
     
     function export($voucherno=null){

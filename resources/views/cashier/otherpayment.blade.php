@@ -1,6 +1,28 @@
+<?php
+$banks = \App\Dedit::distinct('bank_branch')->pluck('bank_branch')->toArray();
+$checkno = \App\Dedit::distinct('check_number')->pluck('check_number')->toArray();
+?>
+
 @extends("appcashier")
 
 @section("content")
+  <link href="{{ asset('/css/jquery-ui.css') }}" rel="stylesheet">
+  <script src="{{asset('/js/jquery-ui.js')}}"></script>
+<script>
+   $( function() {
+    var bank = [<?php echo '"'.implode('","', $banks).'"' ?>];
+    $( "#bank_branch" ).autocomplete({
+      source: bank
+    });
+    });
+
+   $( function() {
+    var checkno = [<?php echo '"'.implode('","', $checkno).'"' ?>];
+    $( "#check_number" ).autocomplete({
+      source: checkno
+    });
+    });
+</script>
 
 <style>
 .form-horizontal .form-group {

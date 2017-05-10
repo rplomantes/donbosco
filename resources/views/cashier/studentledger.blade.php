@@ -1,7 +1,7 @@
 <?php
 $banks = \App\Dedit::distinct('bank_branch')->pluck('bank_branch')->toArray();
+$checkno = \App\Dedit::distinct('check_number')->pluck('check_number')->toArray();
 ?>
-
 @extends("appcashier")
 
 @section("content")
@@ -14,6 +14,14 @@ $banks = \App\Dedit::distinct('bank_branch')->pluck('bank_branch')->toArray();
       source: bank
     });
     });
+
+   $( function() {
+    var checkno = [<?php echo '"'.implode('","', $checkno).'"' ?>];
+    $( "#check_number" ).autocomplete({
+      source: checkno
+    });
+    });
+
 </script>
   <div class="container_fluid">  
       <div class="col-md-12">
@@ -100,37 +108,6 @@ $banks = \App\Dedit::distinct('bank_branch')->pluck('bank_branch')->toArray();
                     </td></tr>
             </table>
             <h5>Account Details</h5>
-            @if($status->department == "TVET")
-            <table class="table table-striped">
-                <tr><td align="right">Sponsor's Contribution</td><td align="right">TVET Subsidy</td><td>Trainees Contribution</td><td align="right">Payment</td><td align="right">Balance</td></tr>
-                <?php
-                $tvet  = \App\TvetSubsidy::where('idno',$student->idno)->where("batch",$status->period)->first();
-                $amount = 0; 
-                $payment = 0;
-                ?>
-                @if(count($ledgers) > 0)
-                    @foreach($ledgers as $ledger)
-                        <?php 
-                        $amount = $amount + $ledger->amount;
-                        $payment = $payment + $ledger->payment;
-                        ?>
-                    @endforeach
-                    <tr>
-                        <td>@if(count($tvet) > 0)
-                            {{number_format($tvet->sponsor,2)}}
-                            @endif
-                        </td>
-                        <td>@if(count($tvet) > 0)
-                            {{number_format($tvet->subsidy,2)}}
-                            @endif
-                        </td>
-                        <td>{{number_format($amount,2)}}</td>
-                        <td>{{number_format($payment,2)}}</td>
-                        <td>{{number_format($amount-$payment,2)}}</td>
-                    </tr>                
-                @endif
-            </table>
-            @else
             <table class="table table-striped">
                 <tr><td>Description</td><td align="right">Amount</td><td align="right">Discount</td><td align="right">DM</td><td align="right">Payment</td><td align="right">Balance</td></tr>
                 <?php
@@ -158,7 +135,6 @@ $banks = \App\Dedit::distinct('bank_branch')->pluck('bank_branch')->toArray();
                                   <td align="right" style="color:red">{{number_format($totalpayment,2)}}</td>
                                   <td align="right"><strong>{{number_format($totalamount-$totaldiscount-$totaldebitmemo-$totalpayment,2)}}</strong></td></tr>
             </table>
-            @endif
               <h5>Payment History</h5>
               <table class="table table-striped" id="ph"><tr><td>Date</td><td>Ref Number</td><td>OR Number</td><td align="right">Amount</td><td>Payment Type</td><td>Details</td><td>Status</td></tr>
                   @if(count($debits)>0)

@@ -9,34 +9,32 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
-class DisbursementController extends Controller
-{
+class DisbursementController extends Controller{
     
-    public function __construct()
-	{
-		$this->middleware('auth');
-	}
-    //
+    public function __construct(){
+        $this->middleware('auth');
+    }
         
-        function adddisbursement(){
-            return view('accounting.adddisbursement');
+    function adddisbursement(){
+       return view('accounting.adddisbursement');
+    }
+        
+    function printdisbursement($refno){
+       return view('accounting.printdisbursement',compact('refno'));
+    }
+       
+    function restorecanceldisbursement($kind,$refno){
+       if($kind=="Cancel"){
+           $cr = 1;
+        } else {
+           $cr = 0;
         }
-        
-       function printdisbursement($refno){
-           return view('accounting.printdisbursement',compact('refno'));
-       }
-       function restorecanceldisbursement($kind,$refno){
-           if($kind=="Cancel"){
-               $cr = 1;
-            } else {
-                $cr = 0;
-            }
-             \App\Credit::where('refno',$refno)->update(array('isreverse' => $cr));
-             \App\Dedit::where('refno',$refno)->update(['isreverse'=> $cr]);
-             \App\Accounting::where('refno',$refno)->update(['isreversed'=>$cr]);
-             \App\Disbursement::where('refno',$refno)->update(['isreverse'=>$cr]);
-             return redirect(url("printdisbursement",$refno));    
-       }
+        \App\Credit::where('refno',$refno)->update(array('isreverse' => $cr));
+        \App\Dedit::where('refno',$refno)->update(['isreverse'=> $cr]);
+        \App\Accounting::where('refno',$refno)->update(['isreversed'=>$cr]);
+        \App\Disbursement::where('refno',$refno)->update(['isreverse'=>$cr]);
+        return redirect(url("printdisbursement",$refno));
+    }
        
        function printcheckdetails($refno){
            $disbursement = \App\Disbursement::where('refno',$refno)->first();
@@ -395,6 +393,20 @@ class DisbursementController extends Controller
 
     return $string;
 }
+
+    function checkSummary($from,$to){
+        $accounts = DB::Select("Select DISTINCT bank from disbursements order by bank asc");
+        
+        return view('accounting.checkdisbursement',compact('from','to','accounts'));
+    }
+    
+    function printcheckSummary($from,$to){
+        $accounts = DB::Select("Select DISTINCT bank from disbursements order by bank asc");
+        
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->loadView('print.checkdisbursement',compact('from','to','accounts')); 
+        return $pdf->stream();  
+    }
 
 
 }

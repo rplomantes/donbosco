@@ -1,18 +1,20 @@
 @extends('appaccounting')
 @section('content')
 <div class="container-fluid">
-    <table class="table table-stripped">
+    <div style="vertical-align:center" class="col-md-2">From voucher no.:</div><div class="col-md-2"><input type="text" class="form-control" value="{{$voucherno}}" id="voucherno" ></div><button onclick="display()" class="btn btn-primary">Display</button>
+    <table class="table table-stripped" style="font-size:12px;">
         <thead>
             <tr>
                 <td>DATE</td>
-                <td>BANK_CHECK_NO</td>
+                <td>BANK<br>CHECK_NO</td>
                 <td>VOUCHER_NO</td>
                 <td>PAYEE</td>
                 <td>ACCOUNT TITLE</td>
                 <td>UNIT NAME</td>
                 <td>ACCOUNT_AMOUNT</td>
                 <td>DEBIT</td>
-                <td>CANCEL_VOUCHER</td>
+                <td>CANCEL <br>
+		VOUCHER</td>
                 <td>EXPLANATION</td>
             </tr>
         </thead>
@@ -47,4 +49,9 @@
     </table>
     <a href="" class="col-md-12 btn btn-default">Export</a>
 </div>
+<script>
+	function display(){
+	document.location = "/disbursementreport/" + $("#voucherno").val();
+	}
+</script>
 @stop
