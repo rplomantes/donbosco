@@ -7,6 +7,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Request;
 use DB;
+use Illuminate\Support\Facades\Input;
 
 class AjaxController extends Controller{
     function getaccount($group){
@@ -52,5 +53,16 @@ class AjaxController extends Controller{
         return $data;    
         }
 
+    }
+    
+    function searchnonstudent(){
+        if(Request::ajax()){
+            $name = Input::get('name');
+            $search=str_replace(' ','',$name);
+            $students = DB::Select("Select fullname,idno from non_students where fullname LIKE '%$search%' group by trim(fullname) order by fullname"); 
+            
+            return view("ajax.searchnonstudent",compact('students'));
+            //return $search;
+        }
     }
 }

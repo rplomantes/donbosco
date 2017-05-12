@@ -39,7 +39,7 @@
          </table>
         <br/>
         <table width="100%" border="1" cellspacing="0" cellpadding="5">
-		<tr valign="top"><td width="25%">Prepared By:<br><br><i>{{\Auth::user()->firstname}} {{\Auth::user()->lastname}}</i></td><td width="25%">Checked By:</td><td width="25%">Approved By:</td><td width="25%">Received By:</td></tr>
+            <tr valign="top"><td width="25%">Prepared By:<br><br><i>{{\Auth::user()->firstname}} {{\Auth::user()->lastname}}</i></td><td width="25%">Checked By:</td><td width="25%">Approved By:</td><td width="25%">Received By:<div style="font-size: 10px;margin-top:30px;">SIGNATURE OVER PRINTED NAME</div></td></tr>
         </table>
         </body>
 </html>

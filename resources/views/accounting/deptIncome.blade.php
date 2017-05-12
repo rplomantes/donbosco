@@ -1,6 +1,13 @@
 @extends('appaccounting')
 @section('content')
+<style>
+    .amount{
+        text-align: right
+    }
+</style>
 <?php 
+use App\Http\Controllers\Accounting\DeptIncomeController;
+
 $totalnone = 0;
 $totalrector = 0;
 $totalservice = 0;
@@ -9,6 +16,7 @@ $totalelem = 0;
 $totalhs = 0;
 $totaltvet = 0;
 $totalpastoral = 0;
+$abstotal = 0;
 ?>
 <table class="table table-striped">
     <thead>
@@ -23,41 +31,120 @@ $totalpastoral = 0;
         <th>TVET</th>
         <th>Pastoral</th>
     </thead>
-    @foreach($consolidated as $acct)
-    <?php 
-    $totalnone = $totalnone + $acct->none;
-    $totalrector = $totalrector + $acct->rector;
-    $totalservice = $totalservice + $acct->service;
-    $totaladmin = $totaladmin+ $acct->admin;
-    $totalelem = $totalelem + $acct->elem;
-    $totalhs = $totalhs + $acct->hs;
-    $totaltvet = $totaltvet + $acct->tvet;
-    $totalpastoral = $totalpastoral + $acct->pastoral;
-    ?>
-    <tr style="text-align: right">
-        <td style="text-align: left">{{$acct->acctcode}}</td>
-        <td>{{$acct->accountingcode}}</td>
-        <td>@if($acct->none > 0){{number_format($acct->none,2,'.',', ')}}@endif</td>
-        <td>@if($acct->rector > 0){{number_format($acct->rector,2,'.',', ')}}@endif</td>
-        <td>@if($acct->service > 0){{number_format($acct->service,2,'.',', ')}}@endif</td>
-        <td>@if($acct->admin > 0){{number_format($acct->admin,2,'.',', ')}}@endif</td>
-        <td>@if($acct->elem > 0){{number_format($acct->elem,2,'.',', ')}}@endif</td>
-        <td>@if($acct->hs > 0){{number_format($acct->hs,2,'.',', ')}}@endif</td>
-        <td>@if($acct->tvet > 0){{number_format($acct->tvet,2,'.',', ')}}@endif</td>
-        <td>@if($acct->pastoral > 0){{number_format($acct->pastoral,2,'.',', ')}}@endif</td>
-    </tr>
-    @endforeach
-    <tr style="text-align: right;font-weight: bold">
-        <td colspan="2" style="text-align: center">Grand Total: </td>
+    
+    @foreach($accounts as $account)
+    <?php
+        $credits = DB::Select("Select sum(none) as none,sum(rector) as rector,sum(elem) as elem,sum(hs) as hs,sum(tvet) as tvet,sum(service) as service,sum(admin) as admin,sum(pastoral) as pastoral from creditconsolidated where (transactiondate between '$fromtran' AND '$totran') and accountingcode = $account->acctcode");
+        $debits  = DB::Select("Select sum(none) as none,sum(rector) as rector,sum(elem) as elem,sum(hs) as hs,sum(tvet) as tvet,sum(service) as service,sum(admin) as admin,sum(pastoral) as pastoral from debitconsolidated  where (transactiondate between '$fromtran' AND '$totran') and accountingcode = $account->acctcode");
+
+        $none = 0;
+        $rector= 0;
+        $elem= 0;
+        $hs= 0;
+        $tvet= 0;
+        $service= 0;
+        $admin= 0;
+        $pastoral= 0;
         
-        <td>@if($totalnone > 0){{number_format($totalnone,2,'.',', ')}}@endif</td>
-        <td>@if($totalrector > 0){{number_format($totalrector,2,'.',', ')}}@endif</td>
-        <td>@if($totalservice > 0){{number_format($totalservice,2,'.',', ')}}@endif</td>
-        <td>@if($totaladmin > 0){{number_format($totaladmin,2,'.',', ')}}@endif</td>
-        <td>@if($totalelem > 0){{number_format($totalelem,2,'.',', ')}}@endif</td>
-        <td>@if($totalhs > 0){{number_format($totalhs,2,'.',', ')}}@endif</td>
-        <td>@if($totaltvet > 0){{number_format($totaltvet,2,'.',', ')}}@endif</td>
-        <td>@if($totalpastoral > 0){{number_format($totalpastoral,2,'.',', ')}}@endif</td>
+        $creditnone = 0;
+        $creditrector= 0;
+        $creditelem= 0;
+        $crediths= 0;
+        $credittvet= 0;
+        $creditservice= 0;
+        $creditadmin= 0;
+        $creditpastoral= 0;
+        
+        $debitnone = 0;
+        $debitrector= 0;
+        $debitelem= 0;
+        $debiths= 0;
+        $debittvet= 0;
+        $debitservice= 0;
+        $debitadmin= 0;
+        $debitpastoral= 0;
+        
+        $total = 0;
+        
+        if(count($credits)>0){
+            $creditnone = $credits[0]->none;
+            $creditrector= $credits[0]->rector;
+            $creditelem= $credits[0]->elem;
+            $crediths= $credits[0]->hs;
+            $credittvet= $credits[0]->tvet;
+            $creditservice= $credits[0]->service;
+            $creditadmin= $credits[0]->admin;
+            $creditpastoral= $credits[0]->pastoral;
+        }
+        
+        if(count($debits)>0){
+            $debitnone = $debits[0]->none;
+            $debitrector= $debits[0]->rector;
+            $debitelem= $debits[0]->elem;
+            $debiths= $debits[0]->hs;
+            $debittvet= $debits[0]->tvet;
+            $debitservice= $debits[0]->service;
+            $debitadmin= $debits[0]->admin;
+            $debitpastoral= $debits[0]->pastoral;
+        }
+        if($accountcode == 4){
+            $none = $creditnone - $debitnone;
+            $rector= $creditrector - $debitrector;
+            $elem= $creditelem - $debitelem;
+            $hs= $crediths - $debiths;
+            $tvet= $credittvet - $debittvet;
+            $service= $creditservice - $debitservice;
+            $admin= $creditadmin - $debitadmin;
+            $pastoral= $creditpastoral - $debitpastoral;
+        }else{
+            $none =  $debitnone - $creditnone;
+            $rector= $debitrector - $creditrector;
+            $elem= $debitelem - $creditelem;
+            $hs= $debiths - $crediths;
+            $tvet= $debittvet - $credittvet;
+            $service= $debitservice - $creditservice;
+            $admin= $debitadmin - $creditadmin;
+            $pastoral= $debitpastoral - $creditpastoral;
+        }
+        
+        
+        $total = $none + $rector + $elem + $hs + $tvet + $service + $admin + $pastoral;
+        
+        $totalnone = $totalnone + $none;
+        $totalrector = $totalrector + $rector;
+        $totalservice = $totalservice + $service;
+        $totaladmin = $totaladmin + $admin;
+        $totalelem = $totalelem + $elem;
+        $totalhs = $totalhs + $hs;
+        $totaltvet = $totaltvet + $tvet;
+        $totalpastoral = $totalpastoral + $pastoral;
+        $abstotal = $abstotal + $total;
+    ?>
+    
+    <tr>
+        <td>{{$account->accountname}}</td>
+        <td class="amount">{{DeptIncomeController::returnzero($total)}}</td>
+        <td class="amount">{{DeptIncomeController::returnzero($none)}}</td>
+        <td class="amount">{{DeptIncomeController::returnzero($rector)}}</td>
+        <td class="amount">{{DeptIncomeController::returnzero($service)}}</td>
+        <td class="amount">{{DeptIncomeController::returnzero($admin)}}</td>
+        <td class="amount">{{DeptIncomeController::returnzero($elem)}}</td>
+        <td class="amount">{{DeptIncomeController::returnzero($hs)}}</td>
+        <td class="amount">{{DeptIncomeController::returnzero($tvet)}}</td>
+        <td class="amount">{{DeptIncomeController::returnzero($pastoral)}}</td>
+    </tr>    
+    @endforeach
+    <tr>
+        <td><b>Total</b></td>
+        <td class="amount">{{DeptIncomeController::returnzero($abstotal)}}</td>
+        <td class="amount">{{DeptIncomeController::returnzero($totalnone)}}</td>
+        <td class="amount">{{DeptIncomeController::returnzero($totalrector)}}</td>
+        <td class="amount">{{DeptIncomeController::returnzero($totalservice)}}</td>
+        <td class="amount">{{DeptIncomeController::returnzero($totaladmin)}}</td>
+        <td class="amount">{{DeptIncomeController::returnzero($totalelem)}}</td>
+        <td class="amount">{{DeptIncomeController::returnzero($totalhs)}}</td>
+        <td class="amount">{{DeptIncomeController::returnzero($totaltvet)}}</td>
+        <td class="amount">{{DeptIncomeController::returnzero($totalpastoral)}}</td>
     </tr>
 </table>
 

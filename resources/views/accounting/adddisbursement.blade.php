@@ -96,14 +96,14 @@ $bankaccounts = \App\ChartOfAccount::where('acctcode','>','110010')->where('acct
             <div class="amountdetails" id="amountdetails">
             <div class="col-md-2">
                 <label for ="subsidiary">Subsidiary</label>
-                <select class="form-control" name="subsidiary" id="subsidiary" onkeydown="changed(event,'department')">
+                <select class="form-control" name="subsidiary" id="subsidiary">
                     <option value="" selected="selected" hidden="hidden">select Subsidiary if any</option>
                        
                 </select>
             </div>   
             <div class="col-md-2">
                 <label for ="department">Department</label>
-                <select class="form-control" name="department" id="department" onkeydown="changed(event,'entrytype')">
+                <select class="form-control" name="department" id="department" >
                   <option>None</option>
                   @foreach($departments as $department)
                   <option value="{{$department->sub_department}}">{{$department->sub_department}}</option>
@@ -405,6 +405,25 @@ $(document).ready(function(){
   $("#entrytype").click(function(){
           $("#amount").focus();
   });
+  
+    document.getElementById("subsidiary").addEventListener("keypress", function(e) {
+        if(e.keyCode == 13){
+          $("#department").focus();
+        }
+  }, false);  
+
+    document.getElementById("department").addEventListener("keypress", function(e) {
+        if(e.keyCode == 13){
+          $("#entrytype").focus();
+        }
+  }, false);  
+  
+    document.getElementById("entrytype").addEventListener("keypress", function(e) {
+        if(e.keyCode == 13){
+          $("#amount").focus();
+        }
+  }, false);
+  
 </script>
 
 

@@ -5,7 +5,7 @@
     Route::get('/', 'MainController@index');
     
     //Book Store Module
-    Route::get('deptincome/{fromtran}/{totran}', 'Accounting\DeptIncomeController@index');
+    Route::get('deptincome/{account}/{fromtran}/{totran}', 'Accounting\DeptIncomeController@index');
     Route::get('books/{idno}', 'Miscellaneous\BookController@index');
     Route::get('unclaim/{idno}', 'Miscellaneous\AjaxController@unclaim');
     Route::post('/books/update', 'Miscellaneous\BookController@updatebooks');
@@ -194,6 +194,9 @@
     Route::get('/searchor','Vincent\CashierController@searchor');
     Route::post('/searchor','Vincent\CashierController@findor');
     
+    Route::get('/viewnonstudent/{id}','Cashier\SearchNonSutdentController@viewtransactions');
+    Route::get('/nonstudents','Cashier\SearchNonSutdentController@search');
+    
     //Accounting VINCENT (10-13-2016)
     Route::get('/discounting', 'Update\UpdateController@updateDiscount');
     Route::get('checksummary/{from}/{to}','Accounting\DisbursementController@checkSummary');
@@ -297,6 +300,7 @@
    
     //AJAX 
     Route::get('/getparticulars/{group}','Cashier\AjaxController@getparticular');
+    Route::get('/searchnonstudent','Cashier\AjaxController@searchnonstudent');
     
     Route::get('/getsubjs','Vincent\AjaxController@getsubjs');
     Route::get('/showgrades', 'Vincent\AjaxController@showgrades');

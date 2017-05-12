@@ -17,7 +17,7 @@
                      
          </table>
          @if($encashment->isreverse == '0')
-         <a href="{{url('reverseencashment',$encashment->refno)}}" class="btn btn-danger">Cancell</a>
+         <a href="{{url('reverseencashment',$encashment->refno)}}" class="btn btn-danger">Cancel</a>
          @else
          <a href="{{url('reverseencashment',$encashment->refno)}}" class="btn btn-danger">Restore</a
          @endif
