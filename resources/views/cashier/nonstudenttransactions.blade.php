@@ -13,6 +13,7 @@
                 <td>Status</td>
             </tr>
             @foreach($students as $student)
+            <tr>
             <?php $trans = \App\Dedit::where('idno',$student->idno)->first();?>
                 <td>{{$trans->receiptno}}</td>
                 <td>{{$trans->transactiondate}}</td>
@@ -25,6 +26,7 @@
                     Cancelled
                     @endif
                 </td>
+            </tr>
             @endforeach
         </table>
     </div>

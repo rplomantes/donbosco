@@ -5,7 +5,7 @@
     Route::get('/', 'MainController@index');
     
     //Book Store Module
-    Route::get('deptincome/{account}/{fromtran}/{totran}', 'Accounting\DeptIncomeController@index');
+    
     Route::get('books/{idno}', 'Miscellaneous\BookController@index');
     Route::get('unclaim/{idno}', 'Miscellaneous\AjaxController@unclaim');
     Route::post('/books/update', 'Miscellaneous\BookController@updatebooks');
@@ -208,6 +208,8 @@
     Route::get('printcashreceipt','Accounting\CashReceiptController@cashreceiptpdf');
     Route::get('printcashbreakdown/{fromtran}/{totran}','Accounting\CashReceiptController@breakdownpdf');
     
+    Route::get('deptincome/{account}/{fromtran}/{totran}', 'Accounting\DeptIncomeController@index');
+    Route::get('printconsolidate/{account}/{fromtran}/{totran}', 'Accounting\DeptIncomeController@printreport');
     
     Route::get('/tvetledger','Vincent\TvetController@tvetledger');
     Route::get('/studentsledger/{batch}/{cours}/{section}','Vincent\TvetController@getsectionstudent');

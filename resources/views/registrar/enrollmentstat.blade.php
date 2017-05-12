@@ -21,11 +21,30 @@
         $mycount=0;
         $gradelevel = 0;
         $tvet = 0;
+        
+        $elem = 0;
+        $jhs = 0;
+        $shs = 0;
         ?>
      @foreach($stats as $stat)
      <?php 
         $mycount=$mycount + $stat->count;
         $gradelevel = $gradelevel + $stat->count;
+        
+        switch($stat->department){
+            case 'Kindergarten':
+                $elem = $elem + $stat->count;
+                break;
+            case 'Elementary':
+                $elem = $elem + $stat->count;
+                break;
+            case 'Junior High School':
+                $jhs = $jhs + $stat->count;
+                break;
+            case 'Senior High School':
+                $shs = $shs + $stat->count;
+                break;
+        }
      ?>
      <tr><td>{{$stat->department}}</td><td>{{$stat->level}} </td><td>{{$stat->course}}</td><td>{{$stat->strand}}</td><td align="right">{{$stat->count}}</td></tr>
      @endforeach
@@ -40,6 +59,16 @@
     </tbody>
   </table>
   <div class="col-md-4">
+    <table class="table table-condensed">
+            <thead>
+            <tr><td>Department</td><td>Count</td></tr>
+            </thead>
+            <tr><td>Elementary</td><td>{{number_format($elem)}}</td></tr>
+            <tr><td>Junior High School</td><td>{{number_format($jhs)}}</td></tr>
+            <tr><td>Senior High School</td><td>{{number_format($shs)}}</td></tr>
+    </table>
+   </div>
+  <div class="col-md-4">
     <table class="table table-stripped">
             <thead>
             <tr><td>Department</td><td>Count</td></tr>
@@ -48,7 +77,7 @@
             <tr><td>TVET</td><td>{{$tvet}}</td></tr>
     </table>
    </div>
-</div>
 
+</div>
 
 @endsection

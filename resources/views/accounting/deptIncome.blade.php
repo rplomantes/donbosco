@@ -147,5 +147,8 @@ $abstotal = 0;
         <td class="amount">{{DeptIncomeController::returnzero($totalpastoral)}}</td>
     </tr>
 </table>
-
+<br>
+<div class="container">
+    <a href="{{url('printconsolidate',array($accountcode,$fromtran,$totran))}}" class="col-md-12 btn btn-info">PRINT</a>
+</div>
 @stop

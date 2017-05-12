@@ -106,7 +106,16 @@
                                         <li><a href="{{url('encashment')}}">Encashment</a></li>
                                         <li><a href="{{url('nonstudent')}}">Other Payment</a></li>
                                         <li><a href="{{url('studentregister')}}"><i class="fa fa-btn fa-sign-out"></i>Register</a></li>
-                                        <li><a href="{{url('searchor')}}"><i class="fa fa-btn fa-sign-out"></i>Search OR</a></li>
+                                        <li class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Others
+                                            <span class="caret"></span></a>
+                               
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li><a href="{{url('searchor')}}"><i class="fa fa-btn fa-sign-out"></i>Search OR</a></li>
+                                                <li><a href="{{url('nonstudents')}}"><i class="fa fa-btn fa-sign-out"></i>Non Students</a></li>
+                                            </ul>
+                                        </li>
+                                        
                                     @endif
                                  @endif
                                  

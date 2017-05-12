@@ -9,7 +9,7 @@
             {{$student->fullname}}
         </td>
         <td>
-            <a href="{{url('nonstudent',$student->idno)}}">view</a>
+            <a href="{{url('viewnonstudent',$student->idno)}}">view</a>
         </td>
     </tr>
     @endforeach
