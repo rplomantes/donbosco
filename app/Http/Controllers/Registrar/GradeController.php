@@ -118,4 +118,25 @@ class GradeController extends Controller
         
         return $ave;
     }
+    
+    static gradeSubjectGrade($quarter,$grade){
+        $acad = 0;
+                    switch($quarter){
+                        case 1:       
+                            $acad = $grade->first_grading;
+                            break;
+                        case 2:
+                            $acad = $grade->second_grading;
+                            break;
+                        case 3:
+                            $acad = $grade->third_grading;
+                            break;
+                        case 4:
+                            $acad = $grade->fourth_grading;
+                            break;
+                        default:
+                            $acad = $grade->first_grading + $grade->second_grading +$grade->third_grading + $grade->fourth_grading;
+                            break;
+                    }
+    }
 }

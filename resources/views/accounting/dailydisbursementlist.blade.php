@@ -1,5 +1,5 @@
 <?php
-$lists = \App\Disbursement::where('transactiondate',$trandate)->where('postedby',\Auth::user()->idno)->get();
+$lists = \App\Disbursement::where('transactiondate',$trandate)->get();
 $banktotal = DB::Select("Select sum(amount) as amount, bank from disbursements where transactiondate = '$trandate' and isreverse = '0' group by bank");
 $total=0;
 $totalbank=0;

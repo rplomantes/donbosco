@@ -197,6 +197,7 @@
     Route::get('/viewnonstudent/{id}','Cashier\SearchNonSutdentController@viewtransactions');
     Route::get('/nonstudents','Cashier\SearchNonSutdentController@search');
     
+    
     //Accounting VINCENT (10-13-2016)
     Route::get('/discounting', 'Update\UpdateController@updateDiscount');
     Route::get('checksummary/{from}/{to}','Accounting\DisbursementController@checkSummary');
@@ -221,6 +222,9 @@
     Route::get('/listofentry','Vincent\JournalController@listofentry');
     Route::get('/accountingview/{refno}','Vincent\JournalController@accountingview');
     Route::get('/editjournalentry/{refno}','Vincent\JournalController@editjournalentry');
+    
+    Route::get('/searchvoucher','Accounting\DisbursementController@searchvoucher');
+    Route::post('/searchvoucher','Accounting\DisbursementController@findvoucher');
     //ACADEMIC VINCENT
     Route::get('/registerAdviser','Vincent\TvetController@tvetledger');
     Route::get('/enrollmentreport','Vincent\TvetController@enrollmentreport');

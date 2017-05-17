@@ -408,5 +408,23 @@ class DisbursementController extends Controller{
         return $pdf->stream();  
     }
 
+    
+    function searchvoucher(){
+        return view('accounting.searchvoucher');
+    }
+    
+    function findvoucher(request $request){
+        $disbursement = \App\Disbursement::where('voucherno',$request->voucher)->get();
+        $refno = 0;
+        
+        if(count($disbursement)>1){
+            return view('accounting.vouchersearchlist',compact('disbursement'));
+        }else{
+            foreach($disbursement as $disb){
+                $refno = $disb->refno;
+            }
+            return redirect('printdisbursement/'.$refno);
+        }
+    }  
 
 }

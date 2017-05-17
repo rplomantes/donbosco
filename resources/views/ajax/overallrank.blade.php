@@ -50,23 +50,18 @@
                 <?php
                     switch($quarter){
                         case 1:
-                            $acad = round($grade->first_grading,0);
                             $acad_rank =$student->oa_acad_1;
                             break;
                         case 2:
-                            $acad = round($grade->second_grading,0);
                             $acad_rank =$student->oa_acad_2;
                             break;
                         case 3:
-                            $acad = round($grade->third_grading,0);
                             $acad_rank =$student->oa_acad_3;
                             break;
                         case 4:
-                            $acad = round($grade->fourth_grading,0);
                             $acad_rank =$student->oa_acad_4;
                             break;
                         default:
-                            $acad = GradeController::studentSubjectTotalAve($sy,$quarter,$level,$student->idno,$grade->subjectcode);
                             $acad_rank =$student->oa_acad_final;
                                 break;
                     }
