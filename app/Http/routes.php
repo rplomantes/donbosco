@@ -209,7 +209,8 @@
     Route::get('printcashbreakdown/{fromtran}/{totran}','Accounting\CashReceiptController@breakdownpdf');
     
     Route::get('deptincome/{account}/{fromtran}/{totran}', 'Accounting\DeptIncomeController@index');
-    Route::get('printconsolidate/{account}/{fromtran}/{totran}', 'Accounting\DeptIncomeController@printreport');
+    Route::get('deptreport/{dept}/{account}/{fromtran}/{totran}', 'Accounting\DeptIncomeController@deptreport');
+    Route::get('printconsolidate/{account}/{fromtran}/{totran}', 'Accounting\DeptIncomeController@printconsolidatedreport');
     
     Route::get('/tvetledger','Vincent\TvetController@tvetledger');
     Route::get('/studentsledger/{batch}/{cours}/{section}','Vincent\TvetController@getsectionstudent');
@@ -340,12 +341,17 @@
     
     Route::get('/pullrecords','Update\UpdateController@prevgrade');
     Route::get('/studentslist/{level}/{sy}', 'Registrar\AjaxController@levelStudent');
+    Route::get('/getoverallrank', 'Registrar\AjaxController@getoverallrank');
+    Route::get('/setoverallrank', 'Registrar\OverallRankController@setOARank');
+    
     
     
     
 // Registrar Group
 Route::group(['middleware' => ['web','registrar']], function () {
     Route::get('/kto12sectioning/{sy}', 'Registrar\SectionController@sectioning');
+    Route::get('/overallranking/{sy}', 'Registrar\OverallRankController@index');
+    
    Route::get('/sheetA/{record}',function($record){
        $levels = \App\CtrLevel::get();
        return view('vincent.registrar.sheetAv2',compact('levels','record'));

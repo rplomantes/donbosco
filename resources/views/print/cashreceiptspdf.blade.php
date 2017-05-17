@@ -172,7 +172,7 @@
 					$refno = $currTrans[$index]['refno'];
 					$idno = \App\Credit::where('refno',$refno)->first()->idno;
 					$student = \App\User::where('idno',$idno)->first();
-					$name = $student->lastname.", ".$student->firstname." ".$student->middlename;
+					$name = $currTrans[$index]['from'];
 
                             if(strlen($name)<=28){
                                 $currrows++;

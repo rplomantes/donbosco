@@ -420,7 +420,7 @@ class AjaxController extends Controller
         
         return $result;
         
-    }    
+    }
     
     public function calcSeniorGrade($quarter,$idno,$sy){
             switch ($quarter){

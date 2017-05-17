@@ -18,6 +18,35 @@ $totaltvet = 0;
 $totalpastoral = 0;
 $abstotal = 0;
 ?>
+
+<h4 style="text-align: left;">CONSOLIDATED DEPARTMENTAL
+    @if($accountcode == 4)
+    INCOME
+    @else
+    EXPENSE
+    @endif
+    SUBSIDIARY LEDGER
+</h4>
+
+<div class="col-md-3">
+<div class class="form form-group">
+<label>From :</label>
+    <input type="text" id="fromtran" class="form-control" value="{{$fromtran}}">
+</div>   
+</div>    
+<div class="col-md-3">
+<div class="form form-group">
+    <label>To :</label>
+    <input type="text" id="totran"  value="{{$totran}}" class="form-control">
+</div>
+</div>
+<div class="col-md-3">
+<div class="form form-group">
+    <br>    
+    <button onclick="showtran()" class="btn btn-primary form-control">View Report</button>
+</div>    
+</div>
+
 <table class="table table-striped">
     <thead>
         <th>ACCOUNT TITLE</th>
@@ -34,8 +63,6 @@ $abstotal = 0;
     
     @foreach($accounts as $account)
     <?php
-        $credits = DB::Select("Select sum(none) as none,sum(rector) as rector,sum(elem) as elem,sum(hs) as hs,sum(tvet) as tvet,sum(service) as service,sum(admin) as admin,sum(pastoral) as pastoral from creditconsolidated where (transactiondate between '$fromtran' AND '$totran') and accountingcode = $account->acctcode");
-        $debits  = DB::Select("Select sum(none) as none,sum(rector) as rector,sum(elem) as elem,sum(hs) as hs,sum(tvet) as tvet,sum(service) as service,sum(admin) as admin,sum(pastoral) as pastoral from debitconsolidated  where (transactiondate between '$fromtran' AND '$totran') and accountingcode = $account->acctcode");
 
         $none = 0;
         $rector= 0;
@@ -66,27 +93,27 @@ $abstotal = 0;
         
         $total = 0;
         
-        if(count($credits)>0){
-            $creditnone = $credits[0]->none;
-            $creditrector= $credits[0]->rector;
-            $creditelem= $credits[0]->elem;
-            $crediths= $credits[0]->hs;
-            $credittvet= $credits[0]->tvet;
-            $creditservice= $credits[0]->service;
-            $creditadmin= $credits[0]->admin;
-            $creditpastoral= $credits[0]->pastoral;
-        }
         
-        if(count($debits)>0){
-            $debitnone = $debits[0]->none;
-            $debitrector= $debits[0]->rector;
-            $debitelem= $debits[0]->elem;
-            $debiths= $debits[0]->hs;
-            $debittvet= $debits[0]->tvet;
-            $debitservice= $debits[0]->service;
-            $debitadmin= $debits[0]->admin;
-            $debitpastoral= $debits[0]->pastoral;
-        }
+            $creditnone = $account->creditnone;
+            $creditrector= $account->creditrector;
+            $creditelem= $account->creditelem;
+            $crediths= $account->crediths;
+            $credittvet= $account->credittvet;
+            $creditservice= $account->creditservice;
+            $creditadmin= $account->creditadmin;
+            $creditpastoral= $account->creditpastoral;
+        
+        
+        
+            $debitnone = $account->debitnone;
+            $debitrector= $account->debitrector;
+            $debitelem= $account->debitelem;
+            $debiths= $account->debiths;
+            $debittvet= $account->debittvet;
+            $debitservice= $account->debitservice;
+            $debitadmin= $account->debitadmin;
+            $debitpastoral= $account->debitpastoral;
+        
         if($accountcode == 4){
             $none = $creditnone - $debitnone;
             $rector= $creditrector - $debitrector;
@@ -135,7 +162,7 @@ $abstotal = 0;
     </tr>    
     @endforeach
     <tr>
-        <td><b>Total</b></td>
+        <td class="amount"><b>Total</b></td>
         <td class="amount">{{DeptIncomeController::returnzero($abstotal)}}</td>
         <td class="amount">{{DeptIncomeController::returnzero($totalnone)}}</td>
         <td class="amount">{{DeptIncomeController::returnzero($totalrector)}}</td>
@@ -151,4 +178,14 @@ $abstotal = 0;
 <div class="container">
     <a href="{{url('printconsolidate',array($accountcode,$fromtran,$totran))}}" class="col-md-12 btn btn-info">PRINT</a>
 </div>
+
+<script>
+function showtran(){
+   //alert("hello")
+    var fromtran = document.getElementById('fromtran').value
+    var totran = document.getElementById('totran').value
+    var acctcode =  {{$accountcode}}
+    document.location= "/deptincome/" + acctcode + "/" + fromtran + "/" + totran
+}
+</script>
 @stop
