@@ -199,6 +199,8 @@
     
     
     //Accounting VINCENT (10-13-2016)
+    Route::get('/advancedstud', 'DBFixer@getAdvancedStudents');
+    
     Route::get('/discounting', 'Update\UpdateController@updateDiscount');
     Route::get('checksummary/{from}/{to}','Accounting\DisbursementController@checkSummary');
     Route::get('printchecksummary/{from}/{to}','Accounting\DisbursementController@printcheckSummary');

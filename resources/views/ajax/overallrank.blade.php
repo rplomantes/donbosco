@@ -65,12 +65,14 @@
                             $acad_rank =$student->oa_acad_final;
                                 break;
                     }
+                    
+                    $acad = GradeController::gradeSubjectAve($quarter,$grade,$level);
                 ?>
                 @if($grade->subjecttype == 5 || $grade->subjecttype == 6 || $grade->subjecttype == 0)
                 <td>{{$acad}}</td>
                 @endif
             @endforeach
-            <td>{{GradeController::acadstudentAverage($sy,$quarter,$level,$student->idno)}}</td>
+            <td>{{GradeController::gradeQuarterAve(array(0,5,6),$quarter,$grades,$level)}}</td>
             <td>{{$acad_rank}}</td>
             @foreach($grades as $grade)
                 <?php
