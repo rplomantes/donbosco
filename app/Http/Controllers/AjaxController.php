@@ -1199,7 +1199,7 @@ class AjaxController extends Controller
                   return "true";  
                 }
             }
-            function getaccountname($acctcode){
+            static function getaccountname($acctcode){
                 return \App\ChartOfAccount::where('acctcode',$acctcode)->first()->accountname;
             }
  }

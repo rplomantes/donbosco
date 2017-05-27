@@ -26,4 +26,32 @@ class AccountSummaryController extends Controller{
             return view('accounting.subsidiary',compact('acctcodes','fromdate','todate'));
         }
     }
+    
+    function printaccountSummary($fromdate,$todate,$account){
+        $accounts = $this->getaccounts($fromdate,$todate,$account);
+        
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->loadView('print.accountsummary',compact('fromdate','todate','accounts','account'));
+        return $pdf->stream();  
+        
+    }
+    
+    static function getaccounts($fromdate,$todate,$account){
+        $accounts = DB::Select("select refno,transactiondate,receiptno,debit,credit,entry_type from "
+                . "(select c.refno,c.transactiondate,c.receiptno,0 as debit,sum(c.amount) as credit,c.entry_type "
+                . "from credits c "
+                . "join dedits d "
+                . "ON c.refno = d.refno "
+                . "where (c.transactiondate BETWEEN '$fromdate' AND '$todate') "
+                . "AND c.accountingcode = '$account' and c. isreverse=0 "
+                . "group by c.refno "
+                . "UNION "
+                . "select refno,transactiondate,receiptno,sum(amount)+sum(checkamount) as debit,0 as credit,entry_type "
+                . "from dedits "
+                . "where (transactiondate BETWEEN '$fromdate' AND '$todate' ) "
+                . "AND accountingcode = '$account' and isreverse=0 "
+                . "group by refno) c order by transactiondate,receiptno");
+        
+        return $accounts;
+    }
 }

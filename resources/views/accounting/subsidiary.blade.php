@@ -12,7 +12,7 @@
         <div class="form-group">
             <h5>Account Title :</h5>
             <select name="accountname" id="accountname" class="form-control">
-                <option value="">-- Select --</option>
+                <option value="" hidden disabled selected>-- Select --</option>
                 @foreach($acctcodes as $acctcode)
                 <option value="{{$acctcode->acctcode}}">{{$acctcode->accountname}}</option>
                 @endforeach
@@ -26,7 +26,12 @@
 <div class="container" id="viewreport">
     
 </div>
+<div class="container" id="viewprint">
+    <button id="print" class="col-md-12 btn btn-primary" onclick="viewprint()">Print</button>
+</div>
+
 <script>
+    $('#viewprint').hide()
     function viewreport(){
         var arrays = {};
         arrays['from'] = $("#from").val();
@@ -39,9 +44,14 @@
             data:arrays,
             success:function(data){
                 $("#viewreport").html(data);
+                $('#viewprint').show()
             }
         });
         
+    }
+    
+    function viewprint(){
+        document.location="/printindividualsummary/" + $('#from').val() + "/" + $('#to').val() + "/" + $('#accountname').val();
     }
 </script>
 @stop
