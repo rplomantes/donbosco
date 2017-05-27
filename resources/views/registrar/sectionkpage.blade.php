@@ -31,7 +31,7 @@
 
 <script>
 $('#level').change(function(){
-if($('#level').val() == "Grade 9" || $('#level').val() == "Grade 10" || $('#level').val() == "Grade 11" ){
+if($('#level').val() == "Grade 9" || $('#level').val() == "Grade 10" || $('#level').val() == "Grade 11" || $('#level').val() == "Grade 12" ){
      $("#studentlist").html("");
      $("#sectioncontrol").html("");
      $("#sectionlist").html("")

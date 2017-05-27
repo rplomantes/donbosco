@@ -58,6 +58,8 @@ class DBFixer extends Controller
        $totalreg = 0;
        $totaltuition = 0;
        $totalbook = 0;
+       $totalreservation = 0;
+       $totalother = 0;
        
        $totaldiscelearnig = 0;
        $totaldiscmisc = 0;
@@ -65,6 +67,7 @@ class DBFixer extends Controller
        $totaldiscreg = 0;
        $totaldisctuition = 0;
        $totaldiscbook = 0;
+       $totaldiscother = 0;
        
        $totalfapeelearnig = 0;
        $totalfapemisc = 0;
@@ -72,6 +75,7 @@ class DBFixer extends Controller
        $totalfapereg = 0;
        $totalfapetuition = 0;
        $totalfapebook = 0;
+       $totalfapeother = 0;
        
        $totalreselearnig = 0;
        $totalresmisc = 0;
@@ -86,57 +90,81 @@ class DBFixer extends Controller
        $totaldepreg = 0;
        $totaldeptuition = 0;
        $totaldepbook = 0;
+       $totaldepother = 0;
+       
+       $totaldebreservation = 0;
+       $totalregreservation = 0;
+       
+       $remfape = 0;
+       $remsd = 0;
        
        $crossmoney = 0;
        $sy = 2017;
        $receipts = DB::Select("Select distinct refno from statuses s join credits c on s.idno = c.idno and s.schoolyear = c.schoolyear where s.schoolyear = $sy and s.status = 2 and isreverse = 0 and (date_enrolled between '2017-02-01' AND '2017-04-31') and (transactiondate between '2017-02-01' AND '2017-04-31') and accountingcode in (420200,420400,420100,420000,120100,440400) and s.department != 'TVET' and referenceid != ''");
        
        foreach($receipts as $receipt){
+
            $elearnig = 0;
            $misc = 0;
            $dept = 0;
            $reg = 0;
            $tuition = 0;
            $book = 0;
-           
+           $reservation = 0;
+           $other = 0;
+//           
            $discelearnig = 0;
            $discmisc = 0;
            $discdept = 0;
            $discreg = 0;
            $disctuition = 0;
            $discbook = 0;
-
+//
            $fapeelearnig = 0;
            $fapemisc = 0;
            $fapedept = 0;
            $fapereg = 0;
            $fapetuition = 0;
            $fapebook = 0;
-
-           $reselearnig = 0;
-           $resmisc = 0;
-           $resdept = 0;
-           $resreg = 0;
-           $restuition = 0;
-           $resbook = 0;
-
+           $fapeother = 0;
+//
+//           $reselearnig = 0;
+//           $resmisc = 0;
+//           $resdept = 0;
+//           $resreg = 0;
+//           $restuition = 0;
+//           $resbook = 0;
+//
            $depelearnig = 0;
            $depmisc = 0;
            $depdept = 0;
            $depreg = 0;
            $deptuition = 0;
            $depbook = 0;
+           $depother = 0;
            
-           $summoneys = DB::Select("Select sum(amount)+sum(checkamount) as money from dedits where refno = $receipt->refno and paymenttype IN (1,5)");
-           foreach($summoneys as $summoney){
-               $money = $summoney->money;
-           }
-           $crossmoney = $crossmoney + $money;
+           $fapedother = 0;
+           $fapedbook = 0;
+           $fapedreg = 0;
+           $fapeddept = 0;
+           $fapedmisc = 0;
+           $fapedelearnig = 0;
+           $fapedtuition = 0;
+           
+           $discountedt = 0;
+           $reservedreg = 0;
+           
+           $debreservation = 0;
+           $regreservation = 0;
+           $hasReservation = 0;
+           
+           $sd = 0;
+           $fape = 0;
+
            $accounts = \App\Credit::where('refno',$receipt->refno)->get();
-           
+//           
            $divider = DB::Select("Select * from credits where refno = $receipt->refno group by accountingcode");
-           $noncashes = \App\Dedit::where('refno',$receipt->refno)->whereIn('paymenttype',array(2,3,4,6,7,8,9))->get();
-           
+//           
            foreach($accounts as $account){
                if($account->accountingcode == 420200 && $account->schoolyear == 2017){
                    $elearnig = $elearnig + $account->amount;
@@ -156,75 +184,160 @@ class DBFixer extends Controller
                if($account->accountingcode == 440400 && $account->schoolyear == 2017){
                    $book = $book + $account->amount;
                }
+               if($account->accountingcode == 210400 && $account->schoolyear == 2017){
+                   $reservation = $reservation + $account->amount;
+                   $hasReservation = 1;
+               }
+               if($account->schoolyear != 2017){
+                   $other = $other + $account->amount;
+               }
            }
+//           
+           $noncashes = \App\Dedit::where('refno',$receipt->refno)->whereIn('paymenttype',array(2,3,4,5,6,7,8,9))->get();  
            
            foreach($noncashes as $noncash){
-               if($noncash->accountingcode == 410100 || $noncash->accountingcode == 410200){
-                   $tuition = $tuition - $account->amount;
-                   
-               }
-               if($noncash->description == 'FAPE'){
-                   $divideto = $account->amount/count($divider);
-                    $elearnig = $elearnig - $divideto;
-                    $misc = $misc - $divideto;
-                    $dept = $dept - $divideto;
-                    $reg = $reg - $divideto;
-                    $tuition = $tuition - $divideto;
-                    $book = $book - $divideto;
-               }
-               if($noncash->paymenttype == 4 && ($noncash->accountingcode != 410100 || $noncash->accountingcode != 410200)){
-                   foreach($accounts as $account){
-                       $ledger = \App\Ledger::where('id',$account->referenceid)->first();
-                       if(count($ledger)>0){
-                           
-                        if($ledger->amount - ($ledger->plandiscount+$ledger->otherdiscount)==0){
-                            $minus = $ledger->otherdiscount;
-                        }else{
-                            $minus = 0;
-                        }
 
-                         if($ledger->accountingcode == 420200){
-                             $elearnig = $elearnig + $ledger->otherdiscount;
-                         }
-                         if($ledger->accountingcode == 420400){
-                             $misc = $misc + $ledger->otherdiscount;
-                         }
-                         if($ledger->accountingcode == 420100){
-                             $dept = $dept + $ledger->otherdiscount;
-                         }
-                         if($ledger->accountingcode == 420000){
-                             $reg = $reg + $ledger->otherdiscount;
-                         }
-                         if($ledger->accountingcode == 120100){
-                             $tuition = $tuition + $ledger->otherdiscount;
-                         }
-                         if($ledger->accountingcode == 440400){
-                             $book = $book + $ledger->otherdiscount;
-                         }
-                       }
+               if(($noncash->accountingcode == 410100) || ($noncash->accountingcode == 410200) || ($noncash->accountingcode == 500300) || ($noncash->accountingcode == 530200)){
+                   $disctuition = $disctuition + $noncash->amount;
+               }
+               
+               $discountedt = $tuition - $disctuition;
+               
+               if($noncash->accountingcode == 210400){
+                   if($hasReservation == 0){
+                       $regreservation = $regreservation + $noncash->amount;
+                   }else{
+                       $debreservation = $debreservation + $noncash->amount;
                    }
                }
-           
-                    $totalelearnig = $totalelearnig + $elearnig;
-                    $totalmisc = $totalmisc + $misc;
-                    $totaldept = $totaldept + $dept;
-                    $totalreg = $totalreg + $reg;
-                    $totaltuition = $totaltuition + $tuition;
-                    $totalbook = $totalbook + $book;
                
+               $reservedreg = $reg - $regreservation;
+               
+               if($noncash->description == 'FAPE'){
+                   $fape = $noncash->amount;
+                   
+                   if($fape > 0){
+                       $fapeother = $this->addminus($other,$fape);
+                       $fape = $fape - $fapeother;
+                   }
+                   if($fape>0){
+                       $fapebook = $this->addminus($book,$fape);
+                       $fape = $fape - $fapebook;
+                   }
+                   if($fape>0){
+                       $fapereg = $this->addminus($reservedreg,$fape);
+                       $fape = $fape - $fapereg;
+                   }
+                   if($fape>0){
+                       $fapedept = $this->addminus($dept,$fape);
+                       $fape = $fape - $fapedept;
+                   }
+                   if($fape>0){
+                       $fapemisc = $this->addminus($misc,$fape);
+                       $fape = $fape - $fapemisc;
+                   }
+                   if($fape>0){
+                       $fapeelearnig = $this->addminus($elearnig,$fape);
+                       $fape = $fape - $fapeelearnig;
+                   }
+                   if($fape>0){
+                       $fapetuition = $this->addminus($discountedt,$fape);
+                       $fape = $fape - $fapetuition;
+                   }
                }
+               
+               $fapedother = $other - $fapeother;
+               $fapedbook = $book - $fapebook;
+               $fapedreg = $reg - $fapereg;
+               $fapeddept = $dept - $fapedept;
+               $fapedmisc = $misc - $fapemisc;
+               $fapedelearnig = $elearnig - $fapeelearnig;
+               $fapedtuition = $tuition - ($fapetuition+$discountedt);
+               
+               if($noncash->description == 'Student Deposit'){
+                   $sd = $noncash->amount;
+                   if($sd>0){
+                       $depother = $this->addminus($fapedother,$sd);
+                       $sd = $sd - $depother;
+                   }
+                   if($sd>0){
+                       $depbook = $this->addminus($fapedbook,$sd);
+                       $sd = $sd - $depbook;
+                   }
+                   if($sd>0){
+                       $depreg = $this->addminus($fapedreg,$sd);
+                       $sd = $sd - $depreg;
+                   }
+                   if($sd>0){
+                       $depdept = $this->addminus($fapeddept,$sd);
+                       $sd = $sd - $depdept;
+                   }
+                   if($sd>0){
+                       $depmisc = $this->addminus($fapedmisc,$sd);
+                       $sd = $sd - $depmisc;
+                   }
+                   if($sd>0){
+                       $depelearnig = $this->addminus($fapedelearnig,$sd);
+                       $sd = $sd - $depelearnig;
+                   }
+                   if($sd>0){
+                       $deptuition = $this->addminus($discountedt+$fapedtuition,$sd);
+                       $sd = $sd - $deptuition;
+                   }
+               }
+           }
            
-           
-           
-       }
-       echo $totalelearnig."<br>";
-       echo $totalmisc."<br>";
-       echo $totaldept."<br>";
-       echo $totalreg."<br>";
-       echo $totaltuition."<br>";
-       echo $totalbook."<br>";
-       echo "<br>".$crossmoney."<br>";
-       return "none";
+       $totalelearnig = $totalelearnig + $elearnig;
+       $totalmisc = $totalmisc + $misc;
+       $totaldept = $totaldept + $dept;
+       $totalreg = $totalreg + $reg;
+       $totaltuition = $totaltuition + $tuition;
+       $totalbook = $totalbook + $book;
+       $totalreservation = $totalreservation + $reservation;
+       $totalother = $totalother + $other;
        
+       $totaldiscelearnig = $totaldiscelearnig + $discelearnig;
+       $totaldiscmisc = $totaldiscmisc + $discmisc;
+       $totaldiscdept = $totaldiscdept + $discdept;
+       $totaldiscreg = $totaldiscreg + $discreg;
+       $totaldisctuition = $totaldisctuition + $disctuition;
+       $totaldiscbook = $totaldiscbook + $discbook;
+       
+       $totalfapeelearnig = $totalfapeelearnig + $fapeelearnig;
+       $totalfapemisc = $totalfapemisc + $fapemisc;
+       $totalfapedept = $totalfapedept + $fapedept;
+       $totalfapereg = $totalfapereg + $fapereg;
+       $totalfapetuition = $totalfapetuition + $fapetuition;
+       $totalfapebook = $totalfapebook + $fapebook;
+       $totalfapeother = $totalfapeother + $fapeother;
+       
+       $totaldepelearnig = $totaldepelearnig + $depelearnig;
+       $totaldepmisc = $totaldepmisc + $depmisc;
+       $totaldepdept = $totaldepdept + $depdept;
+       $totaldepreg = $totaldepreg + $depreg;
+       $totaldeptuition = $totaldeptuition + $deptuition;
+       $totaldepbook = $totaldepbook + $depbook;
+       $totaldepother = $totaldepother + $depother;
+       
+       $remfape = $fape;
+       $remsd = $sd;
+       
+       $totaldebreservation = $totaldebreservation + $debreservation;
+       $totalregreservation = $totalregreservation + $regreservation;
+
+       }
+       
+
+       return view('report',compact('totalelearnig','totalmisc','totaldept','totalreg','totaltuition','totalbook','totalreservation','totalother','totaldiscelearnig','totaldiscmisc','totaldiscdept','totaldiscreg','totaldisctuition','totaldiscbook','totalfapeelearnig','totalfapemisc','totalfapedept','totalfapereg','totalfapetuition','totalfapebook','totalfapeother','totaldepelearnig','totaldepmisc','totaldepdept','totaldepreg','totaldeptuition','totaldepbook','totaldepother','remfape','remsd','totaldebreservation','totalregreservation'));
+   }
+   
+   function addminus($account,$amount){
+       if($account >= $amount){
+           $returned= $amount;
+       }else{
+           $returned= $account;
+       }
+       
+       return $returned;
    }
 }

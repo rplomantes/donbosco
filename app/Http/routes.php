@@ -347,8 +347,11 @@
     
     Route::get('/pullrecords','Update\UpdateController@prevgrade');
     Route::get('/studentslist/{level}/{sy}', 'Registrar\AjaxController@levelStudent');
+    Route::get('/getsectionstudents', 'Registrar\AjaxController@getsectionstudents');
+    
     Route::get('/getoverallrank', 'Registrar\AjaxController@getoverallrank');
     Route::get('/setoverallrank', 'Registrar\OverallRankController@setOARank');
+    
     
     
     
@@ -357,6 +360,7 @@
 Route::group(['middleware' => ['web','registrar']], function () {
     Route::get('/kto12sectioning/{sy}', 'Registrar\SectionController@sectioning');
     Route::get('/overallranking/{sy}', 'Registrar\OverallRankController@index');
+    Route::get('/autosection/{level}', 'Registrar\AjaxController@autoSectioning');
     
    Route::get('/sheetA/{record}',function($record){
        $levels = \App\CtrLevel::get();
@@ -364,5 +368,15 @@ Route::group(['middleware' => ['web','registrar']], function () {
    });
    
 });
+
+
+
+// Accounting Group
+
+Route::group(['middleware' => ['web','accounting']], function () {
+    Route::get('/individualsummary/{fromdate}/{todate}', 'Accounting\AccountSummaryController@index');
+});
     
+
+Route::get('/getindividualaccount', 'Accounting\AjaxController@individualAccount');
    

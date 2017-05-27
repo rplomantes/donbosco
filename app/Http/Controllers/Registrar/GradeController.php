@@ -164,14 +164,15 @@ class GradeController extends Controller
                         break;
                     default:
                         if($level == "Grade 7" | $level == "Grade 8" | $level == "Grade 9" | $level == "Grade 10"){
-                            $grade = $grade + (round(($subject->first_grading + $subject->second_grading +$subject->third_grading + $subject->fourth_grading)/4,0));
+                            $grade = $grade + round($subject->final_grade,0);
                         }else{
-                            $grade = $grade + (round(($subject->first_grading + $subject->second_grading +$subject->third_grading + $subject->fourth_grading)/4,2));
+                            $grade = $grade + round($subject->final_grade,2);
                         }
                         break;
                 }
             }
         }
+        
         if($level == "Grade 7" | $level == "Grade 8" | $level == "Grade 9" | $level == "Grade 10"){
             $average = round($grade/$total,0);
         }else{

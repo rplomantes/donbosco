@@ -56,13 +56,13 @@ class OverallRankController extends Controller
         if($level == "Grade 7" || $level == "Grade 8" || $level == "Grade 9" || $level == "Grade 10" || $level == "Grade 11" || $level == "Grade 12"){
             
             if($quarter == 5){
-                $averages = DB::Select("SELECT grades.idno,ROUND((ROUND( SUM( first_grading ) / COUNT( grades.idno ) , 0 ) + ROUND( SUM( second_grading ) / COUNT( grades.idno ) , 0 ) + ROUND( SUM( third_grading ) / COUNT( grades.idno ) , 0 ) + ROUND( SUM( fourth_grading ) / COUNT( grades.idno ) , 0 ) ) /4, 0 ) as average "
+                $averages = DB::Select("SELECT grades.idno,ROUND( SUM(ROUND(final_grade,0)) / count( grades.idno ) ,0) AS average "
                         . "FROM `grades` "
-                        . "left join statuses on statuses.idno = grades.idno "
+                        . "left join $table s on s.idno = grades.idno "
                         . "WHERE subjecttype IN (0,5,6) "
                         . "AND grades.level = '$level' "
                         . "AND grades.schoolyear = '$sy' "
-                        . "AND statuses.strand = '$course' "
+                        . "AND s.strand = '$course' "
                         . "AND isdisplaycard = 1 "
                         . "GROUP BY idno ORDER BY `average` DESC");
             }
@@ -70,18 +70,18 @@ class OverallRankController extends Controller
                 $averages = DB::Select("SELECT grades.idno,ROUND( SUM( $qrt ) / count( grades.idno ) ,0) AS average "
                         . "FROM `grades` "
                         . "left join $table s"
-                        . "on s.idno = grades.idno "
+                        . " on s.idno = grades.idno "
                         . "and s.schoolyear = grades.schoolyear "
                         . "WHERE subjecttype IN (0,5,6) "
                         . "AND grades.level = '$level' "
                         . "AND grades.schoolyear = '$sy' "
-                        . "AND statuses.strand = '$course' "
+                        . "AND s.strand = '$course' "
                         . "AND isdisplaycard = 1 "
-                        . "GROUP BY idno ORDER BY `average` and  DESC");
+                        . "GROUP BY idno ORDER BY `average` DESC");
             }
         }else{
             if($quarter == 5){
-                $averages = DB::Select("SELECT grades.idno,ROUND((ROUND( SUM( first_grading ) / COUNT( grades.idno ) , 2 ) + ROUND( SUM( second_grading ) / COUNT( grades.idno ) , 2 ) + ROUND( SUM( third_grading ) / COUNT( grades.idno ) , 2 ) + ROUND( SUM( fourth_grading ) / COUNT( grades.idno ) , 2 ) ) /4, 2 ) as average "
+                $averages = DB::Select("SELECT grades.idno,ROUND( SUM(ROUND(final_grade,2)) / count( grades.idno ) ,2) AS average "
                         . "FROM `grades` "
                         . "left join statuses on statuses.idno = grades.idno "
                         . "WHERE subjecttype IN (0,5,6) "

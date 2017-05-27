@@ -37,13 +37,14 @@ class AddtoAccountController extends Controller
         $newledger = new \App\Ledger;
         $fiscal = \App\CtrFiscalyear::first();
         $acctcode = \App\ChartOfAccount::where('acctcode',$request['accttype'])->first();
+        $sy = \App\ctrSchoolYear::first()->schoolyear;
         
         if(count($status)>0){
         $newledger->level=$status->level;
         $newledger->course=$status->course;
         $newledger->strand=$status->strand;
         $newledger->department = $status->department;
-        $newledger->schoolyear=$status->schoolyear;
+        $newledger->schoolyear=$sy;
         $newledger->period=$status->period;
         }
         

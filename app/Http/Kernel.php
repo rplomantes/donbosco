@@ -48,6 +48,7 @@ class Kernel extends HttpKernel
         'maker' => \App\Http\Middleware\UserMaker::class,
         'acct' => \App\Http\Middleware\Accounting::class,
         'registrar' => \App\Http\Middleware\registrarModules::class,
+        'accounting' => \App\Http\Middleware\accountingModules::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,

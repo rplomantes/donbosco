@@ -18,7 +18,7 @@
         
         <!--TECH RANK-->
         @foreach($subjects as $subject)
-            @if($subject->subjecttype == 1){
+            @if($subject->subjecttype == 1)
             <td>{{$subject->subjectname}}</td>
             @endif
         @endforeach
@@ -47,6 +47,7 @@
             <td>{{strrchr($student->section," ")}}</td>
             <td style="text-align: left">{{$studInfo->lastname}}, {{$studInfo->firstname}} {{$studInfo->middlename}} {{$studInfo->extensionname}}</td>
             @foreach($grades as $grade)
+                
                 <?php
                     switch($quarter){
                         case 1:
@@ -78,26 +79,23 @@
                 <?php
                     switch($quarter){
                         case 1:
-                            $tech = round($grade->first_grading,0);
                             $tech_rank =$student->oa_acad_1;
                             break;
                         case 2:
-                            $tech = round($grade->second_grading,0);
                             $tech_rank =$student->oa_acad_2;
                             break;
                         case 3:
-                            $tech = round($grade->third_grading,0);
                             $tech_rank =$student->oa_acad_3;
                             break;
                         case 4:
-                            $tech = round($grade->fourth_grading,0);
                             $tech_rank =$student->oa_acad_4;
                             break;
                         default:
-                            $acad = $grade->final_grade;
                             $tech_rank =$student->oa_acad_final;
                                 break;
                     }
+                    
+                    $tech = GradeController::gradeSubjectAve($quarter,$grade,$level);
                 ?>
                 @if($grade->subjecttype == 1)
                 <td>{{$tech}}</td>

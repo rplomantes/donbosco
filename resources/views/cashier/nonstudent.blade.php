@@ -1,6 +1,11 @@
 <?php
 $banks = \App\Dedit::distinct('bank_branch')->pluck('bank_branch')->toArray();
 $checkno = \App\Dedit::distinct('check_number')->pluck('check_number')->toArray();
+$payees = \App\NonStudent::distinct('fullname')->pluck('fullname')->toArray();
+
+foreach($payees as $key=>$value){
+  $payees[$key]=str_replace('"','\"',$value);
+}
 ?>
 
 @extends('appcashier')
@@ -19,6 +24,13 @@ $checkno = \App\Dedit::distinct('check_number')->pluck('check_number')->toArray(
     var checkno = [<?php echo '"'.implode('","', $checkno).'"' ?>];
     $( "#check_number" ).autocomplete({
       source: checkno
+    });
+    });
+    
+   $( function() {
+    var payee = [<?php echo '"'.implode('","', $payees).'"' ?>];
+    $( "#name" ).autocomplete({
+      source: payee
     });
     });
 </script>
