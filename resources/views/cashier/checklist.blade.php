@@ -22,15 +22,38 @@
 <p>Received by : {{Auth::user()->lastname}}, {{Auth::user()->firstname}} <br>
     Date:<input type="text" id="trandate" value="{{date('Y-m-d')}}" class="form"><a href="#" onclich="showchecks()" class="btn btn-primary">Show List</a>
 </p>
+<h4>China Bank</h4>
 <table class="table table-striped"><tr><td>OR No</td><td>Name</td><td>Bank</td><td>Check No</td><td align="right">Amount</td></tr>
-    <?php $total = 0;?>
+    <?php 
+    $total = 0;
+    $summary = 0;
+    ?>
     @foreach($checklists as $checklist)
-    @if($checklist->checkamount>0)
+    @if(($checklist->checkamount>0) && ($checklist->bank_branch =="CBC"))
     <tr><td>{{$checklist->receiptno}}</td><td>{{$checklist->receivefrom}}</td><td>{{$checklist->bank_branch}}</td><td>{{$checklist->check_number}}</td><td align="right">{{number_format($checklist->checkamount,2)}}</td></tr>
     <?php $total = $total + $checklist->checkamount; ?>
     @endif
     @endforeach
     <tr><td colspan="4">Total</td><td align="right"><strong><?php echo number_format($total, 2);?></strong></td></tr>
+    <?php $summary = $summary+$total;?>
+</table>
+
+<p>&nbsp;</p>
+<h4>Other Bank</h4>
+<table class="table table-striped"><tr><td>OR No</td><td>Name</td><td>Bank</td><td>Check No</td><td align="right">Amount</td></tr>
+    <?php $total = 0;?>
+    @foreach($checklists as $checklist)
+    @if(($checklist->checkamount>0) && ($checklist->bank_branch !="CBC"))
+    <tr><td>{{$checklist->receiptno}}</td><td>{{$checklist->receivefrom}}</td><td>{{$checklist->bank_branch}}</td><td>{{$checklist->check_number}}</td><td align="right">{{number_format($checklist->checkamount,2)}}</td></tr>
+    <?php $total = $total + $checklist->checkamount; ?>
+    @endif
+    @endforeach
+    <tr><td colspan="4">Total</td><td align="right"><strong><?php echo number_format($total, 2);?></strong></td></tr>
+    <?php $summary = $summary+$total;?>
+</table>
+<p>&nbsp;</p>
+<table class="table table-striped">
+    <tr><td>Overall Total</td><td align="right"><strong><?php echo number_format($summary, 2);?></strong></td></tr>
 </table>
 </div>
 </div>
