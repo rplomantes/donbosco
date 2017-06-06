@@ -147,6 +147,9 @@
                 <li><a href="{{url('statementofaccount')}}"><i class="fa fa-btn fa-sign-out"></i>Statement of Account</a></li>
                 <li><a href="{{url('deptincome',array(4,date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn fa-sign-out"></i>Consolidated Departmental Income</a></li>
                 <li><a href="{{url('deptincome',array(5,date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn fa-sign-out"></i>Consolidated Departmental Expense</a></li>
+                <li><hr></li>
+                <li><a href="{{url('departmentalsummary',array(date('Y-m-d'),date('Y-m-d'),'Student Services',4))}}"><i class="fa fa-btn fa-sign-out"></i>Departmental Income</a></li>
+                <li><a href="{{url('departmentalsummary',array(date('Y-m-d'),date('Y-m-d'),'Student Services',5))}}"><i class="fa fa-btn fa-sign-out"></i>Departmental Expense</a></li>
                 @endif
 
                 </ul>

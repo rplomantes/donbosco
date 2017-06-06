@@ -8,10 +8,13 @@
             table.footer tr td{border-width: 1px; font-size: 7pt;}
             body {
             font-family: dejavu sans;}
+            
+            #footer { position: fixed; bottom:0px;border-top:1px solid gray;font-size: 10pt;}
         </style>    
         
     </head>
     <body>
+        <div id="footer">Enrolled as of {{date("Y-m-d h:i:sa")}}</div>
             <table border="0" cellspacing="0" cellpadding ="0" width="100%" style="margin-bottom: 0px;">
             <tr><td width="50" align="center"><img src="<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/images/DBTI.png" width="100%" height="auto"></td>
                 <td><span style="font-size: 10pt; font-weight: bold;" >Don Bosco Technical Institute of Makati</span><br>

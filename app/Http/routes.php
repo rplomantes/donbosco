@@ -375,7 +375,10 @@ Route::group(['middleware' => ['web','registrar']], function () {
 
 Route::group(['middleware' => ['web','accounting']], function () {
     Route::get('/individualsummary/{fromdate}/{todate}', 'Accounting\AccountSummaryController@index');
+    Route::get('/departmentalsummary/{fromdate}/{todate}/{dept}/{acctcode}', 'Accounting\OfficeSumController@index');
+    Route::get('/printdepartmentalsummary/{fromdate}/{todate}/{dept}/{acctcode}', 'Accounting\OfficeSumController@printOfficeSum');
     Route::get('/printindividualsummary/{fromdate}/{todate}/{account}', 'Accounting\AccountSummaryController@printaccountSummary');
+    
 });
     
 

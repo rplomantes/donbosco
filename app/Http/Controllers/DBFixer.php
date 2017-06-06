@@ -95,13 +95,16 @@ class DBFixer extends Controller
        $totaldebreservation = 0;
        $totalregreservation = 0;
        
+       $depositbreakdown = array();
+       
        $remfape = 0;
        $remsd = 0;
        
        $crossmoney = 0;
        $sy = 2017;
-       $receipts = DB::Select("Select distinct refno from statuses s join credits c on s.idno = c.idno and s.schoolyear = c.schoolyear where s.schoolyear = $sy and s.status = 2 and isreverse = 0 and (date_enrolled between '2017-02-01' AND '2017-04-31') and (transactiondate between '2017-02-01' AND '2017-04-31') and accountingcode in (420200,420400,420100,420000,120100,440400) and s.department != 'TVET' and referenceid != ''");
-       
+       //$receipts = DB::Select("Select distinct refno from statuses s join credits c on s.idno = c.idno and s.schoolyear = c.schoolyear where s.schoolyear = $sy and s.status = 2 and isreverse = 0 and (date_enrolled between '2017-02-01' AND '2017-04-31') and (transactiondate between '2017-02-01' AND '2017-04-31') and accountingcode in (420200,420400,420100,420000,120100,440400) and s.department != 'TVET' and referenceid != ''");
+
+       $receipts = DB::Select("Select distinct refno from statuses s join dedits c on s.idno = c.idno and s.schoolyear = c.schoolyear where s.schoolyear = $sy and s.status = 2 and isreverse = 0 and (date_enrolled between '2017-02-01' AND '2017-04-31') and (transactiondate between '2017-02-01' AND '2017-04-31') and description = 'Student Deposit' and s.department != 'TVET'");
        foreach($receipts as $receipt){
 
            $elearnig = 0;
@@ -284,7 +287,10 @@ class DBFixer extends Controller
                        $deptuition = $this->addminus($discountedt+$fapedtuition,$sd);
                        $sd = $sd - $deptuition;
                    }
+                   $depositbreakdown[] =array('trans'=>$noncash->transactiondate,'payer'=>$noncash->receivefrom,'receipt'=>$noncash->receiptno,'deposit'=>$noncash->amount,'sundry'=>$depother,'book'=>$depbook,'registration'=>$depreg,'department'=>$depdept,'misc'=>$depmisc,'elearnign'=>$depelearnig,'tuition'=>$deptuition); 
                }
+               
+               
            }
            
        $totalelearnig = $totalelearnig + $elearnig;
@@ -328,7 +334,7 @@ class DBFixer extends Controller
        }
        
 
-       return view('report',compact('totalelearnig','totalmisc','totaldept','totalreg','totaltuition','totalbook','totalreservation','totalother','totaldiscelearnig','totaldiscmisc','totaldiscdept','totaldiscreg','totaldisctuition','totaldiscbook','totalfapeelearnig','totalfapemisc','totalfapedept','totalfapereg','totalfapetuition','totalfapebook','totalfapeother','totaldepelearnig','totaldepmisc','totaldepdept','totaldepreg','totaldeptuition','totaldepbook','totaldepother','remfape','remsd','totaldebreservation','totalregreservation'));
+       return view('report',compact('totalelearnig','totalmisc','totaldept','totalreg','totaltuition','totalbook','totalreservation','totalother','totaldiscelearnig','totaldiscmisc','totaldiscdept','totaldiscreg','totaldisctuition','totaldiscbook','totalfapeelearnig','totalfapemisc','totalfapedept','totalfapereg','totalfapetuition','totalfapebook','totalfapeother','totaldepelearnig','totaldepmisc','totaldepdept','totaldepreg','totaldeptuition','totaldepbook','totaldepother','remfape','remsd','totaldebreservation','totalregreservation','depositbreakdown','receipts'));
    }
    
    function addminus($account,$amount){

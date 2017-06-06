@@ -384,8 +384,12 @@ class DisbursementController extends Controller{
         $string .= implode(' ', $words); 
         */
         if($fraction !="00"){
-        $myArray = str_split((string) $fraction);
-        $string .= " Pesos and " . $dictionary[$myArray[0]*10] . " " . $dictionary[$myArray[1]] . " Centavos";
+            if(intval($fraction) !=19){
+                $string .= " Pesos and " . $dictionary[intval($fraction)] . " Centavos";   
+            }else{
+                $myArray = str_split((string) $fraction);
+                $string .= " Pesos and " . $dictionary[$myArray[0]*10] . " " . $dictionary[$myArray[1]] . " Centavos";   
+            }
         } else{
         $string.= " Pesos ";
         }

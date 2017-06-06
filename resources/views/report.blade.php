@@ -83,3 +83,34 @@ $cashother = $totalother - ($totalfapeother+$totaldepother);
         <td></td>
     </tr>
 </table>
+<table>
+    <tr>
+        <td>Receipt No.</td>
+        <td>Transaction Date</td>
+        <td>From</td>
+        <td>Misc</td>
+        <td>Books</td>
+        <td>Elearning</td>
+        <td>Department <br> Facilities</td>
+        <td>Registration</td>
+        <td>Tuition</td>
+        <td>Others</td>
+    </tr>
+    @foreach($depositbreakdown as $deposit)
+    <tr>
+        <td>{{$deposit['receipt']}}</td>
+        <td>{{$deposit['trans']}}</td>
+        <td>{{$deposit['payer']}}</td>
+        <td>{{$deposit['deposit']}}</td>
+        <td>{{$deposit['misc']}}</td>
+        <td>{{$deposit['book']}}</td>
+        <td>{{$deposit['elearnign']}}</td>
+        <td>{{$deposit['department']}}</td>
+        <td>{{$deposit['registration']}}</td>
+        <td>{{$deposit['tuition']}}</td>
+        <td>{{$deposit['sundry']}}</td>
+    </tr>
+    @endforeach
+</table>
+</div>
+
