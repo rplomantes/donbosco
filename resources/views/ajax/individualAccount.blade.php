@@ -1,8 +1,13 @@
+<?php 
+$tdebit = 0;
+$tcredit = 0;
+?>
 <table class="table table-stripped">
     <thead>
         <tr>
             <td>Tran. Date</td>
             <td>Reference No</td>
+            <td>Name</td>
             <td>Debit</td>
             <td>Credit</td>
             <td>Entry</td>
@@ -15,17 +20,24 @@
         if($account->entry_type == 4){   
             $disremark  = \App\Disbursement::where('refno',$account->refno)->first();
             $remark = $disremark->remarks;
+            $payee = $disremark->payee;
         }else{
             $elseremark  = \App\Dedit::where('refno',$account->refno)->first();
-            $remark = $elseremark->remarks;
+            $remark =$elseremark->remarks;
+            $payee = $elseremark->receivefrom;
         }
         ?>
 
         <tr>
             <td>{{$account->transactiondate}}</td>
             <td>{{$account->receiptno}}</td>
-            <td>{{$account->debit}}</td>
-            <td>{{$account->credit}}</td>
+            <td>{{$payee}}</td>
+            <td>{{number_format($account->debit,2)}}</td>
+            <td>{{number_format($account->credit,2)}}</td>
+            <?php
+                $tdebit = $tdebit+ $account->debit;
+                $tcredit = $tcredit+ $account->credit;
+            ?>
             <td>
                 @if($account->entry_type == 1)
                 Cash Receipt
@@ -42,5 +54,12 @@
             <td width="45%">{{$remark}}</td>
         </tr>
         @endforeach
+        <tr>
+            <td colspan="3">Amount</td>
+            <td >{{number_format($tdebit,2)}}</td>
+            <td >{{number_format($tcredit,2)}}</td>
+            <td ></td>
+            <td ></td>
+        </tr>
     </tbody>
 </table>
