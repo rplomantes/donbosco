@@ -16,7 +16,9 @@
         <div class="form-group">
             <input type ="radio" name="whattype" value="China Bank" checked="checked" onclick='popcheckno(this.value)'> China Bank (On us)
         </div> 
-     
+        <div class="form-group">   
+           <input type ="radio" name="whattype" value="China Bank 2" onclick='popcheckno(this.value)'> China Bank 2 (On us)
+         </div> 
         <div class="form-group">
            <input type ="radio" name="whattype" value="BPI 1" onclick='popcheckno(this.value)'> BPI 1 (On us)
          </div> 
@@ -44,6 +46,7 @@
            <div class="form form-group">
                <h5>From</h5>
                <input type = "radio" name="withdrawfrom" value="China Bank" checked="checked">China Bank
+               <input type = "radio" name="withdrawfrom" value="China Bank 2" >China Bank 2
                <input type = "radio" name="withdrawfrom" value="BPI 1">BPI 1
                <input type = "radio" name="withdrawfrom" value="BPI 2">BPI 2
            </div>
