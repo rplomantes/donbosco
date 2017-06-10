@@ -9,27 +9,13 @@ use App\Http\Controllers\Controller;
 use DB;
 class OfficeSumController extends Controller
 {
+    
     function index($fromdate,$todate,$dept,$acctcode){
         $departments = DB::Select("Select distinct main_department from ctr_acct_dept where main_department NOT IN('Elementary Department','High School Department','TVET','Pastoral Department')");
         $schoolyear = \App\CtrSchoolYear::first()->schoolyear;
         $offices = DB::Select("Select sub_department from ctr_acct_dept where main_department ='$dept' ");
         $coas = \App\ChartOfAccount::where('acctcode','LIKE',$acctcode.'%')->orderBy('accountname','ASC')->get();
-        $accounts = DB::Select("select * from `chart_of_accounts` as coa "
-                . "left join (Select accountingcode, SUM( amount ) AS cred, 0 AS deb, sub_department AS coffice "
-                . "from credits "
-                . "where (transactiondate between '$fromdate' AND '$todate') "
-                . "and acct_department = '$dept' "
-                . "and schoolyear = $schoolyear "
-                . "and isreverse = 0 group by accountingcode,sub_department "
-                . "UNION "
-                . "Select accountingcode, 0, SUM( amount ) + SUM( checkamount ) AS deb, sub_department AS coffice from dedits "
-                . "where (transactiondate between '$fromdate' AND '$todate') "
-                . "and acct_department = '$dept' "
-                . "and schoolyear = $schoolyear "
-                . "and isreverse = 0 group by accountingcode,sub_department) d "
-                . "on d.accountingcode=coa.acctcode "
-                . "where coa.acctcode LIKE '$acctcode%' order by coa.acctcode asc");
-        
+        $accounts = $this->accounts($fromdate,$todate,$dept,$acctcode,$schoolyear);
         return view('accounting.officeSummary',compact('fromdate','todate','dept','accounts','offices','acctcode','departments','coas'));
     }
     
@@ -37,23 +23,7 @@ class OfficeSumController extends Controller
         $offices = DB::Select("Select sub_department from ctr_acct_dept where main_department ='$dept' ");
         $coas = \App\ChartOfAccount::where('acctcode','LIKE',$acctcode.'%')->orderBy('accountname','ASC')->get();
         $schoolyear = \App\CtrSchoolYear::first()->schoolyear;
-        $fiscal = \App\CtrFiscalyear::first()->fiscalyear;
-        $accounts = DB::Select("select * from `chart_of_accounts` as coa "
-                . "left join (Select accountingcode, SUM( amount ) AS cred, 0 AS deb, sub_department AS coffice "
-                . "from credits "
-                . "where (transactiondate between '$fromdate' AND '$todate') "
-                . "and acct_department = '$dept' "
-                . "and fiscalyear = $fiscal "
-                . "and schoolyear = $schoolyear "
-                . "and isreverse = 0 group by accountingcode,sub_department "
-                . "UNION "
-                . "Select accountingcode, 0, SUM( amount ) + SUM( checkamount ) AS deb, sub_department AS coffice from dedits "
-                . "where (transactiondate between '$fromdate' AND '$todate') "
-                . "and acct_department = '$dept' "
-                . "and schoolyear = $schoolyear "
-                . "and isreverse = 0 group by accountingcode,sub_department) d "
-                . "on d.accountingcode=coa.acctcode "
-                . "where coa.acctcode LIKE '$acctcode%' order by coa.acctcode asc");
+        $accounts = $this->accounts($fromdate,$todate,$dept,$acctcode,$schoolyear);
         
         $pdf = \App::make('dompdf.wrapper');
         $pdf->setPaper('legal','landscape');
@@ -144,5 +114,48 @@ class OfficeSumController extends Controller
         }else{
             return false;
         }
+    }
+    
+    function checkfiscalyear($fromdate,$todate){
+        $fiscalstart = "05-01";
+        $fiscalend   = "04-31";
+        $fiscalyear = date("Y",  strtotime($fromdate));
+        
+        if(strtotime($fromdate)<=strtotime($fiscalyear."-".$fiscalstart)){
+            $fiscalyear = $fiscalyear;
+        }else{
+            $fiscalyear=$fiscalyear+1;
+        }
+        
+        if(strtotime($todate)<=strtotime($fiscalyear."-".$fiscalend)){
+            $fiscalend = $todate;
+        }else{
+            $fiscalend = $fiscalyear."-".$fiscalend;
+        }
+        
+        return array('enddate'=>$fiscalend,'fiscal',$fiscalyear);
+    }
+    
+    function accounts($fromdate,$todate,$dept,$acctcode,$schoolyear){
+        
+        
+        
+        $accounts = DB::Select("select * from `chart_of_accounts` as coa "
+                . "left join (Select accountingcode, SUM( amount ) AS cred, 0 AS deb, sub_department AS coffice "
+                . "from credits "
+                . "where (transactiondate between '$fromdate' AND '$todate') "
+                . "and acct_department = '$dept' "
+                . "and schoolyear = $schoolyear "
+                . "and isreverse = 0 group by accountingcode,sub_department "
+                . "UNION "
+                . "Select accountingcode, 0, SUM( amount ) + SUM( checkamount ) AS deb, sub_department AS coffice from dedits "
+                . "where (transactiondate between '$fromdate' AND '$todate') "
+                . "and acct_department = '$dept' "
+                . "and schoolyear = $schoolyear "
+                . "and isreverse = 0 group by accountingcode,sub_department) d "
+                . "on d.accountingcode=coa.acctcode "
+                . "where coa.acctcode LIKE '$acctcode%' order by coa.acctcode asc");
+        
+        return $accounts;
     }
 }
