@@ -10,13 +10,11 @@ use Carbon\Carbon;
 
 class EnrollmentstatController extends Controller
 {
-    
+
 public function enrollmentstat()
-{ 
-    $sy = \App\CtrSchoolYear::first()->schoolyear;
-//    $stats=DB::Select("select count(id) as count, department, level, strand, course from statuses where status = '2' and schoolyear = '$sy'"
-//        . " group by level, strand, department, course");
-    
+{
+	$sy = \App\CtrSchoolYear::first()->schoolyear;
+
     $stats = DB::Select("select count(statuses.id) as count, statuses.department, statuses.level, strand, course from statuses join ctr_levels on statuses.level=ctr_levels.level "
             . "where status = '2' and schoolyear = '$sy' group by ctr_levels.id ASC, strand, department, course");    
     

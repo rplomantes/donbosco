@@ -175,6 +175,7 @@ class GradeController extends Controller
         
         if($level == "Grade 7" | $level == "Grade 8" | $level == "Grade 9" | $level == "Grade 10"){
             $average = round($grade/$total,0);
+            //$average =$total;
         }else{
             $average = round($grade/$total,2);
         }
@@ -182,3 +183,4 @@ class GradeController extends Controller
         return $average;
     }
 }
+

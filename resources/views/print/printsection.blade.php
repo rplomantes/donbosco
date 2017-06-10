@@ -8,13 +8,13 @@
             table.footer tr td{border-width: 1px; font-size: 7pt;}
             body {
             font-family: dejavu sans;}
-            
-            #footer { position: fixed; bottom:0px;border-top:1px solid gray;font-size: 10pt;}
+	
+	    #footer { position: fixed; bottom:0px;border-top:1px solid gray;font-size: 10pt;}
         </style>    
         
     </head>
     <body>
-        <div id="footer">Enrolled as of {{date("Y-m-d h:i:sa")}}</div>
+	<div id="footer">Enrolled as of {{date("Y-m-d h:i:sa")}}</div>
             <table border="0" cellspacing="0" cellpadding ="0" width="100%" style="margin-bottom: 0px;">
             <tr><td width="50" align="center"><img src="<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/images/DBTI.png" width="100%" height="auto"></td>
                 <td><span style="font-size: 10pt; font-weight: bold;" >Don Bosco Technical Institute of Makati</span><br>
@@ -50,7 +50,11 @@
                 @if($studentname->gender == "Female" || $studentname->gender == "FEMALE")
                     <tr><td align="center">{{$studentname->idno}}</td><td align="center">
                     <?php if($cnt++ < 9){echo "0".$cnt;} else {echo $cnt;}?>    
-                    </td><td>{{$studentname->lastname}}, {{$studentname->firstname}} {{substr($studentname->middlename,0,1)}}.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                    </td><td>{{$studentname->lastname}}, {{$studentname->firstname}} {{substr($studentname->middlename,0,1)}}.
+        	        @if($studentname->isnew == 1)
+	                
+                	@endif
+		    </td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
                 @endif
             @endforeach         
             <tr><td colspan="3" style="padding-left: 15px">Boys</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
@@ -58,14 +62,22 @@
                 @if($studentname->gender == "Male" || $studentname->gender == "MALE")
                     <tr><td align="center">{{$studentname->idno}}</td><td align="center">
                     <?php if($cnt++ < 9){echo "0".$cnt;} else {echo $cnt;}?>    
-                    </td><td>{{$studentname->lastname}}, {{$studentname->firstname}} {{substr($studentname->middlename,0,1)}}.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                    </td><td>{{$studentname->lastname}}, {{$studentname->firstname}} {{substr($studentname->middlename,0,1)}}.
+                	@if($studentname->isnew == 1)
+        	        
+	                @endif
+		    </td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
                 @endif
             @endforeach                 
         @else
             @foreach($studentnames as $studentname)
             <tr><td align="center">{{$studentname->idno}}</td><td align="center">
             <?php if($cnt++ < 9){echo "0".$cnt;} else {echo $cnt;}?>    
-            </td><td>{{$studentname->lastname}}, {{$studentname->firstname}} {{substr($studentname->middlename,0,1)}}</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            </td><td>{{$studentname->lastname}}, {{$studentname->firstname}} {{substr($studentname->middlename,0,1)}}.
+		@if($studentname->isnew == 1)
+		
+		@endif
+	    </td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
             @endforeach        
         @endif            
         </table>   

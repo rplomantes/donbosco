@@ -172,7 +172,8 @@
 					$refno = $currTrans[$index]['refno'];
 					$idno = \App\Credit::where('refno',$refno)->first()->idno;
 					$student = \App\User::where('idno',$idno)->first();
-					$name = $currTrans[$index]['from'];
+					//$name = $student->lastname.", ".$student->firstname." ".$student->middlename;
+					$name = $name = $currTrans[$index]['from'];
 
                             if(strlen($name)<=28){
                                 $currrows++;
@@ -185,7 +186,8 @@
                             }
 
 				?>
-				<td>{{$student->lastname}}, {{$student->firstname}} {{$student->middlename}}</td>
+				<!--td></td-->
+				<td>{{$name = $currTrans[$index]['from']}}</td>
 			    @endif
                             <td class="cash">{{number_format($currTrans[$index]['cash'], 2, '.', ',')}}</td>
                             <td class="cash">{{number_format($currTrans[$index]['discount'], 2, '.', ',')}}</td>

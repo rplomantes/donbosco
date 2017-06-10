@@ -106,10 +106,10 @@ $departments = DB::Select("Select * from ctr_acct_dept order by sub_department")
                     <tr><td>Student ID</td><td>:</td><td>{{$idno}}</td></tr>
                     <tr><td>Student Name</td><td>:</td><td>{{$student->lastname}}, {{$student->firstname}}</td></tr>
                     <tr><td>Grade/Level</td><td>:</td><td>
-                            @if(count($level)>0)
-                            {{$level->level}}
-                            @endif
-                            </td></tr>
+			@if(count($level)>0)
+			{{$level->level}}
+			@endif
+			</td></tr>
                 </table>    
             </div>    
         </div>    

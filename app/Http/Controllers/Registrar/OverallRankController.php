@@ -186,3 +186,4 @@ class OverallRankController extends Controller
         }
     }
 }
+

@@ -5,12 +5,33 @@
     $total = 0;
 ?>
 <div class="container">
+<h3>CHECK DISBURSEMENT SUMMARY</h3>
+<div class="col-md-3">
+<div class class="form form-group">
+<label>From :</label>
+    <input type="text" id="fromtran" class="form-control" value="{{$from}}">
+</div>   
+</div>    
+<div class="col-md-3">
+<div class="form form-group">
+    <label>To :</label>
+    <input type="text" id="totran"  value="{{$to}}" class="form-control">
+</div>
+</div>
+<div class="col-md-3">
+<div class="form form-group">
+    <br>    
+    <button onclick="showtran()" class="btn btn-primary form-control">View Report</button>
+</div>    
+</div>
+</div>
+<div class="container">
     <table class="table table-striped">
         <thead>
             <tr>
                 <td></td>
-                <td>VOUCHER NO.</td>
                 <td>TRANS DATE</td>
+                <td>VOUCHER NO.</td>
                 <td>BANK-CHECK #</td>
                 <td>PAYEE</td>
                 <td>RECONCILED AMOUNT</td>
@@ -26,8 +47,8 @@
                     <?php $index++; ?>
                     <tr>
                         <td>{{$index}}</td>
-                        <td>{{$voucher->voucherno}}</td>
                         <td>{{$voucher->transactiondate}}</td>
+                        <td>{{$voucher->voucherno}}</td>
                         <td>{{$voucher->checkno}}</td>
                         <td>{{$voucher->payee}}</td>
                         <td style="text-align: right">{{number_format($voucher->amount,2,'.',',')}}</td>
@@ -60,4 +81,12 @@
     
     <a href="{{url('printchecksummary',array($from,$to))}}" class="btn btn-info col-md-12">Print</a>
 </div>
+<script>
+function showtran(){
+   //alert("hello")
+    var fromtran = document.getElementById('fromtran').value
+    var totran = document.getElementById('totran').value
+    document.location= "/checksummary/" + fromtran + "/" + totran
+}
+</script>
 @stop

@@ -31,7 +31,7 @@ class DeptIncomeController extends Controller
         
     }
     
-    function printconsolidatedreport($accountcode,$fromtran,$totran){
+    function printreport($accountcode,$fromtran,$totran){
         //$accounts = \App\ChartOfAccount::where('acctcode','LIKE',$accountcode.'%')->orderBy('acctcode','ASC')->get();
             $accounts = DB::Select("select * from `chart_of_accounts` as coa "
                     . "left join (Select accountingcode,sum(none) as creditnone,sum(rector) as creditrector,sum(elem) as creditelem,sum(hs) as crediths,sum(tvet) as credittvet,sum(service) as creditservice,sum(admin) as creditadmin,sum(pastoral) as creditpastoral "
@@ -52,13 +52,6 @@ class DeptIncomeController extends Controller
         
     }
     
-    function deptreport($dept,$accountcode,$fromtran,$totran){
-        $dept=str_replace('',' ',$dept);
-        //$accounts = \App\ChartOfAccount::where
-
-         //return $account;
-    }
-    
     static function returnzero($amount){
         if($amount != 0){
             return number_format($amount,2,'.',',');
@@ -67,3 +60,4 @@ class DeptIncomeController extends Controller
         }
     }
 }
+

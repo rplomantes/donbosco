@@ -72,7 +72,7 @@
     });
     
     $("#level").change(function(){
-        strand = "";
+	strand = "";
         level = $('#level').val();
         $("#studentlist").html("");
         $('#strand').html("")

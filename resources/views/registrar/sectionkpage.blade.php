@@ -31,7 +31,7 @@
 
 <script>
 $('#level').change(function(){
-if($('#level').val() == "Grade 9" || $('#level').val() == "Grade 10" || $('#level').val() == "Grade 11" || $('#level').val() == "Grade 12" ){
+if($('#level').val() == "Grade 9" || $('#level').val() == "Grade 10" || $('#level').val() == "Grade 11" ||$('#level').val() == "Grade 12"){
      $("#studentlist").html("");
      $("#sectioncontrol").html("");
      $("#sectionlist").html("")
@@ -139,8 +139,8 @@ function rmsection(id){
     }
       $.ajax({
             type: "GET", 
-            //url: "/rmsection/" + id  , 
-            url: "/rmsection/" + 0  , 
+            url: "/rmsection/" + id  , 
+            //url: "/rmsection/" + 0  , 
             success:function(data){
                 if(data == "true"){
                     getstudentlist(strand);

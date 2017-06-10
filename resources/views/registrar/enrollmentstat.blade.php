@@ -73,7 +73,7 @@
             <thead>
             <tr><td>Department</td><td>Count</td></tr>
             </thead>
-            <tr><td>Grade School</td><td>{{$gradelevel}}</td></tr>
+            <tr><td>K12 Grand Total</td><td>{{$gradelevel}}</td></tr>
             <tr><td>TVET</td><td>{{$tvet}}</td></tr>
     </table>
    </div>

@@ -1,4 +1,3 @@
-<!--FINAL AND FINISHED NO CHANGES SHOULD BE MADE-->
 <html>
     <head>
         <style type='text/css'>
@@ -80,49 +79,47 @@
                     <table class='report' width="100%" cellpadding="0" cellspacing="0" border="1">
                         <tr>
                             <td style='text-align: center;width:60px;'>CLASS NO</td>
-                            <td style='text-align: center;width:120px;'>LAST NAME</td>
-                            <td style='text-align: center;width:300px;'>FIRST NAME</td>
-                            <td style='text-align: center;width:100px;'>QTR1</td>
-                            <td style='text-align: center;width:100px;'>Remarks</td>
-                            <td style='text-align: center;width:100px;'>QTR3</td>
-                            <td style='text-align: center;width:100px;'>Remarks</td>
-                            <td style='text-align: center;width:100px;'>QTR4</td>
-                            <td style='text-align: center;width:100px;'>Remarks</td>
+                            <td style='text-align: center;width:100px;'>LAST NAME</td>
+                            <td style='text-align: center'>FIRST NAME</td>
+                            <td style='text-align: center'>M.I.</td>
+                            <td style='text-align: center'>QTR1</td>
+                            <td style='text-align: center'>QTR2</td>
+                            <td style='text-align: center'>QTR3</td>
+                            <td style='text-align: center'>QTR4</td>
                             <td style='text-align: center;width:80px;'>RUNNING AVE</td>
                         </tr>
 
                         @foreach($students as $student)
-                        <?php $grade = \App\Grade::where('idno',$student->idno)->where('subjectcode',$subject->subjectcode)->where('schoolyear','2016')->first(); ?>
+                        <?php $grades = \App\Grade::where('idno',$student->idno)->where('subjectcode',$subject->subjectcode)->where('schoolyear','2016')->get(); ?>
                         <tr>
                             <td style="text-align: center">{{$student->class_no}}</td>
                             <td>{{$student->lastname}}</td>
                             <td>{{$student->firstname}}
-                                @if(!str_replace(' ', '', $student->middlename) == '')
-                                    {{substr($student->middlename, 1,1)."."}}
-                                @endif                                
                             @if($student->stat == 3)
                             <span style="float: right;color: red;font-weight: bold">
                             DROPPED
                             </span>
                             @endif
-                            </td>   
-                        
+                            </td>
+                            
+                            <td style="text-align: center">@if(!$student->middlename == '')
+                                {{substr($student->middlename, 1,1)."."}}
+                                @endif
+                            </td>
+                                    
+                        @foreach($grades as $grade)
                             <td style="text-align: center">@if(!round($grade->first_grading,2) == null)
                                 {{round($grade->first_grading,2)}}
                             @endif</td>
-                            <td style='text-align: center'></td>
                             <td style="text-align: center">@if(!round($grade->second_grading,2) == NULL)
                                 {{round($grade->second_grading,2)}}
                             @endif</td>
-                            <td style='text-align: center'></td>
                             <td style="text-align: center">@if(!round($grade->third_grading,2) == NULL)
                                 {{round($grade->third_grading,2)}}
                             @endif</td>
-                            <td style='text-align: center'></td>
                             <td style="text-align: center">@if(!round($grade->fourth_grading,2) == NULL)
                                 {{round($grade->fourth_grading,2)}}
                             @endif</td>
-                            <td style='text-align: center'></td>
                             <?php 
                             $count = 0;
                             $grades = 0;
@@ -149,15 +146,10 @@
                             ?>
                             
                             <td>@if(!$grades == 0)
-                                @if($level == 'Grade 7' || $level == 'Grade 8' || $level == 'Grade 9' || $level == 'Grade 10' || $level == 'Grade 11' || $level == 'Grade 12')
-                                    {{round($grades,0)}}
-                                    
-                                @else
-                                    {{round($grades,2)}}
-                                    
-                                @endif
+                                {{$grades}}
                             @endif</td>
                             
+                        @endforeach
                         </tr>
                         @endforeach
                     </table>

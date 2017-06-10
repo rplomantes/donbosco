@@ -38,8 +38,8 @@
         <thead>
             <tr >
                 <td width="5px"></td>
+                <td><b>TRANS.<br> DATE</b></td>
                 <td width="90px"><b>VOUCHER<br>NO.</b></td>
-                <td><b>TRANS. DATE</b></td>
                 <td width="120px"><b>BANK-CHECK #</b></td>
                 <td width="200px"><b>PAYEE</b></td>
                 <td style="text-align: center"><b>RECONCILED AMOUNT</b></td>
@@ -55,8 +55,8 @@
                     <?php $index++; ?>
                     <tr>
                         <td width="40px">{{$index}}</td>
-                        <td>{{$voucher->voucherno}}</td>
                         <td>{{$voucher->transactiondate}}</td>
+                        <td>{{$voucher->voucherno}}</td>
                         <td>{{$voucher->checkno}}</td>
                         <td>{{$voucher->payee}}</td>
                         <td style="text-align: right">{{number_format($voucher->amount,2,'.',',')}}</td>

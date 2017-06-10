@@ -60,16 +60,16 @@ $tcredit = 0;
                 ?>
 
                 <tr>
-                    <td width="5%">{{$account->transactiondate}}</td>
-                    <td width="5%">{{$account->receiptno}}</td>
-                    <td width="20%">{{$payee}}</td>
-                    <td width="12%" align="right">{{number_format($account->debit,2,' .',',')}}</td>
-                    <td width="12%" align="right">{{number_format($account->credit,2,' .',',')}}</td>
+                    <td width="7%" align="center">{{$account->transactiondate}}</td>
+                    <td width="7%" align="center">{{$account->receiptno}}</td>
+                    <td width="23%">{{$payee}}</td>
+                    <td width="11%" align="right">{{number_format($account->debit,2,' .',',')}}</td>
+                    <td width="11%" align="right">{{number_format($account->credit,2,' .',',')}}</td>
                     <?php
                         $tdebit = $tdebit+ $account->debit;
                         $tcredit = $tcredit+ $account->credit;
                     ?>
-                    <td width="10%">
+                    <td width="10%" align="center">
                         @if($account->entry_type == 1)
                         Cash Receipt
                         @elseif($account->entry_type == 2)

@@ -568,7 +568,7 @@
                  </td>
                  <td><label>Nationality:</label></td>
                  <td>
-                     <input type="text" class="form-control" name="fnationality" id="fnationality"  placeholder="Enter Nationality"
+                     <input type="text" class="form-control" name="fnationality" id="mnationality"  placeholder="Enter Nationality"
                          @if($studentInfo != NULL)
                          value="{{$studentInfo->fnationality}}"
                          @endif
@@ -706,7 +706,7 @@
                  <td colspan="3">
                      <input type="text" class="form-control" name="fPartjob" id="fPartjob" placeholder="Enter part time "
                      @if($studentInfo != NULL)
-                     value="{{$studentInfo->fPartjob}}"
+                     value="{{$studentInfo->fPartJob}}"
                      @endif
                    >
                  </td>
@@ -715,7 +715,7 @@
                  <td colspan="3">
                      <input type="text" class="form-control" name="mPartjob" id="mPartjob" placeholder="Enter part time "
                      @if($studentInfo != NULL)
-                     value="{{$studentInfo->mPartJob}}"
+                     value="{{$studentInfo->mPartjob}}"
                      @endif
                    >
                  </td>

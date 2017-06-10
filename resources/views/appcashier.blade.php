@@ -115,7 +115,6 @@
                                                 <li><a href="{{url('nonstudents')}}"><i class="fa fa-btn fa-sign-out"></i>Non Students</a></li>
                                             </ul>
                                         </li>
-                                        
                                     @endif
                                  @endif
                                  

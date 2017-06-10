@@ -561,8 +561,8 @@ class UpdateController extends Controller
                                 $firstsched=false;
                             }
                         }
-                        $newsched->sub_department->$paymentschedule->sub_department;
-                        $newsched->acct_department ->paymentschedule->acct_department;
+                        $newsched->sub_department= $paymentschedule->sub_department;
+                        $newsched->acct_department = $paymentschedule->acct_department;
                         $newsched->schoolyear = $schoolyear->schoolyear;
                         $newsched->duetype = $installment->duetype;
                         $newsched->duedate = $installment->duedate;
@@ -596,8 +596,8 @@ class UpdateController extends Controller
                             if($request->plan == "Annual" && $paymentschedule->acctcode =="110100"){
                                 $newsched->discount = round($paymentschedule->amount * .03,2);
                             }
-                        $newsched->sub_department->$paymentschedule->sub_department;
-                        $newsched->acct_department ->paymentschedule->acct_department;    
+                        $newsched->sub_department=$paymentschedule->sub_department;
+                        $newsched->acct_department=$paymentschedule->acct_department;    
                         $newsched->schoolyear = $schoolyear->schoolyear;
                         $newsched->duetype = "0";
                         $newsched->duedate = "2017-04-01";

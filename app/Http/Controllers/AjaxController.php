@@ -270,28 +270,15 @@ class AjaxController extends Controller
                 
                  function getsearchcashier($varsearch){
                     if(Request::ajax()){
-                    $sy = \App\CtrSchoolYear::first();
                     $searches = DB::Select("Select * From users where accesslevel = '0' AND (lastname like '$varsearch%' OR
-                           firstname like '$varsearch%' OR idno = '$varsearch' OR CONCAT(firstname,' ',lastname) LIKE '%$varsearch%') Order by lastname, firstname");
+                           firstname like '$varsearch%' OR idno = '$varsearch') Order by lastname, firstname");
                     $value = "<table class=\"table table-striped\"><thead>
-            <tr><th>Student Number</th><th>Student Name</th><th>Level / Section</th><th>Gender</th><th>View</th></tr>        
+            <tr><th>Student Number</th><th>Student Name</th><th>Gender</th><th>View</th></tr>        
             </thead><tbody>";
                     foreach($searches as $search){
-                        $status = \App\Status::where('idno',$search->idno)->where('schoolyear',$sy->schoolyear)->first();
-                        if(count($status)>0){
-                            if($status->status == 2){
-                                $stat = $status->level." / ".$status->section;
-                            }else{
-                                $stat = "Dropped";
-                            }
-                        }else{
-                            $stat = "";
-                        }
                         $value = $value . "<tr><td>" .$search->idno . "</td><td>". $search->lastname . ", " .
                                 $search->firstname . " " . $search->middlename . " " . $search->extensionname .
-                                "</td>";
-                        $value = $value."<td>".$stat."</td>";
-                        $value = $value. "<td>" . $search->gender . "</td><td><a href = '/cashier/".$search->idno."'>view</a>";
+                                "</td><td>" . $search->gender . "</td><td><a href = '/cashier/".$search->idno."'>view</a>";
                     }
                       
                     $value = $value . "</tbody>
@@ -303,8 +290,8 @@ class AjaxController extends Controller
                 
                 function getsearchaccounting($varsearch){
                     if(Request::ajax()){
-                    $searches = DB::Select("Select * From users where accesslevel = '0' AND (lastname like '$varsearch%' OR "
-                            . "firstname like '$varsearch%' OR idno = '$varsearch' OR CONCAT(firstname,' ',lastname) = '%$varsearch%') Order by lastname, firstname");
+                    $searches = DB::Select("Select * From users where accesslevel = '0' AND (lastname like '$varsearch%' OR
+                           firstname like '$varsearch%' OR idno = '$varsearch') Order by lastname, firstname");
                     $value = "<table class=\"table table-striped\"><thead>
             <tr><th>Student Number</th><th>Student Name</th><th>Gender</th><th>View</th></tr>        
             </thead><tbody>";
@@ -703,11 +690,11 @@ class AjaxController extends Controller
         
         function getstudentlist($level){
             if(Request::ajax()){
-                   
+                 $sy = \App\CtrSchoolYear::first()->schoolyear; 
                    
                     $studentnames = DB::Select("select statuses.id, statuses.idno, users.lastname, "
                         . "users.firstname, users.middlename, statuses.section  from statuses, users where statuses.idno = "
-                        . "users.idno and statuses.level = '$level' and statuses.strand = '" . Input::get("strand") ."'  and statuses.status = '2' order by users.lastname, users.firstname, users.middlename");
+                        . "users.idno and statuses.level = '$level' and statuses.schoolyear='$sy' and statuses.strand = '" . Input::get("strand") ."'  and statuses.status = '2' order by users.lastname, users.firstname, users.middlename");
                
                 
                 $data = "";
@@ -785,9 +772,10 @@ class AjaxController extends Controller
             if(Request::ajax()){
                  $ad = \App\CtrSection::where('level',$level)->where('section',$section)->where('strand',Input::get('strand'))->first();
                  $adviser = $ad->adviser;
+		$sy = \App\CtrSchoolYear::first()->schoolyear;
                 $studentnames = DB::Select("select statuses.id, statuses.idno, users.lastname, "
                         . "users.firstname, users.middlename, statuses.section from statuses, users where statuses.idno = "
-                        . "users.idno and statuses.level = '$level'  AND statuses.section = '$section' and strand = '" . Input::get("strand") . "' order by users.gender, users.lastname, users.firstname, users.middlename");
+                        . "users.idno and statuses.level = '$level' AND schoolyear = '$sy'  AND statuses.section = '$section' and strand = '" . Input::get("strand") . "' order by users.gender, users.lastname, users.firstname, users.middlename");
                 $cn=1;
                 $data = "<div class=\"col-md-6\"><label for=\"adviser\">Adviser</label><input type=\"text\" id=\"adviser\" class=\"form form-control\" value=\"" . $adviser . "\" onkeyup = \"updateadviser(this.value,'" . $ad->id . "')\"></div>";
                 $data = $data . "<table class=\"table table-stripped\"><tr><td>ID No</td><td>CN</td><td>Name</td><td>Section</td></tr>";

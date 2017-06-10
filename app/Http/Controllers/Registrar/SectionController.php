@@ -21,20 +21,14 @@ class SectionController extends Controller
          //return $levels;
          return view('registrar.sectionkpage',compact('levels'));
      }   
-    
-     function sectioning($sy){
-         $levels = \App\CtrLevel::all();
-         return view('registrar.sectioning',compact('levels','sy'));   
-     }
-    
     function printsection($level, $section){
         $sy = \App\CtrSchoolYear::first();
         $schoolyear=$sy->schoolyear;
         $ad = \App\CtrSection::where('level',$level)->where('section',$section)->first();
           $adviser = $ad->adviser;
          $studentnames = DB::Select("select statuses.id, statuses.idno, users.lastname, "
-                        . "users.firstname, users.middlename, statuses.section from statuses, users where statuses.idno = "
-                        . "users.idno and statuses.level = '$level' AND schoolyear = '$schoolyear'  AND statuses.section = '$section' order by users.gender,users.lastname, users.firstname, users.middlename");
+                        . "users.firstname, users.middlename, statuses.section, isnew from statuses, users where statuses.idno = "
+                        . "users.idno and statuses.level = '$level' AND schoolyear = '$schoolyear' AND statuses.section = '$section' order by users.gender,users.lastname, users.firstname, users.middlename");
    
         $pdf = \App::make('dompdf.wrapper');
         $pdf->setPaper("Folio", "portrait");
@@ -50,12 +44,12 @@ class SectionController extends Controller
           $ad = \App\CtrSection::where('level',$level)->where('section',$section)->where('strand',$strand)->first();
           $adviser = $ad->adviser;
            $studentnames = DB::Select("select statuses.id, statuses.idno, users.lastname, "
-                        . "users.firstname, users.middlename, statuses.section,statuses.class_no from statuses, users where statuses.idno = "
+                        . "users.firstname, users.middlename, statuses.section,statuses.class_no,isnew from statuses, users where statuses.idno = "
                         . "users.idno and statuses.level = '$level' AND schoolyear = '$schoolyear' AND statuses.section = '$section' and strand = '$strand' order by users.gender, users.lastname, users.firstname, users.middlename");
            
            if (count($studentnames) == 0){
            $studentnames = DB::Select("select statuses.id, statuses.idno, users.lastname,users.gender, "
-                        . "users.firstname, users.middlename, statuses.section,statuses.class_no from statuses, users where statuses.idno = "
+                        . "users.firstname, users.middlename, statuses.section,statuses.class_no,isnew from statuses, users where statuses.idno = "
                         . "users.idno and statuses.period = '$level'  AND statuses.section = '$section' and course = '$strand' order by users.gender, users.lastname, users.firstname, users.middlename");               
            if (count($studentnames) != 0){
            $level = "Batch ".$level;}

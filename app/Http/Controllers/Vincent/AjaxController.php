@@ -381,6 +381,9 @@ class AjaxController extends Controller
                     case 4;
                         $averages = DB::Select("SELECT weighted,ROUND( SUM( fourth_grading ) / count( idno ) , 2 ) AS average FROM `grades` WHERE subjecttype =$type AND idno = '$idno' AND schoolyear = '$sy' AND isdisplaycard = 1 GROUP BY idno");
                     break;
+		     case  5;
+                        $averages = DB::Select("SELECT weighted,ROUND( SUM( final_grade ) / count( idno ) , 2) AS average FROM `grades` WHERE subjecttype =$type AND idno = '$idno' AND schoolyear = '$sy' AND isdisplaycard = 1 GROUP BY idno");
+		break;
                 }     
                 if(count($averages) > 0 && $averages[0]->weighted == 0){
                     $result = $averages[0]->average;
@@ -420,7 +423,7 @@ class AjaxController extends Controller
         
         return $result;
         
-    }
+    }    
     
     public function calcSeniorGrade($quarter,$idno,$sy){
             switch ($quarter){
@@ -1258,8 +1261,8 @@ class AjaxController extends Controller
         $status->status = 3;
         $status->dropdate = date("Y-m-d");
         $status->save();
-        
-        \App\Ledger::where('idno',$idno)->where('schoolyear',$sy->schoolyear)->update(['amount' => 0]);
+
+//        \App\Ledger::where('idno',$idno)->where('schoolyear',$sy->schoolyear)->update(['amount' => 0]);
         return "Dropped";
     }
     
@@ -1371,9 +1374,9 @@ class AjaxController extends Controller
                 $report = $report . "<td colspan = '5'>".$subject->subjectcode."</td>";
             }
         }
-        $report = $report . "<td colspan = '4'>ACAD GEN AVE</td><td colspan = '4'>RANK</td>";
-        $report = $report . "<td colspan = '4'>GMRC</td>";
-        $report = $report . "<td colspan = '4'>DAYP</td><td colspan = '4'>DAYA</td><td colspan = '4'>DAYT</td>";
+        $report = $report . "<td colspan = '5'>ACAD GEN AVE</td><td colspan = '5'>RANK</td>";
+        $report = $report . "<td colspan = '5'>GMRC</td>";
+        $report = $report . "<td colspan = '5'>DAYP</td><td colspan = '5'>DAYA</td><td colspan = '5'>DAYT</td>";
         $report = $report . "</tr>";
         $report = $report . "<tr>";
         foreach($subjects as $subject){
@@ -1403,8 +1406,7 @@ class AjaxController extends Controller
                     $report = $report . "<td>".$this->blankgrade($grade->second_grading)."</td>";
                     $report = $report . "<td>".$this->blankgrade($grade->third_grading)."</td>";
                     $report = $report . "<td>".$this->blankgrade($grade->fourth_grading)."</td>";
-                    $report = $report . "<td>".$this->blankgrade($grade->final_grading)."</td>";
-                    
+                    $report = $report . "<td>".$this->blankgrade($grade->final_grade)."</td>";
                 }
             }
             
@@ -1412,11 +1414,13 @@ class AjaxController extends Controller
             $report = $report . "<td>".$this->blankgrade($this->calcGrade(0,2,$student->idno,$sy->schoolyear))."</td>";
             $report = $report . "<td>".$this->blankgrade($this->calcGrade(0,3,$student->idno,$sy->schoolyear))."</td>";
             $report = $report . "<td>".$this->blankgrade($this->calcGrade(0,4,$student->idno,$sy->schoolyear))."</td>";
-            
+	    $report = $report . "<td>".$this->blankgrade($this->calcGrade(0,4,$student->idno,$sy->schoolyear))."</td>";
+
             $report = $report . "<td>".$this->blankgrade($student->acad_1)."</td>";
             $report = $report . "<td>".$this->blankgrade($student->acad_2)."</td>";
             $report = $report . "<td>".$this->blankgrade($student->acad_3)."</td>";
             $report = $report . "<td>".$this->blankgrade($student->acad_4)."</td>";
+	    $report = $report . "<td>".$this->blankgrade($student->acad_final)."</td>";
             
             //CONDUCT            
             $conduct1 = 0;
@@ -1440,6 +1444,7 @@ class AjaxController extends Controller
             $report = $report . "<td>".$this->blankgrade($conduct2)."</td>";
             $report = $report . "<td>".$this->blankgrade($conduct3)."</td>";
             $report = $report . "<td>".$this->blankgrade($conduct4)."</td>";
+	    $report = $report . "<td>".$this->blankgrade(($conduct4+$conduct3+$conduct2+$conduct1)/4)."</td>";
             
             //ATTENDANCE
             $dayp = array();
@@ -1453,20 +1458,30 @@ class AjaxController extends Controller
                 $daya [] = $attendance[2];
             }
             $qtr = 1;
+		$tdayp = 0;
             foreach($dayp as $dayp){
                 $report = $report . "<td>".$this->blankattend($dayp,$qtr)."</td>";
+		$tdayp = $tdayp + $dayp;
                 $qtr++;
             }
+		$report = $report . "<td>".$tdayp."</td>";
             $qtr = 1;
-            foreach($dayt as $dayt){
-                $report = $report . "<td>".$this->blankattend($dayt,$qtr)."</td>";
-                $qtr++;
-            }
-            $qtr = 1;
+		$tdaya=0;
             foreach($daya as $daya){
                 $report = $report . "<td>".$this->blankattend($daya,$qtr)."</td>";
+		$tdaya =$tdaya + $daya;
                 $qtr++;
             }
+		$report = $report . "<td>".$tdaya."</td>";
+            $qtr = 1;
+		$tdayt=0;
+            foreach($dayt as $dayt){
+                $report = $report . "<td>".$this->blankattend($dayt,$qtr)."</td>";
+		$tdayt = $tdayt + $dayt;
+
+                $qtr++;
+            }
+		$report = $report . "<td>".$tdayt."</td>";
             $report = $report . "</tr>";
         }
         $report = $report . "</table>";
@@ -1529,7 +1544,6 @@ class AjaxController extends Controller
                     $report = $report . "<td>".round($this->blankgrade($grade->second_grading),0)."</td>";
                     $report = $report . "<td>".round($this->blankgrade($grade->third_grading),0)."</td>";
                     $report = $report . "<td>".round($this->blankgrade($grade->fourth_grading),0)."</td>";
-                    $report = $report . "<td>".round($this->blankgrade($grade->final_grade),0)."</td>";            
                     
                 }
             }
@@ -1538,13 +1552,11 @@ class AjaxController extends Controller
             $report = $report . "<td>".round($this->blankgrade($this->calcGrade(0,2,$student->idno,$sy->schoolyear)),0)."</td>";
             $report = $report . "<td>".round($this->blankgrade($this->calcGrade(0,3,$student->idno,$sy->schoolyear)),0)."</td>";
             $report = $report . "<td>".round($this->blankgrade($this->calcGrade(0,4,$student->idno,$sy->schoolyear)),0)."</td>";
-            $report = $report . "<td>&nbsp;</td>";                       
             
             $report = $report . "<td>".round($this->blankgrade($student->acad_1),0)."</td>";
             $report = $report . "<td>".round($this->blankgrade($student->acad_2),0)."</td>";
             $report = $report . "<td>".round($this->blankgrade($student->acad_3),0)."</td>";
             $report = $report . "<td>".round($this->blankgrade($student->acad_4),0)."</td>";
-            $report = $report . "<td>&nbsp;</td>";                       
             
             foreach($subjects as $subject){
                 if($subject->subjecttype == 1){
@@ -1553,7 +1565,6 @@ class AjaxController extends Controller
                     $report = $report . "<td>".round($this->blankgrade($grade->second_grading),0)."</td>";
                     $report = $report . "<td>".round($this->blankgrade($grade->third_grading),0)."</td>";
                     $report = $report . "<td>".round($this->blankgrade($grade->fourth_grading),0)."</td>";
-                    $report = $report . "<td>".round($this->blankgrade($grade->final_grade),0)."</td>";            
                     
                 }
             }
@@ -1562,13 +1573,11 @@ class AjaxController extends Controller
             $report = $report . "<td>".round($this->blankgrade($this->calcGrade(1,2,$student->idno,$sy->schoolyear)),0)."</td>";
             $report = $report . "<td>".round($this->blankgrade($this->calcGrade(1,3,$student->idno,$sy->schoolyear)),0)."</td>";
             $report = $report . "<td>".round($this->blankgrade($this->calcGrade(1,4,$student->idno,$sy->schoolyear)),0)."</td>";
-            $report = $report . "<td>&nbsp;</td>";            
             
             $report = $report . "<td>".round($this->blankgrade($student->tech_1),0)."</td>";
             $report = $report . "<td>".round($this->blankgrade($student->tech_2),0)."</td>";
             $report = $report . "<td>".round($this->blankgrade($student->tech_3),0)."</td>";
             $report = $report . "<td>".round($this->blankgrade($student->tech_4),0)."</td>";            
-            $report = $report . "<td>&nbsp;</td>";            
             
             //CONDUCT            
             $conduct1 = 0;
@@ -1583,7 +1592,6 @@ class AjaxController extends Controller
                         $conduct2 = $conduct2+$grade->second_grading;
                         $conduct3 = $conduct3+$grade->third_grading;
                         $conduct4 = $conduct4+$grade->fourth_grading;
-                        
                 }
             }
             
@@ -1593,7 +1601,6 @@ class AjaxController extends Controller
             $report = $report . "<td>".round($this->blankgrade($conduct2),0)."</td>";
             $report = $report . "<td>".round($this->blankgrade($conduct3),0)."</td>";
             $report = $report . "<td>".round($this->blankgrade($conduct4),0)."</td>";
-            $report = $report . "<td></td>";                       
             
             //ATTENDANCE
             $dayp = array();
@@ -1611,20 +1618,16 @@ class AjaxController extends Controller
                 $report = $report . "<td>".$this->blankattend($dayp,$qtr)."</td>";
                 $qtr++;
             }
-            $report = $report . "<td>&nbsp;</td>";            
-            $qtr = 1;
-
-            foreach($daya as $daya){
-                $report = $report . "<td>".$this->blankattend($daya,$qtr)."</td>";
-                $qtr++;
-            }
-            $report = $report . "<td>&nbsp;</td>";            
             $qtr = 1;
             foreach($dayt as $dayt){
                 $report = $report . "<td>".$this->blankattend($dayt,$qtr)."</td>";
                 $qtr++;
             }
-            $report = $report . "<td>&nbsp;</td>";            
+            $qtr = 1;
+            foreach($daya as $daya){
+                $report = $report . "<td>".$this->blankattend($daya,$qtr)."</td>";
+                $qtr++;
+            }
             $report = $report . "</tr>";
         }
         
@@ -1825,28 +1828,19 @@ class AjaxController extends Controller
         $attend = array();
         switch ($quarter){
                 case 1;
-//                        $month1 = \App\AttendanceRepo::where('qtrperiod',1)->where('idno',$idno)->where('month','JUN')->orderBy('id','DESC')->first();
-//                        $month2 = \App\AttendanceRepo::where('qtrperiod',1)->where('idno',$idno)->where('month','JUL')->orderBy('id','DESC')->first();
-//                        $month3 = \App\AttendanceRepo::where('qtrperiod',1)->where('idno',$idno)->where('month','AUG')->orderBy('id','DESC')->first();
-//                        
-//                        if(!empty($month1) && !empty($month2) && !empty($month3)){
-//                            
-//                            $dayt = $month1->DAYT + $month2->DAYT + $month3->DAYT;
-//                            $dayp = $month1->DAYP + $month2->DAYP + $month3->DAYP;
-//                            $daya = $month1->DAYA + $month2->DAYA + $month3->DAYA;
-//                        }else{
-//                            $dayt = 0;
-//                            $dayp = 0;
-//                            $daya = 0;
-//                        }
-                    
-                    $attp = \App\Grade::where('idno',$idno)->where('schoolyear',2016)->where('subjectcode','DAYP')->first();
-                    $atta = \App\Grade::where('idno',$idno)->where('schoolyear',2016)->where('subjectcode','DAYA')->first();
-                    $attt = \App\Grade::where('idno',$idno)->where('schoolyear',2016)->where('subjectcode','DAYT')->first();
-                    
-                            $dayt = $attt->first_grading;
-                            $dayp = $attp->first_grading;
-                            $daya = $atta->first_grading;
+                        $month1 = \App\AttendanceRepo::where('qtrperiod',1)->where('idno',$idno)->where('schoolyear',$schoolyear->schoolyear)->where('month','JUN')->orderBy('id','DESC')->first();
+                        $month2 = \App\AttendanceRepo::where('qtrperiod',1)->where('idno',$idno)->where('schoolyear',$schoolyear->schoolyear)->where('month','JUL')->orderBy('id','DESC')->first();
+                        $month3 = \App\AttendanceRepo::where('qtrperiod',1)->where('idno',$idno)->where('schoolyear',$schoolyear->schoolyear)->where('month','AUG')->orderBy('id','DESC')->first();
+                        if(!empty($month1) && !empty($month2) && !empty($month3)){
+                            
+                            $dayt = $month1->DAYT + $month2->DAYT + $month3->DAYT;
+                            $dayp = $month1->DAYP + $month2->DAYP + $month3->DAYP;
+                            $daya = $month1->DAYA + $month2->DAYA + $month3->DAYA;
+                        }else{
+                            $dayt = 0;
+                            $dayp = 0;
+                            $daya = 0;
+                        }
               
                 break;
                 case 2;
@@ -1921,9 +1915,6 @@ class AjaxController extends Controller
         $level = Input::get('level');
         $sy = Input::get('sy');
         $course = Input::get('course');
-        if($course == 'null'){
-            $course = '';
-        }
         $allavailable = 0;
         $sections = DB::Select("Select distinct section from  ctr_sections where level = '$level' and schoolyear = $sy and strand='$course'");
         return view('ajax.selectsection',compact('sections','action','allavailable'));

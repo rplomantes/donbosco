@@ -231,7 +231,6 @@
                                 ?>
                             @endif
                                 <?php $totalacad = $totalacad + $final;?>
-                            {{$final}}
                         </td>
 
                             {{--*/$count ++/*--}}                        
@@ -287,7 +286,7 @@
                                 ?>
                             @endif
                                 <?php $totalacad = $totalacad + $final;?>
-                            {{$final}}
+                            
                         </td>
 
                             {{--*/$count ++/*--}}                        
@@ -298,7 +297,8 @@
                         <td colspan="2" style="text-align: right;padding-right: 10px">
                             <b>GENERAL AVERAGE for the Semester</b>
                         </td>
-                        <td>@if(round($totalacad/$count,0) != 0)
+                        <td>
+				@if(round($totalacad/$count,0) != 0)
                             <b>{{round($totalacad/$count,0)}}</b>
                             @endif
                         </td>

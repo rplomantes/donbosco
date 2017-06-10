@@ -21,7 +21,7 @@ $totalbank=0;
          @endif
          </td></tr>
      <?php
-     if($list->isreverse == '0'){
+     if($list->isreverse == 0){
          $total = $total + $list->amount;
      }
      ?>

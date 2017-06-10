@@ -9,7 +9,10 @@ use App\Http\Controllers\Controller;
 use DB;
 class OfficeSumController extends Controller
 {
-    
+    public function __construct(){
+        $this->middleware('auth');
+    }
+
     function index($fromdate,$todate,$dept,$acctcode){
         $departments = DB::Select("Select distinct main_department from ctr_acct_dept where main_department NOT IN('Elementary Department','High School Department','TVET','Pastoral Department')");
         $schoolyear = \App\CtrSchoolYear::first()->schoolyear;
@@ -18,7 +21,7 @@ class OfficeSumController extends Controller
         $accounts = $this->accounts($fromdate,$todate,$dept,$acctcode,$schoolyear);
         return view('accounting.officeSummary',compact('fromdate','todate','dept','accounts','offices','acctcode','departments','coas'));
     }
-    
+
     function printOfficeSum($fromdate,$todate,$dept,$acctcode){
         $offices = DB::Select("Select sub_department from ctr_acct_dept where main_department ='$dept' ");
         $coas = \App\ChartOfAccount::where('acctcode','LIKE',$acctcode.'%')->orderBy('accountname','ASC')->get();
@@ -88,7 +91,6 @@ class OfficeSumController extends Controller
                 
             } 
         }
-        
         if($accounttype == 4){
             $total = $credit - $debit;
         }else{
@@ -99,7 +101,7 @@ class OfficeSumController extends Controller
             return number_format($total,2,' .',',');
         }else{
             return "";
-        }
+        }        
     }
     
     static function showAcct($accounts,$depts,$acctcode,$accounttype){
@@ -107,7 +109,7 @@ class OfficeSumController extends Controller
         
             foreach($depts as $dept){
                 $total = $total + abs(OfficeSumController::accountdepttotal($accounts,$dept->sub_department,$acctcode,$accounttype));
-            } 
+}
         
         if($total != 0 ){
             return true;

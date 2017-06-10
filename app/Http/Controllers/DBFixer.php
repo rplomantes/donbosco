@@ -31,7 +31,7 @@ class DBFixer extends Controller
         $statuses = \App\Status::where('period','86')->get();
         
         foreach($statuses as $status){
-            //$credits = \App\Credit::where('accountingcode','440000')->where('idno',$status->idno)->get();
+            //$credits = \App\Credit::where('accountingcode','440000')->where('idno',$status->idno)->where('isreverse',0)->get();
             $credits = DB::Select("select * from old_receipts where idno = '$status->idno'");
             $amounted = 0;
             
@@ -49,7 +49,7 @@ class DBFixer extends Controller
             }
 
         }
-    }
+    }    
     
    function getAdvancedStudents(){
        $totalelearnig = 0;
@@ -171,7 +171,7 @@ class DBFixer extends Controller
            foreach($accounts as $account){
                if($account->accountingcode == 420200 && $account->schoolyear == 2017){
                    $elearnig = $elearnig + $account->amount;
-               }
+}
                if($account->accountingcode == 420400 && $account->schoolyear == 2017){
                    $misc = $misc + $account->amount;
                }

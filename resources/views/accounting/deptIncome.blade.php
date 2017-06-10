@@ -50,7 +50,13 @@ $abstotal = 0;
 <table class="table table-striped">
     <thead>
         <th>ACCOUNT TITLE</th>
-        <th>Total Income</th>
+        <th>Total 
+    @if($accountcode == 4)
+    Income
+    @else
+    Expense
+    @endif
+	</th>
         <th>None</th>
         <th>Rector</th>
         <th>Student Services</th>

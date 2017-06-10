@@ -38,18 +38,24 @@
     ?>
         <table class="table table-striped" width="100%" cellspacing="0" style="font-size:15px">
             <thead>
-                <tr>
-                    <th>ACCOUNT TITLE</th>
-                    <th>Total Income</th>
-                    <th>None</th>
-                    <th>Rector</th>
-                    <th>Student Services</th>
-                    <th>Administration</th>
-                    <th>Grade School</th>
-                    <th>High School</th>
-                    <th>TVET</th>
-                    <th>Pastoral</th>
-                </tr>
+		<tr>
+                <th>ACCOUNT TITLE</th>
+                <th>Total
+		@if($accountcode == 4)
+		 Income
+		@else
+		 Expense
+		@endif
+		</th>
+                <th>None</th>
+                <th>Rector</th>
+                <th>Student Services</th>
+                <th>Administration</th>
+                <th>Grade School</th>
+                <th>High School</th>
+                <th>TVET</th>
+                <th>Pastoral</th>
+		</tr>
             </thead>
 
             @foreach($accounts as $account)
@@ -167,5 +173,6 @@
         </table>
     </body>
 </html>
+
 
 

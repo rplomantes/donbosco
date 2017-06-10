@@ -75,6 +75,6 @@
 
     </table>
     <br>
-    <a href="{{url("printdmreport",compact('trandate'))}}" class="col-md-12 btn btn-danger">Print</a>
+    <a href="{{url("dmreport/print",compact('trandate'))}}" class="col-md-12 btn btn-danger">Print</a>
 </div>
 @stop

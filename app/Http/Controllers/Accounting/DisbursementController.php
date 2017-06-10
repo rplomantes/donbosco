@@ -9,32 +9,34 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
-class DisbursementController extends Controller{
+class DisbursementController extends Controller
+{
     
-    public function __construct(){
-        $this->middleware('auth');
-    }
+    public function __construct()
+	{
+		$this->middleware('auth');
+	}
+    //
         
-    function adddisbursement(){
-       return view('accounting.adddisbursement');
-    }
-        
-    function printdisbursement($refno){
-       return view('accounting.printdisbursement',compact('refno'));
-    }
-       
-    function restorecanceldisbursement($kind,$refno){
-       if($kind=="Cancel"){
-           $cr = 1;
-        } else {
-           $cr = 0;
+        function adddisbursement(){
+            return view('accounting.adddisbursement');
         }
-        \App\Credit::where('refno',$refno)->update(array('isreverse' => $cr));
-        \App\Dedit::where('refno',$refno)->update(['isreverse'=> $cr]);
-        \App\Accounting::where('refno',$refno)->update(['isreversed'=>$cr]);
-        \App\Disbursement::where('refno',$refno)->update(['isreverse'=>$cr]);
-        return redirect(url("printdisbursement",$refno));
-    }
+        
+       function printdisbursement($refno){
+           return view('accounting.printdisbursement',compact('refno'));
+       }
+       function restorecanceldisbursement($kind,$refno){
+           if($kind=="Cancel"){
+               $cr = 1;
+            } else {
+                $cr = 0;
+            }
+             \App\Credit::where('refno',$refno)->update(array('isreverse' => $cr));
+             \App\Dedit::where('refno',$refno)->update(['isreverse'=> $cr]);
+             \App\Accounting::where('refno',$refno)->update(['isreversed'=>$cr]);
+             \App\Disbursement::where('refno',$refno)->update(['isreverse'=>$cr]);
+             return redirect(url("printdisbursement",$refno));    
+       }
        
        function printcheckdetails($refno){
            $disbursement = \App\Disbursement::where('refno',$refno)->first();
@@ -384,8 +386,10 @@ class DisbursementController extends Controller{
         $string .= implode(' ', $words); 
         */
         if($fraction !="00"){
-            if(intval($fraction) !=19){
-                $string .= " Pesos and " . $dictionary[intval($fraction)] . " Centavos";   
+//        $myArray = str_split((string) $fraction);
+//        $string .= " Pesos and " . $dictionary[$myArray[0]*10] . " " . $dictionary[$myArray[1]] . " Centavos";
+            if(intval($fraction) <=19){
+                $string .= " Pesos and " .  $dictionary[intval($fraction)]  . " Centavos";   
             }else{
                 $myArray = str_split((string) $fraction);
                 $string .= " Pesos and " . $dictionary[$myArray[0]*10] . " " . $dictionary[$myArray[1]] . " Centavos";   
@@ -412,7 +416,6 @@ class DisbursementController extends Controller{
         return $pdf->stream();  
     }
 
-    
     function searchvoucher(){
         return view('accounting.searchvoucher');
     }
@@ -430,5 +433,4 @@ class DisbursementController extends Controller{
             return redirect('printdisbursement/'.$refno);
         }
     }  
-
 }

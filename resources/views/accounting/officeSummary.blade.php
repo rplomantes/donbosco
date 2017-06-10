@@ -52,8 +52,8 @@ $total = 0;
     </div>    
     </div>
 </div>
-<div class="container" style="overflow-x: scroll" >
-    <table class="table table-stripped" style="width:200%;max-width: 120%">
+<div class="container" style="overflow-x: scroll">
+    <table class="table table-stripped" style="width:120%;max-width: 120%">
         <tr>
             <td>Account Title</td>
             <td>Total Amount</td>
@@ -63,7 +63,6 @@ $total = 0;
         </tr>
         
         @foreach($coas as $coa)
-            
             <?php
             $acctTotal = OfficeSumController::accounttotal($accounts,$coa->acctcode,$acctcode);
             $total = $total + $acctTotal;

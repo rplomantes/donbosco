@@ -2,10 +2,12 @@
     Route::group(['middleware' => 'web'], function () {
     Route::auth();
     
+    Route::get('/discounting', 'Update\UpdateController@updateDiscount');
     Route::get('/', 'MainController@index');
-    
+    Route::get('cashreceipt/{transactiondate}','Accounting\CashReceiptController@cashreceiptbook');
+    Route::get('printcashreceipt','Accounting\CashReceiptController@cashreceiptpdf');
+    Route::get('printcashbreakdown/{fromtran}/{totran}','Accounting\CashReceiptController@breakdownpdf');
     //Book Store Module
-    
     Route::get('books/{idno}', 'Miscellaneous\BookController@index');
     Route::get('unclaim/{idno}', 'Miscellaneous\AjaxController@unclaim');
     Route::post('/books/update', 'Miscellaneous\BookController@updatebooks');
@@ -193,28 +195,24 @@
     Route::post('/addtobatchaccount','Cashier\AddtoBatchController@savebatchposting');
     Route::get('/searchor','Vincent\CashierController@searchor');
     Route::post('/searchor','Vincent\CashierController@findor');
-    
+
     Route::get('/viewnonstudent/{id}','Cashier\SearchNonSutdentController@viewtransactions');
     Route::get('/nonstudents','Cashier\SearchNonSutdentController@search');
     
-    
     //Accounting VINCENT (10-13-2016)
-    Route::get('/advancedstud', 'DBFixer@getAdvancedStudents');
-    
-    Route::get('/discounting', 'Update\UpdateController@updateDiscount');
+    Route::get('/disbursementreport/{voucherno?}', 'Miscellaneous\DisburstmentReportController@index');
     Route::get('checksummary/{from}/{to}','Accounting\DisbursementController@checkSummary');
     Route::get('printchecksummary/{from}/{to}','Accounting\DisbursementController@printcheckSummary');
-    
-    Route::get('/disbursementreport/{voucherno?}', 'Miscellaneous\DisburstmentReportController@index');
-    
-    Route::get('cashreceipt/{transactiondate}','Accounting\CashReceiptController@cashreceiptbook');
-    Route::get('printcashreceipt','Accounting\CashReceiptController@cashreceiptpdf');
-    Route::get('printcashbreakdown/{fromtran}/{totran}','Accounting\CashReceiptController@breakdownpdf');
-    
+
     Route::get('deptincome/{account}/{fromtran}/{totran}', 'Accounting\DeptIncomeController@index');
-    Route::get('deptreport/{dept}/{account}/{fromtran}/{totran}', 'Accounting\DeptIncomeController@deptreport');
-    Route::get('printconsolidate/{account}/{fromtran}/{totran}', 'Accounting\DeptIncomeController@printconsolidatedreport');
-    
+    Route::get('printconsolidate/{account}/{fromtran}/{totran}', 'Accounting\DeptIncomeController@printreport');
+
+    Route::get('/departmentalsummary/{fromdate}/{todate}/{dept}/{acctcode}', 'Accounting\OfficeSumController@index');
+    Route::get('/printdepartmentalsummary/{fromdate}/{todate}/{dept}/{acctcode}', 'Accounting\OfficeSumController@printOfficeSum');
+
+    Route::get('/individualsummary/{fromdate}/{todate}', 'Accounting\AccountSummaryController@index');
+    Route::get('/printindividualsummary/{fromdate}/{todate}/{account}', 'Accounting\AccountSummaryController@printaccountSummary');
+
     Route::get('/tvetledger','Vincent\TvetController@tvetledger');
     Route::get('/studentsledger/{batch}/{cours}/{section}','Vincent\TvetController@getsectionstudent');
     Route::get('/studentsledger/{batch}/{cours}/{section}/edit','Vincent\TvetController@edittvetcontribution');
@@ -224,7 +222,7 @@
     Route::get('/listofentry','Vincent\JournalController@listofentry');
     Route::get('/accountingview/{refno}','Vincent\JournalController@accountingview');
     Route::get('/editjournalentry/{refno}','Vincent\JournalController@editjournalentry');
-    
+
     Route::get('/searchvoucher','Accounting\DisbursementController@searchvoucher');
     Route::post('/searchvoucher','Accounting\DisbursementController@findvoucher');
     //ACADEMIC VINCENT
@@ -250,7 +248,6 @@
     Route::get('generalledger/print/{basic}/{title}/{todate?}','Accounting\GenLedgerController@printledger');
     Route::get('balancesheet','Vincent\BalanceSheetController@index');
     Route::get('dmreport/{trandate}','Accounting\DMReportController@index');
-    Route::get('printdmreport/{trandate}','Accounting\DMReportController@printreport');
     
     Route::get('dmsummary/{trandate}','Accounting\DebitDCSummaryController@index');
     Route::get('printdmjournal/{fromtran}/{totran}','Accounting\DebitDCSummaryController@printsummary');
@@ -347,41 +344,22 @@
     
     Route::get('/pullrecords','Update\UpdateController@prevgrade');
     Route::get('/studentslist/{level}/{sy}', 'Registrar\AjaxController@levelStudent');
-    Route::get('/getsectionstudents', 'Registrar\AjaxController@getsectionstudents');
-    
     Route::get('/getoverallrank', 'Registrar\AjaxController@getoverallrank');
-    Route::get('/setoverallrank', 'Registrar\OverallRankController@setOARank');
-    
-    
-    
+    Route::get('/setoverallrank', 'Registrar\OverallRankController@setOARank');    
+
+    Route::get('/getindividualaccount', 'Accounting\AjaxController@individualAccount');
     
     
 // Registrar Group
 Route::group(['middleware' => ['web','registrar']], function () {
-    Route::get('/kto12sectioning/{sy}', 'Registrar\SectionController@sectioning');
     Route::get('/overallranking/{sy}', 'Registrar\OverallRankController@index');
-    Route::get('/autosection/{level}', 'Registrar\AjaxController@autoSectioning');
-    
+	Route::get('/autosection/{level}/{strand?}', 'Registrar\AjaxController@autoSectioning');
+
    Route::get('/sheetA/{record}',function($record){
        $levels = \App\CtrLevel::get();
        return view('vincent.registrar.sheetAv2',compact('levels','record'));
    });
    
 });
-
-
-
-// Accounting Group
-
-Route::group(['middleware' => ['web','accounting']], function () {
-    Route::get('/individualsummary/{fromdate}/{todate}', 'Accounting\AccountSummaryController@index');
-    Route::get('/departmentalsummary/{fromdate}/{todate}/{dept}/{acctcode}', 'Accounting\OfficeSumController@index');
-    Route::get('/getfiscal/{fromdate}/{todate}', 'Accounting\OfficeSumController@checkfiscalyear');
-    Route::get('/printdepartmentalsummary/{fromdate}/{todate}/{dept}/{acctcode}', 'Accounting\OfficeSumController@printOfficeSum');
-    Route::get('/printindividualsummary/{fromdate}/{todate}/{account}', 'Accounting\AccountSummaryController@printaccountSummary');
     
-});
-    
-
-Route::get('/getindividualaccount', 'Accounting\AjaxController@individualAccount');
    

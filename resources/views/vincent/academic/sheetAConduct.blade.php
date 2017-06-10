@@ -11,7 +11,7 @@
         <link href="{{ asset('/css/fonts.css') }}" rel="stylesheet">
     </head>
     <body style="margin-left:10px;margin-right:10px">
-        @foreach($subjects as $subject)
+        
         <table width="100%" style="page-break-after: always">
             <tr>
                 <td>
@@ -55,11 +55,11 @@
                         </tr>
                         <tr>
                             <td style="font-size: 12px">
-                                <b>SUBJECT:</b> {{$subject->subjectname}}
+                                <b>SUBJECT:</b> GOOD MANNERS & RIGHT CONDUCT
                             </td>
                             
                             <td colspan="2" style="text-align: right;font-size: 12px;">
-                                <?php $adviser = DB::table('ctr_subject_teachers')->where('level',$level)->where('section',$section)->where('subjcode',$subject->subjectcode)->first(); ?>
+                                
                                 <b>Teacher:</b>
                                 @if(isset($adviser->adviser))
                                 {{$adviser->adviser}}
@@ -79,87 +79,44 @@
                     <table class='report' width="100%" cellpadding="0" cellspacing="0" border="1">
                         <tr>
                             <td style='text-align: center;width:60px;'>CLASS NO</td>
-                            <td style='text-align: center;width:120px;'>LAST NAME</td>
-                            <td style='text-align: center;width:300px;'>FIRST NAME</td>
-                            <td style='text-align: center;width:100px;'>QTR1</td>
-                            <td style='text-align: center;width:100px;'>Remarks</td>
-                            <td style='text-align: center;width:100px;'>QTR2</td>
-                            <td style='text-align: center;width:100px;'>Remarks</td>
-                            <td style='text-align: center;width:100px;'>QTR3</td>
-                            <td style='text-align: center;width:100px;'>Remarks</td>
-                            <td style='text-align: center;width:100px;'>QTR4</td>
-                            <td style='text-align: center;width:100px;'>Remarks</td>
-                            <td style='text-align: center;width:80px;'>RUNNING AVE</td>
+                            <td style='text-align: center;width:200px;'>LAST NAME</td>
+                            <td style='text-align: center;width:200px;'>FIRST NAME</td>
+                            <td style='text-align: center'>M.I.</td>
+                            <td style='text-align: center'>
+                                @if($quarter == 1)
+                                QTR1
+                                @endif
+                                @if($quarter == 2)
+                                QTR2
+                                @endif
+                                @if($quarter == 3)
+                                QTR3
+                                @endif
+                                @if($quarter == 4)
+                                QTR4
+                                @endif
+                            </td>
                         </tr>
-
                         @foreach($students as $student)
-                        <?php $grade = \App\Grade::where('idno',$student->idno)->where('subjectcode',$subject->subjectcode)->where('schoolyear','2016')->first(); ?>
+                     
                         <tr>
                             <td style="text-align: center">{{$student->class_no}}</td>
                             <td>{{$student->lastname}}</td>
                             <td>{{$student->firstname}}
-                                @if(!str_replace(' ', '', $student->middlename) == '')
-                                    {{substr($student->middlename, 1,1)."."}}
-                                @endif                                
                             @if($student->stat == 3)
                             <span style="float: right;color: red;font-weight: bold">
                             DROPPED
                             </span>
-                            @endif
-                            </td> 
-                        
-                            <td style="text-align: center">@if(!round($grade->first_grading,2) == null)
-                                {{round($grade->first_grading,2)}}
-                            @endif</td>
-                            <td style='text-align: center'></td>
-                            <td style="text-align: center">@if(!round($grade->second_grading,2) == NULL)
-                                {{round($grade->second_grading,2)}}
-                            @endif</td>
-                            <td style='text-align: center'></td>
-                            <td style="text-align: center">@if(!round($grade->third_grading,2) == NULL)
-                                {{round($grade->third_grading,2)}}
-                            @endif</td>
-                            <td style='text-align: center'></td>
-                            <td style="text-align: center">@if(!round($grade->fourth_grading,2) == NULL)
-                                {{round($grade->fourth_grading,2)}}
-                            @endif</td>
-                            <td style='text-align: center'></td>
-                            <?php 
-                            $count = 0;
-                            $grades = 0;
+                            @endif                            
+                            </td>
                             
-                                if(!round($grade->first_grading,2) == null){
-                                    $grades = $grades+round($grade->first_grading,2);
-                                    $count++;
-                                }
-                                if(!round($grade->second_grading,2) == null){
-                                    $grades = $grades+round($grade->second_grading,2);
-                                    $count++;
-                                }
-                                if(!round($grade->third_grading,2) == null){
-                                    $grades = $grades+round($grade->third_grading,2);
-                                    $count++;
-                                }
-                                if(!round($grade->fourth_grading,2) == null){
-                                    $grades = $grades+round($grade->fourth_grading,2);
-                                    $count++;
-                                }
-                                if(!$count == 0){
-                                $grades = $grades/$count;
-                                }
-                            ?>
-                            
-                            <td>@if(!$grades == 0)
-                                @if($level == 'Grade 7' || $level == 'Grade 8' || $level == 'Grade 9' || $level == 'Grade 10' || $level == 'Grade 11' || $level == 'Grade 12')
-                                    {{round($grades,0)}}
-
-                                    
-                                @else
-                                    {{number_format(round($grades,2),2)}}
-                                    
+                            <td style="text-align: center">@if(!$student->middlename == ''||!$student->middlename == NULL)
+                                {{substr($student->middlename, 1,1)."."}}
                                 @endif
-                            @endif</td>
-                            
+                            </td>
+                            <td style="text-align: center">
+                                {{round($student->total,2)}}
+                            </td>
                         </tr>
                         @endforeach
                     </table>
@@ -188,7 +145,7 @@
             </tr>
         </table>
         
-        @endforeach
+        
 
     </body>
 </html>

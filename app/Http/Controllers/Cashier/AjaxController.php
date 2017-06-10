@@ -54,7 +54,7 @@ class AjaxController extends Controller{
         }
 
     }
-    
+
     function searchnonstudent(){
         if(Request::ajax()){
             $name = Input::get('name');

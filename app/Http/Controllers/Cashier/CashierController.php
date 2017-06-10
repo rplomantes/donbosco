@@ -37,7 +37,7 @@ class CashierController extends Controller
        
        if(count($othercollections) > 0 ){
            foreach($othercollections as $othercollection){
-               $totalothers = $totalothers + $othercollection->amount - $othercollection->payment - $othercollection->debitmemo;
+               $totalothers = $totalothers + ($othercollection->amount - ($othercollection->payment + $othercollection->debitmemo));
            }
        }
        
@@ -107,7 +107,7 @@ class CashierController extends Controller
                 $penalties = \App\Ledger::where($matchfields)->get();
                 if(count($penalties)>0){
                     foreach($penalties as $pen){
-                        $penalty= $penalty + $pen->amount - $pen->debitmemo - $pen->otherdiscount - $pen->payment;
+                        $penalty= $penalty + ($pen->amount - ($pen->debitmemo + $pen->otherdiscount + $pen->payment));
                     }
                 }
            
@@ -1109,7 +1109,7 @@ class CashierController extends Controller
             }
          
          
-            if($credit->description == "Enrollment Reservation"){
+            if($credit->accountingcode == 210400){
                 \App\AdvancePayment::where('refno',$refno)->delete();
             }
 

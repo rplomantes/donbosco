@@ -138,7 +138,7 @@ class GradeController extends Controller
     function viewSectionGrade11to12($level,$shop,$section,$sem){
         $schoolyear = \App\CtrRefSchoolyear::first();
         $collection = array();        
-        $students = DB::Select("SELECT statuses.department,gender,class_no,strand,users.idno,users.lastname, users.firstname,users.middlename,users.extensionname,student_infos.lrn,gender,birthDate from users left join statuses on users.idno = statuses.idno left join student_infos on users.idno=student_infos.idno where statuses.status IN (2,3) AND level LIKE '$level' AND section LIKE '$section' AND strand LIKE '$shop' ORDER BY statuses.class_no ASC");
+        $students = DB::Select("SELECT statuses.department,gender,class_no,strand,users.idno,users.lastname, users.firstname,users.middlename,users.extensionname,student_infos.lrn,gender,birthDate from users left join statuses on users.idno = statuses.idno left join student_infos on users.idno=student_infos.idno where statuses.status IN (2,3) AND level LIKE '$level' AND section LIKE '$section' AND strand LIKE '$shop' and schoolyear = 2016 ORDER BY statuses.class_no ASC");
 
         $matchfield = ["level"=>$level,"section"=>$section,"strand"=>$shop];
         $teacher = \App\CtrSection::where($matchfield)->first();        

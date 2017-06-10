@@ -407,21 +407,21 @@ $(document).ready(function(){
   });
   
     document.getElementById("subsidiary").addEventListener("keypress", function(e) {
-        if(e.keyCode == 13){
-          $("#department").focus();
-        }
+	if(e.keyCode == 13){
+	  $("#department").focus();
+	}
   }, false);  
 
     document.getElementById("department").addEventListener("keypress", function(e) {
-        if(e.keyCode == 13){
+	if(e.keyCode == 13){
           $("#entrytype").focus();
-        }
+	}
   }, false);  
   
     document.getElementById("entrytype").addEventListener("keypress", function(e) {
-        if(e.keyCode == 13){
+	if(e.keyCode == 13){
           $("#amount").focus();
-        }
+	}
   }, false);
   
 </script>

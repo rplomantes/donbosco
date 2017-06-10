@@ -144,5 +144,42 @@ class AjaxController extends Controller
         return view('ajax.overallrank',compact('students','subjects','level','course','sy','quarter'));
         
     }
+
+    function autoSectioning($level,$strand='null'){
+        if($strand == 'null'){
+            $strand = '';
+        }
+        
+        $sy = \App\ctrSchoolYear::first()->schoolyear;
+        $prevSy = $sy-1;
+        $topstudents = DB::Select("Select *,s.idno as studno from statuses s join rankings r on s.idno = r.idno where r.schoolyear = $prevSy and s.schoolyear = $sy and s.status = 2 and s.level = '$level' and s.strand = '$strand' order by oa_acad_final DESC LIMIT 0 , 20");
+       $sec1= $this->sectionStudents($sy,$level,$strand,$topstudents);
+        
+	$students = DB::Select("Select *,s.idno as studno from statuses s join users u on s.idno = u.idno where schoolyear = $sy and s.status = 2 and strand = '$strand' and level='$level' order by lastname,firstname");
+        $sec2=$this->sectionStudents($sy,$level,$strand,$students);
+        
+	return $sec1;
+    }
+    
+    
+    function sectionStudents($sy,$level,$strand,$students){
+        $sections = DB::Select("Select Distinct section as sec from ctr_sections where level = '$level' and strand = '$strand'");
+        $indexCount = count($sections);
+        $index = 0;
+        
+        foreach($students as $student){
+            $stud = \App\Status::where('idno',$student->studno)->where('schoolyear',$sy)->first();
+            if($index >= $indexCount){
+                $index = 0;
+            }
+            if(($stud->section == "") && ($stud->status ==2)){
+                $stud->section  = $sections[$index]->sec;
+                $stud->save();
+                $index++;
+            }
+        }
+	return $sections;
+        
+    }
     
 }

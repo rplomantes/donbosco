@@ -26,7 +26,7 @@ foreach($payees as $key=>$value){
       source: checkno
     });
     });
-    
+
    $( function() {
     var payee = [<?php echo '"'.implode('","', $payees).'"' ?>];
     $( "#name" ).autocomplete({
