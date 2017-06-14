@@ -63,11 +63,11 @@ $total = 0;
         </tr>
         
         @foreach($coas as $coa)
+            @if(OfficeSumController::showAcct($accounts,$offices,$coa->acctcode,$acctcode))
             <?php
             $acctTotal = OfficeSumController::accounttotal($accounts,$coa->acctcode,$acctcode);
             $total = $total + $acctTotal;
             ?>
-            @if(OfficeSumController::showAcct($accounts,$offices,$coa->acctcode,$acctcode))
                 <tr>
                     <td>{{$coa->accountname}}</td>
 
@@ -77,7 +77,7 @@ $total = 0;
                     <td>
                         {{OfficeSumController::accountdepttotal($accounts,$office->sub_department,$coa->acctcode,$acctcode)}}
                     </td>
-                    @endforeach            
+                    @endforeach
                 </tr>
             @endif
         @endforeach

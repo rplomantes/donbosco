@@ -574,7 +574,9 @@ function collectionreport($datefrom, $dateto){
      //$debitdebitmemos = DB::Select("select sum(amount)+sum(checkamount) as totalamount, acctcode from dedits where (transactiondate between '$fromtran' and '$totran') and paymenttype = '3' and isreverse = '0' group by acctcode");
      //$debitdiscounts = DB::Select("select sum(amount)+sum(checkamount) as totalamount from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and paymenttype = '4'");
      //$debitreservations = DB::Select("select sum(amount)+sum(checkamount) as totalamount from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and paymenttype = '5'");
+        
         $pdf = \App::make('dompdf.wrapper');
+        $pdf->setPaper('legal','portrait');
         $pdf->loadView('print.printcashentry',compact('trials','fromtran','totran','entry')); 
         return $pdf->stream();  
 
