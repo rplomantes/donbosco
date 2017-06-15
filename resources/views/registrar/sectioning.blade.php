@@ -41,7 +41,9 @@
     </div>
     <div class="col-md-3">
         <br>
+        @if($currsy == $sy)
         <button id="autosec" class="btn btn-block" onclick="autosection()">Auto Section</button>
+        @endif
     </div>
     <div class="col-md-3" id="section">
     </div>
@@ -60,7 +62,9 @@
     var strand = 'null';
     var section = "";
     
-    document.getElementById("autosec").disabled = true;
+    @if($currsy == $sy)
+        document.getElementById("autosec").disabled = true;
+    @endif
     
     $("#sy").change(function(){
         document.location = "/kto12sectioning/" + $("#sy").val();
@@ -77,7 +81,9 @@
         $('#section').html("")
         $('#adviser').html("")
         
+        @if($currsy == $sy)
         document.getElementById("autosec").disabled = true;
+        @endif
         
         if(level == "Grade 9" || level == "Grade 10" || level == "Grade 11" || level == "Grade 12"){
             getcourse();

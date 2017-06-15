@@ -16,6 +16,11 @@ class SectionController extends Controller
 		$this->middleware('auth');
 	}
         
+     function sectioning($sy){
+         $levels = \App\CtrLevel::all();
+         return view('registrar.sectioning',compact('levels','sy'));   
+     }
+        
      function sectionk(){
          $levels = \App\CtrLevel::all();
          //return $levels;

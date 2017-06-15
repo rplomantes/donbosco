@@ -21,6 +21,8 @@
             <h4 style="text-align: center;margin-top:5px;margin-bottom: 0px;padding-bottom: 0px;font-size: 15pt;">CONSOLIDATED DEPARTMENTAL
                 @if($acctcode == 4)
                 INCOME
+                @elseif($acctcode == 1)
+                ASSETS
                 @else
                 EXPENSE
                 @endif
@@ -41,6 +43,8 @@ $total = 0;
                     <th>Total 
                         @if($acctcode == 4)
                             Income
+                        @elseif($acctcode == 1)
+                            Asset
                         @else
                             Expense
                         @endif

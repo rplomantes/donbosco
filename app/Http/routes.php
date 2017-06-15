@@ -2,6 +2,8 @@
     Route::group(['middleware' => 'web'], function () {
     Route::auth();
     
+    Route::get('/acadincome/{schoolyear}', 'Accounting\AcademicDeptincomeController@index');
+    
     Route::get('/discounting', 'Update\UpdateController@updateDiscount');
     Route::get('/', 'MainController@index');
     Route::get('cashreceipt/{transactiondate}','Accounting\CashReceiptController@cashreceiptbook');
@@ -349,15 +351,21 @@
 
     Route::get('/getindividualaccount', 'Accounting\AjaxController@individualAccount');
     
+    Route::get('/studentslist/{level}/{sy}', 'Registrar\AjaxController@levelStudent');
+    
     
 // Registrar Group
 Route::group(['middleware' => ['web','registrar']], function () {
+    
+    Route::get('/kto12sectioning/{sy}', 'Registrar\SectionController@sectioning');
     Route::get('/overallranking/{sy}', 'Registrar\OverallRankController@index');
-	Route::get('/autosection/{level}/{strand?}', 'Registrar\AjaxController@autoSectioning');
+    Route::get('/autosection/{level}/{strand?}', 'Registrar\AjaxController@autoSectioning');
 
    Route::get('/sheetA/{record}',function($record){
        $levels = \App\CtrLevel::get();
        return view('vincent.registrar.sheetAv2',compact('levels','record'));
+       
+   
    });
    
 });

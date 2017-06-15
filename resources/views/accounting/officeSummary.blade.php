@@ -10,6 +10,8 @@ $total = 0;
 <h4 style="text-align: left;">DEPARTMENTAL
     @if($acctcode == 4)
     INCOME
+    @elseif($acctcode == 1)
+    ASSETS
     @else
     EXPENSE
     @endif

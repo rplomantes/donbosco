@@ -10,10 +10,27 @@ use DB;
 
 class AcademicDeptincomeController extends Controller
 {
-    function index($fiscal){
-        $income  = DB::Select("Select sum(c.elem) - sum(d.elem) as elementary,sum(c.hs) - sum(d.hs) as high,sum(c.tvet) - sum(d.tvet) as tvet from creditconsolidated join deditconsolidated where accountingcode LIKE '4%';' and fiscalyear = $fiscal");
-        $expense  = DB::Select("Select sum(c.elem) - sum(d.elem) as elementary,sum(c.hs) - sum(d.hs) as high,sum(c.tvet) - sum(d.tvet) as tvet from creditconsolidated join deditconsolidated where accountingcode LIKE '5%';' and fiscalyear = $fiscal");
+    function index($schoolyear){
+        $incomeacct = $this->accounts(4, $schoolyear);
+        $expenseacct = $this->accounts(5, $schoolyear);
         
-        return view('accounting.AcadDeptIncome',compact('income','expense'));
+        $departments = $departments = DB::Select("Select distinct main_department from ctr_acct_dept where main_department IN('Elementary Department','High School Department','TVET')");
+        return view('accounting.AcadDeptIncome',compact('incomeacct','expenseacct','schoolyear','departments'));
+    }
+    
+    function accounts($acctcode,$schoolyear){
+        $accounts = DB::Select("select * from `chart_of_accounts` as coa "
+                . "left join (Select accountingcode, SUM( amount ) AS cred, 0 AS deb, acct_department AS coffice "
+                . "from credits "
+                . "where fiscalyear = $schoolyear and schoolyear IN ($schoolyear,'') "
+                . "and isreverse = 0 group by accountingcode,acct_department "
+                . "UNION "
+                . "Select accountingcode, 0, SUM( amount ) + SUM( checkamount ) AS deb, acct_department AS coffice from dedits "
+                . "where fiscalyear = $schoolyear and schoolyear IN ($schoolyear,'') "
+                . "and isreverse = 0 group by accountingcode,acct_department) d "
+                . "on d.accountingcode=coa.acctcode "
+                . "where coa.acctcode LIKE '$acctcode%' order by coa.acctcode asc");
+
+        return $accounts;
     }
 }

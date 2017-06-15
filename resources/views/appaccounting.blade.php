@@ -142,9 +142,12 @@
                                           
                                        </li>  
                                        <li><a href="{{url('statementofaccount')}}"><i class="fa fa-btn fa-sign-out"></i>Statement of Account</a></li>
+                                       <li><hr style="margin-top: 1px;margin-bottom: 1px;"></li>
+                                       <li><a href="{{url('deptincome',array(1,date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn fa-sign-out"></i>Consolidated Departmental Assets</a></li>
                                        <li><a href="{{url('deptincome',array(4,date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn fa-sign-out"></i>Consolidated Departmental Income</a></li>
                                        <li><a href="{{url('deptincome',array(5,date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn fa-sign-out"></i>Consolidated Departmental Expense</a></li>
-		                       <li><hr></li>
+		                       <li><hr style="margin-top: 1px;margin-bottom: 1px;"></li>
+                                       <li><a href="{{url('departmentalsummary',array(date('Y-m-d'),date('Y-m-d'),'Student Services',1))}}"><i class="fa fa-btn fa-sign-out"></i>Departmental Assets</a></li>
 		                       <li><a href="{{url('departmentalsummary',array(date('Y-m-d'),date('Y-m-d'),'Student Services',4))}}"><i class="fa fa-btn fa-sign-out"></i>Departmental Income</a></li>
 		                       <li><a href="{{url('departmentalsummary',array(date('Y-m-d'),date('Y-m-d'),'Student Services',5))}}"><i class="fa fa-btn fa-sign-out"></i>Departmental Expense</a></li>
                                         @endif

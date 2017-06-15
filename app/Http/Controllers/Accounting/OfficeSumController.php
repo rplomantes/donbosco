@@ -149,7 +149,7 @@ class OfficeSumController extends Controller
     }
     
     function accounts($fromdate,$todate,$dept,$acctcode,$schoolyear){
-
+        if($acctcode == 1){
         $accounts = DB::Select("select * from `chart_of_accounts` as coa "
                 . "left join (Select accountingcode, SUM( amount ) AS cred, 0 AS deb, sub_department AS coffice "
                 . "from credits "
@@ -164,7 +164,25 @@ class OfficeSumController extends Controller
                 . "and fiscalyear = $schoolyear and schoolyear IN ($schoolyear,'') "
                 . "and isreverse = 0 group by accountingcode,sub_department) d "
                 . "on d.accountingcode=coa.acctcode "
-                . "where coa.acctcode LIKE '$acctcode%' order by coa.acctcode asc");
+                . "where (coa.acctcode BETWEEN 140100 AND 140116) order by coa.acctcode asc");
+        }else{
+            $accounts = DB::Select("select * from `chart_of_accounts` as coa "
+                    . "left join (Select accountingcode, SUM( amount ) AS cred, 0 AS deb, sub_department AS coffice "
+                    . "from credits "
+                    . "where (transactiondate between '$fromdate' AND '$todate') "
+                    . "and acct_department = '$dept' "
+                    . "and fiscalyear = $schoolyear and schoolyear IN ($schoolyear,'') "
+                    . "and isreverse = 0 group by accountingcode,sub_department "
+                    . "UNION "
+                    . "Select accountingcode, 0, SUM( amount ) + SUM( checkamount ) AS deb, sub_department AS coffice from dedits "
+                    . "where (transactiondate between '$fromdate' AND '$todate') "
+                    . "and acct_department = '$dept' "
+                    . "and fiscalyear = $schoolyear and schoolyear IN ($schoolyear,'') "
+                    . "and isreverse = 0 group by accountingcode,sub_department) d "
+                    . "on d.accountingcode=coa.acctcode "
+                    . "where coa.acctcode LIKE '$acctcode%' order by coa.acctcode asc");            
+        }
+
         
         return $accounts;
     }
