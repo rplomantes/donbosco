@@ -39,9 +39,9 @@ class AjaxController extends Controller
         }
         
         if($schoolyear == $sy){
-            $students = DB::Select("Select distinct s.idno,section,strand,class_no from statuses s join users u on s.idno=u.idno where schoolyear = '$sy' and level = '$level' and strand = '$strand' and section = '$section' order by class_no,gender,lastname,firstname");
+            $students = DB::Select("Select distinct s.idno,section,strand,class_no from statuses s join users u on s.idno=u.idno where schoolyear = '$sy' and level = '$level' and strand = '$strand' and section = '$section' order by  class_no =0,class_no,gender,lastname,firstname");
         }else{
-            $students = DB::Select("Select distinct s.idno,section,strand,class_no from status_histories s join users u on s.idno = u.idno where schoolyear = '$sy' and level  = '$level' and strand = '$strand' and section = '$section' order by class_no,gender, lastname,firstname");
+            $students = DB::Select("Select distinct s.idno,section,strand,class_no from status_histories s join users u on s.idno = u.idno where schoolyear = '$sy' and level  = '$level' and strand = '$strand' and section = '$section' order by class_no =0,class_no,gender, lastname,firstname");
         }
         
         return view('ajax.sectionlist',compact('students'));

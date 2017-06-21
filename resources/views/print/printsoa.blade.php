@@ -1,3 +1,6 @@
+<?php
+$sy = \App\CtrSchoolYear::first()->schoolyear;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -67,7 +70,7 @@ th {
         <img src="<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/images/logo.png" width="60">
         </td><td width="70%"><span style="font-size:12pt; font-weight: bold">Don Bosco Technical Institute of Makati, Inc. </span></td><td align="right"><span style="font-size:14pt; font-style:italic; font-weight: bold;">STATEMENT OF ACCOUNT</span></td></tr>
         <tr><td style="font-size:10pt;">Chino Roces Ave., Makati City </td><td align="right">Date : {{date('M d, Y')}}</td></tr>
-        <tr><td style="font-size:10pt;">Tel No : 892-01-01</td><td align="right">Plan : {{$statuses->plan}}</td></tr>
+        <tr><td style="font-size:10pt;">Tel No : 892-01-01 to 08</td><td align="right">Plan : {{$statuses->plan}}</td></tr>
     </table>
     
     
@@ -160,6 +163,7 @@ th {
            <td align="right">{{number_format($maintotdiscount,2)}}</td><td align="right">{{number_format($maintotpayment,2)}}</td>
            <td align="right">{{number_format($maintotdm,2)}}</td><td align="right">{{number_format($maintotamount-$maintotdiscount-$maintotpayment-$maintotdm,2)}}</td></tr>
        
+       
        @if(count($others)>0)
        <tr><td><b><u>Additional Charges</u></b></td></tr>
        @endif
@@ -173,25 +177,27 @@ th {
        @foreach($others as $balance)
             @if($balance->categoryswitch > 10)
             <?php
-            $totamount = $totamount + $balance->amount;
-            $totdiscount = $totdiscount + $balance->discount;
-            $totdm = $totdm + $balance->debitmemo;
-            $totpayment = $totpayment+$balance->payment;
-            
+            if(round($balance->amount-($balance->discount+$balance->debitmemo+$balance->payment)) > 0){
             $prevtotamount = $prevtotamount + $balance->amount;
             $prevtotdiscount = $prevtotdiscount + $balance->discount;
             $prevtotdm = $prevtotdm + $balance->debitmemo;
             $prevtotpayment = $prevtotpayment+$balance->payment;
-            
+                                    
+            $totamount = $totamount + $balance->amount;
+            $totdiscount = $totdiscount + $balance->discount;
+            $totdm = $totdm + $balance->debitmemo;
+            $totpayment = $totpayment+$balance->payment;
+                       
             $othertotamount = $othertotamount + $balance->amount;
             $othertotdiscount = $othertotdiscount + $balance->discount;
             $othertotdm = $othertotdm + $balance->debitmemo;
             $othertotpayment = $othertotpayment+$balance->payment;
+            }
             ?>
             @endif
        @endforeach
        
-       @if($prevtotamount > 0)
+       @if(round($prevtotamount-($prevtotdm+$prevtotdiscount+$prevtotpayment)) > 0)
             <tr><td>Previous Balance</td><td align="right">{{number_format($prevtotamount,2)}}</td>
                 <td align="right">{{number_format($prevtotdiscount,2)}}</td><td align="right">{{number_format($prevtotpayment,2)}}</td>
                 <td align="right">{{number_format($prevtotdm,2)}}</td><td align="right">{{number_format($prevtotamount-$prevtotdiscount-$prevtotpayment-$prevtotdm,2)}}</td></tr>
@@ -199,7 +205,10 @@ th {
        
        @foreach($others as $balance)
             @if(($balance->categoryswitch > 6 && $balance->categoryswitch < 10) && strpos($balance->description,'Penalty') === false)
+            @if($balance->amount-($balance->discount+$balance->debitmemo+$balance->payment) > 0 || $balance->schoolyear == $sy)
             <?php
+            
+            
             $totamount = $totamount + $balance->amount;
             $totdiscount = $totdiscount + $balance->discount;
             $totdm = $totdm + $balance->debitmemo;
@@ -209,16 +218,21 @@ th {
             $othertotdiscount = $othertotdiscount + $balance->discount;
             $othertotdm = $othertotdm + $balance->debitmemo;
             $othertotpayment = $othertotpayment+$balance->payment;
+            
             ?>
+            
             <tr><td>{{$balance->receipt_details}}</td><td align="right">{{number_format($balance->amount,2)}}</td>
                 <td align="right">{{number_format($balance->discount,2)}}</td><td align="right">{{number_format($balance->payment,2)}}</td>
                 <td align="right">{{number_format($balance->debitmemo,2)}}</td><td align="right">{{number_format($balance->amount-$balance->discount-$balance->payment-$balance->debitmemo,2)}}</td></tr>
+            @endif
             @endif
        @endforeach
        
        @foreach($others as $balance)
             @if(strpos($balance->description,'Penalty') !== false)
+            @if($balance->amount-($balance->discount+$balance->debitmemo+$balance->payment) > 0 || $balance->schoolyear == $sy)
             <?php
+            
             $totamount = $totamount + $balance->amount;
             $totdiscount = $totdiscount + $balance->discount;
             $totdm = $totdm + $balance->debitmemo;
@@ -228,10 +242,12 @@ th {
             $othertotdiscount = $othertotdiscount + $balance->discount;
             $othertotdm = $othertotdm + $balance->debitmemo;
             $othertotpayment = $othertotpayment+$balance->payment;
+            
             ?>
             <tr><td>{{$balance->receipt_details}}</td><td align="right">{{number_format($balance->amount,2)}}</td>
                 <td align="right">{{number_format($balance->discount,2)}}</td><td align="right">{{number_format($balance->payment,2)}}</td>
                 <td align="right">{{number_format($balance->debitmemo,2)}}</td><td align="right">{{number_format($balance->amount-$balance->discount-$balance->payment-$balance->debitmemo,2)}}</td></tr>
+            @endif
             @endif
        @endforeach
        @if(count($others)>0)

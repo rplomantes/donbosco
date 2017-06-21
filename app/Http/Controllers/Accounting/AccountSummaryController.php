@@ -21,7 +21,7 @@ class AccountSummaryController extends Controller{
                     . "from dedits "
                     . "where (transactiondate BETWEEN '$fromdate' AND '$todate')) c "
                     . "join chart_of_accounts coa "
-                    . "on coa.acctcode = c.accountingcode order by coa.acctcode");
+                    . "on coa.acctcode = c.accountingcode order by coa.accountname");
             
             return view('accounting.subsidiary',compact('acctcodes','fromdate','todate'));
         }
@@ -38,16 +38,14 @@ class AccountSummaryController extends Controller{
     }
     
     static function getaccounts($fromdate,$todate,$account){
-        $accounts = DB::Select("select refno,transactiondate,receiptno,debit,credit,entry_type from "
-                . "(select c.refno,c.transactiondate,c.receiptno,0 as debit,sum(c.amount) as credit,c.entry_type "
+        $accounts = DB::Select("select refno,transactiondate,receiptno,debit,credit,entry_type,acct_department,sub_department from "
+                . "(select c.refno,c.transactiondate,c.receiptno,0 as debit,sum(c.amount) as credit,c.entry_type,c.acct_department,c.sub_department "
                 . "from credits c "
-                . "join dedits d "
-                . "ON c.refno = d.refno "
                 . "where (c.transactiondate BETWEEN '$fromdate' AND '$todate') "
                 . "AND c.accountingcode = '$account' and c. isreverse=0 "
                 . "group by c.refno "
                 . "UNION "
-                . "select refno,transactiondate,receiptno,sum(amount)+sum(checkamount) as debit,0 as credit,entry_type "
+                . "select refno,transactiondate,receiptno,sum(amount)+sum(checkamount) as debit,0 as credit,entry_type,acct_department,sub_department "
                 . "from dedits "
                 . "where (transactiondate BETWEEN '$fromdate' AND '$todate' ) "
                 . "AND accountingcode = '$account' and isreverse=0 "

@@ -576,7 +576,7 @@ function collectionreport($datefrom, $dateto){
      //$debitreservations = DB::Select("select sum(amount)+sum(checkamount) as totalamount from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0' and paymenttype = '5'");
         
         $pdf = \App::make('dompdf.wrapper');
-        $pdf->setPaper('legal','portrait');
+        $pdf->setPaper('letter','portrait');
         $pdf->loadView('print.printcashentry',compact('trials','fromtran','totran','entry')); 
         return $pdf->stream();  
 
@@ -668,6 +668,8 @@ function cashcollection($transactiondate){
     function printsoa($idno, $trandate){
           $statuses = \App\Status::where('idno',$idno)->first();
           $users = \App\User::where('idno',$idno)->first();
+          $displayOthers = 0;
+          
           $balances = DB::Select("select sum(amount) as amount , sum(plandiscount) + sum(otherdiscount) as discount, "
                   . "sum(payment) as payment, sum(debitmemo) as debitmemo, receipt_details, categoryswitch  from ledgers  where "
                   . " idno = '$idno'  and (categoryswitch <= '6' or ledgers.receipt_details LIKE 'Trainee%') group by "
@@ -682,11 +684,21 @@ function cashcollection($transactiondate){
                   . " idno = '$idno' and (categoryswitch <= '6' or ledgers.receipt_details LIKE 'Trainee%') group by "
                   . "duedate order by duedate");
 
-          $others=DB::Select("select sum(amount) - sum(plandiscount) - sum(otherdiscount) - "
+          $others=DB::Select("select schoolyear,sum(amount) - sum(plandiscount) - sum(otherdiscount) - "
                   . "sum(payment) - sum(debitmemo) as balance ,sum(amount) as amount , sum(plandiscount) + sum(otherdiscount) as discount,"
                   . "sum(payment) as payment, sum(debitmemo) as debitmemo, receipt_details,description, categoryswitch from ledgers  where "
                   . " idno = '$idno' and categoryswitch > '6' and ledgers.receipt_details NOT LIKE 'Trainee%'  group by "
                   . "receipt_details, transactiondate order by LEFT(receipt_details, 4) ASC,id");
+          
+          $showothers=DB::Select("select sum(amount) - sum(plandiscount) - sum(otherdiscount) - "
+                  . "sum(payment) - sum(debitmemo) as balance ,sum(amount) as amount , sum(plandiscount) + sum(otherdiscount) as discount,"
+                  . "sum(payment) as payment, sum(debitmemo) as debitmemo, receipt_details,description, categoryswitch from ledgers  where "
+                  . " idno = '$idno' and categoryswitch > '6' and ledgers.receipt_details NOT LIKE 'Trainee%'");
+          
+          foreach($showothers as $showother){
+              $displayOthers = $showother->balance;
+          }
+          
           $schedulebal = 0;
           if(count($schedules)>0){
               foreach($schedules as $sched){
@@ -698,17 +710,17 @@ function cashcollection($transactiondate){
           
           
           $otherbalance = 0;
-          if(count($others)>0){
+          if($displayOthers>0){
               foreach($others as $ot){
                   $otherbalance = $otherbalance+$ot->balance;
-              }
+              } 
           }
 
           $totaldue = $schedulebal + $otherbalance;
           $reminder = session('remind');
           $pdf = \App::make('dompdf.wrapper');
           // $pdf->setPaper([0, 0, 336, 440], 'portrait');
-          $pdf->loadView("print.printsoa",compact('statuses','users','balances','trandate','schedules','others','otherbalance','totaldue','reminder'));
+          $pdf->loadView("print.printsoa",compact('statuses','users','balances','trandate','schedules','others','otherbalance','totaldue','reminder','displayOthers'));
           return $pdf->stream();
     }
  

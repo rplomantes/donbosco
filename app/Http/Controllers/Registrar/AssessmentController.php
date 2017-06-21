@@ -545,6 +545,8 @@ function assess(Request $request){
                         $studentdiscount->idno = $id;
                         $studentdiscount->refid = $newledger->id;
                         $studentdiscount->plan=$plan;
+                        $studentdiscount->accountingcode=$discounts->accountingcode;
+                        $studentdiscount->acctname=$discounts->acctname;
                         $studentdiscount->discountcode = $discounts->discountcode;
                         $studentdiscount->description =$discounts->description;
                         $studentdiscount->tuitionfee = $discounts->tuitionfee;

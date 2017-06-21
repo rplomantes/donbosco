@@ -1916,6 +1916,11 @@ class AjaxController extends Controller
         $sy = Input::get('sy');
         $course = Input::get('course');
         $allavailable = 0;
+        
+        if($course == 'null'){
+            $course = '';
+        }
+        
         $sections = DB::Select("Select distinct section from  ctr_sections where level = '$level' and schoolyear = $sy and strand='$course'");
         return view('ajax.selectsection',compact('sections','action','allavailable'));
                

@@ -24,6 +24,11 @@
             </select>
         </div>
     </div>
+    @if($currsy == $sy)
+    <div class="col-md-offset-3 col-md-6" id="lock">
+
+    </div>
+    @endif
 </div>
 <div class="container">
     <div class="col-md-3">
@@ -167,6 +172,9 @@
                    }
                });
     }
+    
+    @if($currsy == $sy)
+    @endif
 </script>
 @stop
 

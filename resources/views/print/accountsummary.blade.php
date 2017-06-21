@@ -42,6 +42,8 @@ $tcredit = 0;
                     <td>Debit</td>
                     <td>Credit</td>
                     <td>Entry</td>
+                    <td>Department</td>
+                    <td>Office</td>
                     <td>Particular</td>
                 </tr>
             </thead>
@@ -60,16 +62,16 @@ $tcredit = 0;
                 ?>
 
                 <tr>
-                    <td width="7%" align="center">{{$account->transactiondate}}</td>
-                    <td width="7%" align="center">{{$account->receiptno}}</td>
-                    <td width="23%">{{$payee}}</td>
-                    <td width="11%" align="right">{{number_format($account->debit,2,' .',',')}}</td>
-                    <td width="11%" align="right">{{number_format($account->credit,2,' .',',')}}</td>
+                    <td width="6.5%" align="center">{{$account->transactiondate}}</td>
+                    <td width="6%" align="center">{{$account->receiptno}}</td>
+                    <td width="20%">{{$payee}}</td>
+                    <td width="8%" align="right">{{number_format($account->debit,2,' .',',')}}</td>
+                    <td width="8%" align="right">{{number_format($account->credit,2,' .',',')}}</td>
                     <?php
                         $tdebit = $tdebit+ $account->debit;
                         $tcredit = $tcredit+ $account->credit;
                     ?>
-                    <td width="10%" align="center">
+                    <td width="8%" align="center">
                         @if($account->entry_type == 1)
                         Cash Receipt
                         @elseif($account->entry_type == 2)
@@ -82,15 +84,16 @@ $tcredit = 0;
                         System Generated
                         @endif
                     </td>
+                    <td width="8%">{{$account->acct_department}}</td>
+                    <td width="9%">{{$account->sub_department}}</td>
                     <td>{{$remark}}</td>
                 </tr>
                 @endforeach
         <tr>
             <td colspan="3">Amount</td>
-            <td align="right">{{number_format($tdebit,2)}}</td>
-            <td align="right">{{number_format($tcredit,2)}}</td>
-            <td ></td>
-            <td ></td>
+            <td align="right">{{number_format($tdebit,2,' .',',')}}</td>
+            <td align="right">{{number_format($tcredit,2,' .',',')}}</td>
+            <td colspan="4"></td>
         </tr>
             </tbody>
         </table>

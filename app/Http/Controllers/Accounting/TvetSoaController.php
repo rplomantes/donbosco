@@ -147,7 +147,7 @@ class TvetSoaController extends Controller
           }
           
           $transactionreceipts = DB::Select("select transactiondate,receiptno,amount from "
-                  . "(select transactiondate,receiptno,sum(amount)+sum(checkamount) as amount from dedits where idno ='$idno' and paymenttype=1 group by receiptno"
+                  . "(select transactiondate,receiptno,sum(amount)+sum(checkamount) as amount from dedits where idno ='$idno' and paymenttype=1 and isreverse = 0 group by refno"
                   . " UNION ALL "
                   . "select transactiondate,receiptno,amount from old_receipts where idno ='$idno') allrec order by transactiondate, receiptno");
           

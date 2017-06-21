@@ -4,6 +4,7 @@
     
     Route::get('/acadincome/{schoolyear}', 'Accounting\AcademicDeptincomeController@index');
     
+    
     Route::get('/discounting', 'Update\UpdateController@updateDiscount');
     Route::get('/', 'MainController@index');
     Route::get('cashreceipt/{transactiondate}','Accounting\CashReceiptController@cashreceiptbook');
@@ -237,6 +238,8 @@
     Route::get('/gensubj','DBFixer@gensubjects');
     Route::get('/updateentrytype','DBFixer@updateentrytype');
     Route::get('/updatetvet','DBFixer@updatetvet');
+    Route::get('/updateacct','DBFixer@fixYouthAssistance');
+    
     
     
     //ACADEMIC
@@ -352,7 +355,7 @@
     Route::get('/getindividualaccount', 'Accounting\AjaxController@individualAccount');
     
     Route::get('/studentslist/{level}/{sy}', 'Registrar\AjaxController@levelStudent');
-    
+    Route::get('/getsectionstudents', 'Registrar\AjaxController@getsectionstudents');
     
 // Registrar Group
 Route::group(['middleware' => ['web','registrar']], function () {
@@ -360,6 +363,7 @@ Route::group(['middleware' => ['web','registrar']], function () {
     Route::get('/kto12sectioning/{sy}', 'Registrar\SectionController@sectioning');
     Route::get('/overallranking/{sy}', 'Registrar\OverallRankController@index');
     Route::get('/autosection/{level}/{strand?}', 'Registrar\AjaxController@autoSectioning');
+    Route::get('/card/{idno}/{sy}', 'Registrar\ReportCardController@studentReport');
 
    Route::get('/sheetA/{record}',function($record){
        $levels = \App\CtrLevel::get();

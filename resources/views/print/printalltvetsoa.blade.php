@@ -79,7 +79,7 @@ th {
                . "receipt_details, transactiondate order by LEFT(receipt_details, 4) ASC,id");
        
       $transactionreceipts = DB::Select("select transactiondate,receiptno,amount from "
-              . "(select transactiondate,receiptno,sum(amount)+sum(checkamount) as amount from dedits where idno ='$idno' and paymenttype=1 group by receiptno"
+              . "(select transactiondate,receiptno,sum(amount)+sum(checkamount) as amount from dedits where idno ='$idno' and paymenttype=1 and isreverse = 0 group by refno"
               . " UNION ALL "
               . "select transactiondate,receiptno,amount from old_receipts where idno ='$idno') allrec order by transactiondate, receiptno");
       
@@ -107,7 +107,7 @@ th {
         <img src="{{url('images','logo.png')}}" width="60">
         </td><td width="50%"><span style="font-size:12pt; font-weight: bold">Don Bosco Technical Institute of Makati, Inc. </span></td><td align="right"><span style="font-size:14pt; font-style:italic; font-weight: bold;">STATEMENT OF ACCOUNT</span></td></tr>
         <tr><td style="font-size:10pt;">Chino Roces Ave., Makati City </td><td align="right">Date : {{date('M d, Y')}}</td></tr>
-        <tr><td style="font-size:10pt;">Tel No : 892-01-01</td><td align="right">Plan : {{$statuses->plan}}</td></tr>
+        <tr><td style="font-size:10pt;">Tel No : 892-01-01 to 08</td><td align="right">Plan : {{$statuses->plan}}</td></tr>
     </table>
 
 <table style="margin-top: 20px;">

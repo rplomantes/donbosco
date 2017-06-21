@@ -8,6 +8,7 @@
             <input type = 'text' value="{{$fromdate}}" id="from" name="from">
             <label> To : </label>
             <input type = "text" value="{{$todate}}" id="to" name="to">
+            <button class="btn btn-danger" onclick="setdate()">Set Date</button>
         </div>    
         <div class="form-group">
             <h5>Account Title :</h5>
@@ -52,6 +53,10 @@
     
     function viewprint(){
         document.location="/printindividualsummary/" + $('#from').val() + "/" + $('#to').val() + "/" + $('#accountname').val();
+    }
+    
+    function setdate(){
+        document.location="/individualsummary/" + $('#from').val() + "/" + $('#to').val()
     }
 </script>
 @stop

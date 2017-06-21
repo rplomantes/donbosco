@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use App\Http\Requests;
+use App\Http\Controllers\Cashier\CashierController;
+use Carbon\Carbon;
 
 class DBFixer extends Controller
 {
@@ -346,4 +348,65 @@ class DBFixer extends Controller
        
        return $returned;
    }
+   
+   function fixYouthAssistance(){
+       $accounts = array(376933,376934,376935,376936,376937);
+       $refno  = 3342122220;
+       $orno = 487558;
+       $totaldisc = 0;
+       $idno = 0;
+       $discountcode = 0;
+       
+       foreach($accounts as $account){
+           $process = \App\Ledger::find($account);
+           CashierController::credit($process->idno, $process->id, $refno, $orno, $process->otherdiscount);
+           $totaldisc = $totaldisc + $process->otherdiscount;
+           $discountcode = $process->discountcode;
+           $idno = $process->idno;
+       }
+       
+       
+       $this->discount($refno, $orno,$idno,$totaldisc,$discountcode);
+       
+       return $idno;
+   }
+   
+   function discount($refno, $orno,$idno,$amount,$discountcode){
+        $student = \App\User::where('idno',$idno)->first();
+        $status = \App\Status::where('idno',$idno)->first();
+        $fiscal = \App\CtrFiscalyear::first();
+        $discount = \App\CtrDiscount::where('discountcode',$discountcode)->first();
+        $debitaccount = new \App\Dedit;
+        $debitaccount->idno = $idno;
+        $debitaccount->fiscalyear=$fiscal->fiscalyear;
+        $debitaccount->transactiondate = Carbon::now();
+        $debitaccount->accountingcode = $discount->accountingcode;
+        $debitaccount->acctcode = $discount->acctname;
+        $debitaccount->description = $discount->description;
+        $debitaccount->refno = $refno;
+        $debitaccount->entry_type = '1';
+        $debitaccount->receiptno = $orno;
+        $debitaccount->paymenttype = 4;
+        $debitaccount->receivefrom = $student->lastname . ", " . $student->firstname . " " . $student->extensionname . " " .$student->middlename;
+        $debitaccount->amount = $amount;
+        if(count($status)>0){
+            if($status->department == "Kindergarten" ||$status->department == "Elementary"){
+                $debitaccount->acct_department = "Elementary Department";
+                $debitaccount->sub_department = "Elementary Department";
+            }elseif($status->department == "Junior High School" ||$status->department == "Senior High School"){
+                $debitaccount->acct_department = "High School Department";
+                $debitaccount->sub_department = "High School Department";
+            }elseif($status->department == "TVET"){
+                $debitaccount->acct_department = "TVET";
+                $debitaccount->sub_department = "TVET";
+            }
+            $debitaccount->schoolyear=$status->schoolyear;
+        }else{
+                $debitaccount->acct_department = "None";
+                $debitaccount->sub_department = "None";
+        }
+        $debitaccount->postedby = \Auth::user()->idno;
+        $debitaccount->save();
+        
+    }
 }

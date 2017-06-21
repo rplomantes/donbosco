@@ -11,6 +11,8 @@ $tcredit = 0;
             <td>Debit</td>
             <td>Credit</td>
             <td>Entry</td>
+            <td>Department</td>
+            <td>Office</td>
             <td>Particular</td>
         </tr>
     </thead>
@@ -51,13 +53,17 @@ $tcredit = 0;
                 System Generated
                 @endif
             </td>
-            <td width="45%">{{$remark}}</td>
+            <td width="5%">{{$account->acct_department}}</td>
+            <td width="5%">{{$account->sub_department}}</td>
+            <td width="35%">{{$remark}}</td>
         </tr>
         @endforeach
         <tr>
             <td colspan="3">Amount</td>
             <td >{{number_format($tdebit,2)}}</td>
             <td >{{number_format($tcredit,2)}}</td>
+            <td ></td>
+            <td ></td>
             <td ></td>
             <td ></td>
         </tr>
