@@ -25,8 +25,6 @@ class GradeController extends Controller
     }
     
     static function acadstudentAverage($sy,$quarter,$level,$idno){
-        
-        
         if($level == "Grade 7" || $level == "Grade 8" || $level == "Grade 9" || $level == "Grade 10"){
         switch ($quarter){
             case 1;
@@ -181,6 +179,57 @@ class GradeController extends Controller
         }
         
         return $average;
+    }
+    
+    static function conductQuarterAve($subjtype,$quarter,$subjects){
+        $grade = 0;
+        
+        foreach($subjects as $subject){
+            if($subject->subjecttype == $subjtype){
+                switch($quarter){
+                    case 1:       
+                        $grade = $grade + $subject->first_grading;
+                        break;
+                    case 2:
+                        $grade = $grade + $subject->second_grading;
+                        break;
+                    case 3:
+                        $grade = $grade + $subject->third_grading;
+                        break;
+                    case 4:
+                        $grade = $grade + $subject->fourth_grading;
+                        break;
+                }
+            }
+        }
+        
+        return $grade;
+    }
+    
+    static function conductTotalAve($grades,$sem){
+        $grade = 0;
+        if($sem ==0){
+            $first =  GradeController::conductQuarterAve(3,1,$grades);
+            $second = GradeController::conductQuarterAve(3,2,$grades);
+            $third =  GradeController::conductQuarterAve(3,3,$grades);
+            $fourth = GradeController::conductQuarterAve(3,4,$grades);
+            
+            $grade = ($first+$second+$third+$fourth)/4;
+        }elseif($sem ==1){
+            $first =  GradeController::conductQuarterAve(3,1,$grades);
+            $second = GradeController::conductQuarterAve(3,2,$grades);
+
+            
+            $grade = ($first+$second)/2;
+            
+        }elseif($sem ==2){
+            $third =  GradeController::conductQuarterAve(3,3,$grades);
+            $fourth = GradeController::conductQuarterAve(3,4,$grades);
+            
+            $grade = ($third+$fourth)/2;
+        }
+        
+        return $grade;
     }
 }
 

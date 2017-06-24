@@ -1,5 +1,6 @@
 @extends('app')
 @section('content')
+
 <style type="text/css" media="print">
     .container-fluid{
         padding-left:0px;
@@ -22,7 +23,7 @@
     <div class="col-md-3 collapse in" id='menu'>
         <?php $menu = 0;?>
         @foreach($levels as $level)
-        <?php $sections = \App\CtrSection::where('level',$level->level)->orderBy('strand','ASC')->get();
+        <?php $sections = DB::Select("select * from `ctr_sections_temp` where `level` = '$level->level' order by `strand` asc");
             
             $strand = null;
             $menu++;

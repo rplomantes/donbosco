@@ -215,6 +215,8 @@
 
     Route::get('/individualsummary/{fromdate}/{todate}', 'Accounting\AccountSummaryController@index');
     Route::get('/printindividualsummary/{fromdate}/{todate}/{account}', 'Accounting\AccountSummaryController@printaccountSummary');
+    
+    Route::get('/subaccountsummary/{fromdate}/{todate}', 'Accounting\SubAccountSummarryController@index');
 
     Route::get('/tvetledger','Vincent\TvetController@tvetledger');
     Route::get('/studentsledger/{batch}/{cours}/{section}','Vincent\TvetController@getsectionstudent');
@@ -353,6 +355,8 @@
     Route::get('/setoverallrank', 'Registrar\OverallRankController@setOARank');    
 
     Route::get('/getindividualaccount', 'Accounting\AjaxController@individualAccount');
+    Route::get('/getsubaccountsum', 'Accounting\AjaxController@subAccountSummary');
+    
     
     Route::get('/studentslist/{level}/{sy}', 'Registrar\AjaxController@levelStudent');
     Route::get('/getsectionstudents', 'Registrar\AjaxController@getsectionstudents');

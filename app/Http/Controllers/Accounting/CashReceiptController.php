@@ -88,19 +88,19 @@ class CashReceiptController extends Controller
 
             switch($receipt->paymenttype){
                 case 1:
-                    $record->cash = $receipt->amount + $receipt->checkamount;
+                    $record->cash = $record->cash + ($receipt->amount + $receipt->checkamount);
                     break;
                 case 4:
-                    $record->discount = $receipt->amount + $receipt->checkamount;
+                    $record->discount = $record->discount + ($receipt->amount + $receipt->checkamount);
                     break;
                 case 5:
-                    $record->dreservation = $receipt->amount + $receipt->checkamount;
+                    $record->dreservation = $record->dreservation + ($receipt->amount + $receipt->checkamount);
                     break;
                 case 7:
-                    $record->fape = $receipt->amount + $receipt->checkamount;
+                    $record->fape = $record->fape + ($receipt->amount + $receipt->checkamount);
                     break;
                 case 8:
-                    $record->deposit = $receipt->amount + $receipt->checkamount;
+                    $record->deposit = $record->deposit + ($receipt->amount + $receipt->checkamount);
                     break;
             }
             $record->save();

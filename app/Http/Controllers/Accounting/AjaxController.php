@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use DB;
 use App\Http\Controllers\Accounting\AccountSummaryController;
+use App\Http\Controllers\Accounting\SubAccountSummarryController;
 
 class AjaxController extends Controller
 {
@@ -21,6 +22,17 @@ class AjaxController extends Controller
         $accounts = AccountSummaryController::getaccounts($fromdate,$todate,$account);
         
         return view('ajax.individualAccount',compact('accounts'));
+    }
+    
+    function subAccountSummary(){
+        $fromdate = Input::get('from');
+        $todate = Input::get('to');
+        $account = Input::get('account');
+        $subaccounts = \App\CtrOtherPayment::distinct('particular')->where('acctcode',$account)->orderBy('particular','ASC')->pluck('particular')->toArray();
+        $accounts = SubAccountSummarryController::getaccounts($fromdate,$todate,$account);
+        
+        return view('ajax.subaccountsummary',compact('accounts','subaccounts'));
+        //return $subaccounts;
     }
     
 }
