@@ -31,7 +31,7 @@ class AjaxController extends Controller
         $subaccounts = \App\CtrOtherPayment::distinct('particular')->where('acctcode',$account)->orderBy('particular','ASC')->pluck('particular')->toArray();
         $accounts = SubAccountSummarryController::getaccounts($fromdate,$todate,$account);
         
-        return view('ajax.subaccountsummary',compact('accounts','subaccounts'));
+        return view('ajax.subaccountsummary',compact('accounts','subaccounts','account'));
         //return $subaccounts;
     }
     

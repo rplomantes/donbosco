@@ -13,25 +13,28 @@ $totalamount = 0;
                 <th>Transaction Date</th>
                 <th>Reference No.</th>
                 <th>Sub Account</th>
+                <th>Entry</th>
                 <th>Amount</th>
             </thead>
             @foreach($accounts as $account)
                 @if(strcmp($account->description,$subaccount) == 0)
+                <?php $total = SubAccountSummarryController::getaccttotal($account->credit,$account->debit,$account->accountingcode);?>
                 <tr>
                     <td>{{$account->transactiondate}}</td>
                     <td>{{$account->receiptno}}</td>
                     <td>{{$account->description}}</td>
-                    <td>{{$account->totalamount}}</td>
+                    <td>{{SubAccountSummarryController::getEntrytype($account->entry_type)}}</td>
+                    <td>{{number_format($total,2)}}</td>
                 </tr>
                 <?php
-                $totalamount = $totalamount + $account->totalamount;
-                $accounttotal = $accounttotal + $account->totalamount;
+                $totalamount = $totalamount + $total;
+                $accounttotal = $accounttotal + $total;
                 ?>
                 @endif
             @endforeach
             <tr>
-                <td colspan="3"></td>
-                <td>{{$accounttotal}}</td>
+                <td colspan="4"></td>
+                <td>{{number_format($accounttotal,2)}}</td>
             </tr>
         </table>
     @endif
@@ -46,25 +49,28 @@ $totalamount = 0;
             <th>Transaction Date</th>
             <th>Reference No.</th>
             <th>Sub Account</th>
+            <th>Entry</th>
             <th>Amount</th>
         </thead>
         @foreach($accounts as $account)
             @if(!in_array($account->description,$subaccounts))
+            <?php $total = SubAccountSummarryController::getaccttotal($account->credit,$account->debit,$account->accountingcode);?>
             <tr>
                 <td>{{$account->transactiondate}}</td>
                 <td>{{$account->receiptno}}</td>
                 <td>{{$account->description}}</td>
-                <td>{{$account->totalamount}}</td>
+                <td>{{SubAccountSummarryController::getEntrytype($account->entry_type)}}</td>
+                <td>{{number_format($total,2)}}</td>
             </tr>
             <?php
-            $totalamount = $totalamount + $account->totalamount;
-            $accounttotal = $accounttotal + $account->totalamount;
+            $totalamount = $totalamount + $total;
+            $accounttotal = $accounttotal + $total;
             ?>
             @endif
         @endforeach
         <tr>
-            <td colspan="3"></td>
-            <td>{{$accounttotal}}</td>
+            <td colspan="4"></td>
+            <td>{{number_format($accounttotal,2)}}</td>
         </tr>
     </table>
 @endif

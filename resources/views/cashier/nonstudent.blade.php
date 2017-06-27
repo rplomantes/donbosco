@@ -355,6 +355,8 @@ foreach($payees as $key=>$value){
                     </div>    
                     <div class="form-group">
                         <input type="radio" name="depositto" value="China Bank" checked= "checked"> China Bank
+                        <input type="radio" name="depositto" value="China Bank 2"> China Bank 2
+                        <br>
                         <input type="radio" name="depositto" value="BPI 1" > BPI 1
                         <input type="radio" name="depositto" value="BPI 2"> BPI 2
                         

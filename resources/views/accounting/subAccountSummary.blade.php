@@ -51,7 +51,7 @@
     }
     
     function setdate(){
-        document.location="/individualsummary/" + $('#from').val() + "/" + $('#to').val()
+        document.location="/subaccountsummary/" + $('#from').val() + "/" + $('#to').val()
     }
 </script>
 @stop

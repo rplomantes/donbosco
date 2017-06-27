@@ -336,6 +336,8 @@ $checkno = \App\Dedit::distinct('check_number')->pluck('check_number')->toArray(
                         </td></tr>
                 <tr><td colspan="2">
                         <input type="radio" name="depositto" value="China Bank" checked="checked"> China Bank
+                                            <input type="radio" name="depositto" value="China Bank 2"> China Bank 2
+                                            <br>
                                             <input type="radio" name="depositto" value="BPI 1"> BPI 1
                                             <input type="radio" name="depositto" value="BPI 2"> BPI 2
                                             

@@ -358,6 +358,7 @@
     Route::get('/getsubaccountsum', 'Accounting\AjaxController@subAccountSummary');
     
     
+    
     Route::get('/studentslist/{level}/{sy}', 'Registrar\AjaxController@levelStudent');
     Route::get('/getsectionstudents', 'Registrar\AjaxController@getsectionstudents');
     

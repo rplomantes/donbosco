@@ -542,6 +542,10 @@ class CashierController extends Controller
                 $acctcode = 'CBC-CA 1049-00 00027-8';
                 $accountingcode = \App\ChartOfAccount::where('accountname','CBC-CA 1049-00 00027-8')->first();
                 break;
+            case 'China Bank 2':
+                $acctcode = 'CBC-SA 149-093601-3';
+                $accountingcode = \App\ChartOfAccount::where('accountname','CBC-SA 149-093601-3')->first();
+                break;
             case 'BPI 1':
                 $acctcode = 'BPI- CA 1885-1129-82';
                 $accountingcode = \App\ChartOfAccount::where('accountname','BPI- CA 1885-1129-82')->first();

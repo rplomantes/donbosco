@@ -3,6 +3,8 @@
    <?php
     $cbcash=0;
     $cbcheck=0;
+    $cbcash2=0;
+    $cbcheck2=0;
     $bpi1cash=0;
     $bpi1check=0;
     $bpi2cash=0;
@@ -18,6 +20,7 @@
          <h5>Create Deposit Slip</h5>
             <div class="col-md-3"><label for="bank">Select <br> Bank</label>
                 <select name="bank" id="bank" class="form form-control"><option value = "China Bank">China Bank</option>
+                        <option value = "China Bank 2">China Bank 2</option>
                         <option value = "BPI 1">BPI 1</option>
                         <option value = "BPI 2">BPI 2</option>
                 </select>
@@ -48,6 +51,12 @@
                                     $cbcash = $cbcash + $deposit_slip->amount;
                                 } else {
                                     $cbcheck = $cbcheck + $deposit_slip->amount;
+                                }
+                            }if($deposit_slip->bank == "China Bank 2"){
+                                if($deposit_slip->deposittype == '0'){
+                                    $cbcash2 = $cbcash2 + $deposit_slip->amount;
+                                } else {
+                                    $cbcheck2 = $cbcheck2 + $deposit_slip->amount;
                                 }
                             } elseif ($deposit_slip->bank=="BPI 1") {
                                 if($deposit_slip->deposittype == '0'){
@@ -81,6 +90,7 @@
                     <table class="table table-striped">
                     <tr><td>Bank</td><td>Cash</td><td>Check</td><td>Total</td></tr>
                     <tr><td>China Bank</td><td align="right">{{number_format($cbcash,2)}}</td><td align="right">{{number_format($cbcheck,2)}}</td><td align="right">{{number_format($cbcash+$cbcheck,2)}}</td></tr>
+                    <tr><td>China Bank 2</td><td align="right">{{number_format($cbcash2,2)}}</td><td align="right">{{number_format($cbcheck2,2)}}</td><td align="right">{{number_format($cbcash2+$cbcheck2,2)}}</td></tr>
                     <tr><td>BPI 1</td><td align="right">{{number_format($bpi1cash,2)}}</td><td align="right">{{number_format($bpi1check,2)}}</td><td align="right">{{number_format($bpi1cash+$bpi1check,2)}}</td></tr>
                     <tr><td>China Bank</td><td align="right">{{number_format($bpi2cash,2)}}</td><td align="right">{{number_format($bpi2check,2)}}</td><td align="right">{{number_format($bpi1cash+$bpi2check,2)}}</td></tr>
                     
