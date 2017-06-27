@@ -19,6 +19,7 @@ class ReportCardController extends Controller
         $infos = DB::Select("Select * from users u join student_infos s on u.idno = s.idno where u.idno = '$idno'");
         $currSy = \App\CtrSchoolYear::first()->schoolyear;
         $birthdate = "0000-00-00";
+        $attendance = "";
 
         foreach($infos as $info){
             $name = $info->lastname.", ".$info->firstname." ".substr($info->middlename,0,1);
