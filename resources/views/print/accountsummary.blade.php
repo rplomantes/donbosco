@@ -44,20 +44,25 @@ $tcredit = 0;
                     <td>Entry</td>
                     <td>Department</td>
                     <td>Office</td>
-                    <td>Particular</td>
                 </tr>
             </thead>
-            <tbody>
+            <tbody style="font-size: 9pt">
                 @foreach($accounts as $account)
                 <?php 
+                $remark = "";
+                $payee = "";
                 if($account->entry_type == 4){   
                     $disremark  = \App\Disbursement::where('refno',$account->refno)->first();
-                    $remark = $disremark->remarks;
-                    $payee = $disremark->payee;
+                    if(count($disremark)>0){
+                        $remark = $disremark->remarks;
+                        $payee = $disremark->payee;
+                    }
                 }else{
                     $elseremark  = \App\Dedit::where('refno',$account->refno)->first();
-                    $remark = $elseremark->remarks;
-                    $payee = $elseremark->receivefrom;
+                    if(count($elseremark)>0){
+                        $remark =$elseremark->remarks;
+                        $payee = $elseremark->receivefrom;   
+                    }
                 }
                 ?>
 
@@ -86,14 +91,14 @@ $tcredit = 0;
                     </td>
                     <td width="8%">{{$account->acct_department}}</td>
                     <td width="9%">{{$account->sub_department}}</td>
-                    <td>{{$remark}}</td>
+                    
                 </tr>
                 @endforeach
         <tr>
             <td colspan="3">Amount</td>
             <td align="right">{{number_format($tdebit,2,' .',',')}}</td>
             <td align="right">{{number_format($tcredit,2,' .',',')}}</td>
-            <td colspan="4"></td>
+            <td colspan="3"></td>
         </tr>
             </tbody>
         </table>

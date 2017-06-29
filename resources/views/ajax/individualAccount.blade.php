@@ -19,14 +19,20 @@ $tcredit = 0;
     <tbody>
         @foreach($accounts as $account)
         <?php 
+        $remark = "";
+        $payee = "";
         if($account->entry_type == 4){   
             $disremark  = \App\Disbursement::where('refno',$account->refno)->first();
-            $remark = $disremark->remarks;
-            $payee = $disremark->payee;
+            if(count($disremark)>0){
+                $remark = $disremark->remarks;
+                $payee = $disremark->payee;
+            }
         }else{
             $elseremark  = \App\Dedit::where('refno',$account->refno)->first();
-            $remark =$elseremark->remarks;
-            $payee = $elseremark->receivefrom;
+            if(count($elseremark)>0){
+                $remark =$elseremark->remarks;
+                $payee = $elseremark->receivefrom;   
+            }
         }
         ?>
 

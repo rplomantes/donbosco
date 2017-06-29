@@ -31,7 +31,7 @@ class AccountSummaryController extends Controller{
         $accounts = $this->getaccounts($fromdate,$todate,$account);
         
         $pdf = \App::make('dompdf.wrapper');
-	$pdf->setPaper('legal','landscape');
+	$pdf->setPaper('letter','portrait');
         $pdf->loadView('print.accountsummary',compact('fromdate','todate','accounts','account'));
         return $pdf->stream();  
         

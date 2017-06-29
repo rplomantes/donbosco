@@ -39,7 +39,7 @@ $total = 0;
         <table class="table table-striped" width="100%" cellspacing="0" style="font-size:15px">
             <thead>
                 <tr>
-                    <th>ACCOUNT TITLE</th>
+                    <th width="23%">ACCOUNT TITLE</th>
                     <th>Total 
                         @if($acctcode == 4)
                             Income
