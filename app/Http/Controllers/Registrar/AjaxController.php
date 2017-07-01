@@ -98,7 +98,7 @@ class AjaxController extends Controller
         
         if($level == 'Grade 9' || $level == 'Grade 10' || $level == 'Grade 11' || $level == 'Grade 12'){
             if($level == 'Grade 11' || $level == 'Grade 12'){
-                $subjects = \App\CtrSubjects::where('level',$level)->where('isdisplaycard',1)->where('strand',$course)->where('quarter',$quarter)->orderBy('sortto','ASC')->get();
+                $subjects = \App\CtrSubjects::where('level',$level)->where('isdisplaycard',1)->where('strand',$course)->where('semester',1)->orderBy('sortto','ASC')->get();
             }else{
                 $subjects = \App\CtrSubjects::where('level',$level)->where('isdisplaycard',1)->orderBy('sortto','ASC')->get();
             }

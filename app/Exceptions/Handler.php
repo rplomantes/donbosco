@@ -9,6 +9,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Auth;
 
 class Handler extends ExceptionHandler
 {
@@ -46,6 +47,15 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-        return parent::render($request, $e);
+        if(\Auth::guest()){
+            return view('errors.503');
+        }else{
+            if(Auth::user()->idno == 'rplomantes' || Auth::user()->idno == '12345'|| Auth::user()->idno == 'larabelle'){
+                return parent::render($request, $e);
+            }else{
+                return view('errors.503');
+            }
+        }
+        
     }
 }

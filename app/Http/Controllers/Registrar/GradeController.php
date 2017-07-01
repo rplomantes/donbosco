@@ -122,11 +122,11 @@ class GradeController extends Controller
                 if($grades->fourth_grading == 0){
                     $dividend++;
                 }
-                $grade = ($grades->first_grading + $grades->second_grading +$grades->third_grading + $grades->fourth_grading)/4;
+                $grade = $grades->final_grade;
                 break;
         }
 
-        if($level == "Grade 7" | $level == "Grade 8" | $level == "Grade 9" | $level == "Grade 10"){
+        if($level == "Grade 7" || $level == "Grade 8" || $level == "Grade 9" || $level == "Grade 10" || $level == "Grade 11" || $level == "Grade 12"){
             $grade = ROUND($grade,0);
         }else{
             if($grade < 100 && $quarter == 5){
@@ -161,7 +161,7 @@ class GradeController extends Controller
                         $grade = $grade + $subject->fourth_grading;
                         break;
                     default:
-                        if($level == "Grade 7" | $level == "Grade 8" | $level == "Grade 9" | $level == "Grade 10"){
+                        if($level == "Grade 7" | $level == "Grade 8" | $level == "Grade 9" | $level == "Grade 10" | $level == "Grade 11" | $level == "Grade 12"){
                             $grade = $grade + round($subject->final_grade,0);
                         }else{
                             $grade = $grade + round($subject->final_grade,2);
@@ -171,11 +171,11 @@ class GradeController extends Controller
             }
         }
         
-        if($level == "Grade 7" | $level == "Grade 8" | $level == "Grade 9" | $level == "Grade 10"){
-            $average = round($grade/$total,0);
+        if($level == "Grade 7" | $level == "Grade 8" | $level == "Grade 9" | $level == "Grade 10" | $level == "Grade 11" | $level == "Grade 12"){
+            $average = "=".$grade."/".$total;
             //$average =$total;
         }else{
-            $average = round($grade/$total,2);
+            $average = $grade."-".$total;
         }
         
         return $average;

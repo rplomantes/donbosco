@@ -22,6 +22,18 @@ class SubAccountSummarryController extends Controller
         }
     }
     
+    function printAccount($from,$to,$account){
+        if(\Auth::user()->accesslevel==env('USER_ACCOUNTING')|| \Auth::user()->accesslevel==env('USER_ACCOUNTING_HEAD')){
+            $fromdate = $from;
+            $todate = $to;
+            $subaccounts = \App\CtrOtherPayment::distinct('particular')->where('acctcode',$account)->orderBy('particular','ASC')->pluck('particular')->toArray();
+            $accounts = SubAccountSummarryController::getaccounts($fromdate,$todate,$account);
+
+           return view('print.printsubaccount',compact('accounts','subaccounts','account','fromdate','todate'));
+        }
+    }
+
+    
     static function getaccounts($fromdate,$todate,$account){
         $accounts = DB::Select("select accountingcode,description,refno,transactiondate,receiptno,entry_type,acct_department,sub_department,debit,credit from "
                 . "(select c.accountingcode,c.description,c.refno,c.transactiondate,c.receiptno,0 as debit,sum(c.amount) as credit,c.entry_type,c.acct_department,c.sub_department "

@@ -583,7 +583,7 @@ class AjaxController extends Controller
     }
 //VINCENT 09/15/16
     function studentContact($level,$section){
-        $schoolyear = \App\CtrRefSchoolyear::first();
+        $schoolyear = \App\CtrSchoolYear::first();
         if(Request::ajax()){
             $strand = Input::get("strand");
         if ($section == "All"){    

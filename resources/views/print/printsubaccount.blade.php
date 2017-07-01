@@ -1,10 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta author="Roy Plomantes">
+        <meta poweredby = "Nephila Web Technology, Inc">
+       
+        
+<style>
+        .header{font-size:14pt;font-weigh:bold}
+        .title{font-size:14pt; font-style: italic; text-decoration: underline}
+        .content td {font-size:10pt}
+        .subtitle{font-size: 10pt;font-weight: bold}
+        </style>
+    <style media="print">    
+    @page { margin:10px;padding:0px;margin-top: 100px;margin-bottom: 30px;}
+    #header { position: fixed; left: 0px; top: -90px; right: 0px; height: 100px; text-align: center;font-size: 15px; }
+    #footer { position: fixed; bottom:0px;border-top:1px solid gray;} .pagenum:before {content: counter(page); } 
+    </style>
+</head>
+<body>
 <?php
+use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\Accounting\SubAccountSummarryController;
+
 $totalamount = 0;
 $debittotalamount = 0;
 $credittotalamount = 0;
-
 ?>
+ <table  width ="100%">
+            <tr><td><span class="header">Don Bosco Technical Institute of Makati</span></td><td align="right"></i></td></tr>
+            <tr><td colspan="2">Chino Roces Avenue, Makati, Metro Manila</td></tr>
+                    <tr><td colspan="4" align="center">
+                <span class="title">Individual Account Summary</span>
+                </td></tr>
+            <tr><td colspan="2" align="center">{{date('M d, Y', strtotime($fromdate))}} to {{date('M d, Y', strtotime($todate))}} </td></tr>
+ </table>
+    <hr>
+    <div><b>{{AjaxController::getaccountname($account)}}</b></div>
+    <div><b>{{$account}}</b></div>
 @foreach($subaccounts as $subaccount)
     <?php
     $accounttotal = 0;
@@ -61,7 +96,7 @@ $credittotalamount = 0;
                 @endif
             @endforeach
             <tr style="background-color:#8fb461">
-                <td colspan="4" align="left"><b>Sub Total</b></td>
+                <td colspan="5" align="left"><b>Sub Total</b></td>
                 <td align="right">{{number_format($debitaccounttotal,2)}}</td>
                 <td align="right">{{number_format($creditaccounttotal,2)}}</td>
             </tr>
@@ -122,7 +157,7 @@ $credittotalamount = 0;
             @endif
         @endforeach
         <tr style="background-color:#8fb461">
-            <td colspan="4" align="left"><b>Sub Total</b></td>
+            <td colspan="5" align="left"><b>Sub Total</b></td>
             <td align="right">{{number_format($debitaccounttotal,2)}}</td>
             <td align="right">{{number_format($creditaccounttotal,2)}}</td>
         </tr>
@@ -139,5 +174,6 @@ $credittotalamount = 0;
         
     </table>
 
-    
 @endif
+    </body>
+    </html>

@@ -11,7 +11,7 @@ use DB;
 class AccountSummaryController extends Controller{
     
     function index($fromdate,$todate){
-        if(\Auth::user()->accesslevel==env('USER_ACCOUNTING')|| \Auth::user()->accesslevel==env('USER_ACCOUNTING_HEAD')){
+        if(\Auth::user()->accesslevel==env('USER_ACCOUNTING')|| \Auth::user()->accesslevel==env('USER_ACCOUNTING_HEAD')|| \Auth::user()->accesslevel==env('USER_ECONOMIC_ADMIN')){
             $acctcodes = DB::Select("select distinct coa.acctcode,coa.accountname "
                     . "from (select acctcode,accountingcode "
                     . "from credits "
@@ -33,7 +33,8 @@ class AccountSummaryController extends Controller{
         $pdf = \App::make('dompdf.wrapper');
 	$pdf->setPaper('letter','portrait');
         $pdf->loadView('print.accountsummary',compact('fromdate','todate','accounts','account'));
-        return $pdf->stream();  
+        //return $pdf->stream();  
+        return view('print.accountsummary',compact('fromdate','todate','accounts','account'));
         
     }
     

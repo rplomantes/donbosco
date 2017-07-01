@@ -50,6 +50,7 @@
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
                                 <li><a href="#">DBTI - Makati School Information System</a></li>
+                                <li><a href="/">Home</a></li>
                                  @if(Auth::guest())
                                  @else
                                     @if(Auth::user()->accesslevel == env('USER_ACCOUNTING') || Auth::user()->accesslevel == env('USER_ACCOUNTING_HEAD'))

@@ -217,6 +217,7 @@
     Route::get('/printindividualsummary/{fromdate}/{todate}/{account}', 'Accounting\AccountSummaryController@printaccountSummary');
     
     Route::get('/subaccountsummary/{fromdate}/{todate}', 'Accounting\SubAccountSummarryController@index');
+    Route::get('/printsubaccountsummary/{from}/{to}/{account}', 'Accounting\SubAccountSummarryController@printAccount');
 
     Route::get('/tvetledger','Vincent\TvetController@tvetledger');
     Route::get('/studentsledger/{batch}/{cours}/{section}','Vincent\TvetController@getsectionstudent');
