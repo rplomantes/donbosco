@@ -60,39 +60,41 @@ $credittotalamount = 0;
             </thead>
             @foreach($accounts as $account)
                 @if(strcmp($account->description,$subaccount) == 0)
-                <?php 
-                $payee = "";
-                if($account->entry_type == 4){   
-                    $disremark  = \App\Disbursement::where('refno',$account->refno)->first();
-                    if(count($disremark)>0){
-                        $payee = $disremark->payee;
-                    }
-                }else{
-                    $elseremark  = \App\Dedit::where('refno',$account->refno)->first();
-                    if(count($elseremark)>0){
-                        $payee = $elseremark->receivefrom;   
-                    }
-                }
-                ?>
-                <tr>
-                    <td>{{$account->transactiondate}}</td>
-                    <td>{{$account->receiptno}}</td>
-                    <td>{{$payee}}</td>
-                    <td>{{$account->description}}</td>
-                    <td>{{SubAccountSummarryController::getEntrytype($account->entry_type)}}</td>
-                    <td align="right">{{number_format($account->debit,2)}}</td>
-                    <td align="right">{{number_format($account->credit,2)}}</td>
-                </tr>
-                <?php
+                    @if($account->debit != 0 || $account->credit != 0)
+                        <?php 
+                        $payee = "";
+                        if($account->entry_type == 4){   
+                            $disremark  = \App\Disbursement::where('refno',$account->refno)->first();
+                            if(count($disremark)>0){
+                                $payee = $disremark->payee;
+                            }
+                        }else{
+                            $elseremark  = \App\Dedit::where('refno',$account->refno)->first();
+                            if(count($elseremark)>0){
+                                $payee = $elseremark->receivefrom;   
+                            }
+                        }
+                        ?>
+                        <tr>
+                            <td>{{$account->transactiondate}}</td>
+                            <td>{{$account->receiptno}}</td>
+                            <td>{{$payee}}</td>
+                            <td>{{$account->description}}</td>
+                            <td>{{SubAccountSummarryController::getEntrytype($account->entry_type)}}</td>
+                            <td align="right">{{number_format($account->debit,2)}}</td>
+                            <td align="right">{{number_format($account->credit,2)}}</td>
+                        </tr>
+                        <?php
 
-                
-                $debitaccounttotal = $debitaccounttotal + $account->debit;
-                $creditaccounttotal = $creditaccounttotal + $account->credit;
-                
-                $debittotalamount = $debittotalamount + $account->debit;
-                $credittotalamount = $credittotalamount + $account->credit;
-                
-                ?>
+
+                        $debitaccounttotal = $debitaccounttotal + $account->debit;
+                        $creditaccounttotal = $creditaccounttotal + $account->credit;
+
+                        $debittotalamount = $debittotalamount + $account->debit;
+                        $credittotalamount = $credittotalamount + $account->credit;
+
+                        ?>
+                    @endif
                 @endif
             @endforeach
             <tr style="background-color:#8fb461">
@@ -102,8 +104,13 @@ $credittotalamount = 0;
             </tr>
         </table>
     @endif
+    <table class="table table-borderless">
+        <tr><td colspan="7"></td></tr>
+    </table>
 @endforeach
-
+<table class="table table-borderless">
+    <tr><td colspan="7"></td></tr>
+</table>
 @if(SubAccountSummarryController::notinlist($accounts,$subaccounts) > 0)
     <?php
     $accounttotal = 0;
@@ -162,7 +169,9 @@ $credittotalamount = 0;
             <td align="right">{{number_format($creditaccounttotal,2)}}</td>
         </tr>
     </table>
-
+    <table class="table table-borderless">
+        <tr><td colspan="7"></td></tr>
+    </table>
     <table class="table table-borderless">
         <tr align="left">
             <td colspan="5" align="left">

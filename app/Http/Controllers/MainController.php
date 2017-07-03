@@ -69,7 +69,7 @@ class MainController extends Controller
                
                case env('USER_ECONOMIC_ADMIN');
                    
-                   return redirect('/deptincome/1/'.date('Y-m-d')."/".date('Y-m-d'));
+                   return view('economic.index');
                    //return "me";
                    break;
             }

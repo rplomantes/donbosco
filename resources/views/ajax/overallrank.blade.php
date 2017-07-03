@@ -35,7 +35,7 @@
             $studInfo = App\User::where('idno',$student->idno)->first();
 
             if($level == 'Grade 11' || $level == 'Grade 12'){
-                $grades = \App\Grade::where('idno',$student->idno)->where('isdisplaycard',1)->where('semester',1)->where('schoolyear',$sy)->orderBy('sortto','ASC')->get();
+                $grades = \App\Grade::where('idno',$student->idno)->where('isdisplaycard',1)->whereIn('semester',[1,2])->where('schoolyear',$sy)->orderBy('sortto','ASC')->get();
             }else{
                 $grades = \App\Grade::where('idno',$student->idno)->where('isdisplaycard',1)->where('schoolyear',$sy)->orderBy('sortto','ASC')->get();
             }

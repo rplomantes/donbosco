@@ -5,7 +5,7 @@
         <h5> {{$studentname->idno}} - {{$studentname->lastname}}, {{$studentname->firstname}} {{$studentname->middlename}}</h5>
         <ul>
             @foreach($syissued as $sy)
-            <li class="btn btn-default form-control"><a href="#" onclick="displaygrade('{{$idno}}','{{$sy->schoolyear}}')">{{$sy->schoolyear}} - {{$sy->schoolyear +1 }}</li>
+            <li class="btn btn-default form-control"><a href="#" onclick="displaygrade('{{$idno}}','{{$sy->schoolyear}}')">{{$sy->schoolyear}} - {{$sy->schoolyear +1 }}</a></li>
             @endforeach
         </ul>
     </div>    

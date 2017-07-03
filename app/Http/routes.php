@@ -4,6 +4,9 @@
     
     Route::get('/acadincome/{schoolyear}', 'Accounting\AcademicDeptincomeController@index');
     
+    Route::get('/samplewidget', 'Widget\ConsolidatedReport@piechart');
+    Route::get('/consolidatedbar', 'Widget\ConsolidatedReport@barchart');
+    
     
     Route::get('/discounting', 'Update\UpdateController@updateDiscount');
     Route::get('/', 'MainController@index');
