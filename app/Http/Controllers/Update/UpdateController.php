@@ -232,8 +232,12 @@ class UpdateController extends Controller
         function prevgrade(){
             $sy = "2013";
             $students = DB::connection('dbti2test')->select("select distinct scode from grade_report where SY_EFFECTIVE = '$sy'");
+            
             foreach($students as $student){
-                $this->migrategrade($student->scode,$sy);
+                $newstudents = \App\User::where('idno',$student->scode)->first();
+                if(count($newstudents)>0){
+                    $this->migrategrade($student->scode,$sy);
+                }
             }
             //$this->migrategrade("021067",$sy);
         }
