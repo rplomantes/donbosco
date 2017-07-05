@@ -43,8 +43,8 @@ $total = 0;
                     <th>Total 
                         @if($acctcode == 4)
                             Income
-                        @elseif($acctcode == 1)
-                            Asset
+	                @elseif($acctcode == 1)
+		            Asset
                         @else
                             Expense
                         @endif

@@ -83,7 +83,7 @@ th {
                . "sum(payment) as payment, sum(debitmemo) as debitmemo,description, receipt_details, categoryswitch from ledgers  where "
                . " idno = '$idno' and categoryswitch > '6'  group by "
                . "receipt_details, transactiondate order by LEFT(receipt_details, 4) ASC,id");
-       
+
           $showothers=DB::Select("select sum(amount) - sum(plandiscount) - sum(otherdiscount) - "
                   . "sum(payment) - sum(debitmemo) as balance ,sum(amount) as amount , sum(plandiscount) + sum(otherdiscount) as discount,"
                   . "sum(payment) as payment, sum(debitmemo) as debitmemo, receipt_details,description, categoryswitch from ledgers  where "
@@ -178,20 +178,20 @@ th {
        ?>
        @foreach($others as $balance)
             @if($balance->categoryswitch > 10)
-            <?php         
+            <?php
+            if(round($balance->amount-($balance->discount+$balance->debitmemo+$balance->payment)) > 0){
             
-            if($balance->amount-($balance->discount+$balance->debitmemo+$balance->payment) > 0){
             $prevtotamount = $prevtotamount + $balance->amount;
             $prevtotdiscount = $prevtotdiscount + $balance->discount;
             $prevtotdm = $prevtotdm + $balance->debitmemo;
             $prevtotpayment = $prevtotpayment+$balance->payment;
-                
+            
             $totamount = $totamount + $balance->amount;
             $totdiscount = $totdiscount + $balance->discount;
             $totdm = $totdm + $balance->debitmemo;
             $totpayment = $totpayment+$balance->payment;
                        
-            $othertotamount = $othertotamount + $balance->amount;
+         	   $othertotamount = $othertotamount + $balance->amount;
             $othertotdiscount = $othertotdiscount + $balance->discount;
             $othertotdm = $othertotdm + $balance->debitmemo;
             $othertotpayment = $othertotpayment+$balance->payment;
@@ -200,7 +200,7 @@ th {
             @endif
        @endforeach
        
-       @if($prevtotamount-($prevtotdm+$prevtotdiscount+$prevtotpayment) > 0)
+	@if(round($prevtotamount-($prevtotdm+$prevtotdiscount+$prevtotpayment)) > 0)
             <tr><td style="font-size: 8pt;">Previous Balance</td><td align="right">{{number_format($prevtotamount,2)}}</td>
                 <td align="right">{{number_format($prevtotdiscount,2)}}</td><td align="right">{{number_format($prevtotpayment,2)}}</td>
                 <td align="right">{{number_format($prevtotdm,2)}}</td><td align="right">{{number_format($prevtotamount-$prevtotdiscount-$prevtotpayment-$prevtotdm,2)}}</td></tr>
@@ -209,8 +209,7 @@ th {
        @foreach($others as $balance)
             @if(($balance->categoryswitch > 6 && $balance->categoryswitch < 10) && strpos($balance->description,'Penalty') === false)
             <?php
-            
-            if($balance->amount-($balance->discount+$balance->debitmemo+$balance->payment) > 0 || $balance->schoolyear == $sy){
+	    if($balance->amount-($balance->discount+$balance->debitmemo+$balance->payment) > 0 || $balance->schoolyear == $sy){
             $totamount = $totamount + $balance->amount;
             $totdiscount = $totdiscount + $balance->discount;
             $totdm = $totdm + $balance->debitmemo;
@@ -220,19 +219,20 @@ th {
             $othertotdiscount = $othertotdiscount + $balance->discount;
             $othertotdm = $othertotdm + $balance->debitmemo;
             $othertotpayment = $othertotpayment+$balance->payment;
-            }
+	    }
             ?>
-            @if($balance->amount-($balance->discount+$balance->debitmemo+$balance->payment) > 0 || $balance->schoolyear == $sy)
+		@if($balance->amount-($balance->discount+$balance->debitmemo+$balance->payment) > 0 || $balance->schoolyear == $sy)
             <tr><td style="font-size: 8pt;">{{$balance->receipt_details}}</td><td align="right">{{number_format($balance->amount,2)}}</td>
                 <td align="right">{{number_format($balance->discount,2)}}</td><td align="right">{{number_format($balance->payment,2)}}</td>
                 <td align="right">{{number_format($balance->debitmemo,2)}}</td><td align="right">{{number_format($balance->amount-$balance->discount-$balance->payment-$balance->debitmemo,2)}}</td></tr>
-            @endif
+		@endif
             @endif
        @endforeach
        
+
        @foreach($others as $balance)
             @if(strpos($balance->description,'Penalty') !== false)
-            @if($balance->amount-($balance->discount+$balance->debitmemo+$balance->payment) > 0 || $balance->schoolyear == $sy)
+	    @if($balance->amount-($balance->discount+$balance->debitmemo+$balance->payment) > 0 || $balance->schoolyear == $sy)
             <?php
             $totamount = $totamount + $balance->amount;
             $totdiscount = $totdiscount + $balance->discount;
@@ -244,7 +244,6 @@ th {
             $othertotdm = $othertotdm + $balance->debitmemo;
             $othertotpayment = $othertotpayment+$balance->payment;
             ?>
-            
             <tr><td>{{$balance->receipt_details}}</td><td align="right">{{number_format($balance->amount,2)}}</td>
                 <td align="right">{{number_format($balance->discount,2)}}</td><td align="right">{{number_format($balance->payment,2)}}</td>
                 <td align="right">{{number_format($balance->debitmemo,2)}}</td><td align="right">{{number_format($balance->amount-$balance->discount-$balance->payment-$balance->debitmemo,2)}}</td></tr>
@@ -310,8 +309,8 @@ th {
                 </p>
             </td>
             <td>
-                <div style="height:50px"><img src="{{url('images','frbocsignature.png')}}" height="80" style=";margin-left:20"></div>
-                <p style="align:center; font-size:9pt;margin-top: 0px">Fr. Manuel H. Nicholas, SDB<br>
+                <div style="height:50px"><img src="{{url('images','frsonny.png')}}" height="80" style=";margin-left:20"></div>
+                <p style="align:center; font-size:9pt;margin-top: 0px">Fr. Sonny F. Arevalo, SDB<br>
                     Administrator</p>
             </td>
         </tr>

@@ -163,7 +163,6 @@ th {
            <td align="right">{{number_format($maintotdiscount,2)}}</td><td align="right">{{number_format($maintotpayment,2)}}</td>
            <td align="right">{{number_format($maintotdm,2)}}</td><td align="right">{{number_format($maintotamount-$maintotdiscount-$maintotpayment-$maintotdm,2)}}</td></tr>
        
-       
        @if(count($others)>0)
        <tr><td><b><u>Additional Charges</u></b></td></tr>
        @endif
@@ -182,7 +181,7 @@ th {
             $prevtotdiscount = $prevtotdiscount + $balance->discount;
             $prevtotdm = $prevtotdm + $balance->debitmemo;
             $prevtotpayment = $prevtotpayment+$balance->payment;
-                                    
+            
             $totamount = $totamount + $balance->amount;
             $totdiscount = $totdiscount + $balance->discount;
             $totdm = $totdm + $balance->debitmemo;
@@ -205,10 +204,8 @@ th {
        
        @foreach($others as $balance)
             @if(($balance->categoryswitch > 6 && $balance->categoryswitch < 10) && strpos($balance->description,'Penalty') === false)
-            @if($balance->amount-($balance->discount+$balance->debitmemo+$balance->payment) > 0 || $balance->schoolyear == $sy)
             <?php
-            
-            
+		if($balance->amount-($balance->discount+$balance->debitmemo+$balance->payment) > 0 || $balance->schoolyear == $sy){
             $totamount = $totamount + $balance->amount;
             $totdiscount = $totdiscount + $balance->discount;
             $totdm = $totdm + $balance->debitmemo;
@@ -218,21 +215,20 @@ th {
             $othertotdiscount = $othertotdiscount + $balance->discount;
             $othertotdm = $othertotdm + $balance->debitmemo;
             $othertotpayment = $othertotpayment+$balance->payment;
-            
+		}
             ?>
-            
+		@if($balance->amount-($balance->discount+$balance->debitmemo+$balance->payment) > 0 || $balance->schoolyear == $sy)
             <tr><td>{{$balance->receipt_details}}</td><td align="right">{{number_format($balance->amount,2)}}</td>
                 <td align="right">{{number_format($balance->discount,2)}}</td><td align="right">{{number_format($balance->payment,2)}}</td>
                 <td align="right">{{number_format($balance->debitmemo,2)}}</td><td align="right">{{number_format($balance->amount-$balance->discount-$balance->payment-$balance->debitmemo,2)}}</td></tr>
-            @endif
+		@endif
             @endif
        @endforeach
        
        @foreach($others as $balance)
             @if(strpos($balance->description,'Penalty') !== false)
-            @if($balance->amount-($balance->discount+$balance->debitmemo+$balance->payment) > 0 || $balance->schoolyear == $sy)
+	    @if($balance->amount-($balance->discount+$balance->debitmemo+$balance->payment) > 0 || $balance->schoolyear == $sy)
             <?php
-            
             $totamount = $totamount + $balance->amount;
             $totdiscount = $totdiscount + $balance->discount;
             $totdm = $totdm + $balance->debitmemo;
@@ -242,12 +238,11 @@ th {
             $othertotdiscount = $othertotdiscount + $balance->discount;
             $othertotdm = $othertotdm + $balance->debitmemo;
             $othertotpayment = $othertotpayment+$balance->payment;
-            
             ?>
             <tr><td>{{$balance->receipt_details}}</td><td align="right">{{number_format($balance->amount,2)}}</td>
                 <td align="right">{{number_format($balance->discount,2)}}</td><td align="right">{{number_format($balance->payment,2)}}</td>
                 <td align="right">{{number_format($balance->debitmemo,2)}}</td><td align="right">{{number_format($balance->amount-$balance->discount-$balance->payment-$balance->debitmemo,2)}}</td></tr>
-            @endif
+	    @endif
             @endif
        @endforeach
        @if(count($others)>0)
@@ -321,8 +316,8 @@ th {
         @endif
     </P>
     </td>
-    <td><img src="<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/images/frbocsignature.png" height="80" style="position:absolute;margin-left:20"><br><br>
-        <p align="center; font-size:9pt;">Fr. Manuel H. Nicholas, SDB<br>
+    <td><img src="<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/images/frsonny.png" height="80" style="position:absolute;margin-left:20"><br><br>
+        <p align="center; font-size:9pt;">Fr. Sonny F. Arevalo, SDB<br>
             Administrator</p>
     </tr>
     </table>

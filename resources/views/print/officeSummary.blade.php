@@ -16,8 +16,8 @@
             <h4 style="text-align: center;margin-top:5px;margin-bottom: 0px;padding-bottom: 0px;font-size: 15pt;">DEPARTMENTAL
                 @if($acctcode == 4)
                 INCOME
-                @elseif($acctcode == 1)
-                ASSETS
+		@elseif($acctcode == 1)
+	        ASSETS
                 @else
                 EXPENSE
                 @endif

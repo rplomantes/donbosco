@@ -67,7 +67,7 @@ th {
         <img src="<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/images/logo.png" width="60">
         </td><td width="70%"><span style="font-size:12pt; font-weight: bold">Don Bosco Technical Institute of Makati, Inc. </span></td><td align="right"><span style="font-size:14pt; font-style:italic; font-weight: bold;">STATEMENT OF ACCOUNT</span></td></tr>
         <tr><td style="font-size:10pt;">Chino Roces Ave., Makati City </td><td align="right">Date : {{date('M d, Y')}}</td></tr>
-        <tr><td style="font-size:10pt;">Tel No : 892-01-01</td><td align="right">Plan : {{$statuses->plan}}</td></tr>
+        <tr><td style="font-size:10pt;">Tel No : 892-01-01 to 08</td><td align="right">Plan : {{$statuses->plan}}</td></tr>
     </table>
     
     
@@ -154,8 +154,8 @@ th {
         @endif
     </P>
     </td>
-    <td><img src="<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/images/frbocsignature.png" height="80" style="position:absolute;margin-left:20"><br><br>
-        <p align="center; font-size:9pt;">Fr. Manuel H. Nicholas, SDB<br>
+    <td><img src="<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/images/frsonny.png" height="80" style="position:absolute;margin-left:20"><br><br>
+        <p align="center; font-size:9pt;">Fr. Sonny F. Arevalo, SDB<br>
             Administrator</p>
     </tr>
     </table>
