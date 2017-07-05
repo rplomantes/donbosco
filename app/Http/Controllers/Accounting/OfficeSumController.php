@@ -22,9 +22,7 @@ class OfficeSumController extends Controller
 
         if($dept == 'Student Services'){
             unset($offices[0]);
-        }
-        
-
+        }	
         return view('accounting.officeSummary',compact('fromdate','todate','dept','accounts','offices','acctcode','departments','coas'));
     }
 
@@ -33,7 +31,7 @@ class OfficeSumController extends Controller
         $coas = \App\ChartOfAccount::where('acctcode','LIKE',$acctcode.'%')->orderBy('accountname','ASC')->get();
         $schoolyear = \App\CtrSchoolYear::first()->schoolyear;
         $accounts = $this->accounts($fromdate,$todate,$dept,$acctcode,$schoolyear);
-        
+
         if($dept == 'Student Services'){
             unset($offices[0]);
         }
@@ -161,7 +159,7 @@ class OfficeSumController extends Controller
                 . "Select accountingcode, 0, SUM( amount ) + SUM( checkamount ) AS deb, sub_department AS coffice from dedits "
                 . "where (transactiondate between '$fromdate' AND '$todate') "
                 . "and acct_department = '$dept' "
-                . "and fiscalyear = $schoolyear and schoolyear IN ($schoolyear,'') "
+                . "and fiscalyear = $schoolyear "
                 . "and isreverse = 0 group by accountingcode,sub_department) d "
                 . "on d.accountingcode=coa.acctcode "
                 . "where (coa.acctcode BETWEEN 140100 AND 140116) order by coa.acctcode asc");
@@ -171,19 +169,18 @@ class OfficeSumController extends Controller
                     . "from credits "
                     . "where (transactiondate between '$fromdate' AND '$todate') "
                     . "and acct_department = '$dept' "
-                    . "and fiscalyear = $schoolyear and schoolyear IN ($schoolyear,'') "
+                    . "and fiscalyear = $schoolyear "
                     . "and isreverse = 0 group by accountingcode,sub_department "
                     . "UNION "
                     . "Select accountingcode, 0, SUM( amount ) + SUM( checkamount ) AS deb, sub_department AS coffice from dedits "
                     . "where (transactiondate between '$fromdate' AND '$todate') "
                     . "and acct_department = '$dept' "
-                    . "and fiscalyear = $schoolyear and schoolyear IN ($schoolyear,'') "
+                    . "and fiscalyear = $schoolyear "
                     . "and isreverse = 0 group by accountingcode,sub_department) d "
                     . "on d.accountingcode=coa.acctcode "
                     . "where coa.acctcode LIKE '$acctcode%' order by coa.acctcode asc");            
-        }
-
-        
+        }        
         return $accounts;
     }
 }
+

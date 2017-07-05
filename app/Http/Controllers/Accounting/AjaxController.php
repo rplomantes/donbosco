@@ -9,7 +9,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use DB;
 use App\Http\Controllers\Accounting\AccountSummaryController;
-use App\Http\Controllers\Accounting\SubAccountSummarryController;
 
 class AjaxController extends Controller
 {
@@ -23,7 +22,7 @@ class AjaxController extends Controller
         
         return view('ajax.individualAccount',compact('accounts'));
     }
-    
+
     function subAccountSummary(){
         $fromdate = Input::get('from');
         $todate = Input::get('to');
@@ -36,3 +35,4 @@ class AjaxController extends Controller
     }
     
 }
+

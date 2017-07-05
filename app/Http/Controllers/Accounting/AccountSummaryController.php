@@ -33,8 +33,7 @@ class AccountSummaryController extends Controller{
         $pdf = \App::make('dompdf.wrapper');
 	$pdf->setPaper('letter','portrait');
         $pdf->loadView('print.accountsummary',compact('fromdate','todate','accounts','account'));
-        //return $pdf->stream();  
-        return view('print.accountsummary',compact('fromdate','todate','accounts','account'));
+        return $pdf->stream();  
         
     }
     

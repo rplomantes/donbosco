@@ -46,8 +46,8 @@ class SubAccountSummarryController extends Controller
                 . "from dedits "
                 . "where (transactiondate BETWEEN '$fromdate' AND '$todate' ) "
                 . "AND accountingcode = '$account' and isreverse=0 "
-                . "group by refno,description) c order by transactiondate,receiptno");
-        
+                . "group by refno,description) c order by transactiondate,receiptno");        
+
         return $accounts;
     }
     
@@ -71,7 +71,7 @@ class SubAccountSummarryController extends Controller
         
         return count(array_diff($accountsDescription, $subaccounts));
     }
-    
+
     static function getEntrytype($entry){
         if($entry == 1){
             return "Cash Receipt";

@@ -38,18 +38,19 @@ class DeptIncomeController extends Controller
         return $pdf->stream();
     }
     
-    static function accounts($fromdate,$todate,$acctcode,$schoolyear){
+    function accounts($fromdate,$todate,$acctcode,$schoolyear){
+
         if($acctcode == 1){
         $accounts = DB::Select("select * from `chart_of_accounts` as coa "
                 . "left join (Select accountingcode, SUM( amount ) AS cred, 0 AS deb, acct_department AS coffice "
                 . "from credits "
                 . "where (transactiondate between '$fromdate' AND '$todate') "
-                . "and fiscalyear = $schoolyear and schoolyear IN ($schoolyear,'') "
+                . "and fiscalyear = $schoolyear "
                 . "and isreverse = 0 group by accountingcode,acct_department "
                 . "UNION "
                 . "Select accountingcode, 0, SUM( amount ) + SUM( checkamount ) AS deb, acct_department AS coffice from dedits "
                 . "where (transactiondate between '$fromdate' AND '$todate') "
-                . "and fiscalyear = $schoolyear and schoolyear IN ($schoolyear,'') "
+                . "and fiscalyear = $schoolyear "
                 . "and isreverse = 0 group by accountingcode,acct_department) d "
                 . "on d.accountingcode=coa.acctcode "
                 . "where (coa.acctcode BETWEEN 140100 AND 140116) order by coa.acctcode asc");
@@ -68,7 +69,6 @@ class DeptIncomeController extends Controller
                 . "on d.accountingcode=coa.acctcode "
                 . "where coa.acctcode LIKE '$acctcode%' order by coa.acctcode asc");
         }
-
         return $accounts;
     }
     
@@ -95,4 +95,5 @@ class DeptIncomeController extends Controller
         }
     }
 }
+
 
