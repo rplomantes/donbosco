@@ -1,21 +1,3 @@
-<?php
-$bank = "";
-$checkno = "";
-$checkamount = "";
-$cashamount = "";
-$receiveamount ="";
-if(count($debit_cash)>0){
-    foreach($debit_cash as $debit){
-        $bank = $debit->bank_branch;
-        $checkno = $debit->checkno;
-        $checkamount = $checkamount+$debit->check;
-        $cashamount = $debit->amount+$cashamount;
-        $receiveamount =$debit->receive_amount+$receiveamount;
-    }
-}
-
-?>
-
 @extends('appcashier')
 
 @section('content')
