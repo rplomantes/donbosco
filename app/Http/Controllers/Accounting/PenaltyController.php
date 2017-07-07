@@ -122,3 +122,4 @@ class PenaltyController extends Controller
                 return $penalty;
             }
 }
+    

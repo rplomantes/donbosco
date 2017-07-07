@@ -124,7 +124,7 @@ $credittotalamount = 0;
             @endif
         @endforeach
         <tr style="background-color:#8fb461">
-            <td colspan="4" align="left"><b>Sub Total</b></td>
+            <td colspan="5" align="left"><b>Sub Total</b></td>
             <td align="right">{{number_format($debitaccounttotal,2)}}</td>
             <td align="right">{{number_format($creditaccounttotal,2)}}</td>
         </tr>
@@ -141,5 +141,5 @@ $credittotalamount = 0;
         
     </table>
 
-    
+<a href="{{url('printsubaccountsummary',array($fromdate,$todate,$acct))}}" class="col-md-12 btn btn-danger">Print</a>
 @endif

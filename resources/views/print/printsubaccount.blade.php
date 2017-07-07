@@ -50,6 +50,7 @@ $credittotalamount = 0;
         <h4>{{$subaccount}}</h4>
         <table class="table table-borderless">
             <thead>
+                <tr>
                 <th width="150px">Transaction Date</th>
                 <th width="150px">Reference No.</th>
                 <th width="320px">Name</th>
@@ -57,6 +58,7 @@ $credittotalamount = 0;
                 <th width="150px">Entry</th>
                 <th width="150px">Debit</th>
                 <th width="150px">Credit</th>
+                <tr>
             </thead>
             @foreach($accounts as $account)
                 @if(strcmp($account->description,$subaccount) == 0)
@@ -104,13 +106,8 @@ $credittotalamount = 0;
             </tr>
         </table>
     @endif
-    <table class="table table-borderless">
-        <tr><td colspan="7"></td></tr>
-    </table>
 @endforeach
-<table class="table table-borderless">
-    <tr><td colspan="7"></td></tr>
-</table>
+
 @if(SubAccountSummarryController::notinlist($accounts,$subaccounts) > 0)
     <?php
     $accounttotal = 0;
@@ -119,6 +116,7 @@ $credittotalamount = 0;
     ?>
     <table class="table table-borderless">
         <thead>
+            <tr>
             <th width="150px">Transaction Date</th>
             <th width="150px">Reference No.</th>
             <th width="320px">Name</th>
@@ -126,6 +124,7 @@ $credittotalamount = 0;
             <th width="150px">Entry</th>
             <th width="150px">Debit</th>
             <th width="150px">Credit</th>
+            </tr>
         </thead>
         @foreach($accounts as $account)
             @if(!in_array($account->description,$subaccounts))

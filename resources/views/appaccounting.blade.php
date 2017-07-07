@@ -174,6 +174,7 @@
                                            <a href="{{url('dmcmallreport',array(date('Y-m-d'),date('Y-m-d') ))}}"><i class="fa fa-btn"></i>Debit Memo Summary</a>
                                            <a href="{{url('generaljournal',date('Y-m-d'))}}"><i class="fa fa-btn"></i>Journal Entry Details</a>
                                            <a href ="{{url('individualsummary',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Individual Account Summary</a>
+                                           <a href ="{{url('subaccountsummary',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Sub Account Summary</a>
 
                                            <a href="{{url('dailyalljournallist',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Journal Entry List</a>
                                            <a href ="{{url('checksummary',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Disbursement Check Summary</a>

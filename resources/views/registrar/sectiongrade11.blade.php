@@ -222,6 +222,8 @@
                         <td>
                             @if(round($core->second_grading,2) != 0)
                             {{round((round($core->second_grading,2)+round($core->first_grading,2))/2,0)}}
+                            @else
+                            {{round((round($core->third_grading,2)+round($core->fourth_grading,2))/2,0)}}
                             @endif
                             @if($sem ==1)
                                 <?php $final = $final + round((round($core->first_grading,2)+round($core->second_grading,2))/2,0);
@@ -231,6 +233,7 @@
                                 ?>
                             @endif
                                 <?php $totalacad = $totalacad + $final;?>
+                            
                         </td>
 
                             {{--*/$count ++/*--}}                        
@@ -277,6 +280,8 @@
                         <td>
                             @if(round($spec->second_grading,2) != 0)
                             {{round((round($spec->second_grading,2)+round($spec->first_grading,2))/2,0)}}
+                            @else
+                            {{round((round($core->third_grading,2)+round($core->fourth_grading,2))/2,0)}}
                             @endif
                             @if($sem ==1)
                                 <?php $final = $final + round((round($spec->first_grading,2)+round($spec->second_grading,2))/2,0);

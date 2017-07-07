@@ -231,7 +231,10 @@ class UpdateController extends Controller
         }
         function prevgrade(){
             $sy = "2013";
-            $students = DB::connection('dbti2test')->select("select distinct scode from grade_report where SY_EFFECTIVE = '$sy'");
+            //$students = DB::connection('dbti2test')->select("select distinct scode from grade_report where SY_EFFECTIVE = '$sy'");
+            $students = DB::connection('dbti2test')->select("select distinct scode from grade where SY_EFFECTIVE = '$sy'");
+            ini_set("memory_limit","850M"); 
+            set_time_limit('1000'); 
             
             foreach($students as $student){
                 $newstudents = \App\User::where('idno',$student->scode)->first();
@@ -248,11 +251,24 @@ class UpdateController extends Controller
                         $scode = "0".$scode;
                     }
                 }while(strlen($scode) < 6);
-              
-            $hsgrades = DB::connection('dbti2test')->select("select * from grade_report "
+            $level = "";
+            $section = "";
+            $infos = DB::connection('dbti2test')->select("select * from grade_report "
                     . "where SY_EFFECTIVE = '$sy'"
                     . "and SCODE =".$scode);
-
+            foreach($infos as $info){
+                $level = $info->GR_YR;
+                $section = $info->SECTION;
+            }
+            $hsgrades = DB::connection('dbti2test')->select("select * from grade "
+                    . "where SY_EFFECTIVE = '$sy'"
+                    . "and SCODE =".$scode);
+            
+            
+            foreach($hsgrades as $grade){
+                $this->savegrade($scode,$sy,$grade->QTR,$level,$section,$grade->GRADE_PASS1,$grade->SUBJ_CODE);
+            }
+            /*
             foreach($hsgrades as $grade){
                 if($grade->GR_YR == 'I'){
                     $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->CL,"CL");//
@@ -403,7 +419,7 @@ class UpdateController extends Controller
                     $this->savegrade($scode,$sy,$grade->QTR,$grade->GR_YR,$grade->SECTION,$grade->TRIGO,"TRIGO");//
                 }                    
             }
-            
+            */
         }
         
         function savegrade($scode,$sy,$qtr,$level,$section,$score,$subj){
@@ -442,7 +458,8 @@ class UpdateController extends Controller
                     }  
                     $record->schoolyear = $sy;
                     $record->save();
-                }else{
+                }
+                else{
                     $record = \App\Grade::where('idno',$scode)->where('subjectcode',$subj)->where('schoolyear',$sy)->first();
                     if($qtr == 1){
                         $record->first_grading = $score;
@@ -479,6 +496,7 @@ class UpdateController extends Controller
         }
         
         function changegrade($level){
+            $newlevel = "";
             if($level == 'I'){
                 $newlevel = "Grade 1";
             }

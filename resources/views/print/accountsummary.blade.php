@@ -11,8 +11,12 @@
 <style>
         .header{font-size:14pt;font-weigh:bold}
         .title{font-size:14pt; font-style: italic; text-decoration: underline}
-        .content td {font-size:10pt}
-        .subtitle{font-size: 10pt;font-weight: bold}
+        .content td {font-size:11pt}
+        .subtitle{font-size: 11pt;font-weight: bold}
+        html body{
+            margin: -20px;
+            padding: 0px;
+        }
         </style>
 </head>
 <body>
@@ -44,9 +48,10 @@ $tcredit = 0;
                     <td>Entry</td>
                     <td>Department</td>
                     <td>Office</td>
+                    <td>Remarks</td>
                 </tr>
             </thead>
-            <tbody style="font-size: 9pt">
+            <tbody style="font-size: 10pt">
                 @foreach($accounts as $account)
                 <?php 
                 $remark = "";
@@ -69,9 +74,9 @@ $tcredit = 0;
                 <tr>
                     <td width="6.5%" align="center">{{$account->transactiondate}}</td>
                     <td width="6%" align="center">{{$account->receiptno}}</td>
-                    <td width="20%">{{$payee}}</td>
-                    <td width="8%" align="right">{{number_format($account->debit,2,' .',',')}}</td>
-                    <td width="8%" align="right">{{number_format($account->credit,2,' .',',')}}</td>
+                    <td width="15%">{{$payee}}</td>
+                    <td width="7%" align="right">{{number_format($account->debit,2,' .',',')}}</td>
+                    <td width="7%" align="right">{{number_format($account->credit,2,' .',',')}}</td>
                     <?php
                         $tdebit = $tdebit+ $account->debit;
                         $tcredit = $tcredit+ $account->credit;
@@ -90,7 +95,8 @@ $tcredit = 0;
                         @endif
                     </td>
                     <td width="8%">{{$account->acct_department}}</td>
-                    <td width="9%">{{$account->sub_department}}</td>
+                    <td width="8%">{{$account->sub_department}}</td>
+                    <td width="17%">{{$remark}}</td>
                     
                 </tr>
                 @endforeach
@@ -98,7 +104,7 @@ $tcredit = 0;
             <td colspan="3">Amount</td>
             <td align="right">{{number_format($tdebit,2,' .',',')}}</td>
             <td align="right">{{number_format($tcredit,2,' .',',')}}</td>
-            <td colspan="3"></td>
+            <td colspan="4"></td>
         </tr>
             </tbody>
         </table>

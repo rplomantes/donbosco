@@ -1093,10 +1093,15 @@ class CashierController extends Controller
         
          $matchfields = ['postedby'=>$idno, 'transactiondate'=>$transactiondate];
         //$collections = \App\Dedit::where($matchfields)->get();
+//        $collections = DB::Select("select sum(dedits.amount) as amount, sum(dedits.checkamount) as checkamount, users.idno, users.lastname, users.firstname,"
+//                . " dedits.transactiondate, dedits.isreverse, dedits.receiptno, dedits.refno from users, dedits where users.idno = dedits.idno and"
+//                . " dedits.postedby = '".\Auth::user()->idno."' and dedits.transactiondate = '" 
+//                . $transactiondate . "' and dedits.paymenttype = '1' group by users.idno, dedits.transactiondate, users.lastname, users.firstname, dedits.isreverse,dedits.receiptno,dedits.refno" );
+//        
         $collections = DB::Select("select sum(dedits.amount) as amount, sum(dedits.checkamount) as checkamount, users.idno, users.lastname, users.firstname,"
-                . " dedits.transactiondate, dedits.isreverse, dedits.receiptno, dedits.refno from users, dedits where users.idno = dedits.idno and"
-                . " dedits.postedby = '".\Auth::user()->idno."' and dedits.transactiondate = '" 
-                . $transactiondate . "' and dedits.paymenttype = '1' group by users.idno, dedits.transactiondate, users.lastname, users.firstname, dedits.isreverse,dedits.receiptno,dedits.refno" );
+                . " dedits.transactiondate, dedits.isreverse, dedits.receiptno, dedits.refno, dedits.postedby,non_students.fullname from dedits left join users on users.idno = dedits.idno left join non_students on non_students.idno = dedits.idno where"
+                . " dedits.transactiondate = '" 
+                . $transactiondate . "' and dedits.postedby = '".\Auth::user()->idno."' and dedits.paymenttype = '1' group by users.idno, dedits.transactiondate, dedits.postedby, users.lastname, users.firstname, dedits.isreverse,dedits.receiptno,dedits.refno order by dedits.refno" );
         
         $teller=\Auth::user()->firstname." ". \Auth::user()->lastname;
         $pdf = \App::make('dompdf.wrapper');

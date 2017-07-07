@@ -29,7 +29,12 @@ class SubAccountSummarryController extends Controller
             $subaccounts = \App\CtrOtherPayment::distinct('particular')->where('acctcode',$account)->orderBy('particular','ASC')->pluck('particular')->toArray();
             $accounts = SubAccountSummarryController::getaccounts($fromdate,$todate,$account);
 
-           return view('print.printsubaccount',compact('accounts','subaccounts','account','fromdate','todate'));
+           //return view('print.printsubaccount',compact('accounts','subaccounts','account','fromdate','todate'));
+            $pdf = \App::make('dompdf.wrapper');
+            $pdf->setPaper('letter','landscape');
+            $pdf->loadView('print.printsubaccount',compact('accounts','subaccounts','account','fromdate','todate'));
+            //return view("print.printconsolidateddept",compact('accounts','fromtran','totran','acctcode','coas','departments'));
+            return $pdf->stream();
         }
     }
 

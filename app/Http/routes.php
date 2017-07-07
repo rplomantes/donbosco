@@ -118,9 +118,9 @@
     //Route::get('/getsoasummary','Accounting\AccountingController@getsoasummary');
     Route::post('/getsoasummary','Accounting\AccountingController@setsoasummary');
     Route::get('/printsoasummary/{level}/{strand}/{section}/{trandate}/{amtover}','Accounting\AccountingController@printsoasummary');
-    Route::get('penalties','Accounting\AccountingController@penalties');
-    Route::post('postpenalties','Accounting\AccountingController@postpenalties');
-    Route::post('postviewpenalty','Accounting\AccountingController@postviewpenalty');
+    Route::get('penalties','Accounting\PenaltyController@penalties');
+    Route::post('postpenalties','Accounting\PenaltyController@postpenalties');
+    Route::post('postviewpenalty','Accounting\PenaltyController@postviewpenalty');
     Route::get('subsidiary','Accounting\AccountingController@subsidiary');
     Route::post('subsidiary','Accounting\AccountingController@postsubsidiary');
     Route::get('showjournallist','Accounting\JournalController@ShowJournalList');

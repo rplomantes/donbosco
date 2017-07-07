@@ -54,7 +54,6 @@ $total = 0;
                     @endforeach
                 </tr>
             </thead>
-            <tbody>
                 @foreach($coas as $coa)
                 @if(DeptIncomeController::showAcct($accounts,$departments,$coa->acctcode,$acctcode))
                     <?php
@@ -81,7 +80,6 @@ $total = 0;
                     </td>
                     @endforeach
                 </tr>
-            </tbody>
         </table>
     </body>
 </html>
