@@ -7,6 +7,8 @@
     Route::get('/samplewidget', 'Widget\ConsolidatedReport@piechart');
     Route::get('/consolidatedbar', 'Widget\ConsolidatedReport@barchart');
     
+    Route::get('/attendance/{idno}/{sy}', 'Registrar\PermanentRecord@index');
+    
     
     Route::get('/discounting', 'Update\UpdateController@updateDiscount');
     Route::get('/', 'MainController@index');
