@@ -8,6 +8,16 @@
             <li class="btn btn-default form-control"><a href="#" onclick="displaygrade('{{$idno}}','{{$sy->schoolyear}}')">{{$sy->schoolyear}} - {{$sy->schoolyear +1 }}</a></li>
             @endforeach
         </ul>
+        <ul>
+            @if($shspermanentRec)
+            <li class="btn btn-default form-control"><a href="{{url('permanentrec',array($idno,2016))}}" >SHS Permanent Record</a></li>
+            @endif
+        </ul>
+        
+        <ul>
+            <li class="btn btn-default form-control"><a href="{{url('createrec',$studentname->idno)}}" >Create Student Record</a></li>
+        </ul>
+        
     </div>    
     <div  class="col-md-9">
         <div id="displaygrade">

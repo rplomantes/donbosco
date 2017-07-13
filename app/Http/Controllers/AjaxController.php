@@ -250,8 +250,9 @@ class AjaxController extends Controller
             }
                 function getsearch($varsearch){
                     if(Request::ajax()){
-                    $searches = DB::Select("Select * From users where accesslevel = '0' AND (lastname like '$varsearch%' OR
-                           firstname like '$varsearch%' OR idno = '$varsearch') Order by lastname, firstname");
+                    $find = strtolower($varsearch);
+                    $searches = DB::Select("Select * From users where accesslevel = '0' AND (lastname like '$varsearch%' OR lcase(lastname) like '$find%' OR "
+                            . "firstname like '$varsearch%' OR idno = '$varsearch') Order by lastname, firstname");
                     $value = "<table class=\"table table-striped\"><thead>
             <tr><th>Student Number</th><th>Student Name</th><th>Gender</th><th>Assessment</th><th>Student Info</th><th>Student Grade</th></tr>        
             </thead><tbody>";
@@ -270,7 +271,8 @@ class AjaxController extends Controller
                 
                  function getsearchcashier($varsearch){
                     if(Request::ajax()){
-                    $searches = DB::Select("Select * From users where accesslevel = '0' AND (lastname like '$varsearch%' OR
+                        $find = strtolower($varsearch);
+                    $searches = DB::Select("Select * From users where accesslevel = '0' AND (lastname like '$varsearch%' OR lcase(lastname) like '$find%' OR 
                            firstname like '$varsearch%' OR idno = '$varsearch') Order by lastname, firstname");
                     $value = "<table class=\"table table-striped\"><thead>
             <tr><th>Student Number</th><th>Student Name</th><th>Gender</th><th>View</th></tr>        
@@ -867,15 +869,8 @@ class AjaxController extends Controller
             $data = $data . "<table class=\"table table-stripped\"><tr><td><span class=\"subjecttitle\">Academic Subject</span></td><td>1</td><td>2</td><td>3</td><td>4</td><td>Final</td><td>Remarks</td></tr>";
             foreach($academics as $grade){
             $data = $data . "<tr><td width=\"50%\">".$grade->subjectname."</td><td>".round($grade->first_grading)."</td><td>" . round($grade->second_grading) . ""
-                    . "</td><td>" . round($grade->third_grading) . "</td><td>" . round($grade->fourth_grading) . "</td><td>";
-                    if(round($grade->fourth_grading) != 0){
-                       $data = $data . round(($grade->fourth_grading+$grade->third_grading+$grade->second_grading+$grade->first_grading)/4,0);
-                        
-                    }else{
-                        $data = $data . "0";
-                        
-                    }
-            $data = $data . "</td><td>". $grade->remarks . "</td><td></tr>";    
+                    . "</td><td>" . round($grade->third_grading) . "</td><td>" . round($grade->fourth_grading) . "</td><td>".round($grade->final_grade)."</td>";
+            $data = $data . "<td>". $grade->remarks . "</td><td></tr>";    
             }
             $data = $data . "</table>";
            }
@@ -886,7 +881,7 @@ class AjaxController extends Controller
             $data = $data . "<table class=\"table table-stripped\"><tr><td><span class=\"subjecttitle\">Core Subject</span></td><td>1</td><td>2</td><td>3</td><td>4</td><td>Final</td><td>Remarks</td></tr>";
             foreach($core as $grade){
             $data = $data . "<tr><td width=\"50%\">".$grade->subjectname."</td><td>".round($grade->first_grading)."</td><td>" . round($grade->second_grading) . ""
-                    . "</td><td>" . round($grade->third_grading) . "</td><td>" . round($grade->fourth_grading) . "</td><td>" . round($grade->finalgrade) 
+                    . "</td><td>" . round($grade->third_grading) . "</td><td>" . round($grade->fourth_grading) . "</td><td>" . round($grade->final_grade) 
                     . "</td><td>". $grade->remarks . "</td><td></tr>";    
             }
             $data = $data . "</table>";

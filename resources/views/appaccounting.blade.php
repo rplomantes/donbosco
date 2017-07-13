@@ -79,6 +79,9 @@
 						<li class="dropdown">
  						   <a href="{{url('searchvoucher')}}"><i class="fa fa-btn fa-sign-out"></i>Search Voucher</a></li>
 						</li>
+						<li class="dropdown">
+ 						   <a href="{{url('searchpayee')}}"><i class="fa fa-btn fa-sign-out"></i>Search Payee</a></li>
+						</li>
 					@endif
                                         @if(Auth::user()->accesslevel == env('USER_ACCOUNTING_HEAD'))
                                          <li class="dropdown">
@@ -164,7 +167,10 @@
                                         <ul class="dropdown-menu" role="menu">
                                        <li><a href="{{url('penalties')}}"><i class="fa fa-btn"></i>Over Due Charges </a>
                                         <a href="{{url('searchor')}}"><i class="fa fa-btn fa-sign-out"></i>Search OR</a>
-					<a href="{{url('searchvoucher')}}"><i class="fa fa-btn fa-sign-out"></i>Search Voucher</a></li>
+					<a href="{{url('searchvoucher')}}"><i class="fa fa-btn fa-sign-out"></i>Search Voucher</a>
+ 				        <a href="{{url('searchpayee')}}"><i class="fa fa-btn fa-sign-out"></i>Search Payee</a>
+                                       </li>
+
                                        <hr>
                                        <li>
                                            <a href="{{url('overallcollection',date('Y-m-d'))}}"><i class="fa fa-btn"></i>Collection Report</a>

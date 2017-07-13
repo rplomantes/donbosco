@@ -38,7 +38,7 @@
                           
                       } echo number_format($penalty,2);?>
            </td><td><input type="checkbox" name="idnumber[]" value="{{$soa->idno}}" 
-                           @if($soa->amount>=1000)
+                           @if($soa->amount>=2000)
                            checked="checked"
                            @endif
                            >

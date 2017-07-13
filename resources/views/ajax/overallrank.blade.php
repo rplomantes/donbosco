@@ -73,7 +73,7 @@
                 <td>{{$acad}}</td>
                 @endif
             @endforeach
-            <td>{{GradeController::gradeQuarterAve(array(0,5,6),$quarter,$grades,$level)}}</td>
+            <td>{{GradeController::gradeQuarterAve(array(0,5,6),array(0,1,2),$quarter,$grades,$level)}}</td>
             <td>{{$acad_rank}}</td>
             @foreach($grades as $grade)
                 <?php

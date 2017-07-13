@@ -67,4 +67,30 @@ class SectionController extends Controller
 
            //return $studentnames;
     }
+    
+    function assignClassNo(){
+        $level = array("Kindergarten","Grade 1","Grade 2","Grade 3","Grade 4","Grade 5","Grade 6","Grade 7","Grade 8","Grade 9","Grade 10","Grade 11","Grade 12");
+        $schoolyear = \App\CtrSchoolYear::first()->schoolyear;
+        foreach($level as $level){
+            $sections = \App\CtrSection::where('level',$level)->get();
+            foreach($sections as $section){
+                $students = DB::Select("select statuses.idno,statuses.section, isnew from statuses, users where statuses.idno = "
+                                . "users.idno and statuses.level = '$level' AND schoolyear = '$schoolyear' AND statuses.section = '$section->section' order by class_no,users.gender,users.lastname, users.firstname, users.middlename");
+                $class_no = 1;
+
+                 foreach($students as $student){
+                     $stud = \App\Status::where('idno',$student->idno)->where('schoolyear',$schoolyear)->first();
+
+                     if($stud){
+                         if($stud->class_no == 0){
+                             $stud->class_no = $class_no;
+                             $stud->save();
+                             $class_no++;
+                         }
+                     }
+                 }
+                
+            }
+        }
+    }
 }

@@ -8,10 +8,10 @@
 </script>
 <div class="container">
     <div class="form-group">
-        <form method="POST" action="{{url('/searchor')}}">    
+        <form method="POST" action="{{url('/searchpayee')}}">    
             {!!csrf_field()!!}
             <label>OR Number</label>
-            <input type="text" class="form form-control" id="or" name="or" autofocus>
+            <input type="text" class="form form-control" id="or" name="payee" autofocus>
             <p></p>
             <input type="submit" class="btn btn-primary" value="Search">
         </form>

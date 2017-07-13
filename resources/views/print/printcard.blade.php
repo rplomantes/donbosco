@@ -109,11 +109,11 @@ use App\Http\Controllers\Registrar\GradeController;
                 @endforeach
                 <tr>
                     <td align="right"><b>GENERAL AVERAGE</b></td>
-                    <td align="center">{{GradeController::gradeQuarterAve(array(0),1,$grades,$level)}}</td>
-                    <td align="center">{{GradeController::gradeQuarterAve(array(0),2,$grades,$level)}}</td>
-                    <td align="center">{{GradeController::gradeQuarterAve(array(0),3,$grades,$level)}}</td>
-                    <td align="center">{{GradeController::gradeQuarterAve(array(0),4,$grades,$level)}}</td>
-                    <td align="center">{{GradeController::gradeQuarterAve(array(0   ),5,$grades,$level)}}</td>
+                    <td align="center">{{GradeController::gradeQuarterAve(array(0),array(0),1,$grades,$level)}}</td>
+                    <td align="center">{{GradeController::gradeQuarterAve(array(0),array(0),2,$grades,$level)}}</td>
+                    <td align="center">{{GradeController::gradeQuarterAve(array(0),array(0),3,$grades,$level)}}</td>
+                    <td align="center">{{GradeController::gradeQuarterAve(array(0),array(0),4,$grades,$level)}}</td>
+                    <td align="center">{{GradeController::gradeQuarterAve(array(0),array(0),5,$grades,$level)}}</td>
                     <td></td>             
                 </tr>
             </table>

@@ -432,5 +432,20 @@ class DisbursementController extends Controller
             }
             return redirect('printdisbursement/'.$refno);
         }
-    }  
+    }
+    
+    function searchpayee(){
+        $payees = \App\Disbursement::distinct('payee')->pluck('payee')->toArray();
+        
+        foreach($payees as $key=>$value){
+          $payees[$key]=str_replace('"','\"',$value);
+        }
+        return view('accounting.searchPayee',compact('payees'));
+    }
+    
+    function findpayee(request $request){
+        $disbursement = \App\Disbursement::where('payee',$request->payee)->get();
+
+        return view('accounting.vouchersearchlist',compact('disbursement'));
+    }
 }

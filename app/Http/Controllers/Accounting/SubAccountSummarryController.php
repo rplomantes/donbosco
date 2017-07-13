@@ -34,7 +34,8 @@ class SubAccountSummarryController extends Controller
             $pdf->setPaper('letter','landscape');
             $pdf->loadView('print.printsubaccount',compact('accounts','subaccounts','account','fromdate','todate'));
             //return view("print.printconsolidateddept",compact('accounts','fromtran','totran','acctcode','coas','departments'));
-            return $pdf->stream();
+            return view('print.printsubaccount',compact('accounts','subaccounts','account','fromdate','todate'));
+            //return $pdf->stream();
         }
     }
 

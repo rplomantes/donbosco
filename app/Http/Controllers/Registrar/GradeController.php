@@ -13,9 +13,10 @@ class GradeController extends Controller
     //
     function seegrade($idno){
     if(\Auth::user()->accesslevel==env('USER_REGISTRAR')){
-        $syissued= DB::Select("select distinct schoolyear from grades where idno = '$idno'");
+        $syissued= DB::Select("select distinct schoolyear from grades where idno = '$idno' order by schoolyear ASC");
         $studentname = \App\User::where('idno',$idno)->first();
-        return view('registrar.studentgrade',compact('syissued','idno','studentname'));
+        $shspermanentRec = \App\StatusHistory::where('idno',$idno)->where('department',"Senior High School")->first();
+        return view('registrar.studentgrade',compact('syissued','idno','studentname','shspermanentRec'));
     } 
     }
     
@@ -140,42 +141,89 @@ class GradeController extends Controller
         return $grade;
     }
     
-    static function gradeQuarterAve($insubjtype,$quarter,$subjects,$level){
+    static function gradeQuarterAve($insubjtype,$sem,$quarter,$subjects,$level){
         $total = 0;
         $grade = 0;
         foreach($subjects as $subject){
             if(in_array($subject->subjecttype,$insubjtype)){
-                $total = $total + 1;
                 
-                switch($quarter){
-                    case 1:       
-                        $grade = $grade + $subject->first_grading;
-                        break;
-                    case 2:
-                        $grade = $grade + $subject->second_grading;
-                        break;
-                    case 3:
-                        $grade = $grade + $subject->third_grading;
-                        break;
-                    case 4:
-                        $grade = $grade + $subject->fourth_grading;
-                        break;
-                    default:
-                        if($level == "Grade 7" | $level == "Grade 8" | $level == "Grade 9" | $level == "Grade 10" | $level == "Grade 11" | $level == "Grade 12"){
-                            $grade = $grade + round($subject->final_grade,0);
-                        }else{
-                            $grade = $grade + round($subject->final_grade,2);
-                        }
-                        break;
+                if(in_array($subject->semester, $sem)){
+                    $total = $total + 1;
+                    switch($quarter){
+                        case 1:       
+                            $grade = $grade +$subject->first_grading;
+                            break;
+                        case 2:
+                            $grade = $grade+$subject->second_grading;
+                            break;
+                        case 3:
+                            $grade = $grade + $subject->third_grading;
+                            break;
+                        case 4:
+                            $grade = $grade + $subject->fourth_grading;
+                            break;
+                        default:
+                            if($level == "Grade 7" | $level == "Grade 8" | $level == "Grade 9" | $level == "Grade 10" | $level == "Grade 11" | $level == "Grade 12"){
+                                $grade = $grade + round($subject->final_grade,0);
+                            }else{
+                                $grade = $grade + round($subject->final_grade,2);
+                            }                            
+                            break;
+                    }   
                 }
             }
         }
         
+        
         if($level == "Grade 7" | $level == "Grade 8" | $level == "Grade 9" | $level == "Grade 10" | $level == "Grade 11" | $level == "Grade 12"){
             $average = ROUND($grade/$total,0);
-            //$average =$total;
+            //$average =$grade;
         }else{
             $average = ROUND($grade/$total,2);
+        }
+        
+        return $average;
+    }
+    
+    static function weightedgradeQuarterAve($insubjtype,$sem,$quarter,$subjects,$level){
+        $total = 0;
+        $grade = 0;
+        foreach($subjects as $subject){
+            if(in_array($subject->subjecttype,$insubjtype)){
+                
+                if(in_array($subject->semester, $sem)){
+                    $total = $total + 1;
+                    switch($quarter){
+                        case 1:       
+                            $grade = $grade +$subject->first_grading*(100/$subject->weight);
+                            break;
+                        case 2:
+                            $grade = $grade+$subject->second_grading*(100/$subject->weight);
+                            break;
+                        case 3:
+                            $grade = $grade + $subject->third_grading*(100/$subject->weight);
+                            break;
+                        case 4:
+                            $grade = $grade + $subject->fourth_grading*(100/$subject->weight);
+                            break;
+                        default:
+                            if($level == "Grade 7" | $level == "Grade 8" | $level == "Grade 9" | $level == "Grade 10" | $level == "Grade 11" | $level == "Grade 12"){
+                                $grade = $grade + round($subject->final_grade*(100/$subject->weight),0);
+                            }else{
+                                $grade = $grade + round($subject->final_grade*(100/$subject->weight),2);
+                            }                            
+                            break;
+                    }   
+                }
+            }
+        }
+        
+        
+        if($level == "Grade 7" | $level == "Grade 8" | $level == "Grade 9" | $level == "Grade 10" | $level == "Grade 11" | $level == "Grade 12"){
+            $average = ROUND($grade,0);
+            //$average =$grade;
+        }else{
+            $average = ROUND($grade,2);
         }
         
         return $average;

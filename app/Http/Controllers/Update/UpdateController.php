@@ -230,9 +230,9 @@ class UpdateController extends Controller
             }
         }
         function prevgrade(){
-            $sy = "2013";
+            $sy = "2015";
             //$students = DB::connection('dbti2test')->select("select distinct scode from grade_report where SY_EFFECTIVE = '$sy'");
-            $students = DB::connection('dbti2test')->select("select distinct scode from grade where SY_EFFECTIVE = '$sy'");
+              $students = DB::connection('dbti2test')->select("select distinct scode from grade where SY_EFFECTIVE = '$sy' and SCODE IN (160946,120715,052892,123803,121215,052027,123242,051390,051250,121452,074063,050652,055077,054551,083208,123692,062391,120731,051772,121436,051683,120758,095273,121193,061891,122679,050938,064793,065064,072842,051489,055425,064912,062197,113476,093378,051373,051454,083071,094412,121100,050822,053414,051764,050491,061867,054950,062081,052159,120898,120910,1640011,052132,052191,050423,055000,062316,051268,051144,061905,123552,061948,095966,120987,121533,122491,051641,051594,1640026,1640032,050661,120839,061662,051462,073300,120651,065226,1640136,050431,050300,120871,1610386,052299,082511,074250,160628,063002,123676,061816,103861,052019,053988,074055,064122,122106,050911,1640273,053015,063312,035882,160997,123731,061697,121177,123943,050881,054003,122505,053651,121495,125405,051519,1640430,120693,050466,056146,1610302,123722,052388,103047,050628,1610083,1640507,065986,122556,053333,062448,121037,1692657,050598,051471,051691,120685,061964,094382,051551,051845,051021,1640602,1693452,1640671,1640686,1640692,064955,083186,051837,062278,072664,053121,121878,1640760,053457,050474,062022,053473,120845,102989,050849,1640555,063983,1640885,052990,1684447,053317,160989,1640980,053538,050377,121461,073296,092118,123269,055522,1600164,1640294,101991,122521,1640403,160776,121291,054071,055387,085073,160661,1690535,161136,161047,160610,160598,052973,064653,053490,051748,161594,161624,160971,160814,160636,161101,160644,062162,054429,160679,161021,160652,122696,160792,161055,053279,161071,160954,1641151,1641166,064009,160806,160687,061735,050555,055069,052337,1641193,123625,064742,061727,1640445,050407,1621423,053619,082708,065170,053511,1690624,122611,075213,054135,1640424,1620881,1641187,123561,062359,122777,074331,121525,1641412,084965,054631,052051,052221,062103,062235,1601428,050156,121134,065196,120928,075311,074926,074811,052906,050725,101907,1621471,061751,083500,050580,122149,062201,066419,053350,124265,055450)");
             ini_set("memory_limit","850M"); 
             set_time_limit('1000'); 
             
@@ -425,17 +425,22 @@ class UpdateController extends Controller
         function savegrade($scode,$sy,$qtr,$level,$section,$score,$subj){
                 $check = $this->check($scode,$subj,$sy);
                 if(empty($check)){
+                    
                     $subjects = DB::connection('dbti2test')->select("Select subj_card,class from subject_updated where subj_code = '$subj'");
-                    $orders = DB::connection('dbti2test')->select("Select hs_subj_order,gs_subj_order from subject where subj_code = '$subj'");
+                    $orders = DB::connection('dbti2test')->select("Select hs_subj_order,gs_subj_order,wtd_val_ave from subject where subj_code = '$subj'");
+                    
+                    
                     $record = new \App\Grade();
                     $record->idno = $scode;
                     $record->level = $this->changegrade($level);
                     $record->subjectcode = $subj;
                     $record->section = $section;
                     
-                    if($level == 1 ||$level == 2||$level == 3||$level == 4){
+                    //if($level == 1 ||$level == 2||$level == 3||$level == 4){
+                    if($level == 7 ||$level == 8||$level == 9||$level == 10){
                         foreach($orders as $order){
                             $record->sortto = $order->hs_subj_order;
+                            $record->weighted = $order->wtd_val_ave;
                         }
                     }else{
                         foreach($orders as $order){
@@ -445,8 +450,9 @@ class UpdateController extends Controller
                     
                     foreach($subjects as $subject){
                     $record->subjectname = $subject->subj_card;
-                    }
                     $record->subjecttype = $this->settype($subject->class);
+                    }
+                    
                     if($qtr == 1){
                         $record->first_grading = $score;
                     }else if($qtr == 2){
@@ -475,7 +481,7 @@ class UpdateController extends Controller
         }
         
         function settype($subjcode){
-            $code = 4;
+            $code = 3;
             if($subjcode == 'A'){
                 $code = 0;
             }
@@ -483,7 +489,7 @@ class UpdateController extends Controller
                 $code = 1;
             }
             if($subjcode == 'C'){
-                $code = 3;
+                $code = 2;
             }
             
             return $code;
@@ -497,35 +503,69 @@ class UpdateController extends Controller
         
         function changegrade($level){
             $newlevel = "";
-            if($level == 'I'){
+//            if($level == 'I'){
+//                $newlevel = "Grade 1";
+//            }
+//            else if($level == 'II'){
+//                $newlevel = "Grade 2";
+//            }
+//            else if($level == 'III'){
+//                $newlevel = "Grade 3";
+//            }
+//            else if($level == 'IV'){
+//                $newlevel = "Grade 4";
+//            }
+//            else if($level == 'V'){
+//                $newlevel = "Grade 5";
+//            }
+//            else if($level == 'VI'){
+//                $newlevel = "Grade 6";
+//            }
+//            else if($level == 1){
+//                $newlevel = "Grade 7";
+//            }            
+//            else if($level == 2){
+//                $newlevel = "Grade 8";
+//            }            
+//            else if($level == 3){
+//                $newlevel = "Grade 9";
+//            }            
+//            else if($level == 4){
+//                $newlevel = "Grade 10";
+//            }
+            
+            if($level == 1){
                 $newlevel = "Grade 1";
             }
-            else if($level == 'II'){
+            else if($level == 2){
                 $newlevel = "Grade 2";
             }
-            else if($level == 'III'){
+            else if($level == 3){
                 $newlevel = "Grade 3";
             }
-            else if($level == 'IV'){
+            else if($level == 4){
                 $newlevel = "Grade 4";
             }
-            else if($level == 'V'){
+            else if($level == 5){
                 $newlevel = "Grade 5";
             }
-            else if($level == 'VI'){
+            else if($level == 6){
                 $newlevel = "Grade 6";
             }
-            else if($level == 1){
+            else if($level == 7){
                 $newlevel = "Grade 7";
             }            
-            else if($level == 2){
+            else if($level == 8){
                 $newlevel = "Grade 8";
             }            
-            else if($level == 3){
+            else if($level == 9){
                 $newlevel = "Grade 9";
             }            
-            else if($level == 4){
+            else if($level == 10){
                 $newlevel = "Grade 10";
+            }
+            else if($level == "K"){
+                $newlevel = "Kindergarten";
             }
             
             return $newlevel;

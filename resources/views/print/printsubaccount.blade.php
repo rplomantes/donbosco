@@ -48,7 +48,7 @@ $credittotalamount = 0;
     ?>
     @if(SubAccountSummarryController::isvisible($accounts,$subaccount)>0)
         <h4>{{$subaccount}}</h4>
-        <table class="table table-borderless">
+        <table class="table table-borderless" >
             <thead>
                 <tr>
                 <th width="150px">Transaction Date</th>

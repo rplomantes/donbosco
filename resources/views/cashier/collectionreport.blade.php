@@ -16,7 +16,7 @@ if($collection->isreverse == '1'){
 
 
 <tr><td>{{$collection->receiptno}}</td>
-    @if($collection->lastname != "")
+    @if($collection->lastname != "" ||$collection->firstname != "")
     <td>{{$collection->lastname}}, {{$collection->firstname}}</td>
     @else
     <td>{{strtoupper($collection->fullname)}}</td>

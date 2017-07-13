@@ -34,7 +34,7 @@ class PenaltyController extends Controller
                     . " sum(ledgers.amount) - sum(ledgers.payment) - sum(ledgers.debitmemo) - sum(ledgers.plandiscount) - sum(ledgers.otherdiscount) as amount "
                     . " from users, statuses, ledgers where users.idno = statuses.idno and users.idno = ledgers.idno and statuses.department != 'TVET' and "
                     . " ledgers.duedate <= '$currentdate' and statuses.status='2' and statuses.plan = 'Monthly 2'"
-                    . " AND ledgers.acctcode IN ('Tuition Fee','Registration & Other Institutional Fees','Department Facilities')"
+                    //. " AND ledgers.acctcode IN ('Tuition Fee','Registration & Other Institutional Fees','Department Facilities')"
                     . " group by statuses.idno, users.lastname, users.firstname, users.middlename, statuses.level, statuses.section, statuses.strand  order by statuses.strand, users.lastname, users.firstname");
             }else{
             $soasummary = DB::Select("select statuses.idno, users.lastname, users.firstname, users.middlename, statuses.level, statuses.section, statuses.strand, "
