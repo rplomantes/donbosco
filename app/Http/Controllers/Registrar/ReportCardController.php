@@ -66,9 +66,22 @@ class ReportCardController extends Controller
                 . "sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct)+sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as total"
                 . " from ctr_attendances where level = '$level' and schoolyear = '$sy' group by schoolyear");
         
-        $pdf = \App::make('dompdf.wrapper');
-        $pdf->setPaper([0, 0, 468, 612], 'portrait');
-        $pdf->loadView("print.printcard",compact('idno','sy','name','lrn','adviser','section','level','grades','totalage','class_no','ctr_attendances','attendances'));
-        return $pdf->stream();
+//        $pdf = \App::make('dompdf.wrapper');
+//        
+//        if(in_array($level,array("Grade 1","Grade 2","Grade 3","Grade 4","Grade 5","Grade 6"))){
+//            $pdf->setPaper([0, 0, 468, 612], 'portrait');
+//            $pdf->loadView("print.printelemcard",compact('idno','sy','name','lrn','adviser','section','level','grades','totalage','class_no','ctr_attendances','attendances'));            
+//        }elseif(in_array($level,array("Grade 7","Grade 8","Grade 9","Grade 10"))){
+//            $pdf->setPaper([0, 0, 468, 612], 'portrait');
+//            //$pdf->loadView("print.printjhscard",compact('idno','sy','name','lrn','adviser','section','level','grades','totalage','class_no','ctr_attendances','attendances'));                        
+//            
+//        }elseif(in_array($level,array("Grade 11","Grade 12"))){
+//            $pdf->setPaper([0, 0, 468, 612], 'portrait');
+//            $pdf->loadView("print.printcard",compact('idno','sy','name','lrn','adviser','section','level','grades','totalage','class_no','ctr_attendances','attendances'));
+//        }else{
+//            
+//        }
+        return view("print.printjhscard",compact('idno','sy','name','lrn','adviser','section','level','grades','totalage','class_no','ctr_attendances','attendances'));
+
     }
 }

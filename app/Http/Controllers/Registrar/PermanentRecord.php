@@ -97,7 +97,7 @@ class PermanentRecord extends Controller
 //        }
         
         $pdf = \App::make('dompdf.wrapper');
-        $pdf->setPaper([0,0,648.00,1008.00], 'portrait');
+        $pdf->setPaper([0,0,650.00,1008.00], 'portrait');
         $pdf->loadView("print.seniorPermanentRec",compact('idno','sy','grades','info','class_no','section','level','strand','q2dayp','q2daya','q2dayt','q1dayp','q1daya','q1dayt','jhschool','jhsSy','jhsaverage'));
         return $pdf->stream();
         //return view("print.seniorPermanentRec",compact('idno','sy','grades','info','class_no','section','level','strand'));

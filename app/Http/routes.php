@@ -384,6 +384,7 @@ Route::group(['middleware' => ['web','registrar']], function () {
     Route::get('/seegrade/{idno}','Registrar\GradeController@seegrade');
     
     Route::get('/createrec/{idno}','Registrar\MakeRecord@createRecord');
+    Route::post('/createrec','Registrar\MakeRecord@saveRecord');
     
    Route::get('/sheetA/{record}',function($record){
        $levels = \App\CtrLevel::get();

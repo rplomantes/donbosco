@@ -11,6 +11,13 @@ use DB;
 
 class AjaxController extends Controller
 {
+    function displaygrade(){
+        $sy = Input::get('sy');
+        $idno = Input::get('idno');
+        
+        $grades = \App\Grade::where('idno',$idno)->where('sy',$sy)->get();
+    }
+        
     function levelStudent($level,$sy){
         $strand = Input::get('strand');
         if($strand == 'null'){

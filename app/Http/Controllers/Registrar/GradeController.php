@@ -13,7 +13,9 @@ class GradeController extends Controller
     //
     function seegrade($idno){
     if(\Auth::user()->accesslevel==env('USER_REGISTRAR')){
-        $syissued= DB::Select("select distinct schoolyear from grades where idno = '$idno' order by schoolyear ASC");
+        $syissued= DB::Select("select schoolyear from (select distinct schoolyear from grades where idno = '$idno' "
+                . "UNION "
+                . "select distinct schoolyear from prev_school_recs where idno ='$idno') v order by schoolyear ASC");
         $studentname = \App\User::where('idno',$idno)->first();
         $shspermanentRec = \App\StatusHistory::where('idno',$idno)->where('department',"Senior High School")->first();
         return view('registrar.studentgrade',compact('syissued','idno','studentname','shspermanentRec'));

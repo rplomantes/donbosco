@@ -934,6 +934,8 @@ class AjaxController extends Controller
             $data = $data . "</table>";
             }
             
+            $data = $data . "<a class='btn btn-danger' href='/card/".Input::get('idno')."/".Input::get('sy')."'>Print</a>";
+            
             return $data;
         }
         
