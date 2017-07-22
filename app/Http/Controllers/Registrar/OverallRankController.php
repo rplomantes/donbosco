@@ -66,7 +66,6 @@ class OverallRankController extends Controller
                         . "AND isdisplaycard = 1 "
                         . "GROUP BY idno ORDER BY `average` DESC");
             }
-
             else{
                 $averages = DB::Select("SELECT grades.idno,ROUND( SUM( $qrt ) / count( grades.idno ) ,0) AS average "
                         . "FROM `grades` "

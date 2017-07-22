@@ -237,7 +237,7 @@ use App\Http\Controllers\Registrar\GradeController;
                         </tr>
                         @foreach($grades as $grade)
                         @if($grade->subjecttype == 1)
-                        <tr style="text-align: center;font-weight: bold">
+                        <tr style="text-align: center;">
                             <td style="text-align: left;padding-left:10px" class="print-size">
                                 {{$grade->subjectname}} 
                                 @if($grade->weighted != 0)
@@ -257,7 +257,7 @@ use App\Http\Controllers\Registrar\GradeController;
                         </tr>
                         @endif
                         @endforeach
-                        @if($sy != 2016 &&($level == "Grade 9" || $level == "Grade 10"))
+			@if($sy != 2016 &&($level == "Grade 9" || $level == "Grade 10"))
                         <tr style="text-align: center;font-weight: bold">
                             <td class="print-size" style="text-align: right"><b>TECHNICAL AVERAGE&nbsp;&nbsp;&nbsp;</b></td>
 
@@ -273,7 +273,7 @@ use App\Http\Controllers\Registrar\GradeController;
                             </td>
                         </tr>
                         @else
-                        <tr style="text-align: center">
+                        <tr style="text-align: center;font-weight:bold">
                             <td class="print-size" style="text-align: right"><b>TECHNICAL AVERAGE&nbsp;&nbsp;&nbsp;</b></td>
 
                             <td align="center">{{GradeController::gradeQuarterAve(array(1),array(0),1,$grades,$level)}}</td>
@@ -559,4 +559,5 @@ use App\Http\Controllers\Registrar\GradeController;
     </div>    
         </body>
 </html>
+
 

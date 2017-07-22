@@ -239,8 +239,8 @@ class UpdateController extends Controller
             foreach($students as $student){
                 $newstudents = \App\User::where('idno',$student->scode)->first();
                 if(count($newstudents)>0){
-                    $this->migrategrade($student->scode,$sy);
-                }
+                $this->migrategrade($student->scode,$sy);
+            }
             }
             //$this->migrategrade("021067",$sy);
         }
@@ -263,8 +263,7 @@ class UpdateController extends Controller
             $hsgrades = DB::connection('dbti2test')->select("select * from grade "
                     . "where SY_EFFECTIVE = '$sy'"
                     . "and SCODE =".$scode);
-            
-            
+
             foreach($hsgrades as $grade){
                 $this->savegrade($scode,$sy,$grade->QTR,$level,$section,$grade->GRADE_PASS1,$grade->SUBJ_CODE);
             }
@@ -425,7 +424,6 @@ class UpdateController extends Controller
         function savegrade($scode,$sy,$qtr,$level,$section,$score,$subj){
                 $check = $this->check($scode,$subj,$sy);
                 if(empty($check)){
-                    
                     $subjects = DB::connection('dbti2test')->select("Select subj_card,class from subject_updated where subj_code = '$subj'");
                     $orders = DB::connection('dbti2test')->select("Select hs_subj_order,gs_subj_order,wtd_val_ave from subject where subj_code = '$subj'");
                     
@@ -879,13 +877,13 @@ class UpdateController extends Controller
                     $newcdb->remarks = $disbursement->EXPLANATION;
                     $newcdb->postedby = $disbursement->PREPARED_BY;
                     $newcdb->save();
-                    
+            
                     echo $newcdb->voucherno." - ".$newcdb->bank."<br>";
                 }
-                
+        
                 return 0;
             }
-            
+        
             function createCdbRecs(){
                 $disbursements = DB::Select("Select * from forwarded_cbd2");
                 
@@ -907,7 +905,7 @@ class UpdateController extends Controller
                 }else{
                     $newacct->cr_db_indic = '0';
                     $newacct->debit=$populate->ACCOUNT_AMOUNT;
-                }
+}
                 $newacct->save();
                 
                 }

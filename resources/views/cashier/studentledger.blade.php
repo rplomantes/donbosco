@@ -100,12 +100,20 @@ $checkno = \App\Dedit::distinct('check_number')->pluck('check_number')->toArray(
                  @else
                  Registered
                  @endif       
-                    
-                    </td><td>Specialization</td><td>
+		 </td>
+                 @if(isset($status) && $status->department == "TVET")
+                    <td>Batch</td><td>
+                        {{$status->period}}
+                    </td>
+
+		 @else
+                    <td>Specialization</td><td>
                     @if(isset($status->strand))
                         {{$status->strand}}
                     @endif
-                    </td></tr>
+                    </td>
+		 @endif
+		</tr>
             </table>
             <h5>Account Details</h5>
             <table class="table table-striped">

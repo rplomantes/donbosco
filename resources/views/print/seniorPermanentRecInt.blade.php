@@ -70,8 +70,8 @@ foreach($grades as $grade){
     </tr>
     
     </table>
-    <img src="{{asset('images/DBTI.png')}}"  style="position:absolute;width:108px;height:auto;top:0px;left:80px;">
-    <img src="{{asset('images/boscorale.png')}}"  style="position:absolute;width:100px;height:auto;top:0px;right:80px;">
+    <img src="<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/images/DBTI.png"  style="position:absolute;width:108px;height:auto;top:0px;left:80px;">
+    <img src="<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/images/boscorale.png"  style="position:absolute;width:100px;height:auto;top:0px;right:80px;">
     
     <table width="100%" style="font-size: 9pt" cellspacing="2" >
         <tr>
@@ -97,23 +97,24 @@ foreach($grades as $grade){
 
         <tr style="vertical-align: top">
             <td>Father:</td>
-            <td class="underscore">{{$info->fName}}</td>
+            <td class="underscore">{{$info->fname}}</td>
             <td style="padding-top: 9pt;"></td>
             <td>Address:</td>
-            <td colspan="4" rowspan="2" style="font-size:8.5pt;"><div class="underscore">
-                {{$info->address1}}
+            <td colspan="4" rowspan="2" style="font-size:8.5pt;">
+		<div class="underscore">
+		{{$info->address1}}
                 @if($info->address2 != "")
                 ,{{$info->address2}}
                 @endif
                 @if($info->address3 != "")
                 , {{$info->address3}}
                 @endif
-                </div>
+		</div>
             </td>
         </tr>
         <tr>
             <td>Mother:</td>
-            <td class="underscore">{{$info->mName}}</td>
+            <td class="underscore">{{$info->mname}}</td>
             <td style="padding-top: 9pt;"></td>
             <td></td>
         </tr>
@@ -381,7 +382,7 @@ foreach($grades as $grade){
             <td width='100px'>Prepared by:</td>
             <td><div style="width:40%;text-align: center">Mrs. Asuncion G. Torrefiel<br>HS Records Assistant</div></td>
             <td  width='200px'>
-                This record is valid for:
+                This record is valid for assessment:
                 <div style='border-bottom: 1px solid;padding-top: 8pt;height:8pt'></div>
                 <div style='border-bottom: 1px solid;padding-top: 8pt;height:8pt'></div>
             </td>
@@ -436,3 +437,4 @@ foreach($grades as $grade){
     </div>
 </body>
 </html>
+

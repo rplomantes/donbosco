@@ -35,7 +35,6 @@ class DeptIncomeController extends Controller
         $pdf = \App::make('dompdf.wrapper');
         $pdf->setPaper([0,0,632.00,1008.00],'landscape');
         $pdf->loadView("print.printconsolidateddept",compact('accounts','fromtran','totran','acctcode','coas','departments'));
-        //return view("print.printconsolidateddept",compact('accounts','fromtran','totran','acctcode','coas','departments'));
         return $pdf->stream();
     }
     

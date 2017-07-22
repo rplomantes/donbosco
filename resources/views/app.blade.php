@@ -36,7 +36,7 @@
            }
            
            .headers{
-               display: none;
+               display:none;
            }
            
         </style>

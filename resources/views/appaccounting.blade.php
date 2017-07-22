@@ -16,7 +16,6 @@
         @endif
         
 	<link href="{{ asset('/css/app_1.css') }}" rel="stylesheet">
-        <link href="{{ asset('/css/customGrid.css') }}" rel="stylesheet">
         <link href="{{ asset('/css/fileinput.css') }}" rel="stylesheet">
 	<link href="{{ asset('/css/datepicker.css') }}" rel="stylesheet">
         
@@ -169,7 +168,7 @@
                                         <a href="{{url('searchor')}}"><i class="fa fa-btn fa-sign-out"></i>Search OR</a>
 					<a href="{{url('searchvoucher')}}"><i class="fa fa-btn fa-sign-out"></i>Search Voucher</a>
  				        <a href="{{url('searchpayee')}}"><i class="fa fa-btn fa-sign-out"></i>Search Payee</a>
-                                       </li>
+				       </li>
 
                                        <hr>
                                        <li>

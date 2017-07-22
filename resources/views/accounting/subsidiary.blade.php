@@ -54,7 +54,6 @@
     function viewprint(){
         document.location="/printindividualsummary/" + $('#from').val() + "/" + $('#to').val() + "/" + $('#accountname').val();
     }
-    
     function setdate(){
         document.location="/individualsummary/" + $('#from').val() + "/" + $('#to').val()
     }

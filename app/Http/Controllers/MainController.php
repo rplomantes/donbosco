@@ -61,7 +61,7 @@ class MainController extends Controller
                      
                         return redirect('/sectiontvet');
                   break;
-              
+
                case env('USER_ELEM');
                     $students = DB::Select("select lastname,firstname,middlename,extensionname,gender,users.idno,statuses.status as stat from users join statuses on statuses.idno = users.idno where statuses.department IN('Kindergarte','Elementary')");
                     return view('misc.index',compact('students'));

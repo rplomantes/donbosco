@@ -233,7 +233,6 @@
                                 ?>
                             @endif
                                 <?php $totalacad = $totalacad + $final;?>
-                            
                         </td>
 
                             {{--*/$count ++/*--}}                        

@@ -271,7 +271,7 @@ class AjaxController extends Controller
                 
                  function getsearchcashier($varsearch){
                     if(Request::ajax()){
-                        $find = strtolower($varsearch);
+			$find = strtolower($varsearch);
                     $searches = DB::Select("Select * From users where accesslevel = '0' AND (lastname like '$varsearch%' OR lcase(lastname) like '$find%' OR 
                            firstname like '$varsearch%' OR idno = '$varsearch') Order by lastname, firstname");
                     $value = "<table class=\"table table-striped\"><thead>
@@ -292,7 +292,8 @@ class AjaxController extends Controller
                 
                 function getsearchaccounting($varsearch){
                     if(Request::ajax()){
-                    $searches = DB::Select("Select * From users where accesslevel = '0' AND (lastname like '$varsearch%' OR
+		    $find = strtolower($varsearch);
+                    $searches = DB::Select("Select * From users where accesslevel = '0' AND (lastname like '$varsearch%' OR lcase(lastname) like '$find%' OR 
                            firstname like '$varsearch%' OR idno = '$varsearch') Order by lastname, firstname");
                     $value = "<table class=\"table table-striped\"><thead>
             <tr><th>Student Number</th><th>Student Name</th><th>Gender</th><th>View</th></tr>        
@@ -872,7 +873,7 @@ class AjaxController extends Controller
             $data = $data . "<tr><td width=\"50%\">".$grade->subjectname."</td><td>".round($grade->first_grading)."</td><td>" . round($grade->second_grading) . ""
                     . "</td><td>" . round($grade->third_grading) . "</td><td>" . round($grade->fourth_grading) . "</td><td>".round($grade->final_grade)."</td>";
             $data = $data . "<td>". $grade->remarks . "</td><td></tr>";    
-            }
+                    }
             $data = $data . "</table>";
            }
            
@@ -934,9 +935,7 @@ class AjaxController extends Controller
             }
             $data = $data . "</table>";
             }
-            
             $data = $data . "<a class='btn btn-danger' href='/card/".Input::get('idno')."/".Input::get('sy')."'>Print</a>";
-            
             return $data;
         }
         

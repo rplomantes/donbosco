@@ -14,7 +14,7 @@ class DisbursementController extends Controller
     
     public function __construct()
 	{
-		$this->middleware(['auth','acct']);
+		$this->middleware('auth');
 	}
     //
         
@@ -432,8 +432,8 @@ class DisbursementController extends Controller
             }
             return redirect('printdisbursement/'.$refno);
         }
-    }
-    
+    }  
+
     function searchpayee(){
         $payees = \App\Disbursement::distinct('payee')->pluck('payee')->toArray();
         

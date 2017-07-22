@@ -1618,19 +1618,19 @@ class AjaxController extends Controller
                 $report = $report . "<td>".$this->blankattend($dayp,$qtr)."</td>";
                 $qtr++;
             }
-            
+
             $qtr = 1;
             foreach($daya as $daya){
                 $report = $report . "<td>".$this->blankattend($daya,$qtr)."</td>";
                 $qtr++;
             }
-            
+
             $qtr = 1;
             foreach($dayt as $dayt){
                 $report = $report . "<td>".$this->blankattend($dayt,$qtr)."</td>";
                 $qtr++;
             }
-            $report = $report . "</tr>";
+	    $report = $report . "</tr>";
         }
         
         $report = $report . "</table>";
@@ -1787,7 +1787,7 @@ class AjaxController extends Controller
                 $qtr++;
             }
             $report = $report . "<td>".$totaldaya."</td>";
-            
+
             $qtr = 1;
             $totaldayt=0;
             foreach($dayt as $dayt){

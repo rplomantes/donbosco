@@ -73,8 +73,7 @@ class ReportCardController extends Controller
 //            $pdf->loadView("print.printelemcard",compact('idno','sy','name','lrn','adviser','section','level','grades','totalage','class_no','ctr_attendances','attendances'));            
 //        }elseif(in_array($level,array("Grade 7","Grade 8","Grade 9","Grade 10"))){
 //            $pdf->setPaper([0, 0, 468, 612], 'portrait');
-//            //$pdf->loadView("print.printjhscard",compact('idno','sy','name','lrn','adviser','section','level','grades','totalage','class_no','ctr_attendances','attendances'));                        
-//            
+//            $pdf->loadView("print.printjhscard",compact('idno','sy','name','lrn','adviser','section','level','grades','totalage','class_no','ctr_attendances','attendances'));
 //        }elseif(in_array($level,array("Grade 11","Grade 12"))){
 //            $pdf->setPaper([0, 0, 468, 612], 'portrait');
 //            $pdf->loadView("print.printcard",compact('idno','sy','name','lrn','adviser','section','level','grades','totalage','class_no','ctr_attendances','attendances'));

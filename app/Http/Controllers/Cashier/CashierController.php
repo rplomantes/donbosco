@@ -365,25 +365,7 @@ class CashierController extends Controller
         $receiveamount = $request->receivecash ;
         $remarks=$request->remarks;
         $this->debit($refno, $orno,$request->idno,env('DEBIT_CHECK') , $bank_branch, $check_number,$totalcash, $request->receivecheck, $iscbc,$depositto,$receiveamount,$remarks);
-        //}
 
-
-       //if($request->receivecash > "0){
-        //$this->debit($request->idno,env('DEBIT_CASH') , $bank_branch, $check_number, $request->receiveamount, '0');
-        //}
-
-//        if($discount > 0 ){
-//            $discountname="Plan Discount";
-//            $schoolyear = \App\ctrSchoolYear::first()->schoolyear;
-//            $disc = \App\Discount::where('idno',$request->idno)->first();
-//            if($disc != ""){
-//
-//                $discountname = $disc->description;
-//            }
-//          $this->debit_reservation_discount($refno, $orno,$request->idno,env('DEBIT_DISCOUNT') , $discount, $discountname);
-//
-//      }
-      
       if($plandiscount > 0){
           $this->debit_reservation_discount($refno, $orno,$request->idno,env('DEBIT_DISCOUNT') , $plandiscount, "Plan Discount");
       }
@@ -394,10 +376,7 @@ class CashierController extends Controller
           }
       }
        return $this->viewreceipt($refno, $request->idno);
-      //return redirect(url('/viewreceipt',array($refno,$request->idno)));  
-      //return view("cashier.payment", compact('previous','idno','reservation','totaldue','totalother','totalprevious','totalpenalty'));
    }
-
 
    function changestatatus($idno, $reservation){
    $status = \App\Status::where('idno',$idno)->first();    
@@ -605,11 +584,11 @@ class CashierController extends Controller
             
     }
    
-   static function debit_reservation_discount($refno, $orno,$idno,$debittype,$amount,$discountname){
+   function debit_reservation_discount($refno, $orno,$idno,$debittype,$amount,$discountname){
         if($discountname == "Plan Discount"){
             $accountcode='410100';
-            $acctcode='Cash/Semi payment discount';
-            $description = 'Plan Discount';
+            $acctcode='Cash - Semi Payment Discount';
+            $description = 'Cash - Semi Payment Discount';
         }else if($discountname == "Reservation"){
             $accountcode='210400';
             $acctcode='Enrollment Reservation';
@@ -629,7 +608,6 @@ class CashierController extends Controller
                 $acctcode='Unknown';
                 $description = 'Unknown';
             }
-
         }
         $student = \App\User::where('idno',$idno)->first();
         $status = \App\Status::where('idno',$idno)->first();
@@ -668,7 +646,7 @@ class CashierController extends Controller
         
     }
   
-   static function credit($idno, $idledger, $refno, $receiptno, $amount){
+   function credit($idno, $idledger, $refno, $receiptno, $amount){
        $ledger = \App\Ledger::find($idledger);
        $fiscal = \App\CtrFiscalyear::first();
        $newcredit = new \App\Credit;
@@ -694,6 +672,52 @@ class CashierController extends Controller
        $newcredit->save();
        
    } 
+   
+   static function viewreceipt($refno, $idno = 0){
+       $student = \App\User::where('idno',$idno)->first();
+       $status= \App\Status::where('idno',$idno)->first();
+       $debits = \App\Dedit::where('refno',$refno)->get();
+       $debit_discount = \App\Dedit::where('refno',$refno)->where('paymenttype','4')->first();
+       $debit_reservation = \App\Dedit::where('refno',$refno)->where('paymenttype','5')->first();
+       $debit_fape = \App\Dedit::where('refno',$refno)->where('paymenttype','7')->first();
+       $debit_deposit = \App\Dedit::where('refno',$refno)->where('paymenttype','8')->first();
+       $debit_cash = \App\Dedit::where('refno',$refno)->where('paymenttype','1')->first();
+       $debit_dm = \App\Dedit::where('refno',$refno)->where('paymenttype','3')->first();
+       $credits = DB::Select("select sum(amount) as amount, receipt_details, transactiondate, sub_department from credits "
+               . "where refno = '$refno' group by receipt_details, transactiondate");
+       $timeissued =  \App\Credit::where('refno',$refno)->first();
+       $timeis=date('h:i:s A',strtotime($timeissued->created_at));
+       $tdate = \App\Dedit::where('refno',$refno)->first();
+       $posted = \App\User::where('idno',$tdate->postedby)->first();
+       return view("cashier.viewreceipt",compact('posted','timeis','tdate','student','debits','credits','status','debit_discount','debit_reservation','debit_cash','debit_dm','idno','refno','debit_fape','debit_deposit'));
+       
+   }
+   
+   
+    function printreceipt($refno, $idno = 0){
+       $student = \App\User::where('idno',$idno)->first();
+       $status= \App\Status::where('idno',$idno)->first();
+       $debits = \App\Dedit::where('refno',$refno)->get();
+       $debit_discount = \App\Dedit::where('refno',$refno)->where('paymenttype','4')->first();
+       $debit_reservation = \App\Dedit::where('refno',$refno)->where('paymenttype','5')->first();
+       $debit_fape = \App\Dedit::where('refno',$refno)->where('paymenttype','7')->first();
+       $debit_deposit = \App\Dedit::where('refno',$refno)->where('paymenttype','8')->first();
+       $debit_cash = \App\Dedit::where('refno',$refno)->where('paymenttype','1')->first();
+       $debit_check = \App\Dedit::where('refno',$refno)->where('paymenttype','2')->first();
+       $debit_dm = \App\Dedit::where('refno',$refno)->where('paymenttype','3')->first();
+       $credits = DB::Select("select sum(amount) as amount, receipt_details, transactiondate, sub_department from credits "
+               . "where refno = '$refno' group by receipt_details, transactiondate");
+       $timeissued =  \App\Credit::where('refno',$refno)->first();
+       $timeis=date('h:i:s A',strtotime($timeissued->created_at));
+       $tdate = \App\Dedit::where('refno',$refno)->first();
+       $posted = \App\User::where('idno',$tdate->postedby)->first();
+       $pdf = \App::make('dompdf.wrapper');
+       $pdf->setPaper([0, 0, 336, 440], 'portrait');
+       $pdf->loadView("cashier.printreceipt",compact('posted','timeis','tdate','student','debits','credits','status','debit_discount','debit_reservation','debit_cash','debit_dm','idno','refno','debit_fape','debit_deposit'));
+       return $pdf->stream();
+        
+    
+}
 
     function otherpayment($idno){
         $student =  \App\User::where('idno',$idno)->first();
@@ -1070,7 +1094,7 @@ class CashierController extends Controller
 //                . " dedits.transactiondate, dedits.isreverse, dedits.receiptno, dedits.refno from users, dedits where users.idno = dedits.idno and"
 //                . " dedits.postedby = '".\Auth::user()->idno."' and dedits.transactiondate = '" 
 //                . $transactiondate . "' and dedits.paymenttype = '1' group by users.idno, dedits.transactiondate, users.lastname, users.firstname, dedits.isreverse,dedits.receiptno,dedits.refno" );
-//        
+
         $collections = DB::Select("select sum(dedits.amount) as amount, sum(dedits.checkamount) as checkamount, users.idno, users.lastname, users.firstname,"
                 . " dedits.transactiondate, dedits.isreverse, dedits.receiptno, dedits.refno, dedits.postedby,non_students.fullname from dedits left join users on users.idno = dedits.idno left join non_students on non_students.idno = dedits.idno where"
                 . " dedits.transactiondate = '" 

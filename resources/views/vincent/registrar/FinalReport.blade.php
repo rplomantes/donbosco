@@ -1,6 +1,5 @@
 @extends('app')
 @section('content')
-
 <style type="text/css" media="print">
     .container-fluid{
         padding-left:0px;

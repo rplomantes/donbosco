@@ -65,10 +65,10 @@ th {
     <?php
        foreach($soasummary as $soasum){
        $idno = $soasum->idno;    
-       $displayOthers = 0;
-       
        $statuses = \App\Status::where('idno',$idno)->first();
        $users = \App\User::where('idno',$idno)->first(); 
+	$displayOthers = 0;
+
        $balances = DB::Select("select sum(amount) as amount , sum(plandiscount) + sum(otherdiscount) as discount, "
                . "sum(payment) as payment, sum(debitmemo) as debitmemo, receipt_details, categoryswitch  from ledgers  where "
                . " idno = '$idno'  and categoryswitch <= '6' group by "
@@ -185,6 +185,7 @@ th {
             $prevtotdiscount = $prevtotdiscount + $balance->discount;
             $prevtotdm = $prevtotdm + $balance->debitmemo;
             $prevtotpayment = $prevtotpayment+$balance->payment;
+            
             
             $totamount = $totamount + $balance->amount;
             $totdiscount = $totdiscount + $balance->discount;

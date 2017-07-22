@@ -92,7 +92,7 @@
                     <tr><td>China Bank</td><td align="right">{{number_format($cbcash,2)}}</td><td align="right">{{number_format($cbcheck,2)}}</td><td align="right">{{number_format($cbcash+$cbcheck,2)}}</td></tr>
                     <tr><td>China Bank 2</td><td align="right">{{number_format($cbcash2,2)}}</td><td align="right">{{number_format($cbcheck2,2)}}</td><td align="right">{{number_format($cbcash2+$cbcheck2,2)}}</td></tr>
                     <tr><td>BPI 1</td><td align="right">{{number_format($bpi1cash,2)}}</td><td align="right">{{number_format($bpi1check,2)}}</td><td align="right">{{number_format($bpi1cash+$bpi1check,2)}}</td></tr>
-                    <tr><td>China Bank</td><td align="right">{{number_format($bpi2cash,2)}}</td><td align="right">{{number_format($bpi2check,2)}}</td><td align="right">{{number_format($bpi1cash+$bpi2check,2)}}</td></tr>
+                    <tr><td>BPI 2</td><td align="right">{{number_format($bpi2cash,2)}}</td><td align="right">{{number_format($bpi2check,2)}}</td><td align="right">{{number_format($bpi1cash+$bpi2check,2)}}</td></tr>
                     
                     </table>
                         
@@ -204,3 +204,4 @@ function removeslip(refid){
     }    
 </script>
 @stop
+

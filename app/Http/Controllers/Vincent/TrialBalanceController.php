@@ -38,5 +38,4 @@ class TrialBalanceController extends Controller
        $pdf->loadView('print.trialBal',compact('trials','fromtran','totran'));
        return $pdf->stream();      
     }
-    
 }

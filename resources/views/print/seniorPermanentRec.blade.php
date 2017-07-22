@@ -70,8 +70,8 @@ foreach($grades as $grade){
     </tr>
     
     </table>
-    <img src="{{asset('images/DBTI.png')}}"  style="position:absolute;width:108px;height:auto;top:0px;left:80px;">
-    <img src="{{asset('images/boscorale.png')}}"  style="position:absolute;width:100px;height:auto;top:0px;right:80px;">
+    <img src="<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/images/DBTI.png"  style="position:absolute;width:108px;height:auto;top:0px;left:80px;">
+    <img src="<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/images/boscorale.png"  style="position:absolute;width:100px;height:auto;top:0px;right:80px;">
     
     <table width="100%" style="font-size: 9pt" cellspacing="2" >
         <tr>
@@ -97,21 +97,23 @@ foreach($grades as $grade){
 
         <tr style="vertical-align: top">
             <td>Father:</td>
-            <td class="underscore">{{$info->fName}}</td>
+            <td class="underscore">{{$info->fname}}</td>
             <td style="padding-top: 9pt;"></td>
             <td>Address:</td>
-            <td colspan="4" rowspan="2" class="underscore" style="font-size:8.5pt;">{{$info->address1}}
+            <td colspan="4" rowspan="2" style="font-size:8.5pt;"><div class="underscore">
+		{{$info->address1}}
                 @if($info->address2 != "")
                 ,{{$info->address2}}
                 @endif
                 @if($info->address3 != "")
                 , {{$info->address3}}
                 @endif
+		</div>
             </td>
         </tr>
         <tr>
             <td>Mother:</td>
-            <td class="underscore">{{$info->mName}}</td>
+            <td class="underscore">{{$info->mname}}</td>
             <td style="padding-top: 9pt;"></td>
             <td></td>
         </tr>
@@ -141,6 +143,7 @@ foreach($grades as $grade){
             </td>
         </tr>
     </table>
+    
     <table width="75%" style="font-size: 9pt">
         <tr>
             <td width="45%">{{strtoupper($level)}} - {{$section}}</td>
@@ -153,6 +156,7 @@ foreach($grades as $grade){
             <td width="25%" style="text-align: center">{{$sy}} - {{$sy+1}}</td>
         </tr>
     </table>
+    
     <div style="font-weight: bold;font-size: 9pt;">ACADEMIC TRACK: 
     @if($strand == "ABM")
     Accountancy, Business and Management (ABM)
@@ -160,7 +164,7 @@ foreach($grades as $grade){
     Science, Technology, Engineering and Mathematics (STEM)
     @endif
     </div>
-
+    
     <table width="100%" cellspacing="0">
         <tr style="font-size: 9pt">
             <td width="49%">
@@ -362,7 +366,7 @@ foreach($grades as $grade){
             </td>
         </tr>
     </table>
-    <br>
+   
     <div>
 <script type="text/javascript">
     
@@ -393,3 +397,4 @@ foreach($grades as $grade){
     </div>
 </body>
 </html>
+

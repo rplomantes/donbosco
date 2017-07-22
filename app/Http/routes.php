@@ -9,8 +9,6 @@
     
     Route::get('/permanentrec/{idno}/{sy}', 'Registrar\PermanentRecord@index');
     Route::get('/permanentrecint/{idno}/{sy}', 'Registrar\PermanentRecord@internal');
-    
-    
     Route::get('/discounting', 'Update\UpdateController@updateDiscount');
     Route::get('/', 'MainController@index');
     Route::get('cashreceipt/{transactiondate}','Accounting\CashReceiptController@cashreceiptbook');
@@ -168,8 +166,6 @@
     Route::get('updatecdbmain','Update\UpdateController@updatecdbmain');
     Route::get('updatecdbaccounting','Update\UpdateController@updatecdbaccounting');
     Route::get('updatecdbdrcr','Update\UpdateController@updatecdbdrcr');
-    
-    
     Route::get('makepaymentschedule',function(){
         return view("update.makepaymentschedule");
     });
@@ -223,7 +219,7 @@
 
     Route::get('/individualsummary/{fromdate}/{todate}', 'Accounting\AccountSummaryController@index');
     Route::get('/printindividualsummary/{fromdate}/{todate}/{account}', 'Accounting\AccountSummaryController@printaccountSummary');
-    
+
     Route::get('/subaccountsummary/{fromdate}/{todate}', 'Accounting\SubAccountSummarryController@index');
     Route::get('/printsubaccountsummary/{from}/{to}/{account}', 'Accounting\SubAccountSummarryController@printAccount');
 
@@ -239,7 +235,7 @@
 
     Route::get('/searchvoucher','Accounting\DisbursementController@searchvoucher');
     Route::post('/searchvoucher','Accounting\DisbursementController@findvoucher');
-    
+
     Route::get('/searchpayee','Accounting\DisbursementController@searchpayee');
     Route::post('/searchpayee','Accounting\DisbursementController@findpayee');
     //ACADEMIC VINCENT
@@ -255,8 +251,6 @@
     Route::get('/updatetvet','DBFixer@updatetvet');
     Route::get('/updateacct','DBFixer@fixYouthAssistance');
     Route::get('/updaterank/{level}/{sy}/{course}/{quarter}','Registrar\OverallRankController@setOARankingAcad');
-    
-    
     
     
     //ACADEMIC
@@ -388,19 +382,20 @@ Route::group(['middleware' => ['web','registrar']], function () {
     Route::get('/classno', 'Registrar\SectionController@assignClassNo');
     Route::get('/overallranking/{sy}', 'Registrar\OverallRankController@index');
     Route::get('/autosection/{level}/{strand?}', 'Registrar\AjaxController@autoSectioning');
+    Route::get('/classno', 'Registrar\SectionController@assignClassNo');
     Route::get('/card/{idno}/{sy}', 'Registrar\ReportCardController@studentReport');
     Route::get('/seegrade/{idno}','Registrar\GradeController@seegrade');
-    
+
     Route::get('/createrec/{idno}','Registrar\MakeRecord@createRecord');
     Route::post('/createrec','Registrar\MakeRecord@saveRecord');
     
    Route::get('/sheetA/{record}',function($record){
        $levels = \App\CtrLevel::get();
        return view('vincent.registrar.sheetAv2',compact('levels','record'));
-       
-   
-   });
+
    
 });
     
+});
+   
    

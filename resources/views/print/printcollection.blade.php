@@ -25,7 +25,7 @@ if($collection->isreverse == '1'){
     @else
     <td>{{strtoupper($collection->fullname)}}</td>
     @endif
-    <td align="right">{{number_format($collection->amount,2)}}</td><td align="right">{{number_format($collection->checkamount,2)}}</td><td align="right">{{number_format($collection->checkamount + $collection->amount,2)}}</td><td> <?php echo $remarks;?></td></tr>
+<td align="right">{{number_format($collection->amount,2)}}</td><td align="right">{{number_format($collection->checkamount,2)}}</td><td align="right">{{number_format($collection->checkamount + $collection->amount,2)}}</td><td> <?php echo $remarks;?></td></tr>
 
 @endforeach
 </table>
