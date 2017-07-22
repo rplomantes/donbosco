@@ -8,6 +8,7 @@
     Route::get('/consolidatedbar', 'Widget\ConsolidatedReport@barchart');
     
     Route::get('/permanentrec/{idno}/{sy}', 'Registrar\PermanentRecord@index');
+    Route::get('/permanentrecint/{idno}/{sy}', 'Registrar\PermanentRecord@internal');
     
     
     Route::get('/discounting', 'Update\UpdateController@updateDiscount');
@@ -61,7 +62,7 @@
     Route::post('payment','Cashier\CashierController@payment');
     Route::get('/setreceipt/{id}','Cashier\CashierController@setreceipt');
     Route::post('/setreceipt','Cashier\CashierController@setOR');
-    Route::get('/viewreceipt/{refno}/{idno?}','Cashier\CashierController@viewreceipt');
+    Route::get('/viewreceipt/{refno}/{idno?}','Cashier\ReceiptController@viewreceipt');
     Route::get('otherpayment/{idno}','Cashier\CashierController@otherpayment');
     Route::post('othercollection','Cashier\CashierController@othercollection');
     Route::get('collectionreport/{transactiondate}','Cashier\CashierController@collectionreport');
@@ -73,7 +74,7 @@
     Route::get('viewencashmentdetail/{refno}', 'Cashier\CashierController@viewencashmentdetail');
     Route::get('reverseencashment/{refno}', 'Cashier\CashierController@reverseencashment');
     Route::get('printregistration/{idno}','Registrar\AssessmentController@printregistration');
-    Route::get('printreceipt/{refno}/{idno}','Cashier\CashierController@printreceipt');
+    Route::get('printreceipt/{refno}/{idno}','Cashier\ReceiptController@printreceipt');
     Route::get('previous/{idno}','Cashier\CashierController@previous');
     Route::get('actualcashcheck/{batch}/{transactiondate}','Cashier\CashierController@actualcashcheck');
     Route::get('printencashment/{idno}/{date}','Cashier\CashierController@printencashment');
@@ -167,6 +168,8 @@
     Route::get('updatecdbmain','Update\UpdateController@updatecdbmain');
     Route::get('updatecdbaccounting','Update\UpdateController@updatecdbaccounting');
     Route::get('updatecdbdrcr','Update\UpdateController@updatecdbdrcr');
+    
+    
     Route::get('makepaymentschedule',function(){
         return view("update.makepaymentschedule");
     });
@@ -246,10 +249,13 @@
     
     //TOOLS
     Route::get('/addoldstudent','DBFixer@addOldStudent');
+    Route::get('/fixdiscount/{refno}','DBFixer@fixdiscount');
     Route::get('/gensubj','DBFixer@gensubjects');
     Route::get('/updateentrytype','DBFixer@updateentrytype');
     Route::get('/updatetvet','DBFixer@updatetvet');
     Route::get('/updateacct','DBFixer@fixYouthAssistance');
+    Route::get('/updaterank/{level}/{sy}/{course}/{quarter}','Registrar\OverallRankController@setOARankingAcad');
+    
     
     
     
@@ -270,6 +276,8 @@
     
     
     Route::get('/finalsheetb/{quarter}/{level}/{section}/{strand?}','Registrar\SheetBController@finalSheetB');
+    
+    Route::get('updatecdb2','Update\UpdateController@updatecdb2');
 });
 
 //Ajax route

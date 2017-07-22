@@ -409,5 +409,106 @@ class DBFixer extends Controller
         $debitaccount->save();
         
     }
-    
+   
+   function fixdiscount($refno){
+        $credits = \App\Credit::where('refno',$refno)->get();
+        $plandiscount = 0;
+        $otherdiscount = array();
+        
+        \App\Dedit::where('refno',$refno)->where('paymenttype',4)->delete();
+        
+        $orno = "";
+        $idno = "";
+        
+       foreach($credits as $credit){
+            $orno = $credit->receiptno;
+            $idno = $credit->idno;
+            echo $credit->referenceid."<br>";
+           $ledgers = \App\Ledger::find($credit->referenceid);
+            if($ledgers->plandiscount > 0){
+                $plandiscount = $plandiscount + $ledgers->plandiscount;
+            }
+            if($ledgers->otherdiscount > 0){
+                if(array_key_exists($ledgers->discountcode, $otherdiscount)){
+                    $acctdisc = $otherdiscount [$ledgers->discountcode];
+                }else{
+                    $acctdisc = 0;
+                }
+                $otherdiscount [$ledgers->discountcode]= $acctdisc + $ledgers->otherdiscount;
+            }
+       }
+       
+      if($plandiscount > 0){
+            $this->debit_discount_fix($refno, $orno,$idno,env('DEBIT_DISCOUNT') , $plandiscount, "Plan Discount");
+      }
+      
+      if(count($otherdiscount) > 0){
+          foreach($otherdiscount as $key =>$amount){
+            $this->debit_discount_fix($refno, $orno,$idno,env('DEBIT_DISCOUNT') , $amount, $key);    
+          }
+      }
+   }
+   
+   function debit_discount_fix($refno, $orno,$idno,$debittype,$amount,$discountname){
+       $department = "";
+        if($discountname == "Plan Discount"){
+            $accountcode='410100';
+            $acctcode='Cash/Semi payment discount';
+            $description = 'Plan Discount';
+        }else{
+            $discount = \App\CtrDiscount::where('discountcode',$discountname)->first();
+            if(count($discount)>0){
+                $accountcode = $discount->accountingcode;
+                $acctcode = $discount->acctname;
+                $description = $discount->description;
+                $department = $discount->sub_department;
+                
+            }else{
+                $accountcode= '0';
+                $acctcode='Unknown';
+                $description = 'Unknown';
+            }
+
+        }
+        $student = \App\User::where('idno',$idno)->first();
+        $status = \App\Status::where('idno',$idno)->first();
+        $fiscal = \App\CtrFiscalyear::first();        
+        $debitaccount = new \App\Dedit;
+        $debitaccount->idno = $idno;
+        $debitaccount->fiscalyear=$fiscal->fiscalyear;
+        $debitaccount->transactiondate = Carbon::now();
+        $debitaccount->accountingcode = $accountcode;
+        $debitaccount->acctcode = $acctcode;
+        $debitaccount->description = $description;
+        $debitaccount->refno = $refno;
+        $debitaccount->entry_type = '1';
+        $debitaccount->receiptno = $orno;
+        $debitaccount->paymenttype = $debittype;
+        $debitaccount->receivefrom = $student->lastname . ", " . $student->firstname . " " . $student->extensionname . " " .$student->middlename;
+        $debitaccount->amount = $amount;
+        if($department == ""){
+            if(count($status)>0){
+                if($status->department == "Kindergarten" ||$status->department == "Elementary"){
+                    $debitaccount->acct_department = "Elementary Department";
+                    $debitaccount->sub_department = "Elementary Department";
+                }elseif($status->department == "Junior High School" ||$status->department == "Senior High School"){
+                    $debitaccount->acct_department = "High School Department";
+                    $debitaccount->sub_department = "High School Department";
+                }elseif($status->department == "TVET"){
+                    $debitaccount->acct_department = "TVET";
+                    $debitaccount->sub_department = "TVET";
+                }
+                $debitaccount->schoolyear=$status->schoolyear;
+            }else{
+                    $debitaccount->acct_department = "None";
+                    $debitaccount->sub_department = "None";
+            }   
+        }else{
+            $debitaccount->acct_department = CashierController::mainDepartment($discount->sub_department);
+            $debitaccount->sub_department = $discount->sub_department;
+        }
+        $debitaccount->postedby = \Auth::user()->idno;
+        $debitaccount->save();
+        
+    }
 }

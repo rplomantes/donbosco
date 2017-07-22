@@ -36,13 +36,13 @@
            }
            
            .headers{
-               visibility:collapse;
+               display: none;
            }
            
         </style>
         <style type="text/css" media="print">
            .headers{
-               visibility: visible;
+               display: table-row;
            }            
             .no-print, #menu{
                 display: none;

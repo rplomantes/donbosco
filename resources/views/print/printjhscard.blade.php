@@ -237,9 +237,12 @@ use App\Http\Controllers\Registrar\GradeController;
                         </tr>
                         @foreach($grades as $grade)
                         @if($grade->subjecttype == 1)
-                        <tr style="text-align: center;">
+                        <tr style="text-align: center;font-weight: bold">
                             <td style="text-align: left;padding-left:10px" class="print-size">
-                                {{$grade->subjectname}}
+                                {{$grade->subjectname}} 
+                                @if($grade->weighted != 0)
+                                <span style='float: right;margin-right: 50px'>({{$grade->weighted}}%)</span>
+                                @endif
                             </td>
                             <td align="center">{{round($grade->first_grading)}}</td>
                             <td align="center">{{round($grade->second_grading)}}</td>
@@ -254,6 +257,22 @@ use App\Http\Controllers\Registrar\GradeController;
                         </tr>
                         @endif
                         @endforeach
+                        @if($sy != 2016 &&($level == "Grade 9" || $level == "Grade 10"))
+                        <tr style="text-align: center;font-weight: bold">
+                            <td class="print-size" style="text-align: right"><b>TECHNICAL AVERAGE&nbsp;&nbsp;&nbsp;</b></td>
+
+                            <td align="center">{{GradeController::weightedgradeQuarterAve(array(1),array(0),1,$grades,$level)}}</td>
+                            <td align="center">{{GradeController::weightedgradeQuarterAve(array(1),array(0),2,$grades,$level)}}</td>
+                            <td align="center">{{GradeController::weightedgradeQuarterAve(array(1),array(0),3,$grades,$level)}}</td>
+                            <td align="center">{{GradeController::weightedgradeQuarterAve(array(1),array(0),4,$grades,$level)}}</td>
+                            <td align="center">{{GradeController::weightedgradeQuarterAve(array(1),array(0),5,$grades,$level)}}</td>
+                            <td class="print-size">
+                                @if((round(GradeController::weightedgradeQuarterAve(array(1),array(0),5,$grades,$level),0)) != 0)
+                                    {{round(GradeController::weightedgradeQuarterAve(array(1),array(0),5,$grades,$level),0) >= 75 ? "Passed":"Failed"}}
+                                @endif
+                            </td>
+                        </tr>
+                        @else
                         <tr style="text-align: center">
                             <td class="print-size" style="text-align: right"><b>TECHNICAL AVERAGE&nbsp;&nbsp;&nbsp;</b></td>
 
@@ -268,6 +287,8 @@ use App\Http\Controllers\Registrar\GradeController;
                                 @endif
                             </td>
                         </tr>
+                        @endif
+                        
                     </table>                      
                 </td>
             </tr>
@@ -353,9 +374,9 @@ use App\Http\Controllers\Registrar\GradeController;
                 <tr style="font-weight: bold">
                     <td align="center" style="border: 1px solid">CONDUCT GRADE</td>
                     <td align="center" style="border: 1px solid">100</td>
+                    <td align="center" style="border: 1px solid">{{GradeController::conductQuarterAve(3,1,$grades)}}</td>
                     <td align="center" style="border: 1px solid">{{GradeController::conductQuarterAve(3,2,$grades)}}</td>
                     <td align="center" style="border: 1px solid">{{GradeController::conductQuarterAve(3,3,$grades)}}</td>
-                    <td align="center" style="border: 1px solid">{{GradeController::conductQuarterAve(3,4,$grades)}}</td>
                     <td align="center" style="border: 1px solid">{{GradeController::conductQuarterAve(3,4,$grades)}}</td>
                     <td align="center" style="border: 1px solid">{{round(GradeController::conductTotalAve($grades,0),0)}}</td>
                 </tr>

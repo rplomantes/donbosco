@@ -28,7 +28,7 @@ class MakeRecord extends Controller
         $newrecord->created_by = \Auth::user()->idno;
         $newrecord->save();
         
-    
+        return redirect('/seegrade/'.$request->idno);
         
     }
 }

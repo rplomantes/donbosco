@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use DB;
 
-class CashierController extends \App\Http\Controllers\Cashier\CashierController
+class CashierController extends \App\Http\Controllers\Cashier\ReceiptController
 {
     public function __construct(){
         $this->middleware('auth');

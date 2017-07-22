@@ -10,7 +10,7 @@
         </ul>
         <ul>
             @if($shspermanentRec)
-            <li class="btn btn-default form-control"><a href="{{url('permanentrec',array($idno,2016))}}" >SHS Permanent Record</a></li>
+            <li class="btn btn-default form-control"><a onclick="permanentRec()">SHS Permanent Record</a></li>
             @endif
         </ul>
         
@@ -39,6 +39,11 @@ function displaygrade(idno,sy){
                 $('#displaygrade').html(data); 
                 }
             }); 
+}
+
+function permanentRec(){
+    window.open("{{url('permanentrec',array($idno,2016))}}");
+    window.open("{{url('permanentrecint',array($idno,2016))}}");
 }
 </script>
 @stop

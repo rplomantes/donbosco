@@ -197,22 +197,22 @@ class GradeController extends Controller
                     $total = $total + 1;
                     switch($quarter){
                         case 1:       
-                            $grade = $grade +$subject->first_grading*(100/$subject->weight);
+                            $grade = $grade + $subject->first_grading * ($subject->weighted/100);
                             break;
                         case 2:
-                            $grade = $grade+$subject->second_grading*(100/$subject->weight);
+                            $grade = $grade+$subject->second_grading*($subject->weighted/100);
                             break;
                         case 3:
-                            $grade = $grade + $subject->third_grading*(100/$subject->weight);
+                            $grade = $grade + $subject->third_grading*($subject->weighted/100);
                             break;
                         case 4:
-                            $grade = $grade + $subject->fourth_grading*(100/$subject->weight);
+                            $grade = $grade + $subject->fourth_grading*($subject->weighted/100);
                             break;
                         default:
                             if($level == "Grade 7" | $level == "Grade 8" | $level == "Grade 9" | $level == "Grade 10" | $level == "Grade 11" | $level == "Grade 12"){
-                                $grade = $grade + round($subject->final_grade*(100/$subject->weight),0);
+                                $grade = $grade + round($subject->final_grade*($subject->weighted/100),0);
                             }else{
-                                $grade = $grade + round($subject->final_grade*(100/$subject->weight),2);
+                                $grade = $grade + round($subject->final_grade*($subject->weighted/100),2);
                             }                            
                             break;
                     }   

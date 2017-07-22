@@ -1,5 +1,4 @@
 @extends('app')
-
 @section('content')
 
 <div class="container">
@@ -21,11 +20,13 @@
     </div>
   <div class="col-md-6">
   </div>
+</div>
+<div class="container-fluid" style="font-size: 10pt;">
   <div class="col-md-12">
   <div id = "fordisplay">
-  </div>    
+  </div>
 </div>
-
+</div>
 
 <script>
     var strnd = "";

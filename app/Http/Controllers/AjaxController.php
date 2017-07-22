@@ -589,7 +589,7 @@ class AjaxController extends Controller
         if(Request::ajax()){
             $strand = Input::get("strand");
         if ($section == "All"){    
-                $sections = DB::Select("Select distinct section as section from statuses where level = '$level'");
+                $sections = DB::Select("Select distinct section as section from statuses where level = '$level' and status = 2");
         }
         else{
             $sections = DB::Select("Select distinct section as section from statuses where level = '$level' and section = '$section'");
@@ -598,10 +598,10 @@ class AjaxController extends Controller
         $data = $data."<h3 class='no-print'>".$level."</h3>";
         foreach($sections as $section){
             $lists = DB::Select("select users.idno, users.lastname, users.firstname, users.extensionname, users.middlename, "
-                     . "statuses.level, statuses.strand, student_infos.phone1,student_infos.phone2,student_infos.fname, student_infos.fmobile,student_infos.flandline,student_infos.mlandline, student_infos.mname, student_infos.mmobile from users, statuses, student_infos  where users.idno = statuses.idno "
-                     . "and statuses.level = '$level' and statuses.section = '$section->section'  and statuses.status='2' and statuses.idno = student_infos.idno order by users.lastname, users.firstname");            
+                     . "statuses.level, statuses.strand,birthDate ,student_infos.phone1,student_infos.phone2,student_infos.fname, student_infos.fmobile,student_infos.flandline,student_infos.mlandline, student_infos.mname, student_infos.mmobile from users, statuses, student_infos  where users.idno = statuses.idno "
+                     . "and statuses.level = '$level' and statuses.section = '$section->section'  and statuses.status='2' and statuses.idno = student_infos.idno order by users.lastname, users.firstname");
             $data = $data."<h3 class='no-print'>".$section->section."</h3>";
-            $data = $data."<table style='width:100%'><thead class='headers'><td style='text-align:center;'>";
+            $data = $data."<table style='width:100%'><tr class='headers'><td style='text-align:center;'>";
             $data = $data."<div style='text-align: right;padding-left: 0px;vertical-align: top;position: relative;width: 0px;right: 80px;display:inline-block' width='55px'>";
             $data = $data."<img src='".asset('images/logo.png')."'  style='display: inline-block;width:90px'>";
             $data = $data."</div>";            
@@ -619,18 +619,19 @@ class AjaxController extends Controller
             $data = $data."<tr><td style='font-size:9pt;padding-left: 0px;'>&nbsp; </td></tr>";
             $data = $data."<tr><td><span style='font-size:5px'></td></tr></table>";
             
-            $data = $data."</table>";
+            $data = $data."</tr></table>";
             $data = $data."<div>STUDENT CONTACT</div>";
             $data = $data."</td></thead><tr><td>";
-            $data = $data."<table width='100%' class='headers'><tr><td>";
+            $data = $data."<table width='100%' ><tr class='headers'><td>";
             $data = $data."<div>Level: ".$level."</div>";
             $data = $data."<div>Section: ".$section->section."</div>";
             $data = $data."</td></tr></table>";
             $data = $data."</td></tr><tr><td>";
             
-            $data = $data."<table class=\"table table-stripped\"><thead><td>Id No</td><td>Name</td><td>Contact No</td><td>Father</td><td>Contact No</td><td>Mother</td><td>Contact No.</td></thead>";
+            $data = $data."<table class=\"table table-stripped\" style=\"page-break-after:always\"><thead><td>Id No</td><td>Name</td><td width='100px'>Birth Date</td><td>Contact No</td><td>Father</td><td>Contact No</td><td>Mother</td><td>Contact No.</td></thead>";
             foreach($lists as $list){
             $data = $data . "<tr><td>".$list->idno . "</td><td>". $list->lastname.", ".$list->firstname. " " . $list->middlename . " </td><td>";
+            $data = $data . " $list->birthDate</td><td>";
             $data = $data.$list->phone1;
             if($list->phone1 != "" && $list->phone2 != ""){
                 $data = $data ." / ";

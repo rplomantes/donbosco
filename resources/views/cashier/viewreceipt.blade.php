@@ -1,13 +1,11 @@
 @extends('appcashier')
-
 @section('content')
+
 <div class="container">
-    <div class="col-md-3">
-    </div>    
+
     <div class="col-md-6">
-       
       
-       <h5>OFFICIAL RECEIPT : <span style="font-weight: bold; color: red">{{$tdate->receiptno}}</span></h5>
+       <h5>OFFICIAL RECEIPT: <span style="font-weight: bold; color: red">{{$tdate->receiptno}}</span></h5>
        <table class = "table table-responsive">
            @if(count($student)> 0)
            <tr><td>Received From : {{$student->lastname}}, {{$student->firstname}} {{$student->extensionname}} {{$student->midddlename}}</td><td></td></tr>
@@ -35,7 +33,9 @@
            <tr><td>{{$credit->receipt_details}}</td><td align="right">{{number_format($credit->amount,2)}}</td></tr>
            @endforeach
            @if(count($debit_discount)>0)
-            <tr><td>Less Discount</td><td align="right">({{number_format($debit_discount->amount,2)}})</td></tr>
+           @foreach($debit_discount as $debit_discount)
+            <tr><td>Less {{$debit_discount->description}}</td><td align="right">({{number_format($debit_discount->amount,2)}})</td></tr>
+            @endforeach
            @endif
            @if(count($debit_fape)>0)
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Less FAPE</td><td align="right">({{number_format($debit_fape->amount,2)}})</td></tr>
@@ -86,6 +86,30 @@
                 <a href="{{url('/restore',array($tdate->refno,$student->idno))}}" class="btn btn-danger pull-right" onclick="return confirm('Are you sure?')">Restore</a>
                 @endif
               @endif
+    </div>    
+    <div class="col-md-6" style="max-height: 600px;overflow-y: scroll">
+        <h3>Account Breakdown</h3>
+        <div>
+            <table class = "table table-responsive">
+                <?php $r_details = ""; ?>
+                @foreach($creditbreakdowns as $credibreakdown)
+                    @if(strcmp($r_details,$credibreakdown->receipt_details) != 0)
+                    <tr style="background-color: grey">
+                        <td  colspan="4" style='color: white'>{{$credibreakdown->receipt_details}}</td>
+                    </tr>
+                    <?php $r_details = $credibreakdown->receipt_details; ?>
+                    @endif
+                    <tr>
+                        <td></td>
+                        <td>{{$credibreakdown->description}}</td>
+                        <td style="text-align: right;">{{number_format($credibreakdown->amount,2)}}</td>
+                        <td>{{$credibreakdown->sub_department}}</td>
+                    </tr>
+
+                @endforeach
+            </table>            
+        </div>
+
     </div>    
     </div>
 <script>

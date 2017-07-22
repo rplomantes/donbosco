@@ -809,7 +809,8 @@ class UpdateController extends Controller
             }
         }
             function updatecdbaccounting(){
-                 $populates = \App\ForwardedCbd::get();
+                 //$populates = \App\ForwardedCbd::get();
+                $populates = DB::Select("Select * from forwarded_cbd2");
             foreach($populates as $populate){
                 $newacct = new \App\Accounting;
                 $newacct->refno = $populate->VOUCHER_NO;
@@ -822,7 +823,7 @@ class UpdateController extends Controller
                 $newacct->fiscalyear = '2016';
                 $newacct->isfinal = '1';
                 $newacct->type = '4';
-                if($populate->DEBIT == "FALSE"){
+                if($populate->DEBIT == "FALSE" || $populate->DEBIT == "0"){
                     $newacct->cr_db_indic = '1';
                     $newacct->credit=$populate->ACCOUNT_AMOUNT;
                 }else{
@@ -832,7 +833,7 @@ class UpdateController extends Controller
                 $newacct->save();
                 
             }
-            return "Done!!!!!!!!!";
+            return count($populates);
             }
             
             function updatecdbdrcr(){
@@ -861,10 +862,55 @@ class UpdateController extends Controller
                          
                     }
                     
-                    return "Finally Done!!!";
+                    return count($updates);
             }
+            function updatecdb2(){
+                $disbursements = DB::Select("Select * from forwarded_cbd2 WHERE DEBIT IN('TRUE',0) AND `accounttitle` IN ('East West Bank CA 035-02-04076-5','BPICA 1881-0466-59','CBC-CA 1049-00 00027-8','BPI- CA 1885-1129-82') group by VOUCHER_NO");
                 
+                foreach($disbursements as $disbursement){
+                    $newcdb = new \App\Disbursement;
+                    $newcdb->transactiondate = $disbursement->TR_DATE;
+                    $newcdb->bank = $disbursement->accounttitle;
+                    $newcdb->refno = $disbursement->VOUCHER_NO;
+                    $newcdb->payee  = $disbursement->PAYEE;
+                    $newcdb->voucherno = $disbursement->VOUCHER_NO;
+                    $newcdb->checkno = $disbursement->BANK_CHECK_NO;
+                    $newcdb->amount = $disbursement->ACCOUNT_AMOUNT;
+                    $newcdb->remarks = $disbursement->EXPLANATION;
+                    $newcdb->postedby = $disbursement->PREPARED_BY;
+                    $newcdb->save();
+                    
+                    echo $newcdb->voucherno." - ".$newcdb->bank."<br>";
+                }
+                
+                return 0;
+            }
             
-        
-        
+            function createCdbRecs(){
+                $disbursements = DB::Select("Select * from forwarded_cbd2");
+                
+                foreach($disbursements as $disbursement){
+                $newacct = new \App\Accounting;
+                $newacct->refno = $populate->VOUCHER_NO;
+                $newacct->transactiondate = $populate->TR_DATE;
+                $newacct->referenceid = $populate->VOUCHER_NO;
+                $newacct->accountname = $populate->acctname;
+                $newacct->accountcode = $populate->acctcode;
+                $newacct->acct_department = $populate->acct_department;
+                $newacct->sub_department = $populate->sub_department;
+                $newacct->fiscalyear = '2016';
+                $newacct->isfinal = '1';
+                $newacct->type = '4';
+                if($populate->DEBIT == "FALSE"){
+                    $newacct->cr_db_indic = '1';
+                    $newacct->credit=$populate->ACCOUNT_AMOUNT;
+                }else{
+                    $newacct->cr_db_indic = '0';
+                    $newacct->debit=$populate->ACCOUNT_AMOUNT;
+                }
+                $newacct->save();
+                
+                }
+                
+            }
 }
