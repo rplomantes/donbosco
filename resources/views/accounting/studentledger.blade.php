@@ -44,6 +44,8 @@
                  Enrolled
                  @elseif($status->status == "3")
                  Dropped
+                 @elseif($status->status == "4")
+                 No Show
                  @endif
                  @else
                  Registered

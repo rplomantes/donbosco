@@ -20,7 +20,7 @@
         var key = theEvent.keyCode || theEvent.which;
         if(key == 13){
             theEvent.preventDefault();
-            document.getElementById('receivecheck').focus();
+            document.getElementById('bank_branch').focus();
         } 
     }
 /*
@@ -107,7 +107,7 @@ function submitprevious(event,amount){
         }
         else{
             
-             document.getElementById('receivecash').focus(); 
+             document.getElementById('bank_branch').focus(); 
              computetotal();
         }
       event.preventDefault();
@@ -135,7 +135,7 @@ function submitother(event,amount,original,id){
         document.getElementById('totalamount').value = total.toFixed(2);
         */
        computetotal();
-       document.getElementById('receivecash').focus(); 
+       document.getElementById('bank_branch').focus(); 
             }
         event.preventDefault();
         return false;
@@ -292,8 +292,9 @@ function submitcheck(event, amount){
             var diff =  eval(document.getElementById("totalamount").value)-eval(amount)-eval(receivedcash)-eval(fape);
             document.getElementById('submit').style.visibility="hidden";
             document.getElementById('cashdiff').innerHTML = "DIFFERENCE : " + diff.toFixed(2);
-            document.getElementById('fape').focus();
+            document.getElementById('receivecash').focus();
         }
+        document.getElementById('receivecash').focus();
      event.preventDefault();
      return false;
         

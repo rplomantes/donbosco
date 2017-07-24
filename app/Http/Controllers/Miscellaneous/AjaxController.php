@@ -17,8 +17,10 @@ class AjaxController extends Controller
             
             if($accesslevel == env("USER_ELEM")){
                 $students = DB::Select("Select * From users u join statuses s on s.idno = u.idno where u.accesslevel = '0' AND (lastname like '$search%' OR lcase(lastname) like '$find%' OR firstname like '$search%' OR u.idno = '$search') AND s.status = 2 and s.department IN ('Kindergarten','Elementary Department') Order by lastname, firstname");
-            }elseif($accesslevel == env("USER_HS")){
-                $students = DB::Select("Select * From users u join statuses s on s.idno = u.idno where u.accesslevel = '0' AND (lastname like '$search%' OR lcase(lastname) like '$find%' OR firstname like '$search%' OR u.idno = '$search') AND s.status = 2 and s.department IN ('Junior High School','Senior High School') Order by lastname, firstname");
+            }elseif($accesslevel == env("USER_JHS")){
+                $students = DB::Select("Select * From users u join statuses s on s.idno = u.idno where u.accesslevel = '0' AND (lastname like '$search%' OR lcase(lastname) like '$find%' OR firstname like '$search%' OR u.idno = '$search') AND s.status = 2 and s.department IN ('Junior High School') Order by lastname, firstname");
+            }elseif($accesslevel == env("USER_SHS")){
+                $students = DB::Select("Select * From users u join statuses s on s.idno = u.idno where u.accesslevel = '0' AND (lastname like '$search%' OR lcase(lastname) like '$find%' OR firstname like '$search%' OR u.idno = '$search') AND s.status = 2 and s.department IN ('Senior High School') Order by lastname, firstname");
             }else{
             $students = DB::Select("Select * From users where accesslevel = '0' AND (lastname like '$search%' OR lcase(lastname) like '$find%' OR "
                     . "firstname like '$search%' OR idno = '$search') Order by lastname, firstname");                

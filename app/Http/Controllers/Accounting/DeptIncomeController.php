@@ -38,7 +38,7 @@ class DeptIncomeController extends Controller
         return $pdf->stream();
     }
     
-    function accounts($fromdate,$todate,$acctcode,$schoolyear){
+    static function accounts($fromdate,$todate,$acctcode,$schoolyear){
 
         if($acctcode == 1){
         $accounts = DB::Select("select * from `chart_of_accounts` as coa "

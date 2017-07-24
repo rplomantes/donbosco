@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Input;
-
+use App\Http\Controllers\Cashier\ReceiptController;
 
 class CashierController extends Controller
 {
@@ -375,7 +375,7 @@ class CashierController extends Controller
             $this->debit_reservation_discount($refno, $orno,$request->idno,env('DEBIT_DISCOUNT') , $amount, $key);    
           }
       }
-       return $this->viewreceipt($refno, $request->idno);
+       return ReceiptController::viewreceipt($refno, $request->idno);
    }
 
    function changestatatus($idno, $reservation){
@@ -584,12 +584,23 @@ class CashierController extends Controller
             
     }
    
-   function debit_discount_fix($refno, $orno,$idno,$debittype,$amount,$discountname){
+   function debit_reservation_discount($refno, $orno,$idno,$debittype,$amount,$discountname){
        $department = "";
         if($discountname == "Plan Discount"){
             $accountcode='410100';
             $acctcode='Cash/Semi payment discount';
             $description = 'Plan Discount';
+            $department = "Level";
+        }else if($discountname == "Reservation"){
+            $accountcode='210400';
+            $acctcode='Enrollment Reservation';
+            $description = 'Enrollment Reservation';
+            $department = "None";
+        }else if($discountname == "FAPE" || $discountname == "Student Deposit"){
+            $accountcode='210100';
+            $acctcode='Other Current Liabilities';
+            $description = $discountname;
+            $department = "Level";
         }else{
             $discount = \App\CtrDiscount::where('discountcode',$discountname)->first();
             if(count($discount)>0){
@@ -621,8 +632,8 @@ class CashierController extends Controller
         $debitaccount->paymenttype = $debittype;
         $debitaccount->receivefrom = $student->lastname . ", " . $student->firstname . " " . $student->extensionname . " " .$student->middlename;
         $debitaccount->amount = $amount;
-        if($department == ""){
-            if(count($status)>0){
+        if($department == "Level"){
+            if(count($status)>0 || $department == "None"){
                 if($status->department == "Kindergarten" ||$status->department == "Elementary"){
                     $debitaccount->acct_department = "Elementary Department";
                     $debitaccount->sub_department = "Elementary Department";
@@ -1069,7 +1080,7 @@ class CashierController extends Controller
             $debit->save();
         
         
-        return $this->viewreceipt($refno, $request->idno);
+        return ReceiptController::viewreceipt($refno, $request->idno);
         
         //return redirect(url('/viewreceipt',array($refno,$request->idno)));
     }
@@ -1285,7 +1296,7 @@ class CashierController extends Controller
             $encashment->isreverse = '0';
         }
         $encashment->save();
-        return $this->encashmentreport();
+        return $this->encashmentreport($encashment->transactiondate);
         
         //return redirect(url('encashmentreport'));
     }

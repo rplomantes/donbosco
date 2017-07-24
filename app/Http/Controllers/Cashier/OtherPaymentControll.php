@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use DB;
 use App\Http\Controllers\Cashier\CashierController;
+use App\Http\Controllers\Cashier\ReceiptController;
 use Carbon\Carbon;
 class OtherPaymentControll extends Controller
 {
@@ -272,7 +273,7 @@ class OtherPaymentControll extends Controller
         $debit->postedby= \Auth::user()->idno;
         $debit->save();
         
-        return CashierController::viewreceipt($refno, $idno);
+        return ReceiptController::viewreceipt($refno, $idno);
         
     }
 }

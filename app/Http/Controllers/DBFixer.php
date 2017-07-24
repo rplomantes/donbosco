@@ -425,17 +425,20 @@ class DBFixer extends Controller
             $idno = $credit->idno;
             echo $credit->referenceid."<br>";
            $ledgers = \App\Ledger::find($credit->referenceid);
-            if($ledgers->plandiscount > 0){
-                $plandiscount = $plandiscount + $ledgers->plandiscount;
-            }
-            if($ledgers->otherdiscount > 0){
-                if(array_key_exists($ledgers->discountcode, $otherdiscount)){
-                    $acctdisc = $otherdiscount [$ledgers->discountcode];
-                }else{
-                    $acctdisc = 0;
+           if(count($ledgers)>0){
+                if($ledgers->plandiscount > 0){
+                    $plandiscount = $plandiscount + $ledgers->plandiscount;
                 }
-                $otherdiscount [$ledgers->discountcode]= $acctdisc + $ledgers->otherdiscount;
-            }
+                if($ledgers->otherdiscount > 0){
+                    if(array_key_exists($ledgers->discountcode, $otherdiscount)){
+                        $acctdisc = $otherdiscount [$ledgers->discountcode];
+                    }else{
+                        $acctdisc = 0;
+                    }
+                    $otherdiscount [$ledgers->discountcode]= $acctdisc + $ledgers->otherdiscount;
+                }               
+           }
+
        }
        
       if($plandiscount > 0){
@@ -447,6 +450,9 @@ class DBFixer extends Controller
             $this->debit_discount_fix($refno, $orno,$idno,env('DEBIT_DISCOUNT') , $amount, $key);    
           }
       }
+      
+      $renewed = \App\Dedit::where('refno',$refno)->get();
+      return $renewed;
    }
    
    function debit_discount_fix($refno, $orno,$idno,$debittype,$amount,$discountname){
@@ -455,6 +461,7 @@ class DBFixer extends Controller
             $accountcode='410100';
             $acctcode='Cash/Semi payment discount';
             $description = 'Plan Discount';
+            $department = "Level";
         }else{
             $discount = \App\CtrDiscount::where('discountcode',$discountname)->first();
             if(count($discount)>0){

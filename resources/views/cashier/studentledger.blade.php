@@ -96,6 +96,8 @@ $checkno = \App\Dedit::distinct('check_number')->pluck('check_number')->toArray(
                  Enrolled
                  @elseif($status->status == "3")
                  <b>Dropped</b> - {{$status->dropdate}}
+                 @elseif($status->status == "4")
+                 No Show                 
                  @endif
                  @else
                  Registered
