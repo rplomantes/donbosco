@@ -16,7 +16,7 @@
                
             @foreach($students as $student)
             <tr><td>{{$student->idno}}</td><td>{{$student->lastname}}, {{$student->firstname}} {{$student->middlename}}
-                    {{$student->extensionname}}</td><td>{{$student->gender}}</td><td><a href = "{{url('/cashier',$student->idno)}}">view</a></td></tr>
+                    {{$student->extensionname}}</td><td>{{$student->gender}}</td><td><a href = "{{url('/studentinfo',$student->idno)}}">view</a></td></tr>
             @endforeach
             </tbody>
             </table>
@@ -41,7 +41,7 @@
          function search(){
              $.ajax({
             type: "GET", 
-            url: "/getsearchcashier/" +  $("#search").val(), 
+            url: "/getstudent/" + <?php echo Auth::user()->accesslevel; ?> + "/" + $("#search").val(), 
             success:function(data){
                 $('#searchbody').html(data);  
                 }

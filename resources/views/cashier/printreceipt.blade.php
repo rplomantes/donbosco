@@ -39,9 +39,15 @@ body { margin: 0px; }
                 @foreach($credits as $credit)
                 <tr><td>{{$credit->receipt_details}}</td><td align="right">{{number_format($credit->amount,2)}}</td></tr>
                 @endforeach
-           
+
                 @if(count($debit_discount)>0)
-                <tr><td>Less Discount</td><td align="right">({{number_format($debit_discount->amount,2)}})</td></tr>
+                <?php 
+                $discount = 0;
+                    foreach($debit_discount as $debit_discount){
+                        $discount = $discount + $debit_discount->amount;
+                    }
+                ?>
+                <tr><td>Less Discount</td><td align="right">({{number_format($discount,2)}})</td></tr>
                 @endif
                 
                 @if(count($debit_fape)>0)

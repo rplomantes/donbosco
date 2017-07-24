@@ -3,15 +3,30 @@
 namespace App\Http\Controllers\Miscellaneous;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use DB;
 
 class AjaxController extends Controller
 {
-    function __construct(){
-        $this->middleware('auth');
+
+    
+    function findstudent($accesslevel,$search){
+            $find = strtolower($search);
+            
+            if($accesslevel == env("USER_ELEM")){
+                $students = DB::Select("Select * From users u join statuses s on s.idno = u.idno where u.accesslevel = '0' AND (lastname like '$search%' OR lcase(lastname) like '$find%' OR firstname like '$search%' OR u.idno = '$search') AND s.status = 2 and s.department IN ('Kindergarten','Elementary Department') Order by lastname, firstname");
+            }elseif($accesslevel == env("USER_HS")){
+                $students = DB::Select("Select * From users u join statuses s on s.idno = u.idno where u.accesslevel = '0' AND (lastname like '$search%' OR lcase(lastname) like '$find%' OR firstname like '$search%' OR u.idno = '$search') AND s.status = 2 and s.department IN ('Junior High School','Senior High School') Order by lastname, firstname");
+            }else{
+            $students = DB::Select("Select * From users where accesslevel = '0' AND (lastname like '$search%' OR lcase(lastname) like '$find%' OR "
+                    . "firstname like '$search%' OR idno = '$search') Order by lastname, firstname");                
+            }
+
+            
+            return view('ajax.searchstudent',compact('students'));
+
     }
     
     function getsearchbookstore($student){

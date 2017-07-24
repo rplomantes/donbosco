@@ -2,6 +2,8 @@
     Route::group(['middleware' => 'web'], function () {
     Route::auth();
     
+    Route::get('/studentinfo/{idno}','Miscellaneous\StudentInfoController@index');
+    
     Route::get('/acadincome/{schoolyear}', 'Accounting\AcademicDeptincomeController@index');
     
     Route::get('/samplewidget', 'Widget\ConsolidatedReport@piechart');
@@ -389,13 +391,16 @@ Route::group(['middleware' => ['web','registrar']], function () {
     Route::get('/createrec/{idno}','Registrar\MakeRecord@createRecord');
     Route::post('/createrec','Registrar\MakeRecord@saveRecord');
     
+    
+    
+    
    Route::get('/sheetA/{record}',function($record){
        $levels = \App\CtrLevel::get();
        return view('vincent.registrar.sheetAv2',compact('levels','record'));
 
    
-});
+    });
     
 });
-   
+   Route::get('/getstudent/{accesslevel}/{search}','Miscellaneous\AjaxController@findstudent');
    

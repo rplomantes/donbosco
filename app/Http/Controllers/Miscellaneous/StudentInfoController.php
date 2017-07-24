@@ -15,7 +15,7 @@ class StudentInfoController extends Controller
     
     function index($idno){
         $users = \App\User::where('idno',$idno)->first();
-        $info = \App\User::where('idno',$idno)->first();
+        $info = \App\StudentInfo::where('idno',$idno)->first();
         return view('misc.studentinfo',compact('users','info'));
     }
 }

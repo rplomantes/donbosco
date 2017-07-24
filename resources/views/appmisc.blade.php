@@ -79,12 +79,12 @@
 	<!-- Scripts -->
 	
 
-<div class="container_fluid">
-    <div class="col-md-12">    
+<div class="container_fluid no-print">
+     <div class="col-md-12"> 
 <p class="text-muted"> Copyright 2016, Don Bosco Technical Institute of Makati, Inc.  All Rights Reserved.<br />
  <a href="http://www.nephilaweb.com.ph">Powered by: Nephila Web Technology, Inc.</a></p>
 </div>
-</div>
+  </div>
     
 </body>
 </html>

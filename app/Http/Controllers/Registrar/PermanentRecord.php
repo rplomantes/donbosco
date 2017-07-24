@@ -61,7 +61,7 @@ class PermanentRecord extends Controller
             
             if(count($oldrec)>0){
                 $jhschool = "DON BOSCO TECHNICAL INSTITUTE";
-                $jhsaverage = (GradeController::gradeQuarterAve(array(0),array(0),5,$oldrec,'Grade 10') + GradeController::weightedgradeQuarterAve(array(1),array(0),5,$oldrec,'Grade 10'))/2;
+                $jhsaverage = GradeController::gradeQuarterAve(array(0),array(0),5,$oldrec,'Grade 10');
                 
                 foreach($oldrec as $oldrec){
                     $jhsSy = $oldrec->schoolyear;
@@ -143,7 +143,7 @@ class PermanentRecord extends Controller
             
             if(count($oldrec)>0){
                 $jhschool = "DON BOSCO TECHNICAL INSTITUTE";
-                $jhsaverage = (GradeController::gradeQuarterAve(array(0),array(0),5,$oldrec,'Grade 10') + GradeController::weightedgradeQuarterAve(array(1),array(0),5,$oldrec,'Grade 10'))/2;
+                $jhsaverage = GradeController::gradeQuarterAve(array(0),array(0),5,$oldrec,'Grade 10');
                 
                 foreach($oldrec as $oldrec){
                     $jhsSy = $oldrec->schoolyear;

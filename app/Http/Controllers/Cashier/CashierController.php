@@ -584,30 +584,26 @@ class CashierController extends Controller
             
     }
    
-   function debit_reservation_discount($refno, $orno,$idno,$debittype,$amount,$discountname){
+   function debit_discount_fix($refno, $orno,$idno,$debittype,$amount,$discountname){
+       $department = "";
         if($discountname == "Plan Discount"){
             $accountcode='410100';
-            $acctcode='Cash - Semi Payment Discount';
-            $description = 'Cash - Semi Payment Discount';
-        }else if($discountname == "Reservation"){
-            $accountcode='210400';
-            $acctcode='Enrollment Reservation';
-            $description = 'Enrollment Reservation';
-        }else if($discountname == "FAPE" || $discountname == "Student Deposit"){
-            $accountcode='210100';
-            $acctcode='Other Current Liabilities';
-            $description = $discountname;
+            $acctcode='Cash/Semi payment discount';
+            $description = 'Plan Discount';
         }else{
             $discount = \App\CtrDiscount::where('discountcode',$discountname)->first();
             if(count($discount)>0){
                 $accountcode = $discount->accountingcode;
                 $acctcode = $discount->acctname;
                 $description = $discount->description;
+                $department = $discount->sub_department;
+                
             }else{
                 $accountcode= '0';
                 $acctcode='Unknown';
                 $description = 'Unknown';
             }
+
         }
         $student = \App\User::where('idno',$idno)->first();
         $status = \App\Status::where('idno',$idno)->first();
@@ -625,21 +621,26 @@ class CashierController extends Controller
         $debitaccount->paymenttype = $debittype;
         $debitaccount->receivefrom = $student->lastname . ", " . $student->firstname . " " . $student->extensionname . " " .$student->middlename;
         $debitaccount->amount = $amount;
-        if(count($status)>0){
-            if($status->department == "Kindergarten" ||$status->department == "Elementary"){
-                $debitaccount->acct_department = "Elementary Department";
-                $debitaccount->sub_department = "Elementary Department";
-            }elseif($status->department == "Junior High School" ||$status->department == "Senior High School"){
-                $debitaccount->acct_department = "High School Department";
-                $debitaccount->sub_department = "High School Department";
-            }elseif($status->department == "TVET"){
-                $debitaccount->acct_department = "TVET";
-                $debitaccount->sub_department = "TVET";
-            }
-            $debitaccount->schoolyear=$status->schoolyear;
+        if($department == ""){
+            if(count($status)>0){
+                if($status->department == "Kindergarten" ||$status->department == "Elementary"){
+                    $debitaccount->acct_department = "Elementary Department";
+                    $debitaccount->sub_department = "Elementary Department";
+                }elseif($status->department == "Junior High School" ||$status->department == "Senior High School"){
+                    $debitaccount->acct_department = "High School Department";
+                    $debitaccount->sub_department = "High School Department";
+                }elseif($status->department == "TVET"){
+                    $debitaccount->acct_department = "TVET";
+                    $debitaccount->sub_department = "TVET";
+                }
+                $debitaccount->schoolyear=$status->schoolyear;
+            }else{
+                    $debitaccount->acct_department = "None";
+                    $debitaccount->sub_department = "None";
+            }   
         }else{
-                $debitaccount->acct_department = "None";
-                $debitaccount->sub_department = "None";
+            $debitaccount->acct_department = $this->mainDepartment($discount->sub_department);
+            $debitaccount->sub_department = $discount->sub_department;
         }
         $debitaccount->postedby = \Auth::user()->idno;
         $debitaccount->save();
