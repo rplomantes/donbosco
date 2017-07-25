@@ -15,7 +15,6 @@
         <br>
         <hr>
         <br>
-        <a href="#" class="btn btn-default col-md-12">Cash Flow</a>
     </div>
     <div class="col-md-4">        
         <iframe src="{{url('samplewidget')}}" height="350px" width="100%" scrolling="no" frameborder="0" style="border:0"></iframe>

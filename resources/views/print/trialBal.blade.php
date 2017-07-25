@@ -1,4 +1,4 @@
-
+<?php use App\Http\Controllers\Accounting\Helper; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,105 +9,52 @@
         <meta poweredby = "Nephila Web Technology, Inc">
        
         
- <style>
-    .body table, th  , .body td{
-    border: 1px solid black;
-    font-size: 10pt;
-}
-
-td{
-    padding-right: 10px;
-    padding-left: 10px;
-}
-
-table {
-    border-collapse: collapse;
-    width: 100%;
-}
-
-th {
-    height: 20px;
-}
-
-.notice{
-    font-size: 10pt;
-    padding:5px;
-    border: 1px solid #000;
-    text-indent: 10px;
-    margin-top: 5px;
-}
-.footer{
-  padding-top:10px;
-    
-}
-.heading{
-    padding-top: 10px;
-    font-size: 12pt;
-    font-weight: bold;
-}
-        </style>
+    <style>
+        .header{font-size:16pt;font-weigh:bold}
+        body{margin-top: 110px}
+        #header { position: fixed; left: 0px; top: -10px; right: 0px; height: 100px; text-align: center;font-size: 15px; }
+        #footer { position: fixed; bottom:0px;border-top:1px solid gray;} .pagenum:before {content: counter(page); }
+        .title{font-size:16pt; font-style: italic; text-decoration: underline}
+        .content td {font-size:10pt}
+        .subtitle{font-size: 10pt;font-weight: bold}
+        #maintable td,#maintable th { border:1px solid}
+    </style>
 	<!-- Fonts -->
 	
         </head>
     <body> 
-        <table border = '0'celpacing="0" cellpadding = "0" width="550px" align="center">
-            <tr>
-                <td width="10px"><img src = "{{ asset('/images/logo.png') }}" alt="DBTI" align="middle"  width="70px"/></td>
-                <td width="530px">
-                    <p align="center"><span style="font-size:20pt;">Don Bosco Technical Institute of Makati, Inc. </span>
-                        <br>
-                        Chino Roces Ave., Makati City <br>
-                        Tel No : 892-01-01
-                    </p>
-                </td>
-            </tr>
-        </table>
-    
-        <h3 align="center"> Trial Balance</h3>
-        <table>
-            <tr><td>From: {{$fromtran}}</td></tr>
-            <tr><td>To: {{$totran}}</td></tr>
+    <div id="footer">Page <span class="pagenum"></span></div>    
+    <div  id="header">
+        <table  width ="100%">
+            <tr><td><span class="header">Don Bosco Technical Institute of Makati</span></td><td align="right"></i></td></tr>
+            <tr><td colspan="2">Chino Roces Avenue, Makati, Metro Manila</td></tr>
+                    <tr><td colspan="4" align="center">
+                <span class="title">Trial Balance</span>
+                </td></tr>
+            <tr><td colspan="2" align="center">{{date('M d, Y', strtotime($fromtran))}} to {{date('M d, Y', strtotime($totran))}} </td></tr>
+        </table> 
+    <hr>
+    </div>
+        <table width="100%" border="1" cellspacing="0">
 
-            <hr />
-        </table>    
-        <table class="table table-striped ">
-            <?php 
-            $totaldebit = 0;
-            $totalcredit = 0;
-            
-            $entry = count($trials);
-            $curr_row = 1;
-            ?>
-            <thead style="font-weight: bolder"><tr><td>Acct No.</td><td>Account Title</td><td>Debit</td><td>Credit</td></tr></thead>
+            <thead><tr><th>Acct No.</th><th>Account Title</th><th>Amount</th></tr></thead>
+            <tbody>
             @foreach($trials as $trial)
-            <?php 
-            $totaldebit = $totaldebit + $trial->debit;
-            $totalcredit = $totalcredit + $trial->credits;
-            ?>        
-            <tr><td @if($entry <= $curr_row)style="border-bottom: 1px solid;"@endif
-                    >{{$trial->accountingcode}}</td>
-                <td @if($entry == $curr_row) style="border-bottom: 1px solid;"@endif>{{$trial->accountname}}</td>
-                <td style="text-align: right; 
-                    @if($entry == $curr_row)border-bottom: 1px solid;
-                    @endif
-                    ">
-                    @if($trial->debit > 0)
-                    {{number_format($trial->debit, 2, '.', ', ')}}
-                    @endif
-                </td>
-                <td style="text-align: right;
-                    @if($entry == $curr_row)
-                    border-bottom: 1px solid;
-                    @endif
-                    ">
-                    @if($trial->credits > 0)
-                    {{number_format($trial->credits, 2, '.', ', ')}}
+            <tr>
+                <td>{{$trial->accountingcode}}</td>
+                <td>{{$trial->accountname}}</td>
+                <td style="text-align: right">
+                    <?php $accttotal = Helper::getaccttotal($trial->credits,$trial->debit,$trial->accountingcode);?>
+                    @if($accttotal < 0)
+                    ({{number_format(abs($accttotal),2)}})
+                    @else
+                    {{number_format($accttotal,2)}}
                     @endif
                 </td>
             </tr>
-            <?php $curr_row++; ?>
             @endforeach
-            <tr><td colspan="2" style="text-align: right"><b>Total</b></td><td style="text-align: right">{{number_format($totaldebit, 2, '.', ', ')}}</td><td style="text-align: right">{{number_format($totalcredit, 2, '.', ', ')}}</td></tr>
+            <tr><td colspan="2" style="text-align: right"><b>Total</b></td><td style="text-align: right">{{number_format(Helper::allaccttotal($trials),2)}}</td></tr>
+            </tbody>
         </table>
     </body>
 </html>

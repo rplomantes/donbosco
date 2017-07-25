@@ -595,7 +595,7 @@ class CashierController extends Controller
             $accountcode='210400';
             $acctcode='Enrollment Reservation';
             $description = 'Enrollment Reservation';
-            $department = "None";
+            $department = "Level";
         }else if($discountname == "FAPE" || $discountname == "Student Deposit"){
             $accountcode='210100';
             $acctcode='Other Current Liabilities';
@@ -633,7 +633,7 @@ class CashierController extends Controller
         $debitaccount->receivefrom = $student->lastname . ", " . $student->firstname . " " . $student->extensionname . " " .$student->middlename;
         $debitaccount->amount = $amount;
         if($department == "Level"){
-            if(count($status)>0 || $department == "None"){
+            if(count($status)>0){
                 if($status->department == "Kindergarten" ||$status->department == "Elementary"){
                     $debitaccount->acct_department = "Elementary Department";
                     $debitaccount->sub_department = "Elementary Department";

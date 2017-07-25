@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Vincent;
+namespace App\Http\Controllers\Accounting;
 
 use Illuminate\Http\Request;
 
@@ -15,14 +15,13 @@ class TrialBalanceController extends Controller
     }
     function gettrialBalance($fromtran,$totran){
        
-        $trials = DB::Select("select r.accountingcode,accountname,sum(if( type='credit', amount, 0 ))  as credits,sum(if( type='debit', amount, 0 )) as debit from chart_of_accounts coa left join "
+        $trials = DB::Select("select coa.acctcode as accountingcode,accountname,sum(if( type='credit', amount, 0 ))  as credits,sum(if( type='debit', amount, 0 )) as debit from chart_of_accounts coa left join "
                 . "(select accountingcode,'credit' as type,sum(amount) as amount from credits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0'  group by accountingcode "
                 . "UNION ALL "
                 . "select accountingcode,'debit',sum(amount)+sum(checkamount) as amount from dedits where (transactiondate between '$fromtran' and '$totran') and isreverse = '0'  group by accountingcode) r "
                 . "on coa.acctcode = r.accountingcode group by accountingcode order by coa.acctcode");
        
         return $trials;
-        
     }
     
     function viewtrilaBalance($fromtran,$totran){

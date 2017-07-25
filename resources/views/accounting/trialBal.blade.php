@@ -1,6 +1,6 @@
 @extends('appaccounting')
 @section('content')
-
+<?php use App\Http\Controllers\Accounting\Helper; ?>
 <div class="container">
     <h5>Trial Balance</h5>
     <p><b>Period Covered</b></p>
@@ -14,33 +14,29 @@
     <br>
     <div class="col-md-12">
         <table class="table table-striped ">
-            <?php 
-            $totaldebit = 0;
-            $totalcredit = 0;
-            ?>
-            <thead><tr><th>Acct No.</th><th>Account Title</th><th>Debit</th><th>Credit</th></tr></thead>
+            <thead><tr><th>Acct No.</th><th>Account Title</th><th>Amount</th></tr></thead>
             @foreach($trials as $trial)
-            <?php 
-            $totaldebit = $totaldebit + $trial->debit;
-            $totalcredit = $totalcredit + $trial->credits;
-            ?>        
-            <tr><td>{{$trial->accountingcode}}</td><td>{{$trial->accountname}}</td><td style="text-align: right">
-                    @if($trial->debit > 0)
-                    {{number_format($trial->debit, 2, '.', ', ')}}
+            <tr>
+                <td>{{$trial->accountingcode}}</td>
+                <td>{{$trial->accountname}}</td>
+                <td style="text-align: right">
+                    <?php $accttotal = Helper::getaccttotal($trial->credits,$trial->debit,$trial->accountingcode);?>
+                    @if($accttotal < 0)
+                    ({{number_format(abs($accttotal),2)}})
+                    @else
+                    {{number_format($accttotal,2)}}
                     @endif
-                </td><td style="text-align: right">
-                    @if($trial->credits > 0)
-                    {{number_format($trial->credits, 2, '.', ', ')}}
-                    @endif
-                </td></tr>
+                </td>
+            </tr>
             @endforeach
-            <tr><td colspan="2" style="text-align: right"><b>Total</b></td><td style="text-align: right">{{number_format($totaldebit, 2, '.', ', ')}}</td><td style="text-align: right">{{number_format($totalcredit, 2, '.', ', ')}}</td></tr>
+            <tr><td colspan="2" style="text-align: right"><b>Total</b></td><td style="text-align: right">{{number_format(Helper::allaccttotal($trials),2)}}</td></tr>
         </table>
     </div>
+    <a class="col-md-12 btn btn-danger" href="{{url('printtrialbalance',array($fromtran,$totran))}}">Print</a>
 </div>
     
 
-<div class="col-md-offset-10 col-md-2"><a class="btn btn-danger" href="{{url('printtrialbalance',array($fromtran,$totran))}}">Print</a></div>
+
 <script>
 function showtran(){
     var fromtran = document.getElementById('fromtran').value

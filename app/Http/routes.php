@@ -260,8 +260,8 @@
     Route::get('/upload/grade','GradeSubmitController@index');
     Route::post('/upload/grade','GradeSubmitController@importgrade');
     
-    Route::get('trialbalance/{fromtran}/{totran}','Vincent\TrialBalanceController@viewtrilaBalance');
-    Route::get('printtrialbalance/{fromtran}/{totran}','Vincent\TrialBalanceController@printtrilaBalance');
+    Route::get('trialbalance/{fromtran}/{totran}','Accounting\TrialBalanceController@viewtrilaBalance');
+    Route::get('printtrialbalance/{fromtran}/{totran}','Accounting\TrialBalanceController@printtrilaBalance');
     Route::get('generalledger/{basic}/{title}/{todate?}','Accounting\GenLedgerController@index');
     Route::get('generalledger/print/{basic}/{title}/{todate?}','Accounting\GenLedgerController@printledger');
     Route::get('balancesheet','Vincent\BalanceSheetController@index');
