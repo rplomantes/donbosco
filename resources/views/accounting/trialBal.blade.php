@@ -32,7 +32,7 @@
             <tr><td colspan="2" style="text-align: right"><b>Total</b></td><td style="text-align: right">{{number_format(Helper::allaccttotal($trials),2)}}</td></tr>
         </table>
     </div>
-    <a class="col-md-12 btn btn-danger" href="{{url('printtrialbalance',array($fromtran,$totran))}}">Print</a>
+    <a style="display: block" class="btn btn-danger col-md-12" href="{{url('printtrialbalance',array($fromtran,$totran))}}">Print</a>
 </div>
     
 

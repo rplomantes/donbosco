@@ -5,6 +5,7 @@
         @endif
         >
     <option value="" hidden="hidden">-- Select Strand --</option>
+    <option value="All">All</option>
     @foreach($strands as $strand)
     <option value="{{$strand->strand}}">{{$strand->strand}}</option>
     @endforeach

@@ -11,17 +11,20 @@
             </thead>
             <?php $totaldisbursement = 0; ?>
             @foreach($disbursements as $disbursement)
-            <?php $totaldisbursement ?>
+            <?php $totaldisbursement = $totaldisbursement + $disbursement->amount; ?>
             <tr>
-                <td>{{date_format($disbursement->month,"M")}}</td>
+                <td>{{date("F",strtotime("2017-0".$disbursement->month."-01"))}}</td>
                 <td>{{number_format($disbursement->amount,2 )}}</td>
             </tr>
             @endforeach
             <tr>
-                <td></td>
-                <td>{{number_format($disbursement->amount,2 )}}</td>
+                <td>Total</td>
+                <td>{{number_format($totaldisbursement,2 )}}</td>
             </tr>
         </table>
+    </div>
+    <div class="col-md-6" id="chart-div">
+    <?= Lava::render('BarChart', 'Disbursements', 'chart-div') ?>
     </div>
 </div>
 @stop

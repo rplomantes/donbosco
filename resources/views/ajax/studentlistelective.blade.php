@@ -14,11 +14,16 @@
     @foreach($students as $student)
     <?php
     $name = \App\User::where('idno',$student->idno)->first();
+    $section  = App\CtrElectiveSection::find($student->classify);
     ?>
-    <tr style="cursor:pointer;" onclick="{{$action}}({{$student->idno}})">
+    <tr style="cursor:pointer;" onclick="{{$action}}('{{$student->idno}}')">
         <td>{{$student->idno}}</td>
         <td>{{$name->lastname}}, {{$name->firstname}} {{substr($name->middlename,0,1)}}.</td>
-        <td>{{$student->classify}}</td>
+        <td>
+            @if($section)
+            {{$section->elecode}} - <span style="float: right">{{$section->section}}</span>
+            @endif
+        </td>
     </tr>
     @endforeach
 </table>

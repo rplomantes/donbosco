@@ -21,11 +21,11 @@ class SectionController extends Controller
          return view('registrar.sectioning',compact('levels','sy'));   
      }
         
-     function sectionk(){
-         $levels = \App\CtrLevel::all();
-         //return $levels;
-         return view('registrar.sectionkpage',compact('levels'));
-     }   
+    function sectionk(){
+        $levels = \App\CtrLevel::all();
+        return view('registrar.sectionkpage',compact('levels'));
+    }
+    
     function printsection($level, $section){
         $sy = \App\CtrSchoolYear::first();
         $schoolyear=$sy->schoolyear;

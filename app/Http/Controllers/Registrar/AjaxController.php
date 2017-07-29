@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use DB;
+use App\Http\Controllers\Registrar\Elective\Helper;
 
 class AjaxController extends Controller
 {
@@ -17,21 +18,96 @@ class AjaxController extends Controller
         
         $grades = \App\Grade::where('idno',$idno)->where('sy',$sy)->get();
     }
+    
+    function getelectives($action = null){
+        $level = Input::get('level');
+        $sy = Input::get('sy');
+        $electives = \App\CtrElectiveSection::where('level',$level)->where('schoolyear',$sy)->groupBy('elective')->get();
+        return view('ajax.selectelective',compact('electives','action'));
+    }
+    
+    function getelectivesection($action = null){
+        $level = Input::get('level');
+        $sy = Input::get('sy');
+        $elective = Input::get('elective');
+        $allavailable = 0;
+        $sections = \App\CtrElectiveSection::where('level',$level)->where('schoolyear',$sy)->where('elecode',$elective)->get();
+        return view('ajax.selectelectivesection',compact('sections','allavailable','action'));
+    }
+    
+    function strandStudent($level){
+        $strnd = Input::get('strand');
+        if($strnd == 'null'){
+            $strand = "";
+        }elseif($strnd == 'All'){
+            $strand = "AND s.strand != ''";
+        }else{
+            $strand = "AND s.strand = '".$strnd."'";
+        }
         
+        $action = "addtosection";
+        $schoolyear = \App\CtrSchoolYear::first()->schoolyear;
+        $students = DB::Select("Select distinct u.idno,g.section as classify,s.strand from statuses s join users u on u.idno = s.idno join grades g on g.idno = s.idno and s.schoolyear = g.schoolyear where s.schoolyear = '$schoolyear' and s.level = '$level' $strand and s.status = 2 and subjectcode = 'ELE1' order by lastname,firstname");
+
+        return view('ajax.studentlistelective',compact('students','action'));
+    }
+    
+    function electiveadviser(){
+        $section = Input::get('section');
+        $adviser = \App\CtrElectiveSection::find($section);
+        $advisername = "";
+        $user = \App\User::where('idno',$adviser->adviser)->first();
+        if($user){
+            $advisername = $user->firstname." ".substr($user->middlename,0,1).". ".$user->lastname;
+        }
+        return view('ajax.getAdviser',compact('advisername'));
+    }
+    
+    function electiveStudent(){
+        $section = Input::get('section');
+        $students = Helper::studentsectionlist($section);
+        $action = "removetosection";
+        return view('ajax.electivesectionlist',compact('students','action','section'));
+    }
+        
+    function addtoelesection(){
+        $idno = Input::get('idno');
+        $sy = Input::get('sy');
+        $section = Input::get('section');
+        
+        $student = \App\Grade::where('idno',$idno)->where('schoolyear',$sy)->where('subjectcode','ELE1')->update(['section'=>$section]);
+        
+        return $idno;
+    }
+    
+    function removetoelesection(){
+        $idno = Input::get('idno');
+        $sy = Input::get('sy');
+        
+        \App\Grade::where('idno',$idno)->where('schoolyear',$sy)->where('subjectcode','ELE1')->update(['section'=>""]);
+        
+        
+    }
+    
+    
+    
     function levelStudent($level,$sy){
-        $strand = Input::get('strand');
-        if($strand == 'null'){
-            $strand = '';
+        $strnd = Input::get('strand');
+        if($strnd == 'null'){
+            $strand = "";
+        }elseif($strnd == 'All'){
+            $strand = "AND strand != ''";
+        }else{
+            $strand = "AND strand = '".$strnd."'";
         }
         $schoolyear = \App\CtrSchoolYear::first()->schoolyear;
         if($schoolyear == $sy){
-            $students = DB::Select("Select distinct idno,section,strand from statuses where schoolyear = '$sy' and level = '$level' and strand = '$strand' and status = 2");
+            $students = DB::Select("Select distinct users.idno,section as classify,strand from statuses join users on users.idno = statuses.idno where schoolyear = '$sy' and level = '$level' $strand and statuses.status = 2 order by lastname,firstname");
         }else{
-            $students = DB::Select("Select distinct idno,section,strand from status_histories where schoolyear = '$sy' and level  = '$level' and strand = '$strand' and status IN (2,3)");
+            $students = DB::Select("Select distinct users.idno,section as classify,strand from status_histories where schoolyear = '$sy' and level  = '$level' $strand and status_histories.status IN (2,3) order by lastname,firstname");
         }
         
-        return view('ajax.studentlist',compact('students'));
-        
+        return view('ajax.studentlist',compact('students')); 
     }
     
     function getsectionstudents(){

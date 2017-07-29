@@ -115,10 +115,10 @@ class CashierController extends Controller
            
            //history of payments
            $debits = DB::SELECT("select * from dedits d  where d.idno = '" . $idno . "' and "
-                   . "d.paymenttype <= '2' order by d.transactiondate");
+                   . "d.paymenttype <= '2' order by d.transactiondate ASC,d.receiptno ASC");
         
            $debitdms = DB::SELECT("select * from dedits d where d.idno = '" . $idno . "' and "
-                   . "d.paymenttype = '3' order by d.transactiondate");
+                   . "d.paymenttype = '3' order by d.transactiondate ASC,d.receiptno ASC");
            return view('cashier.studentledger',  compact('debitdms','debits','penalty','totalmain','totalprevious','previousbalances','othercollections','student','status','ledgers','reservation','dues','totalothers','deposit','oldreceipts'));
            
        }   
@@ -172,7 +172,6 @@ class CashierController extends Controller
         $this->reset_or();
         if($request->totaldue > 0 ){
         $totaldue = $request->totaldue;   
-        $curr_duedates = array();
             $accounts = DB::SELECT("select * from ledgers where idno = '".$request->idno."' and categoryswitch <= '6' "
                  ." and (amount - payment - debitmemo - plandiscount - otherdiscount) > 0 order By duedate, categorySwitch");
                 foreach($accounts as $account){
@@ -180,6 +179,7 @@ class CashierController extends Controller
                     $balance = $account->amount - $account->payment - $account->plandiscount - $account->otherdiscount - $account->debitmemo;
 
                         if($balance < $totaldue){
+                            $curr_duedates = $account->duedate;
                             $discount = $discount + $account->plandiscount + $account->otherdiscount;
                             if($account->plandiscount > 0){
                                 $plandiscount = $plandiscount + $account->plandiscount;
@@ -200,6 +200,7 @@ class CashierController extends Controller
                             $totaldue = $totaldue - $balance;
                             $this->credit($request->idno, $account->id, $refno, $orno, $account->amount-$account->payment-$account->debitmemo);
                         } else {
+                            $curr_duedates = $account->duedate;
                             $updatepay = \App\Ledger::where('id',$account->id)->first();
                             $updatepay->payment = $updatepay->payment + $totaldue;
                             $updatepay->save();
@@ -225,6 +226,26 @@ class CashierController extends Controller
                             break;
                         }
                 }
+                
+            $todate = $curr_duedates;
+            
+            $fulldiscounts = DB::Select("select * from ledgers where idno = '".$request->idno."' and categoryswitch <= '6' and amount = (plandiscount+otherdiscount) and duedate >= '$todate' and status =0");
+            
+            foreach($fulldiscounts as $fulldiscount){
+                if($fulldiscount->plandiscount > 0){
+                    $plandiscount = $plandiscount + $fulldiscount->plandiscount;
+                }
+                if($fulldiscount->otherdiscount > 0){
+                    if(array_key_exists($fulldiscount->discountcode, $otherdiscount)){
+                        $acctdisc = $otherdiscount [$fulldiscount->discountcode];
+                    }else{
+                        $acctdisc = 0;
+                    }
+                    $otherdiscount [$fulldiscount->discountcode]= $acctdisc + $fulldiscount->otherdiscount;
+                }
+                \App\Ledger::where('id',$fulldiscount->id)->update(['status'=>1]);
+                $this->credit($request->idno, $fulldiscount->id, $refno, $orno, $fulldiscount->amount);
+            }
 
                 $this->changestatatus($request->idno, $request->reservation);
                     if($request->reservation > 0){
@@ -1122,6 +1143,7 @@ class CashierController extends Controller
         
         $credits = \App\Credit::where('refno',$refno)->get();
         foreach($credits as $credit){
+            \App\Ledger::where('id',$credit->referenceid)->update(['status'=>0]);
           
          $ledger = \App\Ledger::find($credit->referenceid);
         

@@ -3,7 +3,7 @@
     Route::auth();
     
     Route::get('/studentinfo/{idno}','Miscellaneous\StudentInfoController@index');
-    
+    Route::get('/disbursementtotal', 'Economer\DisbursementSummary@index');
     Route::get('/acadincome/{schoolyear}', 'Accounting\AcademicDeptincomeController@index');
     
     Route::get('/samplewidget', 'Widget\ConsolidatedReport@piechart');
@@ -239,7 +239,7 @@
     Route::post('/searchvoucher','Accounting\DisbursementController@findvoucher');
 
     Route::get('/searchpayee','Accounting\DisbursementController@searchpayee');
-    Route::post('/searchpayee','Accounting\DisbursementController@findpayee');
+    Route::post('/searchPayee','Accounting\DisbursementController@findpayee');
     //ACADEMIC VINCENT
     Route::get('/registerAdviser','Vincent\TvetController@tvetledger');
     Route::get('/enrollmentreport','Vincent\TvetController@enrollmentreport');
@@ -365,7 +365,19 @@
     Route::get('/pullrecords','Update\UpdateController@prevgrade');
     Route::get('/studentslist/{level}/{sy}', 'Registrar\AjaxController@levelStudent');
     Route::get('/getoverallrank', 'Registrar\AjaxController@getoverallrank');
-    Route::get('/setoverallrank', 'Registrar\OverallRankController@setOARank');    
+    Route::get('/setoverallrank', 'Registrar\OverallRankController@setOARank');  
+    
+    //Elective
+    Route::get('/strandStudent/{level}', 'Registrar\AjaxController@strandStudent');
+    Route::get('/getelectives/{action}', 'Registrar\AjaxController@getelectives');
+    Route::get('/getelectivesection/{action}', 'Registrar\AjaxController@getelectivesection');
+    Route::get('/electiveadviser', 'Registrar\AjaxController@electiveadviser');
+    Route::get('/sectionelectivelist', 'Registrar\AjaxController@electiveStudent');
+    
+    Route::get('/addtoelesection', 'Registrar\AjaxController@addtoelesection');
+    Route::get('/removetoelesection', 'Registrar\AjaxController@removetoelesection');
+    
+    
 
     Route::get('/getindividualaccount', 'Accounting\AjaxController@individualAccount');
     Route::get('/getsubaccountsum', 'Accounting\AjaxController@subAccountSummary');
@@ -391,6 +403,8 @@ Route::group(['middleware' => ['web','registrar']], function () {
     Route::get('/createrec/{idno}','Registrar\MakeRecord@createRecord');
     Route::post('/createrec','Registrar\MakeRecord@saveRecord');
     
+    Route::get('/electivesection','Registrar\Elective\SectionController@electiveSection');
+    Route::get('/printelectivesection/{section}','Registrar\Elective\SectionController@printSection');
     
     
     

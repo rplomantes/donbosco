@@ -27,7 +27,6 @@ class ConsolidatedReport extends Controller
 
 
         \Lava::PieChart('IMDB', $reasons, [
-
                         'height' => 300,
                         'width'  =>700
                     ]);
