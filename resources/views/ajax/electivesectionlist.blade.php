@@ -25,3 +25,4 @@
     <?php $cn++; ?>
     @endforeach
 </table>
+<button class="btn btn-danger col-md-12" onclick="printElective()">Print</button>

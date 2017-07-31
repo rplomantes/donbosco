@@ -32,6 +32,9 @@
     var section="";
     
     function getstrand(lvl){
+        level = lvl;
+        getelectives();
+        
         strand="";
         elective="";
         
@@ -44,9 +47,15 @@
             url: "/getlevelstrands/updatestrand", 
             success:function(data){
                 $('#strand').html(data);
-                level = lvl;
             }
         });
+        
+    }
+    
+    function getelectives(){
+        var array = {};
+        array['sy'] = {{$schoolyear}};
+        array['level'] = level;
         
         $.ajax({
             type:"GET",
@@ -129,6 +138,10 @@
         section = sec
         getadviser();
         getsectionstudents();
+    }
+    
+    function printElective(){
+        window.open("{{url('/printelectivesection')}}/"+section, '_blank');
     }
     
     <!--Section Control-->

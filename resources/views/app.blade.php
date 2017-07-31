@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+    <?php $sy = App\ctrSchoolYear::first()->schoolyear;?>
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -23,8 +24,7 @@
         <link href="{{ asset('/css/fileinput.css') }}" rel="stylesheet">
 	<link href="{{ asset('/css/datepicker.css') }}" rel="stylesheet">
         
-        <link href="{{ asset('/css/selectize/normalize.css') }}" rel="stylesheet">
-        <link href="{{ asset('/css/selectize/stylesheet.css') }}" rel="stylesheet">
+
         
         <style type="text/css">
             .overall tr td,.overall thead td {
@@ -83,7 +83,6 @@
         <script src="{{asset('/js/fileinput.js')}}"></script>
         <script src="{{asset('/js/bootstrap-datepicker.js')}}"></script>
         
-        <script src="{{asset('/js/selectize/selectize.js')}}"></script>
         </head>
 <body> 
 <div class= "container-fluid no-print" >
@@ -148,6 +147,7 @@
                                             <li><hr></li>
                                             <li><a href="{{url('sheetb')}}"><i class="fa fa-btn"></i>Sheet B</a></li>
                                             <li><a href="{{url('sheetA')}}"><i class="fa fa-btn"></i>Sheet A Subjects</a></li>
+                                            <li><a href="{{url('electivesheeta',$sy)}}"><i class="fa fa-btn"></i>Sheet A Elective</a></li>
                                             <li><a href="{{url('conduct')}}"><i class="fa fa-btn"></i>Sheet A Conducts</a></li>
                                             <li><a href="{{url('attendance')}}"><i class="fa fa-btn"></i>Sheet A Attendance</a></li>
                                             <li><hr></li>
@@ -168,6 +168,7 @@
                                     <ul class="dropdown-menu">
                                         <li><a href="/sectionk"><i class="fa fa-btn"></i>K-12</a></li>
                                         <li><a href="/sectiontvet"><i class="fa fa-btn"></i>TVET</a></li>
+                                        <li><a href="/electivesection"><i class="fa fa-btn"></i>Elective</a></li>
                                      </ul>   
                                 
                                 </li>
