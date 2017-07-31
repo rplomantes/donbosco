@@ -21,4 +21,20 @@ class Helper extends Controller
         
         return $students;
     }
+    
+    static function electiveadviser($section){
+        $adviser = \App\CtrElectiveSection::find($section);
+        $advisername = "";
+        $user = \App\User::where('idno',$adviser->adviser)->first();
+        if($user){
+            $advisername = $user->firstname." ".substr($user->middlename,0,1).". ".$user->lastname;
+        }
+        return $advisername;
+    }
+    
+    static function sectionName($section){
+        $sectionname = \App\CtrElectiveSection::find($section);
+        $elective = $sectionname->elective." (".$sectionname->section.")";
+        return $elective;
+    }
 }

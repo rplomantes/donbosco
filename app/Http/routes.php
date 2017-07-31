@@ -377,6 +377,10 @@
     Route::get('/addtoelesection', 'Registrar\AjaxController@addtoelesection');
     Route::get('/removetoelesection', 'Registrar\AjaxController@removetoelesection');
     
+    Route::get('/sheetAelectivesection/{action?}', 'Registrar\AjaxController@electivesheetAsection');
+    Route::get('/sheetAelectivelist', 'Registrar\AjaxController@sheetAelectivelist');
+    
+    
     
 
     Route::get('/getindividualaccount', 'Accounting\AjaxController@individualAccount');
@@ -406,7 +410,8 @@ Route::group(['middleware' => ['web','registrar']], function () {
     Route::get('/electivesection','Registrar\Elective\SectionController@electiveSection');
     Route::get('/printelectivesection/{section}','Registrar\Elective\SectionController@printSection');
     
-    
+    Route::get('/electivesheeta/{selectedSY}','Registrar\Elective\SheetAController@index');
+    Route::get('/printelectivesheeta/{section}','Registrar\Elective\SheetAController@printElective');
     
    Route::get('/sheetA/{record}',function($record){
        $levels = \App\CtrLevel::get();

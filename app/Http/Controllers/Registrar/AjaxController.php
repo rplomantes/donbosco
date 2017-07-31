@@ -35,6 +35,20 @@ class AjaxController extends Controller
         return view('ajax.selectelectivesection',compact('sections','allavailable','action'));
     }
     
+    function electivesheetAsection($action = null){
+        $level = Input::get('level');
+        $sy = Input::get('sy');
+        $sections = \App\CtrElectiveSection::where('level',$level)->where('schoolyear',$sy)->get();
+        return view('ajax.electivesectionsheetA',compact('sections','action'));
+    }
+    
+    function sheetAelectivelist(){
+        $section = Input::get('section');
+        $sem = \App\CtrElectiveSection::find($section)->sem;
+        $students = Helper::studentsectionlist($section);
+        return view('ajax.electiveSheetA',compact('section','students','sem'));
+    }
+            
     function strandStudent($level){
         $strnd = Input::get('strand');
         if($strnd == 'null'){

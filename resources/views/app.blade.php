@@ -23,6 +23,9 @@
         <link href="{{ asset('/css/fileinput.css') }}" rel="stylesheet">
 	<link href="{{ asset('/css/datepicker.css') }}" rel="stylesheet">
         
+        <link href="{{ asset('/css/selectize/normalize.css') }}" rel="stylesheet">
+        <link href="{{ asset('/css/selectize/stylesheet.css') }}" rel="stylesheet">
+        
         <style type="text/css">
             .overall tr td,.overall thead td {
                padding-left: 5px;
@@ -79,6 +82,8 @@
         <script src="{{asset('/js/bootstrap.min.js')}}"></script>
         <script src="{{asset('/js/fileinput.js')}}"></script>
         <script src="{{asset('/js/bootstrap-datepicker.js')}}"></script>
+        
+        <script src="{{asset('/js/selectize/selectize.js')}}"></script>
         </head>
 <body> 
 <div class= "container-fluid no-print" >
