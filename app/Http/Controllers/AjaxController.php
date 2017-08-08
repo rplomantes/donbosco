@@ -865,6 +865,14 @@ class AjaxController extends Controller
         
         function displaygrade(){
             $data = "";
+            $currSy = \App\CtrSchoolYear::first()->schoolyear;
+            $sy = Input::get('sy');
+            if($currSy == $sy){
+                $status = \App\Status::where('idno',Input::get('idno'))->where('schoolyear',$sy)->orderBy('id','DESC')->first();
+            }else{
+                $status = \App\StatusHistory::where('idno',Input::get('idno'))->where('schoolyear',$sy)->orderBy('id','DESC')->first();
+            }
+            
             $academics = \App\Grade::where('idno',Input::get('idno'))->where('schoolyear',Input::get('sy'))->where('subjecttype','0')->orderBy('sortto')->get();
            if(count($academics)>0){
            
@@ -935,7 +943,13 @@ class AjaxController extends Controller
             }
             $data = $data . "</table>";
             }
-            $data = $data . "<a class='btn btn-danger' href='/card/".Input::get('idno')."/".Input::get('sy')."'>Print</a>";
+            if($status->level == "Grade 11" ||$status->level == "Grade 12" ){
+                $data = $data . "<a class='btn btn-danger' href='/card/".Input::get('idno')."/".Input::get('sy')."/1'>Print 1st Sem</a><span width='50px'>&nbsp;</span>";
+                $data = $data . "<a class='btn btn-danger' href='/card/".Input::get('idno')."/".Input::get('sy')."/2'>Print 2nd Sem</a>";
+            }else{
+                $data = $data . "<a class='btn btn-danger' href='/card/".Input::get('idno')."/".Input::get('sy')."'>Print</a>";
+            }
+            
             return $data;
         }
         

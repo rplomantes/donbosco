@@ -10,7 +10,10 @@
     Route::get('/consolidatedbar', 'Widget\ConsolidatedReport@barchart');
     
     Route::get('/permanentrec/{idno}/{sy}', 'Registrar\PermanentRecord@index');
+    Route::post('/juniorpermanentrec/{idno}', 'Registrar\PermanentRecord@viewjuniorPermanentRec');
     Route::get('/permanentrecint/{idno}/{sy}', 'Registrar\PermanentRecord@internal');
+    
+    
     Route::get('/discounting', 'Update\UpdateController@updateDiscount');
     Route::get('/', 'MainController@index');
     Route::get('cashreceipt/{transactiondate}','Accounting\CashReceiptController@cashreceiptbook');
@@ -252,7 +255,7 @@
     Route::get('/updateentrytype','DBFixer@updateentrytype');
     Route::get('/updatetvet','DBFixer@updatetvet');
     Route::get('/updateacct','DBFixer@fixYouthAssistance');
-    Route::get('/updaterank/{level}/{sy}/{course}/{quarter}','Registrar\OverallRankController@setOARankingAcad');
+    Route::get('/updaterank/{level}/{sy}/{course}/{quarter}','Registrar\Ranking\OverallRankController@setOARankingAcad');
     
     
     //ACADEMIC
@@ -364,8 +367,8 @@
     
     Route::get('/pullrecords','Update\UpdateController@prevgrade');
     Route::get('/studentslist/{level}/{sy}', 'Registrar\AjaxController@levelStudent');
-    Route::get('/getoverallrank', 'Registrar\AjaxController@getoverallrank');
-    Route::get('/setoverallrank', 'Registrar\OverallRankController@setOARank');  
+    
+    //Route::get('/setoverallrank', 'Registrar\OverallRankController@setOARank');  
     
     //Elective
     Route::get('/strandStudent/{level}', 'Registrar\AjaxController@strandStudent');
@@ -401,7 +404,7 @@ Route::group(['middleware' => ['web','registrar']], function () {
     Route::get('/overallranking/{sy}', 'Registrar\OverallRankController@index');
     Route::get('/autosection/{level}/{strand?}', 'Registrar\AjaxController@autoSectioning');
     Route::get('/classno', 'Registrar\SectionController@assignClassNo');
-    Route::get('/card/{idno}/{sy}', 'Registrar\ReportCardController@studentReport');
+    Route::get('/card/{idno}/{sy}/{sem?}', 'Registrar\ReportCardController@studentReport');
     Route::get('/seegrade/{idno}','Registrar\GradeController@seegrade');
 
     Route::get('/createrec/{idno}','Registrar\MakeRecord@createRecord');
@@ -416,10 +419,13 @@ Route::group(['middleware' => ['web','registrar']], function () {
    Route::get('/sheetA/{record}',function($record){
        $levels = \App\CtrLevel::get();
        return view('vincent.registrar.sheetAv2',compact('levels','record'));
-
    
     });
     
+    
+    
 });
    Route::get('/getstudent/{accesslevel}/{search}','Miscellaneous\AjaxController@findstudent');
+   Route::get('setoverallrank/{section?}','Registrar\Ranking\RankController@setRank');
+   Route::get('/getoverallrank', 'Registrar\Ranking\OverallRanking@getOARanking');
    

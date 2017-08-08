@@ -22,7 +22,7 @@
             <td>{{$subject->subjectname}}</td>
             @endif
         @endforeach
-        @if($level == "Grade 7" | $level == "Grade 8" | $level == "Grade 9" | $level == "Grade 10")
+        @if(in_array($level,array('Grade 7','Grade 8','Grade 9','Grade 10')))
             <td>General Average</td>
             <td>Overall Ranking</td>
         @endif
@@ -32,76 +32,39 @@
         @foreach($students as $student)
         
         <?php 
-            $studInfo = App\User::where('idno',$student->idno)->first();
-
-            if($level == 'Grade 11' || $level == 'Grade 12'){
-                $grades = \App\Grade::where('idno',$student->idno)->where('isdisplaycard',1)->whereIn('semester',[1,2])->where('schoolyear',$sy)->orderBy('sortto','ASC')->get();
-            }else{
-                $grades = \App\Grade::where('idno',$student->idno)->where('isdisplaycard',1)->where('schoolyear',$sy)->orderBy('sortto','ASC')->get();
-            }
-            
-            $acad_rank = 'No Rank';
+            $studInfo = App\User::where('idno',$student->idno)->first();  
+            $grades = \App\Grade::where('idno',$student->idno)->where('schoolyear',$sy)->where('isdisplaycard',1)->get();
         ?>
         
         <tr>
             <td>{{strrchr($student->section," ")}}</td>
             <td style="text-align: left">{{$studInfo->lastname}}, {{$studInfo->firstname}} {{$studInfo->middlename}} {{$studInfo->extensionname}}</td>
             @foreach($grades as $grade)
-                
-                <?php
-                    switch($quarter){
-                        case 1:
-                            $acad_rank =$student->oa_acad_1;
-                            break;
-                        case 2:
-                            $acad_rank =$student->oa_acad_2;
-                            break;
-                        case 3:
-                            $acad_rank =$student->oa_acad_3;
-                            break;
-                        case 4:
-                            $acad_rank =$student->oa_acad_4;
-                            break;
-                        default:
-                            $acad_rank =$student->oa_acad_final;
-                                break;
-                    }
-                    
-                    $acad = GradeController::gradeSubjectAve($quarter,$grade,$level);
-                ?>
                 @if($grade->subjecttype == 5 || $grade->subjecttype == 6 || $grade->subjecttype == 0)
-                <td>{{$acad}}</td>
+                <td>{{round($grade->$gradefield,0)}}</td>
                 @endif
             @endforeach
-            <td>{{GradeController::gradeQuarterAve(array(0,5,6),array(0,1,2),$quarter,$grades,$level)}}</td>
-            <td>{{$acad_rank}}</td>
-            @foreach($grades as $grade)
-                <?php
-                    switch($quarter){
-                        case 1:
-                            $tech_rank =$student->oa_acad_1;
-                            break;
-                        case 2:
-                            $tech_rank =$student->oa_acad_2;
-                            break;
-                        case 3:
-                            $tech_rank =$student->oa_acad_3;
-                            break;
-                        case 4:
-                            $tech_rank =$student->oa_acad_4;
-                            break;
-                        default:
-                            $tech_rank =$student->oa_acad_final;
-                                break;
-                    }
-                    
-                    $tech = GradeController::gradeSubjectAve($quarter,$grade,$level);
-                ?>
-                @if($grade->subjecttype == 1)
-                <td>{{$tech}}</td>
-                @endif
-            @endforeach
+            <td>{{GradeController::gradeQuarterAve(array(0,5,6),array($semester),$quarter,$grades,$level)}}</td>
+            <td>{{$student->acad}}</td>
             
+            @foreach($grades as $grade)
+                @if($grade->subjecttype == 1)
+                <td>{{round($grade->$gradefield,0)}}</td>
+                @endif
+            @endforeach
+            @if(in_array($level,array('Grade 7','Grade 8','Grade 9','Grade 10')))
+            <?php
+                $subjectsetting = \App\GradesSetting::where('level',$level)->where('schoolyear',$sy)->whereIn('subjecttype',array(1))->first();
+            ?>
+            <td>
+            @if($subjectsetting->calculation == "A")
+                {{GradeController::gradeQuarterAve(array(1),array($semester),$quarter,$grades,$level)}}
+            @elseif($subjectsetting->calculation == "W")
+                {{GradeController::weightedgradeQuarterAve(array(1),array($semester),$quarter,$grades,$level)}}
+            @endif
+            </td>
+            <td>{{$student->tech}}</td>
+            @endif
         </tr>
         @endforeach
     </tbody>

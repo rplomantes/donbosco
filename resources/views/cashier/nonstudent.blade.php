@@ -44,7 +44,7 @@ foreach($payees as $key=>$value){
        
      
             <div style="padding: 10px;">
-                <form class="form-horizontal" id = "assess" role="form" method="POST" action="{{ url('/nonstudent') }}">
+                <form class="form-horizontal" id = "assess" role="form" method="POST" action="{{ url('/nonstudent') }}" onsubmit="return dosubmit();">
                     {!! csrf_field() !!} 
                    
                     <div class="form-group">

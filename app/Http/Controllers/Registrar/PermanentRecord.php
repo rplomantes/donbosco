@@ -7,13 +7,53 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use DB;
+use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Registrar\AttendanceController;
 use App\Http\Controllers\Registrar\GradeController;
+use View;
 
 class PermanentRecord extends Controller
 {
     public function __construct(){
 	$this->middleware('auth');
+    }
+    
+    function viewjuniorPermanentRec($idno,Request $request){
+        $header = 0;
+        $grade7 = 0;
+        $grade8 = 0;
+        $grade9 = 0;
+        $grade10 = 0;
+        
+        if(Input::get('header') != null){
+            $header = 1;
+        }
+        if(Input::get('grade7') != null){
+            $grade7 = 1;
+        }
+        if(Input::get('grade8') != null){
+            $grade8 = 1;
+        }
+        if(Input::get('grade9') != null){
+            $grade9 = 1;
+        }
+        if(Input::get('grade10') != null){
+            $grade10 = 1;
+        }
+        
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->setPaper([0,0,650.00,1008.00], 'portrait');
+        $pdf->loadView("print.juniorOldPermanentRec",compact('idno','header','grade7','grade8','grade9','grade10'));
+        return $pdf->stream();
+        //return view("print.juniorOldPermanentRec",compact('idno','header','grade7','grade8','grade9','grade10'));
+    }
+    
+    static function syInfo($idno,$level){
+        $info = \App\Status::where('idno',$idno)->where('level',$level)->orderBy('id','DESC')->first();
+        if(count($info) == 0){
+            $info = \App\StatusHistory::where('idno',$idno)->where('level',$level)->orderBy('id','DESC')->first();
+        }
+        return $info;
     }
     
     function index($idno,$sy){
@@ -38,6 +78,8 @@ class PermanentRecord extends Controller
 
         if(in_array($level,array("Grade 11","Grade 12"))){
             return $this->seniorHighRec($idno,$section,$level,$class_no,$sy,$strand);
+        }elseif(in_array($level,array("Grade 11","Grade 12"))){
+            
         }else{
             return null;
         }
@@ -157,7 +199,7 @@ class PermanentRecord extends Controller
         $q1dayt = array();
         $q2dayp = array();
         $q2daya = array();
-        $q2dayt = array();        
+        $q2dayt = array();
         
         for($i=1; $i < 3 ;$i++){
             $attendance  = AttendanceController::studentQuarterAttendance($idno,$sy,$i,$level);
@@ -177,7 +219,6 @@ class PermanentRecord extends Controller
         $pdf->setPaper([0,0,650.00,1008.00], 'portrait');
         $pdf->loadView("print.seniorPermanentRecInt",compact('idno','sy','grades','info','class_no','section','level','strand','q2dayp','q2daya','q2dayt','q1dayp','q1daya','q1dayt','jhschool','jhsSy','jhsaverage'));
         return $pdf->stream();
-        //return view("print.seniorPermanentRec",compact('idno','sy','grades','info','class_no','section','level','strand'));
     }
     
     function info($idno,$sy){
@@ -204,4 +245,6 @@ class PermanentRecord extends Controller
             return "Student information dont exist";
         }
     }
+    
+
 }

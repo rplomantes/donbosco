@@ -1940,7 +1940,7 @@ class AjaxController extends Controller
     function getlevelstrands($action=null){
         $level = Input::get('level');
         $sy = Input::get('sy');
-        $strands = DB::Select("select distinct strand from ctr_sections where level = '$level' and schoolyear = $sy");
+        $strands = DB::Select("select distinct strand from ctr_sections where level = '$level' ");
         return view('ajax.selectstrand',compact('strands','action'));
     }
     

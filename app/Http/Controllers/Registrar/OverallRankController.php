@@ -24,8 +24,9 @@ class OverallRankController extends Controller
         $quarter = Input::get('quarter');
         
         $this->setOARankingAcad($level,$sy,$course,$quarter);
-        
-        return "go";
+        if(in_array($level,array('Grade 7','Grade 8','Grade 9','Grade 10','Grade 11','Grade 12'))){
+            $this->setOARankingTech($level,$sy,$course,$quarter);
+        }
     }
     
     function setOARankingAcad($level,$sy,$course,$quarter){
@@ -43,7 +44,6 @@ class OverallRankController extends Controller
                 $qrt = "fourth_grading";
            break; 
         }
-        
         $schoolyear = \App\RegistrarSchoolyear::first()->schoolyear;
         if($schoolyear == $sy){
             $table = 'statuses';
@@ -62,7 +62,7 @@ class OverallRankController extends Controller
                         . "WHERE subjecttype IN (0,5,6) "
                         . "AND grades.level = '$level' "
                         . "AND grades.schoolyear = '$sy' "
-                        . "AND s.strand = '$course' "
+                        . "AND grades.strand = '$course' "
                         . "AND isdisplaycard = 1 "
                         . "GROUP BY idno ORDER BY `average` DESC");
             }
@@ -75,7 +75,7 @@ class OverallRankController extends Controller
                         . "WHERE subjecttype IN (0,5,6) "
                         . "AND grades.level = '$level' "
                         . "AND grades.schoolyear = '$sy' "
-                        . "AND s.strand = '$course' "
+                        . " "
                         . "AND isdisplaycard = 1 "
                         . "GROUP BY idno ORDER BY `average` DESC");
             }
@@ -175,6 +175,9 @@ class OverallRankController extends Controller
             case 4;
                 $qrt = "fourth_grading";
            break; 
+            case 5:
+                $qrt = "final_grade";
+                break;
         }
         
         $schoolyear = \App\RegistrarSchoolyear::first()->schoolyear;

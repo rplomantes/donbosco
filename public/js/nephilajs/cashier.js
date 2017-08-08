@@ -153,8 +153,69 @@ function nosubmit(event, whatbranch){
 
 
 function dosubmit(){
+
+    var totaldebit =  0;
+    var totalcredit =  0;
+    if(document.getElementById("receivecash") !== null){
+        
+        if(document.getElementById("receivecash").value !== ""){
+            totaldebit = totaldebit+eval(document.getElementById("receivecash").value);
+        }
+        
+    }
+
+    if(document.getElementById("receivecheck") !== null){
+        if(document.getElementById("receivecheck").value !== ""){
+            totaldebit = totaldebit+eval(document.getElementById("receivecheck").value);
+        }
+        
+    }
+    
+    if(document.getElementById("fape") !== null){
+        if(document.getElementById("fape").value !== ""){
+            totaldebit = totaldebit+eval(document.getElementById("fape").value);
+        }
+        
+    }
+    
+    if(document.getElementById("cash") !== null){
+        if(document.getElementById("cash").value !== ""){
+            totaldebit = totaldebit+eval(document.getElementById("cash").value);
+        }
+        
+    }
+    
+    if(document.getElementById("check") !== null){
+        if(document.getElementById("check").value !== ""){
+            totaldebit = totaldebit+eval(document.getElementById("check").value);
+        }
+        
+    }
+    
+    if(document.getElementById("totalcredit") !== null){
+        if(document.getElementById("totalcredit").value !== ""){
+            totalcredit = totalcredit+eval(document.getElementById("totalcredit").value);
+        }
+    }
+    
+    if(document.getElementById("totalamount") !== null){
+        if(document.getElementById("totalamount").value !== ""){
+            totalcredit = totalcredit+eval(document.getElementById("totalamount").value);
+        }
+        
+    }
+    
+
+    
     if(confirm("Continue to process payment ?")){
-        return true;
+        if(eval(totaldebit) !== 0){
+            return true;
+
+        }else{
+            alert("Cannot continue transaction.");
+            return false;
+        }
+        
     }else{
         document.getElementById('submit').style.visibility="hidden";
         document.getElementById('receivecash').focus();
@@ -294,7 +355,6 @@ function submitcheck(event, amount){
             document.getElementById('cashdiff').innerHTML = "DIFFERENCE : " + diff.toFixed(2);
             document.getElementById('receivecash').focus();
         }
-        document.getElementById('receivecash').focus();
      event.preventDefault();
      return false;
         

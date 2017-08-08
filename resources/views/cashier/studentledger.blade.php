@@ -22,6 +22,7 @@ $checkno = \App\Dedit::distinct('check_number')->pluck('check_number')->toArray(
     });
     });
 
+
 </script>
   <div class="container_fluid">  
       <div class="col-md-12">
@@ -274,7 +275,7 @@ $checkno = \App\Dedit::distinct('check_number')->pluck('check_number')->toArray(
             </div>    
             <div class="col-md-12" style=" margin-top: 10px;background-color: ">
              <h5>Amount Due</h5>
-             <form onsubmit="return dosubmit();" class="form-horizontal" id = "assess" role="form" method="POST" action="{{ url('/payment') }}">
+             <form onsubmit="return dosubmit();" class="form-horizontal" id = "assess" name="assess" role="form" method="POST" action="{{ url('/payment') }}">
              {!! csrf_field() !!} 
              <input type="hidden" name="idno" value="{{$student->idno}}">
              <input type="hidden" id="reservation" id = "reservation" name="reservation" value="{{$reservation}}">
@@ -364,10 +365,6 @@ $checkno = \App\Dedit::distinct('check_number')->pluck('check_number')->toArray(
    
 <script src="{{url('/js/nephilajs/cashier.js')}}"></script>    
 <script src="{{url('/js/nephilajs/getpaymenttype.js')}}"></script>
-<script>
-    $("#totalamount").change(function(){
-        alert("mes")
-    });
-</script>
+
 
 @stop

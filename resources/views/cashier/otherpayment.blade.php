@@ -31,7 +31,7 @@ $checkno = \App\Dedit::distinct('check_number')->pluck('check_number')->toArray(
 }
 </style>
 <div class="container_fluid">
-    <form class="form-horizontal" id = "assess" role="form" method="POST" action="{{ url('othercollection') }}" onsubmit="return confirm('Continue to process payment?')">
+    <form class="form-horizontal" id = "assess" role="form" method="POST" action="{{ url('othercollection') }}" onsubmit="return dosubmit();">
             {!! csrf_field() !!}
     <div class="col-md-9">
         <div class="col-md-12">

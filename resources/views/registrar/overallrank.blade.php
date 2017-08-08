@@ -24,13 +24,15 @@
             </select>
         </div>
     </div>
-    <div class="col-md-9" style="margin-top: 25px;">
-        <span id="quarters">
-            <a class="btn btn-default quarter btn-primary" id="1st" onclick="changequarter(1,'FIRST')">1st Quarter</a><a class="btn btn-default quarter" id="2nd" onclick="changequarter(2,'SECOND')">2nd Quarter</a><a class="btn btn-default quarter" id="3rd" onclick="changequarter(3,'THIRD')">3rd Quarter</a><a class="btn btn-default quarter" id="4th" onclick="changequarter(4,'FOURTH')">4th Quarter</a><a class="btn btn-default quarter" id="final" onclick="changequarter(5,'FINAL')">Final</a>
-        </span>
+    <div class="col-md-2" style="margin-top: 25px;">
         @if(Auth::user()->accesslevel == env('USER_REGISTRAR') && $schoolyear == $sy ||Auth::user()->idno == 'rplomantes')
             <button class="btn btn-danger" onclick="updateRank();">Set Ranking</button>
         @endif
+    </div>
+    <div class="col-md-7" style="margin-top: 25px;">
+        <span id="quarters">
+            
+        </span>
     </div>
     
 </div>
@@ -54,13 +56,15 @@
 </div>
 
 <script>
+    
+    
     var level = "";
     var strand = "";
     var quarter = '1';
-    var dispQtr ="FIRST";
+    var semester = '0';
     
     $("#quarters").on("click", "a.quarter", function(){
-        $(this).siblings().removeClass('btn-primary');
+        $('a.quarter').removeClass('btn-primary');
         $(this).addClass('btn-primary');
         $(this).blur();
     });
@@ -76,10 +80,25 @@
         level = $('#level').val();
         $("#studentlist").html("");
         $('#strand').html("")
-        if(level == "Grade 9" || level == "Grade 10" || level == "Grade 11" || level == "Grade 12"){
+        if(level == "Grade 9" || level == "Grade 10"){
+            quarter = 1;
+            semester =0;
+            $('#quarters').html('<a class="btn btn-default quarter btn-primary" id="1st" onclick="changequarter(1,0)">1st Quarter</a><a class="btn btn-default quarter" id="2nd" onclick="changequarter(2,0)">2nd Quarter</a><a class="btn btn-default quarter" id="3rd" onclick="changequarter(3,0)">3rd Quarter</a><a class="btn btn-default quarter" id="4th" onclick="changequarter(4,0)">4th Quarter</a><a class="btn btn-default quarter" id="final" onclick="changequarter(5,0)">Final</a>');
             getcourse();
+        }
+        else if(level == "Grade 11" || level == "Grade 12"){
+            quarter = 1;
+            semester =1;
+            $('#quarters').html('<div><dl class="dl-horizontal" style="margin-bottom:0px;"><dt>1st Semester</dt><dd><a class="btn btn-default quarter btn-primary" id="1st" onclick="changequarter(1,1)">1st Quarter</a><a class="btn btn-default quarter" id="2nd" onclick="changequarter(2,1)">2nd Quarter</a><a class="btn btn-default quarter" id="final1" onclick="changequarter(5,1)">Final</a></dd></dl></div><br>'+
+                                '<div><dl class="dl-horizontal" style="margin-bottom:0px;"><dt>2nd Semester</dt><dd><a class="btn btn-default quarter" id="1st" onclick="changequarter(1,2)">1st Quarter</a><a class="btn btn-default quarter" id="2nd2" onclick="changequarter(2,2)">2nd Quarter</a><a class="btn btn-default quarter" id="final2" onclick="changequarter(5,2)">Final</a></dd></dl></div>');
+            getcourse();
+            
         }else{
+            quarter = 1;
+            semester =0;
+            $('#quarters').html('<a class="btn btn-default quarter btn-primary" id="1st" onclick="changequarter(1,0)">1st Quarter</a><a class="btn btn-default quarter" id="2nd" onclick="changequarter(2,0)">2nd Quarter</a><a class="btn btn-default quarter" id="3rd" onclick="changequarter(3,0)">3rd Quarter</a><a class="btn btn-default quarter" id="4th" onclick="changequarter(4,0)">4th Quarter</a><a class="btn btn-default quarter" id="final" onclick="changequarter(5,0)">Final</a>');
             getoverallrank();
+            
         }
     });    
     
@@ -97,9 +116,9 @@
                });
     }
     
-    function changequarter(setQuarter,q){
+    function changequarter(setQuarter,sem){
         quarter = setQuarter;
-        dispQtr =q;
+        semester =sem;
         
         getoverallrank();
     }
@@ -115,6 +134,7 @@
         arrays['sy']= '{{$sy}}';
         arrays['course']= strand;
         arrays['quarter']= quarter;
+        arrays['semester']= semester;
         $.ajax({
                type: "GET", 
                url: "/getoverallrank",
@@ -131,6 +151,7 @@
         arrays['sy']= '{{$sy}}';
         arrays['course']= strand;
         arrays['quarter']= quarter;
+        arrays['semester']= semester;
         $.ajax({
                type: "GET", 
                url: "/setoverallrank",
