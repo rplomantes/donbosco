@@ -20,9 +20,7 @@ class OfficeSumController extends Controller
         $coas = \App\ChartOfAccount::where('acctcode','LIKE',$acctcode.'%')->orderBy('accountname','ASC')->get();
         $accounts = $this->accounts($fromdate,$todate,$dept,$acctcode,$schoolyear);
 
-        if($dept == 'Student Services'){
-            unset($offices[0]);
-        }	
+
         return view('accounting.officeSummary',compact('fromdate','todate','dept','accounts','offices','acctcode','departments','coas'));
     }
 
@@ -32,10 +30,7 @@ class OfficeSumController extends Controller
         $schoolyear = \App\CtrSchoolYear::first()->schoolyear;
         $accounts = $this->accounts($fromdate,$todate,$dept,$acctcode,$schoolyear);
 
-        if($dept == 'Student Services'){
-            unset($offices[0]);
-        }
-        
+
         $pdf = \App::make('dompdf.wrapper');
         $pdf->setPaper('legal','landscape');
         $pdf->loadView('print.officeSummary',compact('fromdate','todate','dept','accounts','offices','acctcode','coas'));

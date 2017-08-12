@@ -27,7 +27,7 @@ class OverallRanking extends Controller
         $acad_field = $this->rankingField($semester,$quarter,'acad_level_');
         $tech_field = $this->rankingField($semester,$quarter,'tech_level_');
         
-        if($course != "NULL"){
+        if($course != "NULL" || $course != "All"){
             $course = "AND s.strand LIKE '".$course."'" ;
         } else{
             $course = "";

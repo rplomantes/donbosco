@@ -422,6 +422,7 @@ class DBFixer extends Controller
         
        foreach($credits as $credit){
             $orno = $credit->receiptno;
+            $transaction = $credit->transactiondate;
             $idno = $credit->idno;
             echo $credit->referenceid."<br>";
            $ledgers = \App\Ledger::find($credit->referenceid);
@@ -442,12 +443,12 @@ class DBFixer extends Controller
        }
        
       if($plandiscount > 0){
-            $this->debit_discount_fix($refno, $orno,$idno,env('DEBIT_DISCOUNT') , $plandiscount, "Plan Discount");
+            $this->debit_discount_fix($transaction,$refno, $orno,$idno,env('DEBIT_DISCOUNT') , $plandiscount, "Plan Discount");
       }
       
       if(count($otherdiscount) > 0){
           foreach($otherdiscount as $key =>$amount){
-            $this->debit_discount_fix($refno, $orno,$idno,env('DEBIT_DISCOUNT') , $amount, $key);    
+            $this->debit_discount_fix($transaction,$refno, $orno,$idno,env('DEBIT_DISCOUNT') , $amount, $key);    
           }
       }
       
@@ -455,7 +456,7 @@ class DBFixer extends Controller
       return $renewed;
    }
    
-   function debit_discount_fix($refno, $orno,$idno,$debittype,$amount,$discountname){
+   function debit_discount_fix($transaction,$refno, $orno,$idno,$debittype,$amount,$discountname){
        $department = "";
         if($discountname == "Plan Discount"){
             $accountcode='410100';
@@ -483,7 +484,7 @@ class DBFixer extends Controller
         $debitaccount = new \App\Dedit;
         $debitaccount->idno = $idno;
         $debitaccount->fiscalyear=$fiscal->fiscalyear;
-        $debitaccount->transactiondate = Carbon::now();
+        $debitaccount->transactiondate = $transaction;
         $debitaccount->accountingcode = $accountcode;
         $debitaccount->acctcode = $acctcode;
         $debitaccount->description = $description;
@@ -517,5 +518,49 @@ class DBFixer extends Controller
         $debitaccount->postedby = \Auth::user()->idno;
         $debitaccount->save();
         
+    }
+    
+    function fullDiscount($refno){
+        $duedate = "";
+        $idno = "";
+        $orno = "";
+        $plandiscount = 0;
+        $otherdiscount = array();
+        
+        $credits = DB::Select("Select receiptno,idno,max(duedate) as due from credits where refno = '$refno' and isreverse = '0'");
+        
+        foreach($credits as $credit){
+            $duedate = $credit->due;
+            $idno = $credit->idno;
+            $orno = $credit->receiptno;
+        }
+        
+        $fulldiscounts = DB::Select("select * from ledgers where idno = '".$idno."' and categoryswitch <= '6' and amount = (plandiscount+otherdiscount) and duedate >= '$duedate' and status =0");
+        
+        foreach($fulldiscounts as $fulldiscount){
+            if($fulldiscount->plandiscount > 0){
+                $plandiscount = $plandiscount + $fulldiscount->plandiscount;
+            }
+            if($fulldiscount->otherdiscount > 0){
+                if(array_key_exists($fulldiscount->discountcode, $otherdiscount)){
+                    $acctdisc = $otherdiscount [$fulldiscount->discountcode];
+                }else{
+                    $acctdisc = 0;
+                }
+                $otherdiscount [$fulldiscount->discountcode]= $acctdisc + $fulldiscount->otherdiscount;
+            }
+            \App\Ledger::where('id',$fulldiscount->id)->update(['status'=>1]);
+            CashierController::credit($idno, $fulldiscount->id, $refno, $orno, $fulldiscount->amount);
+        }
+        
+        if($plandiscount > 0){
+            CashierController::debit_reservation_discount($refno, $orno,$idno,env('DEBIT_DISCOUNT') , $plandiscount, "Plan Discount");
+        }
+
+        if(count($otherdiscount) > 0){
+            foreach($otherdiscount as $key =>$amount){
+              CashierController::debit_reservation_discount($refno, $orno,$idno,env('DEBIT_DISCOUNT') , $amount, $key);    
+            }
+        }
     }
 }

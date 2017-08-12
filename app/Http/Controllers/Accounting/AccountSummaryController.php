@@ -43,13 +43,13 @@ class AccountSummaryController extends Controller{
                 . "from credits c "
                 . "where (c.transactiondate BETWEEN '$fromdate' AND '$todate') "
                 . "AND c.accountingcode = '$account' and c. isreverse=0 "
-                . "group by c.refno "
+                . "group by c.refno,c.sub_department "
                 . "UNION "
                 . "select refno,transactiondate,receiptno,sum(amount)+sum(checkamount) as debit,0 as credit,entry_type,acct_department,sub_department "
                 . "from dedits "
                 . "where (transactiondate BETWEEN '$fromdate' AND '$todate' ) "
                 . "AND accountingcode = '$account' and isreverse=0 "
-                . "group by refno) c order by transactiondate,receiptno");
+                . "group by refno,sub_department) c order by transactiondate,receiptno");
         
         return $accounts;
     }

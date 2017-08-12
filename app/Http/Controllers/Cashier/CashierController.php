@@ -671,7 +671,7 @@ class CashierController extends Controller
                     $debitaccount->sub_department = "None";
             }   
         }else{
-            $debitaccount->acct_department = $this->mainDepartment($discount->sub_department);
+            $debitaccount->acct_department = self::mainDepartment($discount->sub_department);
             $debitaccount->sub_department = $discount->sub_department;
         }
         $debitaccount->postedby = \Auth::user()->idno;

@@ -22,7 +22,7 @@ class Helper extends Controller
         
         $subjects = RegistrarHelper::getSubjectType($subjecttype);        
         $averages = DB::Select("SELECT g.idno, ROUND( SUM( $gradefield ) / count( g.idno ) , $subjectsetting->decimal ) AS average "
-                . "FROM grades g left join statuses s on s.idno = g.idno "
+                . "FROM grades g left join $table s on s.idno = g.idno "
                 . "WHERE g.subjecttype IN ($subjects) $section "
                 . "AND g.level = '$subjectsetting->level' "
                 . "AND g.schoolyear = '$subjectsetting->schoolyear' "

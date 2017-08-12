@@ -251,6 +251,7 @@
     //TOOLS
     Route::get('/addoldstudent','DBFixer@addOldStudent');
     Route::get('/fixdiscount/{refno}','DBFixer@fixdiscount');
+    Route::get('/fulldiscount/{refno}','DBFixer@fullDiscount');
     Route::get('/gensubj','DBFixer@gensubjects');
     Route::get('/updateentrytype','DBFixer@updateentrytype');
     Route::get('/updatetvet','DBFixer@updatetvet');
@@ -416,6 +417,10 @@ Route::group(['middleware' => ['web','registrar']], function () {
     Route::get('/electivesheeta/{selectedSY}','Registrar\Elective\SheetAController@index');
     Route::get('/printelectivesheeta/{section}','Registrar\Elective\SheetAController@printElective');
     
+    Route::get('/promotion/{sy}','Registrar\PromotionController@index');
+    Route::get('/editpromotion/{sy}/{level}','Registrar\PromotionController@editpromotion');
+    Route::post('/savepromotion/{sy}/{level}','Registrar\PromotionController@savepromotion');
+    
    Route::get('/sheetA/{record}',function($record){
        $levels = \App\CtrLevel::get();
        return view('vincent.registrar.sheetAv2',compact('levels','record'));
@@ -428,4 +433,6 @@ Route::group(['middleware' => ['web','registrar']], function () {
    Route::get('/getstudent/{accesslevel}/{search}','Miscellaneous\AjaxController@findstudent');
    Route::get('setoverallrank/{section?}','Registrar\Ranking\RankController@setRank');
    Route::get('/getoverallrank', 'Registrar\Ranking\OverallRanking@getOARanking');
+   
+   Route::get('/viewpromotion/{sy}/{level}','Registrar\PromotionController@viewreport');
    
