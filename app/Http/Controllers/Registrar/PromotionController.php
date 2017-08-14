@@ -26,6 +26,18 @@ class PromotionController extends Controller
         return view('registrar.promotion.edit',compact('students','sy','level','admissions','probations'));
     }
     
+    function printpromotion($sy,$level){
+        $admissions= \App\CtrStudentPromotion::where('type','admission')->get();
+        $probations = \App\CtrStudentPromotion::where('type','!=','admission')->get();
+        $students = $this->students($sy,$level);
+        
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->setPaper("Legal", "portrait");
+        $pdf->loadView('registrar.promotion.print',compact('students','sy','level','admissions','probations'));
+        return $pdf->stream();
+        //return view('registrar.promotion.print',compact('students','sy','level','admissions','probations'));
+    }
+    
     function savepromotion($sy,$level){
         $students = $this->students($sy,$level);
         

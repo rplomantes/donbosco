@@ -37,16 +37,16 @@ use App\Http\Controllers\Registrar\AttendanceController;
         
     </style>
 </head>
-<body style="border:1px solid;">
+<body style="border:1px solid">
     <table width="100%" style='min-height: 250px;'>
         <tr>
             <td></td>
         </tr>
     </table>
     
-    <table width="100%" cellspacing="0">
+    <table width="100%" cellspacing="0" border="1" style="position:absolute;top:339pt;left:0pt;">
         <tr>
-            <td valign="top" width='49%' style="min-height: 615pt;height:615pt;vertical-align: bottom;">
+            <td valign="top" width='49%'>
                 @if($grade7 == 1)
                     <table style="font-size: 8pt" width="100%" border="1" cellspacing="0">
                     <tr>
@@ -338,8 +338,11 @@ use App\Http\Controllers\Registrar\AttendanceController;
                 @endif
             </td>
         </tr>
+    </table>
+    
+    <table width="100%" cellspacing="0" style="position:absolute;top:639pt;left:0pt;" border="1">
         <tr>
-            <td style="vertical-align: bottom;">
+            <td style="vertical-align: bottom;" width='49%'>
                 @if($grade8 == 1)
                 <table style="font-size: 8pt" width="100%" border="1" cellspacing="0">
                     <tr>
@@ -485,7 +488,7 @@ use App\Http\Controllers\Registrar\AttendanceController;
                 @endif
             </td>
             <td></td>
-            <td style="vertical-align: bottom;">
+            <td style="vertical-align: bottom;" width='49%'>
                 @if($grade10 == 1)
                 <table style="font-size: 8pt" width="100%" border="1" cellspacing="0">
                     <tr>

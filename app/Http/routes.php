@@ -419,7 +419,9 @@ Route::group(['middleware' => ['web','registrar']], function () {
     
     Route::get('/promotion/{sy}','Registrar\PromotionController@index');
     Route::get('/editpromotion/{sy}/{level}','Registrar\PromotionController@editpromotion');
+    Route::get('/printpromotion/{sy}/{level}','Registrar\PromotionController@printpromotion');
     Route::post('/savepromotion/{sy}/{level}','Registrar\PromotionController@savepromotion');
+    
     
    Route::get('/sheetA/{record}',function($record){
        $levels = \App\CtrLevel::get();

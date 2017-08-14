@@ -1,5 +1,6 @@
 <?php 
 use App\Http\Controllers\Registrar\PromotionController as Promotion;
+use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
 ?>
 @extends('app')
 @section('content')
@@ -30,11 +31,17 @@ input[type=checkbox]
             </tr>
             <?php $row = 1;?>
             @foreach($students as $student)
+            <?php $isnew = RegistrarHelper::isNewStudent($student->idno,$sy);?>
             <tr>
                 <td>{{$row}}</td>
                 <td>{{$student->studno}}</td>
-                <td>{{$student->lastname}}, {{$student->firstname}} {{substr($student->middlename,0,1)}}.</td>
-                <td>{{$student->section}}</td>
+                <td>@if($isnew)
+                    *
+                    @else
+                    &nbsp;
+                    @endif
+                    {{$student->lastname}}, {{$student->firstname}} {{substr($student->middlename,0,1)}}.</td>
+                <td>{{strrchr($student->section," ")}}</td>
                 <td>
                     <select name="admission[{{$student->studno}}]">
                         @foreach($admissions as $admission)
