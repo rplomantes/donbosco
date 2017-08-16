@@ -3,6 +3,7 @@
 use App\Http\Controllers\Registrar\GradeController;
 use App\Http\Controllers\Registrar\PermanentRecord;
 use App\Http\Controllers\Registrar\AttendanceController;
+use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
 ?>
 <html lang="en">
 <head>
@@ -57,7 +58,7 @@ use App\Http\Controllers\Registrar\AttendanceController;
         </tr>
     </table>
     
-    <table width="100%" cellspacing="0" style="position:absolute;top:246px;left:0pt;">
+    <table width="100%" cellspacing="0" style="position:absolute;top:240px;left:0pt;">
         <tr>
             <td width='48.5%'>
                 @if($grade7 == 1)
@@ -108,7 +109,7 @@ use App\Http\Controllers\Registrar\AttendanceController;
                         @endif
                     @endforeach
                         <tr class="border_left border_right" style='font-weight: bold'>
-                            <td>ACADEMI AVERAGE</td>
+                            <td>ACADEMIC AVERAGE</td>
                             <td style="font-size: 7pt;text-align: center;">{{GradeController::gradeQuarterAve(array(0),array(0),1,$grade7Grades,'Grade 7')}}</td>
                             <td style="font-size: 7pt;text-align: center;">{{GradeController::gradeQuarterAve(array(0),array(0),2,$grade7Grades,'Grade 7')}}</td>
                             <td style="font-size: 7pt;text-align: center;">{{GradeController::gradeQuarterAve(array(0),array(0),3,$grade7Grades,'Grade 7')}}</td>
@@ -118,11 +119,11 @@ use App\Http\Controllers\Registrar\AttendanceController;
 
                         <tr class="border_left border_right">
                             <td>RANK</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->oa_acad_1}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->oa_acad_2}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->oa_acad_3}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->oa_acad_4}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->oa_acad_final}}</td>
+                            <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->acad_level_1}}</td>
+                            <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->acad_level_2}}</td>
+                            <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->acad_level_3}}</td>
+                            <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->acad_level_4}}</td>
+                            <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->acad_level_final1}}</td>
                         </tr>
                         <tr class="border_left border_right">
                             <td colspan="6">TECHNICAL SUBJECTS</td>
@@ -158,11 +159,11 @@ use App\Http\Controllers\Registrar\AttendanceController;
                             </tr>
                             <tr class="border_left border_right border_bottom">
                                 <td>RANK</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->oa_tech_1}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->oa_tech_2}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->oa_tech_3}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->oa_tech_4}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->oa_tech_final}}</td>
+                                <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->tech_level_1}}</td>
+                                <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->tech_level_2}}</td>
+                                <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->tech_level_3}}</td>
+                                <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->tech_level_4}}</td>
+                                <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->tech_level_final1}}</td>
                             </tr>
                                 <tr class="border_left border_right border_top border_bottom"><td colspan="6" style="padding-top: 20px;padding-bottom: 0px;height: 28.8px;"></td></tr>
                             <?php 
@@ -219,11 +220,11 @@ use App\Http\Controllers\Registrar\AttendanceController;
                             <table width='100%' cellspacing='0' >
                                 <tr>
                                     <td style='text-align: left'>{{strtoupper($grade9info->level)}} - {{$grade9info->section}}</td>
-                                    <td style='text-align: right'>School Year</td>
+                                    <td style='text-align: right'>SY: {{$grade9info->schoolyear}}-{{$grade9info->schoolyear+1}}</td>
                                 </tr>
                                 <tr>
                                     <td style='text-align: left'>School: DON BOSCO - MAKATI</td>
-                                    <td style='text-align: right'>{{$grade9info->schoolyear}}-{{$grade9info->schoolyear+1}}</td>
+                                    <td style='text-align: right'>Shop:{{RegistrarHelper::shortStrand($grade9info->strand)}}</td>
                                 </tr>
                             </table>
                             @endif
@@ -254,7 +255,7 @@ use App\Http\Controllers\Registrar\AttendanceController;
                         @endif
                     @endforeach
                         <tr class="border_left border_right" style='font-weight: bold'>
-                            <td>ACADEMI AVERAGE</td>
+                            <td>ACADEMIC AVERAGE</td>
                             <td style="font-size: 7pt;text-align: center;">{{GradeController::gradeQuarterAve(array(0),array(0),1,$grade9Grades,'Grade 9')}}</td>
                             <td style="font-size: 7pt;text-align: center;">{{GradeController::gradeQuarterAve(array(0),array(0),2,$grade9Grades,'Grade 9')}}</td>
                             <td style="font-size: 7pt;text-align: center;">{{GradeController::gradeQuarterAve(array(0),array(0),3,$grade9Grades,'Grade 9')}}</td>
@@ -264,11 +265,11 @@ use App\Http\Controllers\Registrar\AttendanceController;
 
                         <tr class="border_left border_right">
                             <td>RANK</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->oa_acad_1}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->oa_acad_2}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->oa_acad_3}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->oa_acad_4}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->oa_acad_final}}</td>
+                            <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->acad_level_1}}</td>
+                            <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->acad_level_2}}</td>
+                            <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->acad_level_3}}</td>
+                            <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->acad_level_4}}</td>
+                            <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->acad_level_final1}}</td>
                         </tr>
                         <tr class="border_left border_right">
                             <td colspan="6">TECHNICAL SUBJECTS</td>
@@ -304,11 +305,11 @@ use App\Http\Controllers\Registrar\AttendanceController;
                             </tr>
                             <tr class="border_left border_right border_bottom">
                                 <td>RANK</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->oa_tech_1}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->oa_tech_2}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->oa_tech_3}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->oa_tech_4}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->oa_tech_final}}</td>
+                                <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->tech_level_1}}</td>
+                                <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->tech_level_2}}</td>
+                                <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->tech_level_3}}</td>
+                                <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->tech_level_4}}</td>
+                                <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->tech_level_final1}}</td>
                             </tr>
                                 <tr class="border_left border_right border_top border_bottom"><td colspan="6" style="padding-top: 20px;padding-bottom: 0px;height: 28.8px;"></td></tr>
                             <?php 
@@ -353,7 +354,7 @@ use App\Http\Controllers\Registrar\AttendanceController;
         </tr>
     </table>
     
-    <table width="100%" cellspacing="0" style="position:absolute;top:765px;left:0pt;" >
+    <table width="100%" cellspacing="0" style="position:absolute;top:764.5px;left:0pt;" >
         <tr>
             <td style="vertical-align: bottom;" width='48.5%'>
                 @if($grade8 == 1)
@@ -404,7 +405,7 @@ use App\Http\Controllers\Registrar\AttendanceController;
                         @endif
                     @endforeach
                         <tr class="border_left border_right" style='font-weight: bold'>
-                            <td>ACADEMI AVERAGE</td>
+                            <td>ACADEMIC AVERAGE</td>
                             <td style="font-size: 7pt;text-align: center;">{{GradeController::gradeQuarterAve(array(0),array(0),1,$grade8Grades,'Grade 8')}}</td>
                             <td style="font-size: 7pt;text-align: center;">{{GradeController::gradeQuarterAve(array(0),array(0),2,$grade8Grades,'Grade 8')}}</td>
                             <td style="font-size: 7pt;text-align: center;">{{GradeController::gradeQuarterAve(array(0),array(0),3,$grade8Grades,'Grade 8')}}</td>
@@ -414,11 +415,11 @@ use App\Http\Controllers\Registrar\AttendanceController;
 
                         <tr class="border_left border_right">
                             <td>RANK</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->oa_acad_1}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->oa_acad_2}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->oa_acad_3}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->oa_acad_4}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->oa_acad_final}}</td>
+                            <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->acad_level_1}}</td>
+                            <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->acad_level_2}}</td>
+                            <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->acad_level_3}}</td>
+                            <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->acad_level_4}}</td>
+                            <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->acad_level_final1}}</td>
                         </tr>
                         <tr class="border_left border_right">
                             <td colspan="6">TECHNICAL SUBJECTS</td>
@@ -454,11 +455,11 @@ use App\Http\Controllers\Registrar\AttendanceController;
                             </tr>
                             <tr class="border_left border_right border_bottom">
                                 <td>RANK</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->oa_tech_1}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->oa_tech_2}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->oa_tech_3}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->oa_tech_4}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->oa_tech_final}}</td>
+                                <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->tech_level_1}}</td>
+                                <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->tech_level_2}}</td>
+                                <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->tech_level_3}}</td>
+                                <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->tech_level_4}}</td>
+                                <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->tech_level_final1}}</td>
                             </tr>
                                 <tr class="border_left border_right border_top border_bottom"><td colspan="6" style="padding-top: 20px;padding-bottom: 0px;height: 28.8px;"></td></tr>
                             <?php 
@@ -515,11 +516,11 @@ use App\Http\Controllers\Registrar\AttendanceController;
                             <table width='100%' cellspacing='0' >
                                 <tr>
                                     <td style='text-align: left'>{{strtoupper($grade10info->level)}} - {{$grade10info->section}}</td>
-                                    <td style='text-align: right'>School Year</td>
+                                    <td style='text-align: right'>SY: {{$grade10info->schoolyear}}-{{$grade10info->schoolyear+1}}</td>
                                 </tr>
                                 <tr>
                                     <td style='text-align: left'>School: DON BOSCO - MAKATI</td>
-                                    <td style='text-align: right'>{{$grade10info->schoolyear}}-{{$grade10info->schoolyear+1}}</td>
+                                    <td style='text-align: right'>Shop:{{RegistrarHelper::shortStrand($grade10info->strand)}}</td>
                                 </tr>
                             </table>
                             @endif
@@ -550,7 +551,7 @@ use App\Http\Controllers\Registrar\AttendanceController;
                         @endif
                     @endforeach
                         <tr class="border_left border_right" style='font-weight: bold'>
-                            <td>ACADEMI AVERAGE</td>
+                            <td>ACADEMIC AVERAGE</td>
                             <td style="font-size: 7pt;text-align: center;">{{GradeController::gradeQuarterAve(array(0),array(0),1,$grade10Grades,'Grade 10')}}</td>
                             <td style="font-size: 7pt;text-align: center;">{{GradeController::gradeQuarterAve(array(0),array(0),2,$grade10Grades,'Grade 10')}}</td>
                             <td style="font-size: 7pt;text-align: center;">{{GradeController::gradeQuarterAve(array(0),array(0),3,$grade10Grades,'Grade 10')}}</td>
@@ -560,11 +561,11 @@ use App\Http\Controllers\Registrar\AttendanceController;
 
                         <tr class="border_left border_right">
                             <td>RANK</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->oa_acad_1}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->oa_acad_2}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->oa_acad_3}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->oa_acad_4}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->oa_acad_final}}</td>
+                            <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->acad_level_1}}</td>
+                            <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->acad_level_2}}</td>
+                            <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->acad_level_3}}</td>
+                            <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->acad_level_4}}</td>
+                            <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->acad_level_final1}}</td>
                         </tr>
                         <tr class="border_left border_right">
                             <td colspan="6">TECHNICAL SUBJECTS</td>
@@ -600,11 +601,11 @@ use App\Http\Controllers\Registrar\AttendanceController;
                             </tr>
                             <tr class="border_left border_right border_bottom">
                                 <td>RANK</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->oa_tech_1}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->oa_tech_2}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->oa_tech_3}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->oa_tech_4}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->oa_tech_final}}</td>
+                                <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->tech_level_1}}</td>
+                                <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->tech_level_2}}</td>
+                                <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->tech_level_3}}</td>
+                                <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->tech_level_4}}</td>
+                                <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->tech_level_final1}}</td>
                             </tr>
                                 <tr class="border_left border_right border_top border_bottom"><td colspan="6" style="padding-top: 20px;padding-bottom: 0px;height: 28.8px;"></td></tr>
                             <?php 

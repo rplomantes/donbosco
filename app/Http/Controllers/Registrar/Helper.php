@@ -94,4 +94,30 @@ class Helper extends Controller
         
         return $sec;
     }
+    
+    static function shortStrand($strand){
+        $short = "";
+        switch($strand){
+            case "Mechanical Technology":
+                $short = "MT";
+                break;
+            case "Industrial Drafting Technology":
+                $short = "IDT";
+                break;
+            case "Electronics Technology":
+                $short = "ELX";
+                break;            
+            case "Electrical Technology":
+                $short = "ET";
+                break;       
+            case "Computer Technology":
+                $short = "CT";
+                break;
+            case "Automotive Technology":
+                $short = "AT";
+                break;          
+        }
+        
+        return $short;
+    }
 }

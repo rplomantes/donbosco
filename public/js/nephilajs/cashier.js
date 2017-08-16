@@ -227,7 +227,7 @@ function dosubmit(){
 function submitiscbc(event, isSelected){
   if(event.keyCode == 13) {
   if(isSelected){
-      document.getElementById('bank_branch').value="cbc";
+      document.getElementById('bank_branch').value="CBC";
       document.getElementById('check_number').focus();
   }else{
        document.getElementById('bank_branch').value="";
