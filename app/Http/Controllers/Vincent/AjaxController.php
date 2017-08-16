@@ -1913,17 +1913,27 @@ class AjaxController extends Controller
         return view('ajax.selectsection',compact('sections','action','allavailable'));
     }
     
-    function getlevelsections($action=null){
+    function getlevelsections($allavailable,$action=null){
         $level = Input::get('level');
         $sy = Input::get('sy');
         $course = Input::get('course');
-        $allavailable = 0;
         
-        if($course == 'null'){
-            $course = '';
+        
+        if($course != "null"){
+            $course = "and strand='".$course."'";
+        }else{
+            $course = "";
         }
         
-        $sections = DB::Select("Select distinct section from  ctr_sections where level = '$level' and schoolyear = $sy and strand='$course'");
+        $currSY = \App\CtrSchoolYear::first()->schoolyear;
+        if($currSY == $sy){
+            $table = 'ctr_sections';
+        }
+        else{
+            $table = 'ctr_sections_temp';
+        }
+        
+        $sections = DB::Select("Select distinct section from  $table where level = '$level' and schoolyear = $sy $course");
         return view('ajax.selectsection',compact('sections','action','allavailable'));
                
     }
@@ -1933,7 +1943,7 @@ class AjaxController extends Controller
         $sy = Input::get('sy');
         $course = Input::get('course');
         $allavailable = 1;
-        $subjects = DB::Select("Select distinct subjectcode,subjectname from  grades where level = '$level' and schoolyear = $sy and strand='$course' and subjecttype IN(0,1,5,6) and isdisplaycard = 1 order by sortto");
+        $subjects = DB::Select("Select distinct subjectcode,subjectname from  grades where level = '$level' and schoolyear = $sy and strand='$course' and subjecttype IN(0,1,5,6) and subjectcode NOT LIKE 'ELE%' and isdisplaycard = 1 order by sortto");
         return view('ajax.selectsubjects',compact('subjects','action','allavailable'));
     }
     

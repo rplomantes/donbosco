@@ -563,4 +563,37 @@ class DBFixer extends Controller
             }
         }
     }
+    
+    function updateunearned(){
+        $entries = array('1158f6ca0d3711e','1158f7069eb3fc2','1158f6e65459e8f','1158f6bf53987ec','1158f6d3e1b192f','1158f707b3246f4','1158f711b148595','1158f6d3e56e244','1158f6d7f27850f','1158f6b00b7bdc2','1158f6b0d3abe19','1158f6feb359649','1158f6adc5ec0a3','1158f6c1eec9dad','1158f6b9a17e56c','1158f6b9f2d5efd','1158f6d47699894','1158f6d4e1e287c','1158f6aea140d0b','1158f6aedf9a7ff','1158f6dbec52421','1158f6be57d0939','1158f6d825f27ed','1158f6b1e8271d2','1158f6c4f01305c','1158f6ce31985b8','1158f6c6b8b5dc0','1158f6f4b46e899','1158f6ae5f31146','1158f6b93a00996','1158f6c02f030e8','1158f6d34c21081','1158f6b0b409259','1158f6d14bcd1a8','1158f6d33a60d34','1158f6d6890f4c6','1158f6b188d7c01','1158f6b19bcc19d','1158f6b227c38dd','1158f6be9dcdd28','1158f6c4637bee5','1158f6c613b9275','1158f6c81257b53','1158f6cee08bab6','1158f70821b8369','1158f6c09349d93','1158f6c5cc883d8','1158f6e1fa47854','1158f6b2fe0a277','1158f6ba53a330e','1158f6f93503b34','1158f6d8ee50485','1158f6edc2ef9e5','1158f6fabba289f','1158f70639a51a2','1158f6cd3c8ddf6','1158f6e7cfe441d','1158f7145b5f638','1158f704ffddd26','1158f705badf164','1158f6dab51bdcc','1158f6adc8e7748','1158f6f412c542f','1158f6badf42b3a','1158f6f26f277b8','1158f6f77869a30','1158f6f7d87979d','1158f6f89754c21','1158f6d47180222','1158f6d48c1833c','1158f6d5ead9308','1158f6cf9a44e6b','1158f6bd57a6714','1158f6b7ec16c62','1158f6d27e3c4ee','1158f6d2a5953d8','1158f6b012e883f','1158f6e0de9fb55','1158f6d6baa8158','1158f6c22c1ab5f','1158f6c2472445d','1158f6cda4c4711','1158f6d730bbc7b','1158f6b79229804','1158f6bedf6afd1','1158f6dd15cf8f9','1158f6e74d422f3','1158f718b5afd22','1158f701921b968','1158f6af3dc90a5','1158f6c7837282d','1158f716ad2339b','1158f6ddcc3ba58','1158f6b6cf70117','1158f6c57688a0e','1158f6f36bc4409','1158f700e843769','1158f6cc7b510e3','1158f6de59cafaf','1158f6e3c517d01','1158f807ab7a540','1158f8064fccaa3','1158f7f8c69398d','1158f7f958b2a44','1158f822e478258','1158f7fa9e0788c','1158f8226d18ce2','1158f8121963212','1158f80f4cd61b9','1158f811231f246','1158f7f4dd9dc17','1158f7f6698ece9','1158f7f8eaee689','1158f801550ef3d','1158f8018eefc60','1158f81042cf9bd','1158f7f600ca05d','1158f7f7b4108b2','1158f7f80990b67','1158f7f842de037','1158f7f9d14404c','1158f7ff8deb75d','1158f80b4c65a5c','1158f80e97e107b','1158f7f467269ab','1158f7fc73bcfe2','1158f7fe710e49c','1158f806ea85d45','1158f80bf7e6eda','1158f80ee566660','1158f8137e5f568','1158f815f25ef8f','1158f8182f5059a','1158f7fddd58533','1158f814a13ce25','1158f7fd5522db6','1158f80d2d87dfd','1158f816d5bfd0b','1158f8195cb0aab','1158f8201b68859','1158f7f5860acf8','1158f803d4e6709','1158f812904bd0d','1158f80e08e964a','1158f81d84f3240','1158f800ec1d803','1158f7fab47f056','1158f7fec72ddc9','1158f8140958b53','1158f7f6b8adc4a','1158f8236c8456e','1158f8171888442','1158f81c0dd1359','1158f821fa71a03');
+        
+        foreach($entries as $entry){
+            $credit = \App\Credit::where('refno',$entry)->first();
+            self::setuptuitionfee($entry,$credit->idno,'2017');
+        }
+    }
+    
+    function setuptuitionfee($refno,$idno,$schoolyear){
+        $entry_type = \App\CtrAutoEntry::where('entry_type',1)->first();
+        
+        
+        //$tuition = \App\Ledger::select('sum(amount) as amount')->where('accountingcode',$entry_type->indic)->where('idno',$idno)->where('schoolyear',$schoolyear)->first();
+        $tuitions = DB::Select("Select sum(amount) as amount from ledgers where accountingcode = ".$entry_type->indic." and idno  = '".$idno."' and schoolyear = '".$schoolyear."'");
+        
+        $amount = 0;
+        foreach($tuitions as $tuition){
+            $amount = $amount + $tuition->amount;
+        }
+        
+        $credit = \App\Credit::where('refno',$refno)->first();
+        $credit->amount = $amount;
+        $credit->save();
+        
+        $debit = \App\Dedit::where('refno',$refno)->first();
+        $debit->amount = $amount;
+        $debit->save();
+        
+        
+        return null;
+    }
 }

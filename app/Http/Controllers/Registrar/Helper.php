@@ -10,9 +10,30 @@ use DB;
 
 class Helper extends Controller
 {
+    static function getSectionList($sy,$level,$course,$section){
+        $currSY = \App\CtrSchoolYear::first()->schoolyear;
+        if($currSY == $sy){
+            $table = 'statuses';
+        }
+        else{
+            $table = 'status_histories';
+        }
+        if($course != "null"){
+            $course = "and strand='".$course."'";
+        }else{
+            $course = "";
+        }
+        $students = DB::Select("Select * from  $table "
+                . "where level = '$level' $course "
+                . "AND section = '$section' "
+                . "AND status IN(2,3) "
+                . "ORDER BY class_no");
+        
+        return $students;
+    }
     static function getGradeQuarter($quarter){
         switch ($quarter){
-            case 1;
+            case 1; 
                 $qrt = "first_grading";
             break;
             case 2;

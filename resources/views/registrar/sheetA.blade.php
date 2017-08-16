@@ -122,7 +122,7 @@
         arrays['course']= course;
         $.ajax({
                type: "GET", 
-               url: "/getlevelsections/updatesection",
+               url: "/getlevelsections/0/updatesection",
                data : arrays,
                success:function(data){
                    $('#sectionspos').html(data)

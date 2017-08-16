@@ -257,6 +257,8 @@
     Route::get('/updatetvet','DBFixer@updatetvet');
     Route::get('/updateacct','DBFixer@fixYouthAssistance');
     Route::get('/updaterank/{level}/{sy}/{course}/{quarter}','Registrar\Ranking\OverallRankController@setOARankingAcad');
+    Route::get('/updateunearned','DBFixer@updateunearned');
+    
     
     
     //ACADEMIC
@@ -282,9 +284,9 @@
 
 //Ajax route
     Route::get('/getsections/{action?}','Vincent\AjaxController@getsections');
-    Route::get('/getlevelsections/{action?}','Vincent\AjaxController@getlevelsections');
+    Route::get('/getlevelsections/{all}/{action?}','Vincent\AjaxController@getlevelsections');
     Route::get('/getlevelstrands/{action?}','Vincent\AjaxController@getlevelstrands');
-    Route::get('/getlevelsubjects/{action?}','Vincent\AjaxController@getlevelsubjects');
+    Route::get('/getlevelsubjects/{action?}','Registrar\SheetA\Helper@getSubjects');
 
     Route::get('/myDeposit','AjaxController@myDeposit');
     Route::get('/getid/{varid}','AjaxController@getid');
@@ -414,8 +416,12 @@ Route::group(['middleware' => ['web','registrar']], function () {
     Route::get('/electivesection','Registrar\Elective\SectionController@electiveSection');
     Route::get('/printelectivesection/{section}','Registrar\Elective\SectionController@printSection');
     
+    Route::get('/gradesheeta/{selectedSY}','Registrar\SheetA\Grade@index');
+    
     Route::get('/electivesheeta/{selectedSY}','Registrar\Elective\SheetAController@index');
     Route::get('/printelectivesheeta/{section}','Registrar\Elective\SheetAController@printElective');
+       
+   
     
     Route::get('/promotion/{sy}','Registrar\PromotionController@index');
     Route::get('/editpromotion/{sy}/{level}','Registrar\PromotionController@editpromotion');
@@ -437,4 +443,7 @@ Route::group(['middleware' => ['web','registrar']], function () {
    Route::get('/getoverallrank', 'Registrar\Ranking\OverallRanking@getOARanking');
    
    Route::get('/viewpromotion/{sy}/{level}','Registrar\PromotionController@viewreport');
+    
+   Route::get('/getSheetAList','Registrar\SheetA\Helper@getSheetAList');
+       
    

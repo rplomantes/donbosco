@@ -15,5 +15,6 @@ class SheetAController extends Controller
         $currsy = \App\CtrSchoolYear::first();
         $levels = \App\CtrLevel::get();
         return view('registrar.sheetA',compact('sys','levels','currsy'));
+        
     }
 }

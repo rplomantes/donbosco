@@ -42,7 +42,7 @@ class PermanentRecord extends Controller
         }
         
         $pdf = \App::make('dompdf.wrapper');
-        $pdf->setPaper([0,0,650.00,1008.00], 'portrait');
+        $pdf->setPaper([0,0,612.00,1008.00], 'portrait');
         $pdf->loadView("print.juniorOldPermanentRec",compact('idno','header','grade7','grade8','grade9','grade10'));
         return $pdf->stream();
         //return view("print.juniorOldPermanentRec",compact('idno','header','grade7','grade8','grade9','grade10'));
