@@ -75,20 +75,20 @@ foreach($grades as $grade){
     
     <table width="100%" style="font-size: 9pt" cellspacing="2" >
         <tr>
-            <td width="11%">Name:</td>
-            <td width="35%" class="underscore">{{$info->name}}</td>
+            <td width="11.5%">Name:</td>
+            <td width="34.5%" class="underscore">{{$info->name}}</td>
             <td width="4%" style="padding-top: 9pt;"></td>
             <td width="10%">Gender:</td>
             <td width="11%" class="underscore">{{$info->gender}}</td>
             <td width="2%" style="padding-top: 9pt;"></td>
-            <td width="11%">Date of Birth:</td>
+            <td width="11%" style="font-size: 8.5pt">Date of Birth:</td>
             <td width="17%" class="underscore">{{$info->birthDate}}</td>
         </tr>
         <tr>
-            <td>Place of Birth:</td>
+            <td style="font-size: 8.5pt">Place of Birth:</td>
             <td class="underscore">{{$info->birthPlace}}</td>
             <td style="padding-top: 9pt;"></td>
-            <td>Student No.:</td>
+            <td style="font-size: 8.5pt">Student No.:</td>
             <td class="underscore">{{$idno}}</td>
             <td style="padding-top: 9pt;"></td>
             <td>LRN:</td>

@@ -7,7 +7,17 @@
             padding-right:5px;
             font-size:13px;
         }
+        body{
+            margin-left:100px;
+            margin-right:100px;
+        }
+        </style>
         
+        <style type="text/css" media="print">
+            body{
+                margin-left:10px;
+                margin-right:10px;
+            }
         </style>
         <link href="{{ asset('/css/fonts.css') }}" rel="stylesheet">
     </head>

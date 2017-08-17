@@ -117,7 +117,11 @@
     }
     function updatesection(section){
         sec = section;
-        getlist(subj);
+        if((jQuery.inArray( lvl,["Grade 11","Grade 12"]))>=0 && subj == ""){
+            
+        }else{
+            getlist(subj);
+        }
     }
     function getsemester(){
         document.getElementById("semester").style.display = "block";
@@ -156,7 +160,7 @@
         $.ajax({
             type:"GET",
             data:arrays,
-            url: "/getSheetAList",
+            url: "/gradeSheetAList",
             success:function(data){
                 $('#report').html(data);
                 document.getElementById("print").style.visibility = "visible";

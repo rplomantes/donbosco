@@ -444,6 +444,6 @@ Route::group(['middleware' => ['web','registrar']], function () {
    
    Route::get('/viewpromotion/{sy}/{level}','Registrar\PromotionController@viewreport');
     
-   Route::get('/getSheetAList','Registrar\SheetA\Helper@getSheetAList');
+   Route::get('/gradeSheetAList','Registrar\SheetA\Helper@gradeSheetAList');
        
    

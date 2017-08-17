@@ -38,7 +38,7 @@ class Helper extends Controller
         return view('ajax.selectsubjects',compact('subjects','action','allavailable'));
     }
     
-    static function getSheetAList(){
+    static function gradeSheetAList(){
         $level = Input::get('level');
         $sy = Input::get('sy');
         $course = Input::get('course');

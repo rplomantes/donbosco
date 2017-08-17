@@ -58,7 +58,7 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
         </tr>
     </table>
     
-    <table width="100%" cellspacing="0" style="position:absolute;top:240px;left:0pt;">
+    <table width="100%" cellspacing="0" style="position:absolute;top:206px;left:0pt;">
         <tr>
             <td width='48.5%'>
                 @if($grade7 == 1)

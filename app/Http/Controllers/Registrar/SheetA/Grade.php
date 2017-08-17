@@ -15,4 +15,10 @@ class Grade extends Controller
         
         return view('registrar.sheetA.grade',compact('selectedSY','currSY','levels'));
     }
+    
+    function printSheetA($sy,$level,$course,$semester,$section,$subject){
+        $students = RegistrarHelper::getSectionList($sy,$level,$course,$section);
+        
+        return view('ajax.sheetAGrade',compact('students','semester','subject','sy'));
+    }
 }

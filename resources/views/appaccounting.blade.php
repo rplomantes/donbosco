@@ -81,6 +81,15 @@
 						<li class="dropdown">
  						   <a href="{{url('searchpayee')}}"><i class="fa fa-btn fa-sign-out"></i>Search Payee</a></li>
 						</li>
+                                                <li class="dropdown">
+                                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Others
+                                                    <span class="caret"></span></a>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li>    
+                                                            <a href ="{{url('individualsummary',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Individual Account Summary</a>
+                                                        </li>  
+                                                    </ul>
+                                                </li>
 					@endif
                                         @if(Auth::user()->accesslevel == env('USER_ACCOUNTING_HEAD'))
                                          <li class="dropdown">
@@ -133,10 +142,6 @@
                                        @if(\Auth::user()->accesslevel == env('USER_ACCOUNTING_HEAD'))
                                        
                                        <li>
-                                           
-                                           
-                                          
-                                           
                                            <a href="{{url('summarymain',\App\CtrSchoolYear::first()->schoolyear)}}"><i class="fa fa-btn"></i>Account Summary</a>
                                            <a href="{{url('studentledger','all')}}"><i class="fa fa-btn"></i>Student Ledger Summary</a>
                                            

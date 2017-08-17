@@ -8,27 +8,20 @@
             font-size:13px;
         }
         body{
-            margin-left:10px;
-            margin-right:10px;
-        }
-        html{
-            margin-left:180px;
-            margin-right:180px;
-            border: 1px solid;
+            margin-left:100px;
+            margin-right:100px;
         }
         </style>
         
         <style type="text/css" media="print">
-            html{
-                margin-left:0px;
-                margin-right:0px;
-                border: 0px solid;
+            body{
+                margin-left:10px;
+                margin-right:10px;
             }
         </style>
         <link href="{{ asset('/css/fonts.css') }}" rel="stylesheet">
     </head>
-    <body>
-        @foreach($subjects as $subject)
+    <body >
         <table width="100%" style="page-break-after: always">
             <tr>
                 <td>
@@ -93,88 +86,96 @@
             </tr>            
             <tr>
                 <td>
-                    <table class='report' width="100%" cellpadding="0" cellspacing="0" border="1">
-                        <tr>
-                            <td style='text-align: center;width:60px;'>CLASS NO</td>
-                            <td style='text-align: center;width:120px;'>LAST NAME</td>
-                            <td style='text-align: center;width:300px;'>FIRST NAME</td>
-                            <td style='text-align: center;width:100px;'>QTR1</td>
-                            <td style='text-align: center;width:100px;'>QTR2</td>
-                            <td style='text-align: center;width:100px;'>QTR3</td>
-                            <td style='text-align: center;width:100px;'>QTR4</td>
-                            <td style='text-align: center;width:80px;'>RUNNING AVE</td>
-                        </tr>
-
-                        @foreach($students as $student)
-                        <?php $grade = \App\Grade::where('idno',$student->idno)->where('subjectcode',$subject->subjectcode)->where('schoolyear','2016')->first();
-	$gradeexist = \App\Grade::where('idno',$student->idno)->where('subjectcode',$subject->subjectcode)->where('schoolyear','2016')->first();
- ?>
-                        <tr>
-                            <td style="text-align: center">{{$student->class_no}}</td>
-                            <td>{{$student->lastname}}</td>
-                            <td>{{$student->firstname}}
-                                @if(!str_replace(' ', '', $student->middlename) == '')
-                                    {{substr($student->middlename, 0,1)."."}}
-                                @endif                                
-                            @if($student->stat == 3)
-                            <span style="float: right;color: red;font-weight: bold">
-                            DROPPED
-                            </span>
+                    <table class="table table-bordered">
+                        <tr style="text-align: center">
+                            <td>CLASS NO</td>
+                            <td>LAST NAME</td>
+                            <td>FIRST NAME</td>
+                            <td>QTR 1</td>
+                            <td>QTR 2</td>
+                            @if(in_array($semester,array(0)))
+                            <td>QTR 3</td>
+                            <td>QTR 4</td>
                             @endif
-                            </td>   
-                        @if($gradeexist)
-                            <td style="text-align: center">@if(!round($grade->first_grading,2) == null)
-                                {{round($grade->first_grading,2)}}
-                            @endif</td>
-
-                            <td style="text-align: center">@if(!round($grade->second_grading,2) == NULL)
-                                {{round($grade->second_grading,2)}}
-                            @endif</td>
-
-                            <td style="text-align: center">@if(!round($grade->third_grading,2) == NULL)
-                                {{round($grade->third_grading,2)}}
-                            @endif</td>
-
-                            <td style="text-align: center">@if(!round($grade->fourth_grading,2) == NULL)
-                                {{round($grade->fourth_grading,2)}}
-                            @endif</td>
-
-                            <?php 
-                            $count = 0;
-                            $grades = 0;
-                            
-                                if(!round($grade->first_grading,2) == null){
-                                    $grades = $grades+round($grade->first_grading,2);
-                                    $count++;
-                                }
-                                if(!round($grade->second_grading,2) == null){
-                                    $grades = $grades+round($grade->second_grading,2);
-                                    $count++;
-                                }
-                                if(!round($grade->third_grading,2) == null){
-                                    $grades = $grades+round($grade->third_grading,2);
-                                    $count++;
-                                }
-                                if(!round($grade->fourth_grading,2) == null){
-                                    $grades = $grades+round($grade->fourth_grading,2);
-                                    $count++;
-                                }
-                                if(!$count == 0){
-                                $grades = $grades/$count;
-                                }
-                            ?>
-                            
-                            <td>@if(!$grades == 0)
-                                @if($level == 'Grade 7' || $level == 'Grade 8' || $level == 'Grade 9' || $level == 'Grade 10' || $level == 'Grade 11' || $level == 'Grade 12')
-                                    {{round($grades,0)}}
-                                    
-                                @else
-                                    {{number_format(round($grades,2),2)}}
-                                    
-                                @endif
-                            @endif</td>
-				@endif     
+                            <td>RUNNING AVE</td>
                         </tr>
+                        <?php $cn = 1; ?>
+                        @foreach($students as $student)
+                        <?php 
+                        $name = \App\User::where('idno',$student->idno)->first();
+                        $first_grading = 0;
+                        $second_grading = 0;
+                        $third_grading = 0;
+                        $fourth_grading = 0;
+                        $running_ave = 0;
+                        $count = 0;
+
+                        if($subject == 3){
+                            $grades = App\Grade::where('subjecttype',$subject)->where('schoolyear',$sy)->where('idno',$student->idno)->get();
+                        }else{
+                            $grades = App\Grade::where('subjectcode',$subject)->where('schoolyear',$sy)->where('idno',$student->idno)->get();
+                        }
+
+                        foreach($grades as $grade){
+                            $grade_setting = App\GradesSetting::where('level',$grade->level)->first();
+                            $first_grading = $first_grading+$grade->first_grading;
+                            $second_grading = $second_grading+$grade->second_grading;
+                            $third_grading = $third_grading+$grade->third_grading;
+                            $fourth_grading = $fourth_grading+$grade->fourth_grading;
+                        }
+                        ?>
+                        <tr>
+                            <td style="text-align: center">{{$cn}}</td>
+                            <td>{{$name->lastname}}</td>
+                            <td>{{$name->firstname}} {{substr($name->middlename,0,1)}}.</td>
+                            @if(in_array($semester,array(0,1)))
+                            <td style="text-align: center">
+                                @if($first_grading != 0)
+                                <?php 
+                                    $running_ave = $running_ave+$first_grading;
+                                    $count++;
+                                ?>
+                                {{$first_grading}}
+                                @endif
+                            </td>
+                            <td style="text-align: center">
+                                @if($second_grading != 0)
+                                <?php 
+                                    $running_ave = $running_ave+$second_grading;
+                                    $count++;
+                                ?>
+                                {{$second_grading}}
+                                @endif
+                            </td>
+                            @endif
+                            @if(in_array($semester,array(0,2)))
+                            <td style="text-align: center">
+                                @if($third_grading != 0)
+                                <?php 
+                                    $running_ave = $running_ave+$third_grading;
+                                    $count++;
+                                ?>
+                                {{$third_grading}}
+                                @endif
+                            </td>
+                            <td style="text-align: center">
+                                @if($fourth_grading != 0)
+                                <?php 
+                                    $running_ave = $running_ave+$fourth_grading;
+                                    $count++;
+                                ?>
+                                {{$fourth_grading}}
+                                @endif
+                            </td>
+                            @endif
+
+                            <td style="text-align: center">
+                                @if($count != 0)
+                                {{number_format(round($running_ave/$count,$grade_setting->decimal),$grade_setting->decimal)}}
+                                @endif
+                            </td>
+                        </tr>
+                        <?php $cn++; ?>
                         @endforeach
                     </table>
                 </td>
@@ -201,8 +202,5 @@
                 </td>
             </tr>
         </table>
-        
-        @endforeach
-
     </body>
 </html>
