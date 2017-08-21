@@ -16,9 +16,21 @@ class Grade extends Controller
         return view('registrar.sheetA.grade',compact('selectedSY','currSY','levels'));
     }
     
-    function printSheetA($sy,$level,$course,$semester,$section,$subject){
+    function printSheetA($sy,$level,$semester,$section,$subject){
+        $course = "";
+        $setcourse = \App\CtrSection::where('level',$level)->where('section',$section)->where('schoolyear',$sy);
+        if(count($setcourse) == 0){
+            $setcourses = DB::Select("Select * from ctr_sections_temp where level = '$level' AND section = '$section' AND schoolyear = '$sy'");
+            
+            foreach($setcourses as $setcourse){
+                $course = $setcourse->strand;
+            }
+        }else{
+            $course = $setcourse->strand;
+        }
+        $quarter = \App\CtrQuarter::first();
         $students = RegistrarHelper::getSectionList($sy,$level,$course,$section);
         
-        return view('ajax.sheetAGrade',compact('students','semester','subject','sy'));
+        return view('ajax.sheetAGrade',compact('students','level','section','semester','subject','sy','quarter'));
     }
 }

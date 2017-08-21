@@ -179,7 +179,7 @@ foreach($grades as $grade){
         <tr><td colspan="3" ></td></tr>
         <tr>
             <td valign="top">
-                <table style="font-size: 8pt" width="100%" border="1" cellspacing="0">
+                <table style="font-size: 7.5pt" width="100%" border="1" cellspacing="0">
                     <tr style="text-align: center">
                         <td width="60%"><b>SUBJECTS</b></td>
                         <td style="font-size: 7pt">FIRST<br>QUARTER</td>
@@ -275,7 +275,7 @@ foreach($grades as $grade){
             </td>
             <td width="2%" style="padding-top:8pt"></td>
             <td valign="top">
-                <table style="font-size: 8pt" width="100%" border="1" cellspacing="0">
+                <table style="font-size: 7.5pt" width="100%" border="1" cellspacing="0">
                     <tr style="text-align: center">
                         <td width="60%"><b>SUBJECTS</b></td>
                         <td style="font-size: 7pt">FIRST<br>QUARTER</td>

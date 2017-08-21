@@ -49,9 +49,9 @@ class PermanentRecord extends Controller
     }
     
     static function syInfo($idno,$level){
-        $info = \App\Status::where('idno',$idno)->where('level',$level)->orderBy('id','DESC')->first();
+        $info = \App\Status::where('idno',$idno)->whereIn('status',array(2,3))->where('level',$level)->orderBy('id','DESC')->first();
         if(count($info) == 0){
-            $info = \App\StatusHistory::where('idno',$idno)->where('level',$level)->orderBy('id','DESC')->first();
+            $info = \App\StatusHistory::where('idno',$idno)->whereIn('status',array(2,3))->where('level',$level)->orderBy('id','DESC')->first();
         }
         return $info;
     }

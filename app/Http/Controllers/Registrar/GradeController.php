@@ -190,6 +190,11 @@ class GradeController extends Controller
     static function weightedgradeQuarterAve($insubjtype,$sem,$quarter,$subjects,$level){
         $total = 0;
         $grade = 0;
+        $q1 = 0;
+        $q2 = 0;
+        $q3 = 0;
+        $q4 = 0;
+        $final = 0;
         foreach($subjects as $subject){
             if(in_array($subject->subjecttype,$insubjtype)){
                 
@@ -209,17 +214,23 @@ class GradeController extends Controller
                             $grade = $grade + $subject->fourth_grading*($subject->weighted/100);
                             break;
                         default:
-                            if($level == "Grade 7" | $level == "Grade 8" | $level == "Grade 9" | $level == "Grade 10" | $level == "Grade 11" | $level == "Grade 12"){
-                                $grade = $grade + round($subject->final_grade*($subject->weighted/100),0);
-                            }else{
-                                $grade = $grade + round($subject->final_grade*($subject->weighted/100),2);
-                            }                            
+                                $q1 = $q1 + $subject->first_grading * ($subject->weighted/100);
+                                $q2 = $q2 + $subject->second_grading*($subject->weighted/100);
+                                $q3 = $q3 + $subject->third_grading*($subject->weighted/100);
+                                $q4 = $q4 + $subject->fourth_grading*($subject->weighted/100);
                             break;
                     }   
                 }
             }
         }
-        
+        if($quarter >= 5){
+            if($level == "Grade 7" | $level == "Grade 8" | $level == "Grade 9" | $level == "Grade 10" | $level == "Grade 11" | $level == "Grade 12"){
+                $grade = (round($q1,0)+round($q2,0)+round($q3,0)+round($q4,0))/4;
+            }else{
+                $grade = (round($q1,2)+round($q2,2)+round($q3,2)+round($q4,2))/4;
+            }
+
+        }
         
         if($level == "Grade 7" | $level == "Grade 8" | $level == "Grade 9" | $level == "Grade 10" | $level == "Grade 11" | $level == "Grade 12"){
             $average = ROUND($grade,0);
@@ -227,7 +238,6 @@ class GradeController extends Controller
         }else{
             $average = ROUND($grade,2);
         }
-        
         return $average;
     }
     

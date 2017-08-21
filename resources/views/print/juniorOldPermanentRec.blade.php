@@ -26,6 +26,7 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
         
         html{
             margin-top: 72px;
+            
         }
 
         .underscore{
@@ -57,7 +58,7 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
             <td></td>
         </tr>
     </table>
-    
+
     <table width="100%" cellspacing="0" style="position:absolute;top:206px;left:0pt;">
         <tr>
             <td width='48.5%'>
@@ -68,7 +69,7 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
                             <?php $grade7info = PermanentRecord::syInfo($idno,'Grade 7'); ?>
                             @if(count($grade7info)>0)
                             <?php 
-                            $grade7Grades  = \App\Grade::where('schoolyear',$grade7info->schoolyear)->where('idno',$idno)->where('isdisplaycard',1)->orderBy('sortto','ASC')->get();
+                            $grade7Grades  = \App\Grade::whereIn('schoolyear',array($grade7info->schoolyear,($grade7info->schoolyear+1)." SUMMER"))->where('idno',$idno)->where('isdisplaycard',1)->orderBy('sortto','ASC')->get();
                             $grade7Rank     = \App\Ranking::where('idno',$idno)->where('schoolyear',$grade7info->schoolyear)->first();
                             ?>
                             <table width='100%' cellspacing='0' >
@@ -108,7 +109,7 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
                         </tr>
                         @endif
                     @endforeach
-                        <tr class="border_left border_right" style='font-weight: bold'>
+                        <tr class="border_left border_right" style='font-weight: bolder'>
                             <td>ACADEMIC AVERAGE</td>
                             <td style="font-size: 7pt;text-align: center;">{{GradeController::gradeQuarterAve(array(0),array(0),1,$grade7Grades,'Grade 7')}}</td>
                             <td style="font-size: 7pt;text-align: center;">{{GradeController::gradeQuarterAve(array(0),array(0),2,$grade7Grades,'Grade 7')}}</td>
@@ -132,7 +133,7 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
                             @if($grade->subjecttype == 1)
                             <?php $weight7 = $grade->weighted;?>
                             <tr class="border_left border_right">
-                                <td>{{strtoupper($grade->subjectname)}}</td>
+                                <td>{{strtoupper($grade->subjectname)}} @if($weight7 > 0)<span style='float: right;margin-right: 50px'>({{$weight7}}%)</span> @endif</td>
                                 <td style="font-size: 7pt;text-align: center;">{{round($grade->first_grading,0)}}</td>
                                 <td style="font-size: 7pt;text-align: center;">{{round($grade->second_grading,0)}}</td>
                                 <td style="font-size: 7pt;text-align: center;">{{round($grade->third_grading,0)}}</td>
@@ -141,7 +142,7 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
                             </tr>
                             @endif
                         @endforeach
-                            <tr class="border_left border_right" style='font-weight: bold'>
+                            <tr class="border_left border_right" style='font-weight: bolder'>
                                 <td>TECHNICAL AVERAGE</td>
                                 @if($weight7 > 0)
                                     <td style="font-size: 7pt;text-align: center;">{{GradeController::weightedgradeQuarterAve(array(1),array(0),1,$grade7Grades,'Grade 7')}}</td>
@@ -159,13 +160,21 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
                             </tr>
                             <tr class="border_left border_right border_bottom">
                                 <td>RANK</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->tech_level_1}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->tech_level_2}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->tech_level_3}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->tech_level_4}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->tech_level_final1}}</td>
+                                <td style="font-size: 7pt;text-align: center;"></td>
+                                <td style="font-size: 7pt;text-align: center;"></td>
+                                <td style="font-size: 7pt;text-align: center;"></td>
+                                <td style="font-size: 7pt;text-align: center;"></td>
+                                <td style="font-size: 7pt;text-align: center;"></td>
                             </tr>
-                                <tr class="border_left border_right border_top border_bottom"><td colspan="6" style="padding-top: 20px;padding-bottom: 0px;height: 28.8px;"></td></tr>
+                            <tr class="border_left border_right border_top border_bottom">
+                                <td colspan="6" style="padding-top: 20px;padding-bottom: 0px;height: 28.8px;">
+                                    @foreach($grade7Grades as $grade)
+                                        @if($grade->schoolyear == ($grade7info->schoolyear+1)." SUMMER")<br>
+                                        {{$grade->schoolyear}} {{$grade->school}}: {{$grade->subjectname}} = {{round($grade->finalgrade,0)}}
+                                        @endif
+                                    @endforeach
+                                </td>
+                            </tr>
                             <?php 
                             $dayp = array();
                             $daya = array();
@@ -214,7 +223,7 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
                             <?php $grade9info = PermanentRecord::syInfo($idno,'Grade 9'); ?>
                             @if(count($grade9info)>0)
                             <?php 
-                            $grade9Grades  = \App\Grade::where('schoolyear',$grade9info->schoolyear)->where('idno',$idno)->where('isdisplaycard',1)->orderBy('sortto','ASC')->get();
+                            $grade9Grades  = \App\Grade::whereIn('schoolyear',array($grade9info->schoolyear,($grade9info->schoolyear+1)." SUMMER"))->where('idno',$idno)->where('isdisplaycard',1)->orderBy('sortto','ASC')->get();
                             $grade9Rank     = \App\Ranking::where('idno',$idno)->where('schoolyear',$grade9info->schoolyear)->first();
                             ?>
                             <table width='100%' cellspacing='0' >
@@ -239,6 +248,14 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
                         <td style="font-size: 7pt">4</td>
                         <td style="font-size: 7pt">Final</td>
                     </tr>
+                    <tr style="text-align: center" class=" border_left border_right ">
+                        <td style="text-align: left">CONDUCT</td>
+                        <td style="font-size: 7pt">{{GradeController::conductQuarterAve(3,1,$grade9Grades)}}</td>
+                        <td style="font-size: 7pt">{{GradeController::conductQuarterAve(3,2,$grade9Grades)}}</td>
+                        <td style="font-size: 7pt">{{GradeController::conductQuarterAve(3,3,$grade9Grades)}}</td>
+                        <td style="font-size: 7pt">{{GradeController::conductQuarterAve(3,4,$grade9Grades)}}</td>
+                        <td style="font-size: 7pt">{{round(GradeController::conductTotalAve($grade9Grades,0),0)}}</td>
+                    </tr>
                     <tr class="border_left border_right border_top">
                         <td colspan="6" style="height: 22px">ACADEMIC SUBJECTS</td>
                     </tr>
@@ -254,7 +271,7 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
                         </tr>
                         @endif
                     @endforeach
-                        <tr class="border_left border_right" style='font-weight: bold'>
+                        <tr class="border_left border_right" style='font-weight: bolder'>
                             <td>ACADEMIC AVERAGE</td>
                             <td style="font-size: 7pt;text-align: center;">{{GradeController::gradeQuarterAve(array(0),array(0),1,$grade9Grades,'Grade 9')}}</td>
                             <td style="font-size: 7pt;text-align: center;">{{GradeController::gradeQuarterAve(array(0),array(0),2,$grade9Grades,'Grade 9')}}</td>
@@ -265,11 +282,11 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
 
                         <tr class="border_left border_right">
                             <td>RANK</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->acad_level_1}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->acad_level_2}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->acad_level_3}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->acad_level_4}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->acad_level_final1}}</td>
+                            <td style="font-size: 7pt;text-align: center;"></td>
+                            <td style="font-size: 7pt;text-align: center;"></td>
+                            <td style="font-size: 7pt;text-align: center;"></td>
+                            <td style="font-size: 7pt;text-align: center;"></td>
+                            <td style="font-size: 7pt;text-align: center;"></td>
                         </tr>
                         <tr class="border_left border_right">
                             <td colspan="6">TECHNICAL SUBJECTS</td>
@@ -278,7 +295,7 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
                             @if($grade->subjecttype == 1)
                             <?php $weight7 = $grade->weighted;?>
                             <tr class="border_left border_right">
-                                <td>{{strtoupper($grade->subjectname)}}</td>
+                                <td>{{strtoupper($grade->subjectname)}} @if($weight7 > 0)<span style='float: right;margin-right: 50px'>({{$weight7}}%)</span> @endif</td>
                                 <td style="font-size: 7pt;text-align: center;">{{round($grade->first_grading,0)}}</td>
                                 <td style="font-size: 7pt;text-align: center;">{{round($grade->second_grading,0)}}</td>
                                 <td style="font-size: 7pt;text-align: center;">{{round($grade->third_grading,0)}}</td>
@@ -287,7 +304,7 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
                             </tr>
                             @endif
                         @endforeach
-                            <tr class="border_left border_right" style='font-weight: bold'>
+                            <tr class="border_left border_right" style='font-weight: bolder'>
                                 <td>TECHNICAL AVERAGE</td>
                                 @if($weight7 > 0)
                                     <td style="font-size: 7pt;text-align: center;">{{GradeController::weightedgradeQuarterAve(array(1),array(0),1,$grade9Grades,'Grade 9')}}</td>
@@ -305,13 +322,22 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
                             </tr>
                             <tr class="border_left border_right border_bottom">
                                 <td>RANK</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->tech_level_1}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->tech_level_2}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->tech_level_3}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->tech_level_4}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade9Rank->tech_level_final1}}</td>
+                                <td style="font-size: 7pt;text-align: center;"></td>
+                                <td style="font-size: 7pt;text-align: center;"></td>
+                                <td style="font-size: 7pt;text-align: center;"></td>
+                                <td style="font-size: 7pt;text-align: center;"></td>
+                                <td style="font-size: 7pt;text-align: center;"></td>
                             </tr>
-                                <tr class="border_left border_right border_top border_bottom"><td colspan="6" style="padding-top: 20px;padding-bottom: 0px;height: 28.8px;"></td></tr>
+                            <tr class="border_left border_right border_top border_bottom">
+                                <td colspan="6" style="padding-top: 20px;padding-bottom: 0px;height: 28.8px;">
+                                    @foreach($grade9Grades as $grade)
+                                        @if($grade->schoolyear == ($grade9info->schoolyear+1)." SUMMER")<br>
+                                        {{$grade->schoolyear}} {{$grade->school}}: {{$grade->subjectname}} = {{round($grade->finalgrade,0)}}
+                                        @endif	
+                                    @endforeach
+                                </td>
+                            </tr>
+                            </tr>
                             <?php 
                             $dayp = array();
                             $daya = array();
@@ -353,8 +379,8 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
             </td>
         </tr>
     </table>
-    
-    <table width="100%" cellspacing="0" style="position:absolute;top:764.5px;left:0pt;" >
+
+    <table width="100%" cellspacing="0" style="position:absolute;top:764.5px;left:0pt;">
         <tr>
             <td style="vertical-align: bottom;" width='48.5%'>
                 @if($grade8 == 1)
@@ -364,7 +390,7 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
                             <?php $grade8info = PermanentRecord::syInfo($idno,'Grade 8'); ?>
                             @if(count($grade8info)>0)
                             <?php 
-                            $grade8Grades  = \App\Grade::where('schoolyear',$grade8info->schoolyear)->where('idno',$idno)->where('isdisplaycard',1)->orderBy('sortto','ASC')->get();
+                            $grade8Grades  = \App\Grade::whereIn('schoolyear',array($grade8info->schoolyear,($grade8info->schoolyear+1)." SUMMER"))->where('idno',$idno)->where('isdisplaycard',1)->orderBy('sortto','ASC')->get();
                             $grade8Rank     = \App\Ranking::where('idno',$idno)->where('schoolyear',$grade8info->schoolyear)->first();
                             ?>
                             <table width='100%' cellspacing='0' >
@@ -389,6 +415,14 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
                         <td style="font-size: 7pt">4</td>
                         <td style="font-size: 7pt">Final</td>
                     </tr>
+                    <tr style="text-align: center" class=" border_left border_right ">
+                        <td style="text-align: left">CONDUCT</td>
+                        <td style="font-size: 7pt">{{GradeController::conductQuarterAve(3,1,$grade8Grades)}}</td>
+                        <td style="font-size: 7pt">{{GradeController::conductQuarterAve(3,2,$grade8Grades)}}</td>
+                        <td style="font-size: 7pt">{{GradeController::conductQuarterAve(3,3,$grade8Grades)}}</td>
+                        <td style="font-size: 7pt">{{GradeController::conductQuarterAve(3,4,$grade8Grades)}}</td>
+                        <td style="font-size: 7pt">{{round(GradeController::conductTotalAve($grade8Grades,0),0)}}</td>
+                    </tr>
                     <tr class="border_left border_right border_top">
                         <td colspan="6" style="height: 22px">ACADEMIC SUBJECTS</td>
                     </tr>
@@ -404,7 +438,7 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
                         </tr>
                         @endif
                     @endforeach
-                        <tr class="border_left border_right" style='font-weight: bold'>
+                        <tr class="border_left border_right" style='font-weight: bolder'>
                             <td>ACADEMIC AVERAGE</td>
                             <td style="font-size: 7pt;text-align: center;">{{GradeController::gradeQuarterAve(array(0),array(0),1,$grade8Grades,'Grade 8')}}</td>
                             <td style="font-size: 7pt;text-align: center;">{{GradeController::gradeQuarterAve(array(0),array(0),2,$grade8Grades,'Grade 8')}}</td>
@@ -415,11 +449,11 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
 
                         <tr class="border_left border_right">
                             <td>RANK</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->acad_level_1}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->acad_level_2}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->acad_level_3}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->acad_level_4}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->acad_level_final1}}</td>
+                            <td style="font-size: 7pt;text-align: center;"></td>
+                            <td style="font-size: 7pt;text-align: center;"></td>
+                            <td style="font-size: 7pt;text-align: center;"></td>
+                            <td style="font-size: 7pt;text-align: center;"></td>
+                            <td style="font-size: 7pt;text-align: center;"></td>
                         </tr>
                         <tr class="border_left border_right">
                             <td colspan="6">TECHNICAL SUBJECTS</td>
@@ -428,7 +462,7 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
                             @if($grade->subjecttype == 1)
                             <?php $weight7 = $grade->weighted;?>
                             <tr class="border_left border_right">
-                                <td>{{strtoupper($grade->subjectname)}}</td>
+                                <td>{{strtoupper($grade->subjectname)}} @if($weight7 > 0)<span style='float: right;margin-right: 50px'>({{$weight7}}%)</span> @endif</td>
                                 <td style="font-size: 7pt;text-align: center;">{{round($grade->first_grading,0)}}</td>
                                 <td style="font-size: 7pt;text-align: center;">{{round($grade->second_grading,0)}}</td>
                                 <td style="font-size: 7pt;text-align: center;">{{round($grade->third_grading,0)}}</td>
@@ -437,7 +471,7 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
                             </tr>
                             @endif
                         @endforeach
-                            <tr class="border_left border_right" style='font-weight: bold'>
+                            <tr class="border_left border_right" style='font-weight: bolder'>
                                 <td>TECHNICAL AVERAGE</td>
                                 @if($weight7 > 0)
                                     <td style="font-size: 7pt;text-align: center;">{{GradeController::weightedgradeQuarterAve(array(1),array(0),1,$grade8Grades,'Grade 8')}}</td>
@@ -455,13 +489,21 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
                             </tr>
                             <tr class="border_left border_right border_bottom">
                                 <td>RANK</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->tech_level_1}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->tech_level_2}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->tech_level_3}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->tech_level_4}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade8Rank->tech_level_final1}}</td>
+                                <td style="font-size: 7pt;text-align: center;"></td>
+                                <td style="font-size: 7pt;text-align: center;"></td>
+                                <td style="font-size: 7pt;text-align: center;"></td>
+                                <td style="font-size: 7pt;text-align: center;"></td>
+                                <td style="font-size: 7pt;text-align: center;"></td>
                             </tr>
-                                <tr class="border_left border_right border_top border_bottom"><td colspan="6" style="padding-top: 20px;padding-bottom: 0px;height: 28.8px;"></td></tr>
+                            <tr class="border_left border_right border_top border_bottom">
+                                <td colspan="6" style="padding-top: 20px;padding-bottom: 0px;height: 28.8px;">
+                                    @foreach($grade8Grades as $grade)
+                                        @if($grade->schoolyear == ($grade8info->schoolyear+1)." SUMMER")<br>
+                                        {{$grade->schoolyear}} {{$grade->school}}: {{$grade->subjectname}} = {{round($grade->finalgrade,0)}}
+                                        @endif
+                                    @endforeach
+                                </td>
+                            </tr>
                             <?php 
                             $dayp = array();
                             $daya = array();
@@ -510,7 +552,7 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
                             <?php $grade10info = PermanentRecord::syInfo($idno,'Grade 10'); ?>
                             @if(count($grade10info)>0)
                             <?php 
-                            $grade10Grades  = \App\Grade::where('schoolyear',$grade10info->schoolyear)->where('idno',$idno)->where('isdisplaycard',1)->orderBy('sortto','ASC')->get();
+                            $grade10Grades  = \App\Grade::whereIn('schoolyear',array($grade10info->schoolyear,($grade10info->schoolyear+1)." SUMMER"))->where('idno',$idno)->where('isdisplaycard',1)->orderBy('sortto','ASC')->get();
                             $grade10Rank     = \App\Ranking::where('idno',$idno)->where('schoolyear',$grade10info->schoolyear)->first();
                             ?>
                             <table width='100%' cellspacing='0' >
@@ -535,6 +577,14 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
                         <td style="font-size: 7pt">4</td>
                         <td style="font-size: 7pt">Final</td>
                     </tr>
+                    <tr style="text-align: center" class=" border_left border_right ">
+                        <td style="text-align: left">CONDUCT</td>
+                        <td style="font-size: 7pt">{{GradeController::conductQuarterAve(3,1,$grade10Grades)}}</td>
+                        <td style="font-size: 7pt">{{GradeController::conductQuarterAve(3,2,$grade10Grades)}}</td>
+                        <td style="font-size: 7pt">{{GradeController::conductQuarterAve(3,3,$grade10Grades)}}</td>
+                        <td style="font-size: 7pt">{{GradeController::conductQuarterAve(3,4,$grade10Grades)}}</td>
+                        <td style="font-size: 7pt">{{round(GradeController::conductTotalAve($grade10Grades,0),0)}}</td>
+                    </tr>
                     <tr class="border_left border_right border_top">
                         <td colspan="6" style="height: 22px">ACADEMIC SUBJECTS</td>
                     </tr>
@@ -550,7 +600,7 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
                         </tr>
                         @endif
                     @endforeach
-                        <tr class="border_left border_right" style='font-weight: bold'>
+                        <tr class="border_left border_right" style='font-weight: bolder'>
                             <td>ACADEMIC AVERAGE</td>
                             <td style="font-size: 7pt;text-align: center;">{{GradeController::gradeQuarterAve(array(0),array(0),1,$grade10Grades,'Grade 10')}}</td>
                             <td style="font-size: 7pt;text-align: center;">{{GradeController::gradeQuarterAve(array(0),array(0),2,$grade10Grades,'Grade 10')}}</td>
@@ -561,11 +611,11 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
 
                         <tr class="border_left border_right">
                             <td>RANK</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->acad_level_1}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->acad_level_2}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->acad_level_3}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->acad_level_4}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->acad_level_final1}}</td>
+                            <td style="font-size: 7pt;text-align: center;"></td>
+                            <td style="font-size: 7pt;text-align: center;"></td>
+                            <td style="font-size: 7pt;text-align: center;"></td>
+                            <td style="font-size: 7pt;text-align: center;"></td>
+                            <td style="font-size: 7pt;text-align: center;"></td>
                         </tr>
                         <tr class="border_left border_right">
                             <td colspan="6">TECHNICAL SUBJECTS</td>
@@ -574,7 +624,7 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
                             @if($grade->subjecttype == 1)
                             <?php $weight7 = $grade->weighted;?>
                             <tr class="border_left border_right">
-                                <td>{{strtoupper($grade->subjectname)}}</td>
+                                <td>{{strtoupper($grade->subjectname)}} @if($weight7 > 0)<span style='float: right;margin-right: 50px'>({{$weight7}}%)</span> @endif</td>
                                 <td style="font-size: 7pt;text-align: center;">{{round($grade->first_grading,0)}}</td>
                                 <td style="font-size: 7pt;text-align: center;">{{round($grade->second_grading,0)}}</td>
                                 <td style="font-size: 7pt;text-align: center;">{{round($grade->third_grading,0)}}</td>
@@ -583,7 +633,7 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
                             </tr>
                             @endif
                         @endforeach
-                            <tr class="border_left border_right" style='font-weight: bold'>
+                            <tr class="border_left border_right" style='font-weight: bolder'>
                                 <td>TECHNICAL AVERAGE</td>
                                 @if($weight7 > 0)
                                     <td style="font-size: 7pt;text-align: center;">{{GradeController::weightedgradeQuarterAve(array(1),array(0),1,$grade10Grades,'Grade 10')}}</td>
@@ -607,7 +657,15 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
                                 <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->tech_level_4}}</td>
                                 <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->tech_level_final1}}</td>
                             </tr>
-                                <tr class="border_left border_right border_top border_bottom"><td colspan="6" style="padding-top: 20px;padding-bottom: 0px;height: 28.8px;"></td></tr>
+                            <tr class="border_left border_right border_top border_bottom">
+                                <td colspan="6" style="padding-top: 20px;padding-bottom: 0px;height: 28.8px;">
+                                    @foreach($grade10Grades as $grade)
+                                        @if($grade->schoolyear == ($grade10info->schoolyear+1)." SUMMER")<br>
+                                        {{$grade->schoolyear}} {{$grade->school}}: {{$grade->subjectname}} = {{round($grade->finalgrade,0)}}
+                                        @endif	
+                                    @endforeach
+                                </td>
+                            </tr>
                             <?php 
                             $dayp = array();
                             $daya = array();
@@ -649,10 +707,6 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
             </td>
         </tr>
     </table>
-   
-    <div>
-
-    </div>
 </body>
 </html>
 

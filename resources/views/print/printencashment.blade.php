@@ -1,7 +1,7 @@
 <div class="container">
 <div class="col-md-12">    
 <h5> Encashment </h5>
-<table class="table table-striped" width="100%"><tr><td>Payee</td><td>On-us</td><td>Bank</td><td>Check Number</td><td>Amount</td><td>Remarks</td><td></td></tr>
+<table class="table table-striped" width="100%" style="font-size: 9pt;"><tr><td>Payee</td><td>On-us</td><td>Bank</td><td>Check No</td><td>Amount</td><td>Remarks</td><td></td></tr>
 <?php
 $totalcancell = 0;
 $totalcbc = 0;
@@ -54,7 +54,7 @@ $totalothers=0;
     <td>{{$encashmentreport->whattype}}</td>
     <td>{{$encashmentreport->bank_branch}}</td>
     <td>{{$encashmentreport->check_number}}</td>
-    <td>{{$encashmentreport->amount}}</td>
+    <td>{{number_format($encashmentreport->amount,2)}}</td>
     <td>
     @if($encashmentreport->isreverse =="0")
     Ok

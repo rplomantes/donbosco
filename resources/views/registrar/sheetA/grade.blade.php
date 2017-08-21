@@ -62,6 +62,12 @@
         window.location.href = "/gradesheeta/"+schoolyear;
     }
     
+    
+    function printsheetA(){
+        window.location.href = "printgradesheeta/{{$selectedSY}}/"+lvl+"+sem+"/"+sec+"/"+subj;
+    }
+   
+    
     function updatelevel(level){
         lvl = level;
         $('#strand').html("");

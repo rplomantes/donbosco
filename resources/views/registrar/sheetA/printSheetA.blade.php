@@ -37,14 +37,14 @@
                                 GENERATED SHEET A
                             </td>
                             <td style="text-align: right;font-size:12pt;">
-                                <b>Date: </b>{{$today}}
+                                <b>Date: </b>{{date("F d, Y")}}
                             </td>
 
                         </tr>
                         <tr>
                             <td colspan = "2" style="font-size:10pt;padding-left: 0px;">Chino Roces Ave., Makati City </td>
                             <td style="text-align: right">
-                                <b>School Year: </b>{{$schoolyear->schoolyear}} - {{intval($schoolyear->schoolyear)+1}}
+                                <b>School Year: </b>{{$sy}} - {{intval($sy)+1}}
                             </td>                            
                         </tr>
                         <tr>
@@ -58,22 +58,20 @@
                     <table width="100%">
                         <tr>
                             <td width="33.3333px;" style="font-size: 12px">
-                                <b>QUARTER:</b> {{$quarter}}
+                                <b>QUARTER:</b> {{$quarter->qtrperiod}}
                             </td>
-                            <td  style="text-align: center;width:33.3333%;font-size:12px;"><b>LEVEL:</b> {{$level}}</td>
-                            <td style="text-align: right;width:33.3333%;font-size:12px;"><b>SECTION:</b> {{$section}}</td>
+                            <td  style="text-align: center;width:33.3333%;font-size:12px;"><b>LEVEL:</b> {{level}}</td>
+                            <td style="text-align: right;width:33.3333%;font-size:12px;"><b>SECTION:</b> {{section}}</td>
                         </tr>
                         <tr>
                             <td style="font-size: 12px">
-                                <b>SUBJECT:</b> {{$subject->subjectname}}
+                                <b>SUBJECT:</b> 
                             </td>
                             
                             <td colspan="2" style="text-align: right;font-size: 12px;">
                                 <?php $adviser = DB::table('ctr_subject_teachers')->where('level',$level)->where('section',$section)->where('subjcode',$subject->subjectcode)->first(); ?>
                                 <b>Teacher:</b>
-                                @if(isset($adviser->adviser))
-                                {{$adviser->adviser}}
-                                @endif
+
                             </td>
                         </tr>
                     </table>

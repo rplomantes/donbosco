@@ -417,6 +417,7 @@ Route::group(['middleware' => ['web','registrar']], function () {
     Route::get('/printelectivesection/{section}','Registrar\Elective\SectionController@printSection');
     
     Route::get('/gradesheeta/{selectedSY}','Registrar\SheetA\Grade@index');
+    Route::get('/printgradesheeta/{sy},{level},{course},{semester},{section},{subject}','Registrar\SheetA\Grade@index');
     
     Route::get('/electivesheeta/{selectedSY}','Registrar\Elective\SheetAController@index');
     Route::get('/printelectivesheeta/{section}','Registrar\Elective\SheetAController@printElective');
