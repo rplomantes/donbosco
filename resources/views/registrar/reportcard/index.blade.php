@@ -5,24 +5,12 @@
         visibility: hidden;
     }
     
-    #semester{
+    #semester,#qtr{
         display: none;
     }
 </style>
-<div class="container">
-    <div class="col-md-4">
-        <div class="form-group">
-            <label>Schoolyear</label>
-            <select class="form-control" id="schoolyear" name="schoolyear" onchange="changeSy(this.value)">
-                @for ($i = 2016; $i <= $currSY; $i++)
-                    <option value="{{$i}}"
-                            @if($i==$selectedSY)
-                            selected
-                            @endif
-                            >{{$i}}</option>
-                @endfor            
-            </select>
-        </div>
+<div class='container'>
+    <div class='col-md-4'>
         <div class="form-group">
             <label>Level</label>
             <select class="form-control" id="level" name="level" onchange="updatelevel(this.value)">
@@ -42,50 +30,61 @@
                 <option value="2">2nd Semester</option>
             </select>
         </div>
-        <div class="form-group" id="subject"></div>
+        <div class="form-group" id="qtr">
+            <label>Quarter</label>
+            <select class="form-control" id="quarter" name="quarter" onchange="updatequarter(this.value)">
+                <option selected="selected" hidden="hidden" value="0">--Select--</option>
+                <option value="1">1st Quarter</option>
+                <option value="2">2nd Quarter</option>
+                <option value="2">3rd Quarter</option>
+                <option value="2">4th Quarter</option>
+            </select>
+        </div>
         <div>
             <button id="print" class="col-md-12 btn btn-danger" onclick="printsheetA()">PRINT</button>
         </div>
     </div>
-    <div class="col-md-8" id="report">
-    </div>
+    <div class='col-md-8' id="report"></div>
 </div>
 <script>
     var lvl = "";
     var sec = "";
-    var strnd = "";
+    var strand = "";
     var sem = 0;
-    var subj = "";
-    
-    
-    function changeSy(schoolyear){
-        window.location.href = "/gradesheeta/"+schoolyear;
-    }
+    var quarter = 0;
     
     
     function printsheetA(){
-        window.location.href = "/printgradesheeta/{{$selectedSY}}/"+lvl+"/"+sem+"/"+sec+"/"+subj;
+        window.location.href = "/printcards/"+lvl+"/"+strand+"/"+sec+"/"+quarter+"/"+sem;
     }
    
     
     function updatelevel(level){
         lvl = level;
+        quarter = 0;
         $('#strand').html("");
         $('#section').html("");
         $('#subject').html("");
+        document.getElementById("print").style.visibility = "hidden";
         document.getElementById("sem").value = 0;
         document.getElementById("semester").style.display = "none";
+        document.getElementById("quarter").value = 0;
+        document.getElementById("qtr").style.display = "none";
         if((jQuery.inArray( level,["Grade 9","Grade 10","Grade 11","Grade 12"]))>=0){
             getcourse();
         }else{
             updatestrand("null");
+        }
+        
+        if(level == 'Kindergarten'){
+            document.getElementById("qtr").style.display = "block";
         }
     }
     
     function getcourse(){
         arrays ={} ;
         arrays['level']= lvl;
-        arrays['sy']= "{{$selectedSY}}";
+        arrays['sy']= "{{$sy}}";
         $.ajax({
                type: "GET", 
                url: "/getlevelstrands/updatestrand",
@@ -101,10 +100,14 @@
         getsection();
     }
     
+    function updatequarter(qtr){
+        quarter = qtr;
+    }
+    
     function getsection(){
         arrays ={} ;
         arrays['level']= lvl;
-        arrays['sy']= '{{$selectedSY}}';
+        arrays['sy']= '{{$sy}}';
         arrays['course']= strand;
         $.ajax({
                type: "GET", 
@@ -126,52 +129,20 @@
         if((jQuery.inArray( lvl,["Grade 11","Grade 12"]))>=0 && subj == ""){
             
         }else{
-            getlist(subj);
+            print();
         }
     }
     function getsemester(){
         document.getElementById("semester").style.display = "block";
+        print();
     }
     
     function updatesemester(semester){
-        sem = semester;
-        getSubjects();
+        sem = semester;   
     }
     
-    function getSubjects(){
-        arrays ={} ;
-        arrays['level']= lvl;
-        arrays['sy']= '{{$selectedSY}}';
-        arrays['course']= strand;
-        arrays['semester']= sem;
-        $.ajax({
-               type: "GET", 
-               url: "/getlevelsubjects/getlist",
-               data : arrays,
-               success:function(data){
-                   $('#subject').html(data);
-                   }
-               });
-    }
-    
-    function getlist(subject){
-        subj = subject;
-        arrays ={} ;
-        arrays['level']= lvl;
-        arrays['sy']= '{{$selectedSY}}';
-        arrays['course']= strand;
-        arrays['semester']= sem;
-        arrays['section']= sec;
-        arrays['subject']= subject;
-        $.ajax({
-            type:"GET",
-            data:arrays,
-            url: "/gradeSheetAList",
-            success:function(data){
-                $('#report').html(data);
-                document.getElementById("print").style.visibility = "visible";
-            }
-        });
+    function print(){
+        document.getElementById("print").style.visibility = "visible";
     }
 
 </script>

@@ -175,13 +175,18 @@ class GradeController extends Controller
                 }
             }
         }
-        
+        if($total == 0){
+            return "";
+        }
         
         if($level == "Grade 7" | $level == "Grade 8" | $level == "Grade 9" | $level == "Grade 10" | $level == "Grade 11" | $level == "Grade 12"){
             $average = ROUND($grade/$total,0);
-            //$average =$grade;
         }else{
             $average = ROUND($grade/$total,2);
+        }
+        
+        if($average == 0){
+            $average="";
         }
         
         return $average;
@@ -262,7 +267,10 @@ class GradeController extends Controller
                 }
             }
         }
-        
+
+        if($grade == 0){
+            $grade = "";
+        }
         return $grade;
     }
     
@@ -288,7 +296,9 @@ class GradeController extends Controller
             
             $grade = ($third+$fourth)/2;
         }
-        
+        if($grade == 0){
+            $grade = "";
+        }        
         return $grade;
     }
 }

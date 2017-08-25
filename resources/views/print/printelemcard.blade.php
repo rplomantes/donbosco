@@ -226,9 +226,9 @@ use App\Http\Controllers\Registrar\GradeController;
                 <tr style="font-weight: bold">
                     <td align="center" style="border: 1.5px solid">CONDUCT GRADE</td>
                     <td align="center" style="border: 1.5px solid">100</td>
+                    <td align="center" style="border: 1.5px solid">{{GradeController::conductQuarterAve(3,1,$grades)}}</td>
                     <td align="center" style="border: 1.5px solid">{{GradeController::conductQuarterAve(3,2,$grades)}}</td>
                     <td align="center" style="border: 1.5px solid">{{GradeController::conductQuarterAve(3,3,$grades)}}</td>
-                    <td align="center" style="border: 1.5px solid">{{GradeController::conductQuarterAve(3,4,$grades)}}</td>
                     <td align="center" style="border: 1.5px solid">{{GradeController::conductQuarterAve(3,4,$grades)}}</td>
                     <td align="center" style="border: 1.5px solid">{{GradeController::conductTotalAve($grades,0)}}</td>
                 </tr>

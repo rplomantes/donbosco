@@ -370,7 +370,7 @@
                             @endforeach
                         </table>  
                         <br>
-                    </div>                    
+                    </div>
                     <div id="phy_{{$info['info']->idno}}" style="display:none">
                         <table border="1" cellspacing="0" cellpadding="0" width="100%" >
                             <tr style="text-align: center"><td colspan="2"><b>PHYSICAL EDUCATION</b></td></tr>

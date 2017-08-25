@@ -1697,6 +1697,6 @@ class CashierController extends Controller
         
         
         return null;
-    }
+        }
     
    }

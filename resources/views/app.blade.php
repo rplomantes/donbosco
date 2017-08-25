@@ -146,9 +146,9 @@
                                             <li><a href="{{url('printreportcard')}}"><i class="fa fa-btn"></i>Report Card</a></li>
                                             <li><hr></li>
                                             <li><a href="{{url('sheetb')}}"><i class="fa fa-btn"></i>Sheet B</a></li>
-                                            <li><a href="{{url('sheetA')}}"><i class="fa fa-btn"></i>Sheet A Subjects</a></li>
+                                            <li><a href="{{url('gradesheeta',$sy)}}"><i class="fa fa-btn"></i>Sheet A Subjects/Conduct</a></li>
                                             <li><a href="{{url('electivesheeta',$sy)}}"><i class="fa fa-btn"></i>Sheet A Elective</a></li>
-                                            <li><a href="{{url('conduct')}}"><i class="fa fa-btn"></i>Sheet A Conducts</a></li>
+                                            
                                             <li><a href="{{url('attendance')}}"><i class="fa fa-btn"></i>Sheet A Attendance</a></li>
                                             <li><hr></li>
                                             <li><a href="{{url('overallrank')}}"><i class="fa fa-btn"></i>Overall Ranking</a></li>

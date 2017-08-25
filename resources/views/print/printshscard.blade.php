@@ -24,15 +24,22 @@
             .greyed{
                 background-color: rgba(201, 201, 201, 0.79) !important;
                 -webkit-print-color-adjust: exact; 
-            }            
+            }
+            
+            .body{
+                border:1px solid;
+            }
         </style>    
        
         <style type="text/css" media="print">
- 
+             .body{
+                border:0px;
+            }
+            
            .body{
             font-family: calibri;
             width:100%;
-            padding-left: .5cm;
+            padding-left: .54cm;
             padding-right: .54cm;
             }            
             body{
@@ -48,16 +55,16 @@
     </head>
     <body>
 
-        <div class="body" id="body">
+        <div class="body">
         <div class="front" style="padding-top: 50px;">
-            <div style="z-index: 3;position: relative;max-height: 0px;bottom:5px;right:-30px;">
+            <div style="z-index: 3;position: relative;max-height: 0px;bottom:5px;right:-20px;">
                 <img src="{{asset('images/DBTI.png')}}"  style=";width:140px;">
             </div>
         <table class="parent" width="100%" style="z-index: 1;padding:10px;margin-left: auto;margin-right: auto;margin-bottom: .8cm;">
             <thead>
             <tr>
                 <td style="padding-left: 0px;">
-                    <table class="head"  border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <table class="head"  border="0" cellpadding="0" cellspacing="0" width="100%" >
                     <tr>
                         <td style="padding-left: 0px;text-align: center;">
                             <span style="font-size:12pt; font-weight: bold">DON BOSCO TECHNICAL INSTITUTE</span>
@@ -532,8 +539,6 @@
         <div style="text-align: right;padding-left: 0px"><b>{{$idno}}</b></div>
     <div class="page-break"></div>
     </div>
-
-
         </div>
     </body>
 </html>

@@ -1,4 +1,4 @@
-<!--FINAL AND FINISHED NO CHANGES SHOULD BE MADE-->
+<?php use App\Http\Controllers\Registrar\SheetA\Helper as SheetAHelper;?>
 <html>
     <head>
         <style type='text/css'>
@@ -8,8 +8,8 @@
             font-size:13px;
         }
         body{
-            margin-left:100px;
-            margin-right:100px;
+            margin-left:200px;
+            margin-right:200px;
         }
         </style>
         
@@ -60,18 +60,18 @@
                             <td width="33.3333px;" style="font-size: 12px">
                                 <b>QUARTER:</b> {{$quarter->qtrperiod}}
                             </td>
-                            <td  style="text-align: center;width:33.3333%;font-size:12px;"><b>LEVEL:</b> {{level}}</td>
-                            <td style="text-align: right;width:33.3333%;font-size:12px;"><b>SECTION:</b> {{section}}</td>
+                            <td  style="text-align: center;width:33.3333%;font-size:12px;"><b>LEVEL:</b> {{$level}}</td>
+                            <td style="text-align: right;width:33.3333%;font-size:12px;"><b>SECTION:</b> {{$section}}</td>
                         </tr>
                         <tr>
                             <td style="font-size: 12px">
                                 <b>SUBJECT:</b> 
+                                {{SheetAHelper::getSubject($level,$subject)}}
                             </td>
                             
                             <td colspan="2" style="text-align: right;font-size: 12px;">
-                                <?php $adviser = DB::table('ctr_subject_teachers')->where('level',$level)->where('section',$section)->where('subjcode',$subject->subjectcode)->first(); ?>
-                                <b>Teacher:</b>
-
+                                <b>Teacher: </b>
+                                {{SheetAHelper::getAdviser($sy,$level,$section,$subject)}}
                             </td>
                         </tr>
                     </table>
@@ -84,7 +84,7 @@
             </tr>            
             <tr>
                 <td>
-                    <table class="table table-bordered">
+                    <table style='font-size:13px;' width="100%" border="1" cellspacing="0">
                         <tr style="text-align: center">
                             <td>CLASS NO</td>
                             <td>LAST NAME</td>
@@ -188,7 +188,7 @@
                     <table width='100%'>
                         <tr>
                             <td>Certified True and Correct by:</td>
-                            <td rowspan='3' style='text-align: right;vertical-align: top'>Date Printed: {{$print}}</td>
+                            <td rowspan='3' style='text-align: right;vertical-align: top'>Date Printed: {{date("F d, Y h:i:s A")}}</td>
                         </tr>
                         <tr>
                             <td>_________________________</td>

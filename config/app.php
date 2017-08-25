@@ -207,6 +207,7 @@ return [
         'PDF'       => Barryvdh\DomPDF\Facade::class,
         'Excel' => 'Maatwebsite\Excel\Facades\Excel',
         'Lava'      => 'Khill\Lavacharts\Laravel\LavachartsFacade',
+        'GradeController'   =>  'App\Http\Controllers\Registrar\GradeController',
 
     ],
 

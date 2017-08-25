@@ -417,12 +417,13 @@ Route::group(['middleware' => ['web','registrar']], function () {
     Route::get('/printelectivesection/{section}','Registrar\Elective\SectionController@printSection');
     
     Route::get('/gradesheeta/{selectedSY}','Registrar\SheetA\Grade@index');
-    Route::get('/printgradesheeta/{sy},{level},{course},{semester},{section},{subject}','Registrar\SheetA\Grade@index');
+    Route::get('/printgradesheeta/{sy}/{level}/{semester}/{section}/{subject}','Registrar\SheetA\Grade@printSheetA');
     
     Route::get('/electivesheeta/{selectedSY}','Registrar\Elective\SheetAController@index');
     Route::get('/printelectivesheeta/{section}','Registrar\Elective\SheetAController@printElective');
-       
-   
+    
+    Route::get('/reportcards','Registrar\ReportCards\ReportCardController@sectionCards');
+    Route::get('/printcards/{lvl}/{strnd}/{sec}/{quarter}/{sem}','Registrar\ReportCards\ReportCardController@printSectionCards');
     
     Route::get('/promotion/{sy}','Registrar\PromotionController@index');
     Route::get('/editpromotion/{sy}/{level}','Registrar\PromotionController@editpromotion');
@@ -446,5 +447,3 @@ Route::group(['middleware' => ['web','registrar']], function () {
    Route::get('/viewpromotion/{sy}/{level}','Registrar\PromotionController@viewreport');
     
    Route::get('/gradeSheetAList','Registrar\SheetA\Helper@gradeSheetAList');
-       
-   

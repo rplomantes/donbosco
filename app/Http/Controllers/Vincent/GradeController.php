@@ -41,10 +41,10 @@ class GradeController extends Controller
     }
     
     function reset(){
-        /*$no_student=0;
-                    $students = \App\Status::whereIn('status',array(2,3))->where('strand','ABM')->get();
+        $no_student=0;
+        $students = \App\Status::whereIn('status',array(2,3))->where('strand','ABM')->where('schoolyear',2017)->get();
         foreach($students as $student){
-            $subjects = \App\CtrSubjects::where('level',$student->level)->where('semester',2)->where('strand','ABM')->get();
+            $subjects = \App\CtrSubjects::where('level',$student->level)->where('strand','ABM')->get();
                     foreach($subjects as $subject){
                             $newgrade = new \App\Grade;
                             $newgrade->idno = $student->idno;
@@ -62,26 +62,26 @@ class GradeController extends Controller
                     }
                     $no_student =$no_student +1;
                     echo "NO Of Student: ".$no_student;
-        }*/
+        }
         
-        $students = \App\Status::where('status',2)->where('department','Kindergarten')->get();
-        foreach($students as $student){
-            $subjects = \App\CtrCompetence::where('quarter',4)->get();
-                    foreach($subjects as $subject){
-                            $newgrade = new \App\Competency;
-                            $newgrade->idno = $student->idno;
-                            $newgrade->subject = $subject->subject;
-                            $newgrade->section = $subject->section;
-                            $newgrade->competencycode = $subject->competencycode;
-                            $newgrade->description = $subject->description;
-                            $newgrade->sortto = $subject->sortto;
-                            $newgrade->quarter = $subject->quarter;
-                            $newgrade->competencycode=$subject->competencycode;
-                            $newgrade->schoolyear = $student->schoolyear;
-                            $newgrade->save();
-                    }
-                    
-        }        
+//        $students = \App\Status::whereIn('status',array(2,3))->where('level','Kindergarten')->where('schoolyear','2017')->get();
+//        foreach($students as $student){
+//            $subjects = \App\CtrCompetence::where('quarter',1)->get();
+//                    foreach($subjects as $subject){
+//                            $newgrade = new \App\Competency;
+//                            $newgrade->idno = $student->idno;
+//                            $newgrade->subject = $subject->subject;
+//                            $newgrade->section = $subject->section;
+//                            $newgrade->competencycode = $subject->competencycode;
+//                            $newgrade->description = $subject->description;
+//                            $newgrade->sortto = $subject->sortto;
+//                            $newgrade->quarter = $subject->quarter;
+//                            $newgrade->competencycode=$subject->competencycode;
+//                            $newgrade->schoolyear = $student->schoolyear;
+//                            $newgrade->save();
+//                    }
+//                    echo $student->idno."<br>";
+//        }        
         /*
         $students = \App\Grade::distinct()->select('idno')->get();
         foreach($students as $student){

@@ -1297,7 +1297,7 @@ class AjaxController extends Controller
             $level = Input::get('level');
             $section = Input::get('section');
             //$section = "All";
-            $sy = \App\CtrRefSchoolyear::first();
+            $sy = \App\CtrSchoolYear::first();
             
             if($section == "All"){
                 //$students = DB::Select("Select statuses.idno,lastname,firstname,middlename,extensionname from statuses join users on users.idno = statuses.idno join ctr_sections on ctr_sections.section = statuses.section where statuses.status = 2 and schoolyear = $sy->schoolyear and level = '$level' order by ctr_sections.id ASC");

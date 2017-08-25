@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Registrar;
+namespace App\Http\Controllers\Registrar\ReportCards;
 
 use Illuminate\Http\Request;
 
@@ -8,9 +8,9 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use DB;
 
-class ReportCardController extends Controller
+class StudentCard extends Controller
 {
-    static function studentReport($idno,$sy,$sem = null){
+    static function studentReport($idno,$sy,$quarter,$sem = null){
         $name = "";
         $lrn = "";
         $section = "";
@@ -21,7 +21,6 @@ class ReportCardController extends Controller
         $infos = DB::Select("Select * from users u join student_infos s on u.idno = s.idno where u.idno = '$idno'");
         $currSy = \App\CtrSchoolYear::first()->schoolyear;
         $birthdate = "0000-00-00";
-        $attendance = "";
         
         
         foreach($infos as $info){
@@ -48,20 +47,21 @@ class ReportCardController extends Controller
             $class_no = $status->class_no;
         }
         if($currSy == $sy){
-            $getadviser = \App\CtrSection::where('schoolyear',$sy)->where('section',$section)->where('level',$level)->first();
+            $getadviser = \App\CtrSection::where('schoolyear',$sy)->where('section',$section)->where('level',$level)->get();
         }else{
             $getadviser = DB::Select("select * from `ctr_sections_temp` where `schoolyear` = '$sy' and `section` = '$section' and `level` = '$level' limit 1");
         }
         
         
-        if($getadviser){
+        if(count($getadviser)>0){
+            
             foreach($getadviser as $getadviser){
-            $adviser = "";
+            $adviser = $getadviser->adviser;
             }
         }
         
         if($level == 'Kindergarten'){
-            
+            return self::printkinder($idno,$sy,$name,$lrn,$adviser,$section,$level,$class_no,$totalage,$quarter);
         }elseif($level == 'Grade 1' || $level == 'Grade 2' || $level == 'Grade 3' || $level == 'Grade 4' || $level == 'Grade 5' || $level == 'Grade 6'){
             return self::printelem($idno,$sy,$name,$lrn,$adviser,$section,$level,$class_no,$totalage);
         }elseif($level == 'Grade 7' || $level == 'Grade 8'){
@@ -69,13 +69,13 @@ class ReportCardController extends Controller
         }elseif($level == 'Grade 9' || $level == 'Grade 10'){
             
         }elseif($level == 'Grade 11' || $level == 'Grade 12'){
-            return $this->printshs($idno,$sy,$name,$lrn,$gender,$adviser,$section,$level,$class_no,$totalage,$sem,$infos,$status);
+            return self::printshs($idno,$sy,$name,$lrn,$gender,$adviser,$section,$level,$class_no,$totalage,$sem,$infos,$status);
         }else{
             
         }
     }
     
-    function printjhs1($idno,$sy,$name,$lrn,$adviser,$section,$level,$class_no,$totalage){
+    static function printjhs1($idno,$sy,$name,$lrn,$adviser,$section,$level,$class_no,$totalage){
         $grades = \App\Grade::where('idno',$idno)->where('isdisplaycard',1)->where('schoolyear',$sy)->orderBy('sortto','ASC')->get();
         $attendances = DB::Select("Select attendanceName,sum(Jun) as jun,sum(Jul) as jul,sum(Aug) as aug,sum(Sept) as sept,sum(Oct) as oct,sum(Nov) as nov,sum(Dece) as dece,sum(Jan) as jan,sum(Feb) as feb,sum(Mar) as mar,"
                 . "sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct)+sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as total"
@@ -88,7 +88,7 @@ class ReportCardController extends Controller
         return view("print.printjhscard",compact('idno','sy','name','lrn','adviser','section','level','grades','totalage','class_no','ctr_attendances','attendances'));
     }
     
-    function printshs($idno,$sy,$name,$lrn,$gender,$adviser,$section,$level,$class_no,$totalage,$sem,$infos,$status){
+    static function printshs($idno,$sy,$name,$lrn,$gender,$adviser,$section,$level,$class_no,$totalage,$sem,$infos,$status){
         $grades = \App\Grade::where('idno',$idno)->where('isdisplaycard',1)->where('schoolyear',$sy)->whereIn('semester',[$sem,0])->orderBy('sortto','ASC')->get();
         $attendances = DB::Select("Select attendanceName,sum(Jun) as jun,sum(Jul) as jul,sum(Aug) as aug,sum(Sept) as sept,sum(Oct) as oct,sum(Nov) as nov,sum(Dece) as dece,sum(Jan) as jan,sum(Feb) as feb,sum(Mar) as mar,"
                 . "sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct)+sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as total,sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct) as sem1,sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as sem2"
@@ -98,7 +98,7 @@ class ReportCardController extends Controller
                 . "sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct)+sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as total,sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct) as sem1,sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as sem2"
                 . " from ctr_attendances where level = '$level' and schoolyear = '$sy' group by schoolyear");
 
-        return view("print.printshscard",compact('idno','sy','name','lrn','gender','adviser','section','level','grades','totalage','class_no','ctr_attendances','attendances','sem','infos','status'));
+        return view("print.printshscard",compact('idno','sy','name','lrn','gender','adviser','section','level','grades','totalage','class_no','ctr_attendances','attendances','sem','infos','status'))->render();
     }
     
     static function printelem($idno,$sy,$name,$lrn,$adviser,$section,$level,$class_no,$totalage){
@@ -112,5 +112,22 @@ class ReportCardController extends Controller
                 . " from ctr_attendances where level = '$level' and schoolyear = '$sy' group by schoolyear");
 
         return view("print.printelem",compact('idno','sy','name','lrn','adviser','section','level','grades','totalage','class_no','ctr_attendances','attendances'));
+    }
+    
+    static function printkinder($idno,$sy,$name,$lrn,$adviser,$section,$level,$class_no,$totalage,$quarter){
+        $grades = \App\Grade::where('idno',$idno)->where('isdisplaycard',1)->where('schoolyear',$sy)->orderBy('sortto','ASC')->get();
+        
+        $match5 = ["idno"=>$idno,"quarter"=>$quarter,"schoolyear"=>$sy];
+        $competencies = \App\Competency::where($match5)->orderBy("sortto","ASC")->get();
+        
+        $attendances = DB::Select("Select attendanceName,sum(Jun) as jun,sum(Jul) as jul,sum(Aug) as aug,sum(Sept) as sept,sum(Oct) as oct,sum(Nov) as nov,sum(Dece) as dece,sum(Jan) as jan,sum(Feb) as feb,sum(Mar) as mar,"
+                . "sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct)+sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as total"
+                . " from attendances where idno = '$idno' and schoolyear = '$sy' group by quarter,schoolyear,attendancetype order by sortto ASC");
+        
+        $ctr_attendances = DB::Select("Select sum(Jun) as jun,sum(Jul) as jul,sum(Aug) as aug,sum(Sept) as sept,sum(Oct) as oct,sum(Nov) as nov,sum(Dece) as dece,sum(Jan) as jan,sum(Feb) as feb,sum(Mar) as mar,"
+                . "sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct)+sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as total"
+                . " from ctr_attendances where level = '$level' and schoolyear = '$sy' group by schoolyear");
+
+        return view("registrar.reportcard.KinderCard2016",compact('idno','sy','name','lrn','adviser','section','level','grades','totalage','class_no','ctr_attendances','attendances','quarter','competencies'))->render();
     }
 }
