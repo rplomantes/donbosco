@@ -287,6 +287,7 @@
     Route::get('/getlevelsections/{all}/{action?}','Vincent\AjaxController@getlevelsections');
     Route::get('/getlevelstrands/{action?}','Vincent\AjaxController@getlevelstrands');
     Route::get('/getlevelsubjects/{action?}','Registrar\SheetA\Helper@getSubjects');
+    Route::get('/getlevelquarter/{action?}','Registrar\SheetA\Helper@getQuarter');
 
     Route::get('/myDeposit','AjaxController@myDeposit');
     Route::get('/getid/{varid}','AjaxController@getid');
@@ -417,6 +418,7 @@ Route::group(['middleware' => ['web','registrar']], function () {
     Route::get('/printelectivesection/{section}','Registrar\Elective\SectionController@printSection');
     
     Route::get('/gradesheeta/{selectedSY}','Registrar\SheetA\Grade@index');
+        Route::get('/attendancesheeta/{selectedSY}','Registrar\SheetA\Attendance@index');
     Route::get('/printgradesheeta/{sy}/{level}/{semester}/{section}/{subject}','Registrar\SheetA\Grade@printSheetA');
     
     Route::get('/electivesheeta/{selectedSY}','Registrar\Elective\SheetAController@index');

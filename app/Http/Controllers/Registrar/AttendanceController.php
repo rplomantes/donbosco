@@ -17,12 +17,37 @@ class AttendanceController extends Controller
         if($sy == 2016){
             $qtrattendance = self::compute2016Attend($idno,$sy,$quarter,$level);
         }else{
-            return null;    
+            $qtrattendance = self::computeQuarterAttendance($idno,$sy,$quarter);
         }
         
         return $qtrattendance;
     }
     
+    static function computeQuarterAttendance($idno,$sy,$quarter){
+        $getdayp = \App\Attendance::where('idno',$idno)->where('schoolyear',$sy)->where('quarter',$quarter)->where('attendancetype','DAYP')->first();
+        $getdayt = \App\Attendance::where('idno',$idno)->where('schoolyear',$sy)->where('quarter',$quarter)->where('attendancetype','DAYT')->first();
+        $getdaya = \App\Attendance::where('idno',$idno)->where('schoolyear',$sy)->where('quarter',$quarter)->where('attendancetype','DAYA')->first();
+        
+        if(count($getdayp)>0){
+            $dayp = number_format($getdayp->Jun+$getdayp->Jul+$getdayp->Aug+$getdayp->Sept+$getdayp->Oct+$getdayp->Nov+$getdayp->Dece+$getdayp->Jan+$getdayp->Feb+$getdayp->Mar,1);
+        }else{
+            $dayp = "";
+        }
+        
+        if(count($getdayt)>0){
+            $dayt = number_format($getdayt->Jun+$getdayt->Jul+$getdayt->Aug+$getdayt->Sept+$getdayt->Oct+$getdayt->Nov+$getdayt->Dece+$getdayt->Jan+$getdayt->Feb+$getdayt->Mar,1);
+        }else{
+            $dayt = "";
+        }
+        
+        if(count($getdaya)>0){
+            $daya = number_format($getdaya->Jun+$getdaya->Jul+$getdaya->Aug+$getdaya->Sept+$getdaya->Oct+$getdaya->Nov+$getdaya->Dece+$getdaya->Jan+$getdaya->Feb+$getdaya->Mar,1);
+        }else{
+            $daya = "";
+        }
+        
+        return array($dayp,$daya,$dayt);
+    }
     static function compute2016Attend($idno,$sy,$quarter,$level){
         
         $months = self::attendance2016Reconstruct($quarter,$sy,$idno,$level);

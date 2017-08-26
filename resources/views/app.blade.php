@@ -149,7 +149,7 @@
                                             <li><a href="{{url('gradesheeta',$sy)}}"><i class="fa fa-btn"></i>Sheet A Subjects/Conduct</a></li>
                                             <li><a href="{{url('electivesheeta',$sy)}}"><i class="fa fa-btn"></i>Sheet A Elective</a></li>
                                             
-                                            <li><a href="{{url('attendance')}}"><i class="fa fa-btn"></i>Sheet A Attendance</a></li>
+                                            <li><a href="{{url('attendancesheeta',$sy)}}"><i class="fa fa-btn"></i>Sheet A Attendance</a></li>
                                             <li><hr></li>
                                             <li><a href="{{url('overallrank')}}"><i class="fa fa-btn"></i>Overall Ranking</a></li>
                                             <li><a href="{{url('finalreport')}}"><i class="fa fa-btn"></i>Final Report</a></li>
@@ -172,7 +172,13 @@
                                      </ul>   
                                 
                                 </li>
-                                <li><a href="{{ url('/upload/grade') }}">Upload grades</a></li>
+                                <li class="dropdown">
+                                    <a href="#"  class="dropdown-toggle" data-toggle="dropdown" role="button">Others<span class="caret"></span></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="{{url('promotion',$sy)}}"><i class="fa fa-btn"></i>K-12</a></li>
+                                     </ul>   
+                                
+                                </li>
                                 
                                  @endif
                                  @endif

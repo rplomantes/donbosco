@@ -12,6 +12,12 @@ use DB;
 
 class Helper extends Controller
 {
+    static function getQuarter($action = null){
+        $level = Input::get('level');
+        
+        return view('ajax.selectquarter',compact('level','action'));
+    }
+    
     static function getSubjects($action = null){
         $level = Input::get('level');
         $sy = Input::get('sy');
@@ -34,7 +40,7 @@ class Helper extends Controller
             $course = "";
         }
         
-        $subjects = DB::Select("Select distinct subjectcode,subjectname from grades g join $table s on g.idno = s.idno AND g.schoolyear = s.schoolyear where s.level = '$level' $course and subjecttype IN(0,1,5,6) and subjectcode NOT LIKE 'ELE%' and isdisplaycard = 1 AND g.semster = $semester order by sortto");
+        $subjects = DB::Select("Select distinct subjectcode,subjectname from grades g join $table s on g.idno = s.idno AND g.schoolyear = s.schoolyear where s.level = '$level' $course and subjecttype IN(0,1,5,6) and subjectcode NOT LIKE 'ELE%' and isdisplaycard = 1 AND g.semester = $semester order by sortto");
         return view('ajax.selectsubjects',compact('subjects','action','allavailable'));
     }
     
@@ -44,11 +50,15 @@ class Helper extends Controller
         $course = Input::get('course');
         $semester = Input::get('semester');
         $subject = Input::get('subject');
+        $quarter = Input::get('quarter');
         $section = Input::get('section');
 
         $students = RegistrarHelper::getSectionList($sy,$level,$course,$section);
-        
-        return view('ajax.sheetAGrade',compact('students','semester','subject','sy'));
+        if($subject == 2){
+            return view('ajax.sheetAAttendance',compact('students','semester','quarter','sy','level','quarter'));
+        }else{
+            return view('ajax.sheetAGrade',compact('students','semester','subject','sy'));
+        }
     }
     
     static function getAdviser($sy,$level,$section,$subjectcode){
