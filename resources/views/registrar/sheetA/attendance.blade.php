@@ -53,7 +53,7 @@
 <script>
     var lvl = "";
     var sec = "";
-    var strnd = "";
+    var strand = "null";
     var sem = 0;
     var qtr = 2;
     
@@ -64,7 +64,7 @@
     
     
     function printsheetA(){
-        window.location.href = "/printattendancesheeta/{{$selectedSY}}/"+lvl+"/"+sem+"/"+sec+"/"+2;
+        window.location.href = "/printattendancesheeta/{{$selectedSY}}/"+lvl+"/"+strand+"/"+sec+"/"+sem+"/"+qtr;
     }
    
     
@@ -151,6 +151,7 @@
     }
     
     function getlist(quarter){
+        qtr = quarter;
         arrays ={} ;
         arrays['level']= lvl;
         arrays['sy']= '{{$selectedSY}}';

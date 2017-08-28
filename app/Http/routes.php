@@ -420,6 +420,7 @@ Route::group(['middleware' => ['web','registrar']], function () {
     Route::get('/gradesheeta/{selectedSY}','Registrar\SheetA\Grade@index');
     Route::get('/attendancesheeta/{selectedSY}','Registrar\SheetA\Attendance@index');
     Route::get('/printgradesheeta/{sy}/{level}/{semester}/{section}/{subject}','Registrar\SheetA\Grade@printSheetA');
+    Route::get('/printattendancesheeta/{sy}/{level}/{course}/{section}/{semester}/{qtr}','Registrar\SheetA\Attendance@printSheetA');
     
     Route::get('/sheetB/{selectedSY}','Registrar\SheetBController@index');
     
