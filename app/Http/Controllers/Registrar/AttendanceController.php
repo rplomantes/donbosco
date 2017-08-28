@@ -24,24 +24,33 @@ class AttendanceController extends Controller
     }
     
     static function computeQuarterAttendance($idno,$sy,$quarter){
-        $getdayp = \App\Attendance::where('idno',$idno)->where('schoolyear',$sy)->where('quarter',$quarter)->where('attendancetype','DAYP')->first();
-        $getdayt = \App\Attendance::where('idno',$idno)->where('schoolyear',$sy)->where('quarter',$quarter)->where('attendancetype','DAYT')->first();
-        $getdaya = \App\Attendance::where('idno',$idno)->where('schoolyear',$sy)->where('quarter',$quarter)->where('attendancetype','DAYA')->first();
+        $getdayp = \App\Attendance::where('idno',$idno)->where('schoolyear',$sy)->whereIn('quarter',$quarter)->where('attendancetype','DAYP')->get();
+        $getdayt = \App\Attendance::where('idno',$idno)->where('schoolyear',$sy)->whereIn('quarter',$quarter)->where('attendancetype','DAYT')->get();
+        $getdaya = \App\Attendance::where('idno',$idno)->where('schoolyear',$sy)->whereIn('quarter',$quarter)->where('attendancetype','DAYA')->get();
+        $dayp = 0;
+        $dayt = 0;
+        $daya = 0;
         
         if(count($getdayp)>0){
-            $dayp = number_format($getdayp->Jun+$getdayp->Jul+$getdayp->Aug+$getdayp->Sept+$getdayp->Oct+$getdayp->Nov+$getdayp->Dece+$getdayp->Jan+$getdayp->Feb+$getdayp->Mar,1);
+            foreach($getdayp as $getdayp){
+                $dayp = $dayp+($getdayp->Jun+$getdayp->Jul+$getdayp->Aug+$getdayp->Sept+$getdayp->Oct+$getdayp->Nov+$getdayp->Dece+$getdayp->Jan+$getdayp->Feb+$getdayp->Mar);
+            }
         }else{
             $dayp = "";
         }
         
         if(count($getdayt)>0){
-            $dayt = number_format($getdayt->Jun+$getdayt->Jul+$getdayt->Aug+$getdayt->Sept+$getdayt->Oct+$getdayt->Nov+$getdayt->Dece+$getdayt->Jan+$getdayt->Feb+$getdayt->Mar,1);
+            foreach($getdayt as $getdayt){
+                $dayt = $dayt+($getdayt->Jun+$getdayt->Jul+$getdayt->Aug+$getdayt->Sept+$getdayt->Oct+$getdayt->Nov+$getdayt->Dece+$getdayt->Jan+$getdayt->Feb+$getdayt->Mar);
+            }
         }else{
             $dayt = "";
         }
         
         if(count($getdaya)>0){
-            $daya = number_format($getdaya->Jun+$getdaya->Jul+$getdaya->Aug+$getdaya->Sept+$getdaya->Oct+$getdaya->Nov+$getdaya->Dece+$getdaya->Jan+$getdaya->Feb+$getdaya->Mar,1);
+            foreach($getdaya as $getdaya){
+                $daya = $daya+($getdaya->Jun+$getdaya->Jul+$getdaya->Aug+$getdaya->Sept+$getdaya->Oct+$getdaya->Nov+$getdaya->Dece+$getdaya->Jan+$getdaya->Feb+$getdaya->Mar);
+            }
         }else{
             $daya = "";
         }

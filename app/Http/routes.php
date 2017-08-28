@@ -390,7 +390,7 @@
     
     
 
-    Route::get('/getindividualaccount', 'Accounting\AjaxController@individualAccount');
+    Route::get('/getindividualaccount/{access}', 'Accounting\AjaxController@individualAccount');
     Route::get('/getsubaccountsum', 'Accounting\AjaxController@subAccountSummary');
     
     
@@ -418,8 +418,10 @@ Route::group(['middleware' => ['web','registrar']], function () {
     Route::get('/printelectivesection/{section}','Registrar\Elective\SectionController@printSection');
     
     Route::get('/gradesheeta/{selectedSY}','Registrar\SheetA\Grade@index');
-        Route::get('/attendancesheeta/{selectedSY}','Registrar\SheetA\Attendance@index');
+    Route::get('/attendancesheeta/{selectedSY}','Registrar\SheetA\Attendance@index');
     Route::get('/printgradesheeta/{sy}/{level}/{semester}/{section}/{subject}','Registrar\SheetA\Grade@printSheetA');
+    
+    Route::get('/sheetB/{selectedSY}','Registrar\SheetBController@index');
     
     Route::get('/electivesheeta/{selectedSY}','Registrar\Elective\SheetAController@index');
     Route::get('/printelectivesheeta/{section}','Registrar\Elective\SheetAController@printElective');

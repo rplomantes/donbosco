@@ -10,15 +10,6 @@
     </tr>
     <?php 
     $cn = 1; 
-    
-    if($semester == 2){
-        if($quarter == 1){
-            $quarter = 3;
-        }
-        if($quarter == 2){
-            $quarter = 4;
-        }
-    }
     ?>
     @foreach($students as $student)
     <?php

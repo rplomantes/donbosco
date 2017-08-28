@@ -120,4 +120,28 @@ class Helper extends Controller
         
         return $short;
     }
+    
+    static function getLevelSubjects($level,$strand,$sy){
+        $currSy = \App\RegistrarSchoolyear::first()->schoolyear;
+        if($strand != "null"){
+            $strand = "and s.strand='".$strand."'";
+        }else{
+            $strand = "";
+        }
+        
+        if($currSy == $sy){
+            $table = 'statuses';
+        }
+        else{
+            $table = 'status_histories';
+        }
+        
+        $subjects = DB::Select("Select * from grades form grades g join $table s "
+                . "ON s.idno = g.idno AND s.schoolyear = g.schoolyear "
+                . "WHERE s.schoolyear = '$sy' and s.status = 2 and s.level = '$level' "
+                . "AND g.subjecttype IN(0,1,5,6) $strand group by subjectcode "
+                . "order by subjecttype,sortto");
+        
+        return $subjects;
+    }
 }

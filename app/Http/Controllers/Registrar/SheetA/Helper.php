@@ -55,6 +55,7 @@ class Helper extends Controller
 
         $students = RegistrarHelper::getSectionList($sy,$level,$course,$section);
         if($subject == 2){
+            $quarter = self::setAttendanceQuarter($semester,$quarter);
             return view('ajax.sheetAAttendance',compact('students','semester','quarter','sy','level','quarter'));
         }else{
             return view('ajax.sheetAGrade',compact('students','semester','subject','sy'));
@@ -97,5 +98,34 @@ class Helper extends Controller
         }
         
         return $subjectname;
+    }
+    
+    static function setAttendanceQuarter($semester,$quarter){
+        $qtr = array($quarter);
+        switch($semester){
+            case 0;
+                if($quarter == 5){
+                    $qtr = array(1,2,3,4);
+                }
+            break;
+            case 1;
+                if($quarter == 5){
+                    $qtr = array(1,2);
+                }
+            break;
+            case 2;
+                if($quarter == 1){
+                    $qtr = array(3);
+                }
+                if($quarter == 2){
+                    $qtr = array(4);
+                }
+                if($quarter == 5){
+                    $qtr = array(3,4);
+                }
+            break;
+        }
+        
+        return $qtr;
     }
 }

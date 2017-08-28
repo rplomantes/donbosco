@@ -13,6 +13,16 @@ class SheetBController extends Controller
         $this->middleware('auth');
     }
     
+    function index($selectedSY){
+        $currSY = \App\ctrSchoolYear::first()->schoolyear;
+        $levels = \App\CtrLevel::get();
+        
+        return view('registrar.sheetB.index',compact('selectedSY','currSY','levels'));   
+    }
+    
+    
+    
+    
     function finalSheetB($quarter,$level,$section,$strand = null){
         $sy = \App\CtrRefSchoolyear::first();
         $strands = Input::get('strand');
@@ -26,5 +36,19 @@ class SheetBController extends Controller
         
         return view("ajax.finalSheetB",compact('quarter','students','subjects','level','section'));
         //return $subjects;
+    }
+    
+    static function gradeSheetBList(){
+        $level = Input::get('level');
+        $sy = Input::get('sy');
+        $course = Input::get('course');
+        $semester = Input::get('semester');
+        $quarter = Input::get('quarter');
+        $section = Input::get('section');
+        $strand = Input::get('strand');
+        
+        $students = RegistrarHelper::getSectionList($sy,$level,$course,$section);
+        $subjects = RegistrarHelper::getLevelSubjects($level,$strand,$sy);
+        return view('ajax.sheetBTable',compact('students','level','section','semester','subject','sy','quarter','strand'));
     }
 }

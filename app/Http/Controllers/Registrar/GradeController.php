@@ -113,18 +113,6 @@ class GradeController extends Controller
                 $grade = $grades->fourth_grading;
                 break;
             default:
-                if($grades->first_grading == 0){
-                    $dividend++;
-                }
-                if($grades->second_grading == 0){
-                    $dividend++;
-                }
-                if($grades->third_grading == 0){
-                    $dividend++;
-                }
-                if($grades->fourth_grading == 0){
-                    $dividend++;
-                }
                 $grade = $grades->final_grade;
                 break;
         }

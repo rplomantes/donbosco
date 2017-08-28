@@ -85,7 +85,7 @@ class StudentCard extends Controller
                 . "sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct)+sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as total"
                 . " from ctr_attendances where level = '$level' and schoolyear = '$sy' group by schoolyear");
 
-        return view("print.printjhscard",compact('idno','sy','name','lrn','adviser','section','level','grades','totalage','class_no','ctr_attendances','attendances'));
+        return view("print.printjhscard",compact('idno','sy','name','lrn','adviser','section','level','grades','totalage','class_no','ctr_attendances','attendances'))->render();
     }
     
     static function printshs($idno,$sy,$name,$lrn,$gender,$adviser,$section,$level,$class_no,$totalage,$sem,$infos,$status){
@@ -111,7 +111,7 @@ class StudentCard extends Controller
                 . "sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct)+sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as total"
                 . " from ctr_attendances where level = '$level' and schoolyear = '$sy' group by schoolyear");
 
-        return view("print.printelem",compact('idno','sy','name','lrn','adviser','section','level','grades','totalage','class_no','ctr_attendances','attendances'));
+        return view("print.printelem",compact('idno','sy','name','lrn','adviser','section','level','grades','totalage','class_no','ctr_attendances','attendances'))->render();
     }
     
     static function printkinder($idno,$sy,$name,$lrn,$adviser,$section,$level,$class_no,$totalage,$quarter){

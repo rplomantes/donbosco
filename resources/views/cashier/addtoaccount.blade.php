@@ -69,10 +69,10 @@
             </div>
             <div class="form-group">
                 <label>Particular:</label>
-                <input type="text" class="form form-control" id="remark" name="remark" style="text-align: right">
+                <input type="text" class="form form-control" id="remark" name="remark" style="text-align: right" onkeypress ="validate2(event)">
             </div>
              <div class="form-group">
-                 <input type="submit" class="form form-control btn btn-primary" name="submit"  id="submit" value="Add to account">
+                 <input type="submit" class="form form-control btn btn-primary"  name="submit"  id="submitme" value="Add to account">
             </div> 
         </form>    
         <div class="form-group">
@@ -146,13 +146,25 @@
         }
         
         if(key == 13){
-            document.getElementById("submit").focus()            
+            document.getElementById("remark").focus()            
             theEvent.preventDefault();
             return false;
             
         }
     }
     
+    function validate2(evt) {
+        var theEvent = evt || window.event;
+        var key = theEvent.keyCode || theEvent.which;
+
+        if(key == 13){
+            document.getElementById("submitme").focus()       
+            theEvent.preventDefault();
+            return false;
+
+        }
+    }
+
     function deleteAccount(id){
         $("#remark_"+id).slideToggle();
     }
@@ -174,4 +186,5 @@
         }
 
     }
+
 </script>  

@@ -10,7 +10,7 @@
     }
 </style>
 <div class="container">
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="form-group">
             <label>Schoolyear</label>
             <select class="form-control" id="schoolyear" name="schoolyear" onchange="changeSy(this.value)">
@@ -47,7 +47,7 @@
             <button id="print" class="col-md-12 btn btn-danger" onclick="printsheetA()">PRINT</button>
         </div>
     </div>
-    <div class="col-md-8" id="report">
+    <div class="col-md-9" id="report">
     </div>
 </div>
 <script>
@@ -55,7 +55,7 @@
     var sec = "";
     var strnd = "";
     var sem = 0;
-    var qtr = 2;
+    var qtr = 1;
     
     
     function changeSy(schoolyear){
@@ -69,7 +69,6 @@
    
     
     function updatelevel(level){
-        qtr = 0;
         lvl = level;
         $('#strand').html("");
         $('#section').html("");
@@ -151,14 +150,16 @@
     }
     
     function getlist(quarter){
+        qtr = quarter;
         arrays ={} ;
         arrays['level']= lvl;
         arrays['sy']= '{{$selectedSY}}';
         arrays['course']= strand;
         arrays['semester']= sem;
         arrays['section']= sec;
-        arrays['subject']= 2;
         arrays['quarter']= quarter;
+        arrays['strand']= strnd;
+        
         
         $.ajax({
             type:"GET",

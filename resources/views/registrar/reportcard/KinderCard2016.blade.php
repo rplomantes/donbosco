@@ -19,7 +19,7 @@
            body{
                 font-family: calibri;
                 margin-left: auto;
-                width:782px;
+                
                     margin:0px;
             }
 
@@ -27,6 +27,7 @@
         </style>    
         <style type="text/css" media="print">
                        body{
+		
                 font-family: calibri;
                 margin-left: none;
                 margin-right: none;
@@ -46,8 +47,8 @@
     <body style="margin:0px;">
         
 
-        <div class="back" style="border:1px solid">
-            <table style="margin-top: 20px;margin-bottom:30px;margin-left: .5cm;margin-right:.5cm;height: 619.2px;max-height: 613.2px;">
+        <div class="back">
+            <table style="margin-top: 30px;margin-bottom:30px;margin-left: .5cm;margin-right:.5cm">
                 <tr>
                     <td style="width:8.33cm" id="com0">
                         <table class="padded grades" border = '1' cellspacing="0" cellpadding = "0" width="100%" class="reports" style="margin-top: auto;margin-bottom: auto;">
@@ -210,7 +211,7 @@
                             @endif
                         </table>
                         <br>
-<table border='1' cellpadding='0' cellspacing='0' width="100%" style="text-align: center;font-size:11px;">
+			<table border='1' cellpadding='0' cellspacing='0' width="100%" style="text-align: center;font-size:11px;">
                             <tr style="font-size:12px;">
                                 <td style="padding-bottom:5px;padding-top:5px">
                                     <b>ATTENDANCE</b>
@@ -406,10 +407,10 @@
             </table>
 
         <div class="page-break"></div>
-        </div>
+	        </div>
 
         <div class="front">
-        <table style="margin-top: 20px;margin-bottom:30px;margin-left: .5cm;margin-right:.5cm" align="center">
+        <table style="margin-top: 110px;margin-bottom:30px;margin-left: .5cm;margin-right:.5cm" align="center">
                     <tr>
                         <td style="width:8.33cm" id="com3">
                         <div  id="MATH">
@@ -518,11 +519,11 @@
                                 </div>
                                 <br>
                             </div>
-                            <div class="parent" style="border: 1px solid; padding: 20px 10px 50px;border-radius: 40px;">
-                                <div style="text-align:center;font-size: 12pt;"><b>KINDERGARTEN</b></div>
+                            <div class="parent" style="border: 1px solid; padding: 20px 10px 10px;border-radius: 40px;">
+                                <div style="text-align:center;font-size: 11pt;"><b>KINDERGARTEN</b></div>
                                 <br>
-                            <div><div style="display:inline-block;width:55px;vertical-align: top"><b>Name: </b></div><div style="display:inline-block;width:235px">{{$name}}</div></div>
-                            <div><div style="display:inline-block;width:55px;vertical-align: top"><b>ID No: </b></div><div style="display:inline-block;width:235px">{{$idno}}</div></div>
+                            <div><div style="display:inline-block;width:55px;vertical-align: top"><b>Name: </b></div><div style="display:inline-block;width:200px">{{$name}}</div></div>
+                            <div><div style="display:inline-block;width:55px;vertical-align: top"><b>ID No: </b></div><div style="display:inline-block;width:200px">{{$idno}}</div></div>
                             <div><div style="display:inline-block;width:55px;"><b>LRN: </b></div>{{$lrn}}</div>
                             <div><div style="display:inline-block;width:55px;"><b>Age: </b></div>{{$totalage}}</div>
                             <div><div style="display:inline-block;width:55px;"><b>Section: </b></div>{{strtoupper($section)}}</div>

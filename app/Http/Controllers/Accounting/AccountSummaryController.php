@@ -28,7 +28,7 @@ class AccountSummaryController extends Controller{
     }
     
     function printaccountSummary($fromdate,$todate,$account){
-        $accounts = $this->getaccounts($fromdate,$todate,$account);
+        $accounts = $this->getaccounts($fromdate,$todate,$account,\Auth::user()->accesslevel);
         
         $pdf = \App::make('dompdf.wrapper');
 	$pdf->setPaper([0,0,1008.00,612.00],'portrait');
@@ -37,19 +37,35 @@ class AccountSummaryController extends Controller{
         
     }
     
-    static function getaccounts($fromdate,$todate,$account){
-        $accounts = DB::Select("select refno,transactiondate,receiptno,debit,credit,entry_type,acct_department,sub_department from "
-                . "(select c.refno,c.transactiondate,c.receiptno,0 as debit,sum(c.amount) as credit,c.entry_type,c.acct_department,c.sub_department "
-                . "from credits c "
-                . "where (c.transactiondate BETWEEN '$fromdate' AND '$todate') "
-                . "AND c.accountingcode = '$account' and c. isreverse=0 "
-                . "group by c.refno,c.sub_department "
-                . "UNION "
-                . "select refno,transactiondate,receiptno,sum(amount)+sum(checkamount) as debit,0 as credit,entry_type,acct_department,sub_department "
-                . "from dedits "
-                . "where (transactiondate BETWEEN '$fromdate' AND '$todate' ) "
-                . "AND accountingcode = '$account' and isreverse=0 "
-                . "group by refno,sub_department) c order by transactiondate,receiptno");
+    static function getaccounts($fromdate,$todate,$account,$access){
+        if($access == env('USER_ACCOUNTING_HEAD')){
+            $accounts = DB::Select("select refno,transactiondate,receiptno,debit,credit,entry_type,acct_department,sub_department from "
+                    . "(select c.refno,c.transactiondate,c.receiptno,0 as debit,sum(c.amount) as credit,c.entry_type,c.acct_department,c.sub_department "
+                    . "from credits c "
+                    . "where (c.transactiondate BETWEEN '$fromdate' AND '$todate') "
+                    . "AND c.accountingcode = '$account' and c. isreverse=0 "
+                    . "group by c.refno,c.sub_department "
+                    . "UNION "
+                    . "select refno,transactiondate,receiptno,sum(amount)+sum(checkamount) as debit,0 as credit,entry_type,acct_department,sub_department "
+                    . "from dedits "
+                    . "where (transactiondate BETWEEN '$fromdate' AND '$todate' ) "
+                    . "AND accountingcode = '$account' and isreverse=0 "
+                    . "group by refno,sub_department) c order by transactiondate,receiptno");            
+        }elseif($access == env('USER_ACCOUNTING')){
+            $accounts = DB::Select("select refno,transactiondate,receiptno,debit,credit,entry_type,acct_department,sub_department from "
+                    . "(select c.refno,c.transactiondate,c.receiptno,0 as debit,sum(c.amount) as credit,c.entry_type,c.acct_department,c.sub_department "
+                    . "from credits c "
+                    . "where (c.transactiondate BETWEEN '$fromdate' AND '$todate') "
+                    . "AND c.accountingcode = '$account' and c. isreverse=0 AND entry_type = 4 "
+                    . "group by c.id "
+                    . "UNION "
+                    . "select refno,transactiondate,receiptno,sum(amount)+sum(checkamount) as debit,0 as credit,entry_type,acct_department,sub_department "
+                    . "from dedits "
+                    . "where (transactiondate BETWEEN '$fromdate' AND '$todate' ) "
+                    . "AND accountingcode = '$account' and isreverse=0 AND entry_type = 4 "
+                    . "group by id) c order by transactiondate,receiptno");            
+        }
+
         
         return $accounts;
     }

@@ -14,11 +14,11 @@ class AjaxController extends Controller
 {
 
     
-    function individualAccount(){
+    function individualAccount($access){
         $fromdate = Input::get('from');
         $todate = Input::get('to');
         $account = Input::get('account');
-        $accounts = AccountSummaryController::getaccounts($fromdate,$todate,$account);
+        $accounts = AccountSummaryController::getaccounts($fromdate,$todate,$account,$access);
         
         return view('ajax.individualAccount',compact('accounts'));
     }

@@ -41,7 +41,7 @@
         
         $.ajax({
             type:"GET",
-            url:"/getindividualaccount",
+            url:"/getindividualaccount/{{\Auth::user()->accesslevel}}",
             data:arrays,
             success:function(data){
                 $("#viewreport").html(data);
