@@ -35,51 +35,48 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
         <hr>
     </div>
    
-    <table width="100%" style="font-size: 8px;" border="1" cellspacing="0">
+    <table width="100%" style="font-size: 9px;" border="1" cellspacing="0">
         <thead>
             <tr style='text-align: center'>
-                <th width="20px"></th>
-                <th width="22px;">STUD NO</th>
-                <th width="50px;">STUDENT'S NAME</th>
-                <th width="20px;">SEC</th>
-                <th colspan="{{count($probations)+1}}">STATUS OF ADMISSION</th>
+                <th></th>
+                <th>STUD NO</th>
+                <th>STUDENT'S NAME</th>
+                <th>SEC</th>
+                <th colspan="4">STATUS OF ADMISSION</th>
             </tr>
             <tr style='text-align: center'>
-                <th colspan="4"></th>
-                <th width="30px">A</th>
-                @foreach($probations as $probation)
-                <th style="font-size: 9px;padding-left: 0px;padding-right: 0px;">{{$probation->code}}</th>
-                @endforeach
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>STATUS</td>
+                <td>CONDUCT</td>
+                <td>ACADEMIC</td>
+                <td>TECHNICAL</td>
             </tr>
-        </thead>
-        <tbody>
             <?php $row = 1;?>
             @foreach($students as $student)
-            <?php $isnew = RegistrarHelper::isNewStudent($student->idno,$sy);?>
+            <?php $isnew = RegistrarHelper::isNewStudent($student->studno,$sy);?>
             <tr>
-                <td>{{$row}}</td>
+                <td style='text-align: center'>{{$row}}</td>
                 <td>{{$student->studno}}</td>
                 <td>@if($isnew)
                     *
-                    @else
-                    &nbsp;
                     @endif
                     {{$student->lastname}}, {{$student->firstname}} {{substr($student->middlename,0,1)}}.</td>
-                <td align="center">{{RegistrarHelper::getNumericSection($sy,$level,$student->section)}}</td>
-                <td>{{$student->admission}}</td>
-                @foreach($probations as $probation)
-                <td style="text-align: center;font-size: 9px;padding-left: 0px;padding-right: 0px;">
-                    <input type="checkbox" class="{{$probation->type}}" name="{{$probation->type}}[{{$student->studno}}]" value="{{$probation->code}}"
-                           @if(Promotion::selected($student->conduct,$student->academic,$student->technical,$probation->type,$probation->code))
-                           checked = 'checked'
-                           @endif
-                           >
-                </td>
-                @endforeach
+                <td>{{$student->section}}</td>
+                <td style='text-align: center'>{{$student->admission}}</td>
+                <td style='text-align: center'>{{$student->conduct}}</td>
+                <td style='text-align: center'>{{$student->academic}}</td>
+                <td style='text-align: center'>{{$student->technical}}</td>
             </tr>
             <?php $row++;?>
-            @endforeach            
-        </tbody>
+            @endforeach
+            @if(count($students) <= 0)
+            <tr>
+                <td colspan='7' style='text-align: center'>No Records Retrieved</td>
+            </tr>
+            @endif
     </table>
     </body>
     </html>

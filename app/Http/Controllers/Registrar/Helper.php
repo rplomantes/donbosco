@@ -63,10 +63,10 @@ class Helper extends Controller
     }
     
     static function isNewStudent($idno,$sy){
-        $newuser = \App\User::where('idno',$idno)->whereNotNull('created_at')->first();
+        $newuser = \App\User::where('idno',$idno)->whereNotNull('created_at')->exists();
         
-        if(count($newuser)>0){
-            $history = \App\StatusHistory::where('idno',$idno)->where('schoolyear',$sy-1)->whereIn('status',array(2,3))->first();
+        if($newuser){
+            $history = \App\StatusHistory::where('idno',$idno)->where('schoolyear','<',$sy)->whereIn('status',array(2,3))->exists();
             
             if($history){
                 return false;
@@ -74,7 +74,12 @@ class Helper extends Controller
                 return true;
             }
         }else{
-            return false;
+            if($sy == 2016 && substr($idno, 0, 2) == '16'){
+                return true;
+            }else{
+                return false;                
+            }
+
         }
     }
     

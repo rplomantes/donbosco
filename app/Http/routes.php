@@ -256,7 +256,7 @@
     Route::get('/updateentrytype','DBFixer@updateentrytype');
     Route::get('/updatetvet','DBFixer@updatetvet');
     Route::get('/updateacct','DBFixer@fixYouthAssistance');
-    Route::get('/updaterank/{level}/{sy}/{course}/{quarter}','Registrar\Ranking\OverallRankController@setOARankingAcad');
+    Route::get('/updaterank/{level}/{sy}/{course}/{quarter}','Registrar\Ranking\OverallRanking@setOARankingAcad');
     Route::get('/updateunearned','DBFixer@updateunearned');
     
     

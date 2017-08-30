@@ -59,7 +59,7 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
         </tr>
     </table>
 
-    <table width="100%" cellspacing="0" style="position:absolute;top:206px;left:0pt;">
+    <table width="100%" cellspacing="0" style="position:absolute;top:170px;left:0pt;">
         <tr>
             <td width='48.5%'>
                 @if($grade7 == 1)
@@ -120,11 +120,11 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
 
                         <tr class="border_left border_right">
                             <td>RANK</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->acad_level_1}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->acad_level_2}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->acad_level_3}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->acad_level_4}}</td>
-                            <td style="font-size: 7pt;text-align: center;">{{$grade7Rank->acad_level_final1}}</td>
+                            <td style="font-size: 7pt;text-align: center;">{</td>
+                            <td style="font-size: 7pt;text-align: center;"></td>
+                            <td style="font-size: 7pt;text-align: center;"></td>
+                            <td style="font-size: 7pt;text-align: center;"></td>
+                            <td style="font-size: 7pt;text-align: center;"></td>
                         </tr>
                         <tr class="border_left border_right">
                             <td colspan="6">TECHNICAL SUBJECTS</td>
@@ -380,7 +380,7 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
         </tr>
     </table>
 
-    <table width="100%" cellspacing="0" style="position:absolute;top:764.5px;left:0pt;">
+    <table width="100%" cellspacing="0" style="position:absolute;top:728.5px;left:0pt;">
         <tr>
             <td style="vertical-align: bottom;" width='48.5%'>
                 @if($grade8 == 1)
@@ -651,11 +651,11 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
                             </tr>
                             <tr class="border_left border_right border_bottom">
                                 <td>RANK</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->tech_level_1}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->tech_level_2}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->tech_level_3}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->tech_level_4}}</td>
-                                <td style="font-size: 7pt;text-align: center;">{{$grade10Rank->tech_level_final1}}</td>
+                                <td style="font-size: 7pt;text-align: center;"></td>
+                                <td style="font-size: 7pt;text-align: center;"></td>
+                                <td style="font-size: 7pt;text-align: center;"></td>
+                                <td style="font-size: 7pt;text-align: center;"></td>
+                                <td style="font-size: 7pt;text-align: center;"></td>
                             </tr>
                             <tr class="border_left border_right border_top border_bottom">
                                 <td colspan="6" style="padding-top: 20px;padding-bottom: 0px;height: 28.8px;">

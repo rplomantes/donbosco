@@ -24,14 +24,14 @@ input[type=checkbox]
                 <td>IDNO</td>
                 <td>STUDENT'S NAME</td>
                 <td>SEC</td>
-                <td>A</td>
+                <td>Status</td>
                 @foreach($probations as $probation)
                 <td>{{$probation->code}}</td>
                 @endforeach
             </tr>
             <?php $row = 1;?>
             @foreach($students as $student)
-            <?php $isnew = RegistrarHelper::isNewStudent($student->idno,$sy);?>
+            <?php $isnew = RegistrarHelper::isNewStudent($student->studno,$sy);?>
             <tr>
                 <td>{{$row}}</td>
                 <td>{{$student->studno}}</td>
@@ -46,7 +46,7 @@ input[type=checkbox]
                     <select name="admission[{{$student->studno}}]">
                         @foreach($admissions as $admission)
                         <option value="{{$admission->code}}"
-                                @if($admission->code == $student->admission)
+                                @if(($admission->code == $student->admission) ||(!$isnew && $admission->code == "PI"))
                                 selected
                                 @endif
                                 >{{$admission->code}}</option>

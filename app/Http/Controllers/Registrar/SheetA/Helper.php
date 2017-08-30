@@ -79,7 +79,7 @@ class Helper extends Controller
         }
         
         if(count($name)> 0){
-            $teacher = ucwords(strtolower($name->title.". ".$name->lastname.", ".$name->firstname." ".substr($name->middlename,0,1)."."));
+            $teacher = ucwords(strtolower($name->title.". ".$name->firstname." ".substr($name->middlename,0,1).". ".$name->lastname));
         }
         
         return $teacher;

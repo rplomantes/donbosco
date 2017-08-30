@@ -64,7 +64,7 @@
     
     
     function printsheetA(){
-        window.location.href = "/printgradesheeta/{{$selectedSY}}/"+lvl+"/"+sem+"/"+sec+"/"+subj;
+        window.open("/printgradesheeta/{{$selectedSY}}/"+lvl+"/"+sem+"/"+sec+"/"+subj);
     }
    
     

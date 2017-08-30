@@ -59,7 +59,7 @@ class PromotionController extends Controller
             self::createOrUpdate($student->studno,$sy,$admission,$conduct,$academic,$technical);
         }
         
-        return "me";
+        return redirect(url('editpromotion'),array($sy,$level));
     }
     
     function  createOrUpdate($idno,$sy,$admission,$conduct,$academic,$technical){
@@ -80,7 +80,7 @@ class PromotionController extends Controller
         $student->technical = $technical;
         $student->save();
         
-        echo $student;
+        //echo $student;
         
     }
             

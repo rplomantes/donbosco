@@ -59,12 +59,12 @@
     
     
     function changeSy(schoolyear){
-        window.location.href = "/gradesheeta/"+schoolyear;
+        window.location.href = "/attendancesheeta/"+schoolyear;
     }
     
     
     function printsheetA(){
-        window.location.href = "/printattendancesheeta/{{$selectedSY}}/"+lvl+"/"+strand+"/"+sec+"/"+sem+"/"+qtr;
+        window.open("/printattendancesheeta/{{$selectedSY}}/"+lvl+"/"+strand+"/"+sec+"/"+sem+"/"+qtr);
     }
    
     

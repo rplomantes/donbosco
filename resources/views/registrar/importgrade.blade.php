@@ -12,6 +12,7 @@
 <?php
 $qtr = \App\CtrQuarter::first();
 $qtrperiod = $qtr->qtrperiod;
+$sy = App\ctrSchoolYear::first()->schoolyear;
 
 ?>
 <div class="col-md-3">
@@ -174,13 +175,13 @@ return $data;
 
 function getCount($level, $subjectcode, $section,$subjecttype,$qtrperiod){
   if($subjecttype=='1'){  
-  $count = DB::Select("select subject_repos.idno from subject_repos,statuses  where  subject_repos.idno=statuses.idno and statuses.level = '$level' and subject_repos.subjectcode = '$subjectcode' and statuses.section = '$section' and subject_repos.qtrperiod = '$qtrperiod'");  
+  $count = DB::Select("select subject_repos.idno from subject_repos,statuses  where  subject_repos.idno=statuses.idno and statuses.level = '$level' and subject_repos.subjectcode = '$subjectcode' and statuses.section = '$section' and subject_repos.qtrperiod = '$qtrperiod' and schoolyear='$sy'");  
   }
   elseif($subjecttype=='2'||$subjecttype=='3'){
   if($subjecttype=='2'){    
-  $count = DB::Select("Select conduct_repos.idno from conduct_repos,statuses where conduct_repos.idno = statuses.idno and statuses.level = '$level' and statuses.section = '$section' and conduct_repos.qtrperiod='$qtrperiod'");
+  $count = DB::Select("Select conduct_repos.idno from conduct_repos,statuses where conduct_repos.idno = statuses.idno and statuses.level = '$level' and statuses.section = '$section' and conduct_repos.qtrperiod='$qtrperiod' and schoolyear='$sy'");
   } else{
-   $count = DB::Select("Select attendance_repos.idno from attendance_repos,statuses where attendance_repos.idno = statuses.idno and statuses.level = '$level' and statuses.section = '$section' and attendance_repos.qtrperiod = '$qtrperiod'");    
+   $count = DB::Select("Select attendance_repos.idno from attendance_repos,statuses where attendance_repos.idno = statuses.idno and statuses.level = '$level' and statuses.section = '$section' and attendance_repos.qtrperiod = '$qtrperiod' and schoolyear='$sy'");    
   }
   
   }

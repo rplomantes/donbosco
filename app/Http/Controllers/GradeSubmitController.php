@@ -42,7 +42,7 @@ class GradeSubmitController extends Controller
         $sy = \App\CtrRefSchoolyear::first();
         $grades = $request->input('student');
         foreach($grades as $key=>$value){
-            if($value != "" || $value != null || !preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $value)){
+            if($value != "" || $value != null || preg_match('/^[0-9]*$/', $value)){
                 $grade = \App\Grade::where('idno',$key)->where('subjectcode',$request->subj)->where('schoolyear',$sy->schoolyear)->first();
                 if(!empty($grade)){
                     $grade->fourth_grading = $value;

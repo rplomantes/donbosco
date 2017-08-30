@@ -5,8 +5,8 @@
         <td>LAST NAME</td>
         <td>FIRST NAME</td>
         <td>DAYS PRESENT</td>
-        <td>DAYS ABSENT</td>
         <td>DAYS TARDY</td>
+        <td>DAYS ABSENT</td>
     </tr>
     <?php 
     $cn = 1; 
@@ -21,8 +21,8 @@
         <td>{{$name->lastname}}</td>
         <td>{{$name->firstname}} {{substr($name->middlename,0,1)}}.</td>
         <td style="text-align: center">{{$attendance[0]}}</td>
-        <td style="text-align: center">{{$attendance[2]}}</td>
         <td style="text-align: center">{{$attendance[1]}}</td>
+        <td style="text-align: center">{{$attendance[2]}}</td>
     </tr>
     <?php $cn++; ?>
     @endforeach
