@@ -12,8 +12,6 @@
 <?php
 $qtr = \App\CtrQuarter::first();
 $qtrperiod = $qtr->qtrperiod;
-$sy = App\ctrSchoolYear::first()->schoolyear;
-
 ?>
 <div class="col-md-3">
 		<form action="{{ URL::to('importGrade') }}" class="form-horizontal" method="post" enctype="multipart/form-data">
@@ -147,7 +145,7 @@ function getCompetencyValue($section,$qtrperiod){
 }
 function getSubject($level,$section,$subjecttype,$qtrperiod){
   if($subjecttype=='1'){  
-    if($level == 'Grade 11'){
+    if($level == 'Grade 11' || $level == 'Grade 12'){
      $subjects = DB::Select("select distinct subjectcode, subjectname from ctr_subjects where level='$level' and subjecttype <= '6' and subjecttype > 4  order by subjecttype, sortto");
     }
     else{
@@ -174,20 +172,20 @@ return $data;
 }
 
 function getCount($level, $subjectcode, $section,$subjecttype,$qtrperiod){
+  $sy = App\ctrSchoolYear::first()->schoolyear;
   if($subjecttype=='1'){  
-  $count = DB::Select("select subject_repos.idno from subject_repos,statuses  where  subject_repos.idno=statuses.idno and statuses.level = '$level' and subject_repos.subjectcode = '$subjectcode' and statuses.section = '$section' and subject_repos.qtrperiod = '$qtrperiod' and schoolyear='$sy'");  
+  $count = DB::Select("select subject_repos.idno from subject_repos,statuses  where  subject_repos.idno=statuses.idno and statuses.level = '$level' and subject_repos.subjectcode = '$subjectcode' and statuses.section = '$section' and subject_repos.qtrperiod = '$qtrperiod' and subject_repos.schoolyear='$sy'");  
   }
   elseif($subjecttype=='2'||$subjecttype=='3'){
   if($subjecttype=='2'){    
-  $count = DB::Select("Select conduct_repos.idno from conduct_repos,statuses where conduct_repos.idno = statuses.idno and statuses.level = '$level' and statuses.section = '$section' and conduct_repos.qtrperiod='$qtrperiod' and schoolyear='$sy'");
+  $count = DB::Select("Select conduct_repos.idno from conduct_repos,statuses where conduct_repos.idno = statuses.idno and statuses.level = '$level' and statuses.section = '$section' and conduct_repos.qtrperiod='$qtrperiod' and conduct_repos.schoolyear='$sy'");
   } else{
-   $count = DB::Select("Select attendance_repos.idno from attendance_repos,statuses where attendance_repos.idno = statuses.idno and statuses.level = '$level' and statuses.section = '$section' and attendance_repos.qtrperiod = '$qtrperiod' and schoolyear='$sy'");    
+   $count = DB::Select("Select attendance_repos.idno from attendance_repos,statuses where attendance_repos.idno = statuses.idno and statuses.level = '$level' and statuses.section = '$section' and attendance_repos.qtrperiod = '$qtrperiod' and attendance_repos.schoolyear='$sy'");    
   }
   
   }
   return count($count);
 }
-
 ?>
 
 @stop

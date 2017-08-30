@@ -192,16 +192,24 @@
                                 </td>
                                 <td>
                                     @if($sem ==1)
-                                        {{round($grade->first_grading,0)}}
+                                        @if($grade->first_grading > 0)
+                                            {{round($grade->first_grading,0)}}
+                                        @endif
                                     @else
-                                        {{round($grade->third_grading,0)}}
+                                        @if($grade->third_grading > 0)
+                                            {{round($grade->third_grading,0)}}
+                                        @endif
                                     @endif
                                 </td>
                                 <td>
                                     @if($sem ==1)
-                                        {{round($grade->second_grading,0)}}
+                                        @if($grade->second_grading > 0)
+                                            {{round($grade->second_grading,0)}}
+                                        @endif
                                     @else
-                                        {{round($grade->fourth_grading,0)}}
+                                        @if($grade->fourth_grading > 0)
+                                            {{round($grade->fourth_grading,0)}}
+                                        @endif
                                     @endif
                                 </td >
                                 <td>
@@ -222,22 +230,32 @@
                         <td style="text-align: left;padding-left: 10px">
                             {{$grade->subjectname}}
                         </td>
-                            <td>
-                                @if($sem ==1)
-                                    {{round($grade->first_grading,0)}}
-                                @else
-                                    {{round($grade->third_grading,0)}}
-                                @endif
-                            </td>
-                            <td>
-                                @if($sem ==1)
-                                    {{round($grade->second_grading,0)}}
-                                @else
-                                    {{round($grade->fourth_grading,0)}}
-                                @endif
-                            </td>
+                                <td>
+                                    @if($sem ==1)
+                                        @if($grade->first_grading > 0)
+                                            {{round($grade->first_grading,0)}}
+                                        @endif
+                                    @else
+                                        @if($grade->third_grading > 0)
+                                            {{round($grade->third_grading,0)}}
+                                        @endif
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($sem ==1)
+                                        @if($grade->second_grading > 0)
+                                            {{round($grade->second_grading,0)}}
+                                        @endif
+                                    @else
+                                        @if($grade->fourth_grading > 0)
+                                            {{round($grade->fourth_grading,0)}}
+                                        @endif
+                                    @endif
+                                </td >
                         <td>
-                            {{round($grade->final_grade,0)}}
+                            @if($grade->final_grade > 0)
+                                {{round($grade->final_grade,0)}}
+                            @endif
                         </td>
                     </tr>    
                         @endif

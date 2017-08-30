@@ -1,3 +1,4 @@
+<?php use App\Http\Controllers\Registrar\GradeComputation; ?>
 <html>
     <head>
         <script src="{{asset('/js/jquery.js')}}"></script>
@@ -100,19 +101,19 @@
                                     <b>ACADEMIC AVERAGE</b>
                                 </td>
                             <td>
-                                <b>{{GradeController::gradeQuarterAve(array(0),array(0),1,$grades,$level)}}</b>
+                                <b>{{GradeComputation::computeQuarterAverage($sy,$level,array(0),0,1,$grades)}}</b>
                             </td>
                             <td>
-                                <b>{{GradeController::gradeQuarterAve(array(0),array(0),2,$grades,$level)}}</b>
+                                <b>{{GradeComputation::computeQuarterAverage($sy,$level,array(0),0,2,$grades)}}</b>
                             </td>
                             <td>
-                                <b>{{GradeController::gradeQuarterAve(array(0),array(0),3,$grades,$level)}}</b>
+                                <b>{{GradeComputation::computeQuarterAverage($sy,$level,array(0),0,3,$grades)}}</b>
                             </td>
                             <td>
-                                <b>{{GradeController::gradeQuarterAve(array(0),array(0),4,$grades,$level)}}</b>
+                                <b>{{GradeComputation::computeQuarterAverage($sy,$level,array(0),0,4,$grades)}}</b>
                             </td>
                             <td>
-                                <b>{{GradeController::gradeQuarterAve(array(0),array(0),5,$grades,$level)}}</b>
+                                <b>{{GradeComputation::computeQuarterAverage($sy,$level,array(0),0,5,$grades)}}</b>
                             </td>
                             </tr>
                         </table>
@@ -147,7 +148,7 @@
                             </tr>
                         </table>
                         <br>
-<table border='1' cellpadding='0' cellspacing='0' width="100%" style="text-align: center;font-size:11px;">
+                        <table border='1' cellpadding='0' cellspacing='0' width="100%" style="text-align: center;font-size:11px;">
                             <tr style="font-size:12px;">
                                 <td style="padding-bottom:5px;padding-top:5px">
                                     <b>ATTENDANCE</b>
@@ -196,7 +197,7 @@
                             @foreach($attendances as $attendance)
                             <tr>
                             <td style="text-align: left">{{$attendance->attendanceName}}</td>
-                            <td>@if($jun != 0){{round($attendance->jun,1)}}@endif</td>
+                            <td>@if($jun != 0){{round($attendance->jun,1)}}@endif </td>
                             <td>@if($jul != 0){{round($attendance->jul,1)}}@endif</td>
                             <td>@if($aug != 0){{round($attendance->aug,1)}}@endif</td>
                             <td>@if($sept != 0){{round($attendance->sept,1)}}@endif</td>
@@ -314,14 +315,14 @@
                             <tr>
                                 <td><b>CONDUCT GRADE</b></td>
                                 <td><b>100</b></td>
-                                <td><b>{{GradeController::conductQuarterAve(3,1,$grades)}}</b></td>
-                                <td><b>{{GradeController::conductQuarterAve(3,2,$grades)}}</b></td>
-                                <td><b>{{GradeController::conductQuarterAve(3,3,$grades)}}</b></td>
-                                <td><b>{{GradeController::conductQuarterAve(3,4,$grades)}}</b></td>
+                                <td><b>{{GradeComputation::computeQuarterAverage($sy,$level,array(3),0,1,$grades)}}</b></td>
+                                <td><b>{{GradeComputation::computeQuarterAverage($sy,$level,array(3),0,2,$grades)}}</b></td>
+                                <td><b>{{GradeComputation::computeQuarterAverage($sy,$level,array(3),0,3,$grades)}}</b></td>
+                                <td><b>{{GradeComputation::computeQuarterAverage($sy,$level,array(3),0,4,$grades)}}</b></td>
                             </tr>
                                 <tr>
                                     <td><b>FINAL GRADE</b></td>
-                                    <td colspan="5">{{GradeController::conductQuarterAve(3,5,$grades)}}</td>
+                                    <td colspan="5">{{GradeComputation::computeQuarterAverage($sy,$level,array(3),0,5,$grades)}}</td>
                                 </tr>
                         </table>
                         <br>
