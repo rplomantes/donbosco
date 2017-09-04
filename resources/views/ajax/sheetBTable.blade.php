@@ -1,19 +1,103 @@
-<?php 
-$withacad = App\GradesSetting::where('level',$level)->where('schoolyear',$sy)->where('subjecttype',0)->exists();
-$withtech = App\GradesSetting::where('level',$level)->where('schoolyear',$sy)->where('subjecttype',1)->exists();
-if($strand == "null"){
-    $subjects = App\CtrSubjects::where('level',$level)->whereIn('semester',array(0,1,5,6))->orderBy('subjecttype','ASC')->orderBy('sortto','ASC')->get();
-}else{
-    $subjects = App\CtrSubjects::  where('level',$level)->where('strand',$strand)->orderBy('subjecttype','ASC')->whereIn('semester',array(1,0))->orderBy('sortto','ASC')->get();
-}
+<?php
+use App\Http\Controllers\Registrar\GradeComputation;
+use App\Http\Controllers\Registrar\AttendanceController as Attendance;
+use App\Http\Controllers\Registrar\Ranking\SectionRanking;
 
+$acad = 0;
+$tech = 0;
 ?>
 <table class="table table-bordered">
     <tr>
         <td>CN</td>
         <td>Student Name</td>
-        @if($withacad)
+        @if(count($subjects) > 0)
         
+            @foreach($subjects as $subject)
+                @if(in_array($subject->subjecttype,array(0,5,6)))
+                <?php $acad++;?>
+                <td>{{$subject->subjectcode}}</td>
+                @endif
+            @endforeach
+            @if($acad > 0)
+            <td>ACADEMIC AVERAGE</td>
+            <td>ACADEMIC RANK</td>
+            @endif
+            
+            @foreach($subjects as $subject)
+                @if(in_array($subject->subjecttype,array(1)))
+                <?php $tech++;?>
+                <td>{{strtoupper($subject->subjectcode)}}</td>
+                @endif
+            @endforeach
+            
+            @if($tech > 0)
+            <td>TECH AVERAGE</td>
+            <td>TECH RANK</td>
+            @endif
+            
+            <td>GMRC</td>
+            <td>DAYS PRESENT</td>
+            <td>DAYS TARDY</td>
+            <td>DAYS ABSENT</td>
+            
         @endif
     </tr>
+    @foreach($students as $student)
+    <?php 
+            $grades = \App\Grade::where('idno',$student->idno)->where('schoolyear',$sy)->get();
+            $attendance = Attendance::studentQuarterAttendance($student->idno,$sy,$attendanceQtr,$level);
+            $name = App\User::where('idno',$student->idno)->first();
+            ?>
+    <tr>
+        <td>{{$student->class_no}}</td>
+        <td>{{$name->lastname}}, {{$name->firstname}} @if($name->middlename != ""){{substr($name->middlename,0,1)}}. @endif 
+            @if($student->status ==3)
+                <span style='float: right;color: red;font-weight: bold'>DROPPED</span>
+            @endif
+        </td>
+ 
+        @foreach($subjects as $subject)
+            @if(in_array($subject->subjecttype,array(0,5,6)))
+                @foreach($grades as $grade)
+                    @if($grade->subjectcode == $subject->subjectcode)
+                    <td>
+                        @if($grade->$gradeField > 0)
+                        {{round($grade->$gradeField,0)}}
+                        @endif
+                    </td>
+                    @endif
+                @endforeach
+            @endif
+        @endforeach
+        
+            @if($acad > 0)
+            <td>{{GradeComputation::computeQuarterAverage($sy,$level,array(0,5,6),$semester,$quarter,$grades)}}</td>
+            <td>{{SectionRanking::getStudentRank($student->idno,$sy,$acad_field)}}</td>
+            @endif
+            
+        @foreach($subjects as $subject)
+            @if(in_array($subject->subjecttype,array(1)))
+                @foreach($grades as $grade)
+                    @if($grade->subjectcode == $subject->subjectcode)
+                    <td>
+                        @if($grade->$gradeField > 0)
+                        {{round($grade->$gradeField,0)}}
+                        @endif
+                    </td>
+                    @endif
+                @endforeach
+            @endif
+        @endforeach
+        
+            @if($tech > 0)
+            <td>{{GradeComputation::computeQuarterAverage($sy,$level,array(1),$semester,$quarter,$grades)}}</td>
+            <td>{{SectionRanking::getStudentRank($student->idno,$sy,$tech_field)}}</td>
+            @endif
+            
+            <td>{{GradeComputation::computeQuarterAverage($sy,$level,array(3),$semester,$quarter,$grades)}}</td>
+            <td style="text-align: center">{{$attendance[0]}}</td>
+            <td style="text-align: center">{{$attendance[2]}}</td>
+            <td style="text-align: center">{{$attendance[1]}}</td>
+    </tr>
+    @endforeach
 </table>

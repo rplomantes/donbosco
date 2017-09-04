@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
+use App\Http\Controllers\Registrar\Ranking\Helper as RankHelper;
 use Illuminate\Support\Facades\Input;
 use DB;
 
@@ -24,8 +25,8 @@ class OverallRanking extends Controller
         $quarter = Input::get('quarter');
         $semester = Input::get('semester');
         $currSy = \App\RegistrarSchoolyear::first()->schoolyear;
-        $acad_field = $this->rankingField($semester,$quarter,'acad_level_');
-        $tech_field = $this->rankingField($semester,$quarter,'tech_level_');
+        $acad_field = RankHelper::rankingField($semester,$quarter,'acad_level_');
+        $tech_field = RankHelper::rankingField($semester,$quarter,'tech_level_');
         
         if($course != "NULL" || $course != "All"){
             $course = "AND s.strand LIKE '".$course."'" ;
@@ -41,19 +42,7 @@ class OverallRanking extends Controller
         
     }
     
-    function rankingField($semester,$quarter,$subject){
-        if($quarter == 5){
-            if($semester == 0){
-                $rankfield = $subject."final1";
-            }else{
-                $rankfield = $subject."final".$semester;
-            }
-        }else{
-            $rankfield = $subject."".$quarter;
-        }
-        
-        return $rankfield;
-    }
+
     
     function getStudents($sy,$currSy,$acad_field,$tech_field,$level,$course){
         if($currSy == $sy){

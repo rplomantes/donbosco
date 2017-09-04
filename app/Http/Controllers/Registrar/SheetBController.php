@@ -7,11 +7,10 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
+use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
+use App\Http\Controllers\Registrar\Ranking\Helper as RankHelper;
 class SheetBController extends Controller
 {
-    function __construct(){
-        $this->middleware('auth');
-    }
     
     function index($selectedSY){
         $currSY = \App\ctrSchoolYear::first()->schoolyear;
@@ -19,9 +18,6 @@ class SheetBController extends Controller
         
         return view('registrar.sheetB.index',compact('selectedSY','currSY','levels'));   
     }
-    
-    
-    
     
     function finalSheetB($quarter,$level,$section,$strand = null){
         $sy = \App\CtrRefSchoolyear::first();
@@ -45,10 +41,33 @@ class SheetBController extends Controller
         $semester = Input::get('semester');
         $quarter = Input::get('quarter');
         $section = Input::get('section');
-        $strand = Input::get('strand');
+        $strand = Input::get('course');
+        $gradeQuarter = self::setQuarter($semester, $quarter);
+        $acad_field = RankHelper::rankingField($semester,$quarter,'acad_');
+        $tech_field = RankHelper::rankingField($semester,$quarter,'tech_');
+        $attendanceQtr = RegistrarHelper::setAttendanceQuarter($semester, $quarter);
+        $gradeField = RegistrarHelper::getGradeQuarter($gradeQuarter);
         
         $students = RegistrarHelper::getSectionList($sy,$level,$course,$section);
-        $subjects = RegistrarHelper::getLevelSubjects($level,$strand,$sy);
-        return view('ajax.sheetBTable',compact('students','level','section','semester','subject','sy','quarter','strand'));
+        $subjects = RegistrarHelper::getLevelSubjects($level,$strand,$sy,$semester);
+        
+        return view('ajax.sheetBTable',compact('students','level','section','semester','subjects','sy','quarter','strand','attendanceQtr','gradeField','quarter','acad_field','tech_field'));
+        //return $quarter;
+    }
+    
+    static function setQuarter($semester,$quarter){
+        $qtr = $quarter;
+        switch($semester){
+            case 2;
+                if($quarter == 1){
+                    $qtr = 3;
+                }
+                if($quarter == 2){
+                    $qtr = 4;
+                }
+            break;
+        }
+        
+        return $qtr;
     }
 }

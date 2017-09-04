@@ -59,7 +59,9 @@ class PromotionController extends Controller
             self::createOrUpdate($student->studno,$sy,$admission,$conduct,$academic,$technical);
         }
         
-        return redirect(url('editpromotion'),array($sy,$level));
+        return redirect()->back();
+        //return $sy." ".$level;
+        
     }
     
     function  createOrUpdate($idno,$sy,$admission,$conduct,$academic,$technical){

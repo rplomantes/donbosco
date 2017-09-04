@@ -52,7 +52,7 @@
 </div>
 <script>
     var lvl = "";
-    var sec = "";
+    var sec = "null";
     var strand = "null";
     var sem = 0;
     var qtr = 2;
@@ -71,6 +71,7 @@
     function updatelevel(level){
         qtr = 0;
         lvl = level;
+        sec = "null";
         $('#strand').html("");
         $('#section').html("");
         $('#subject').html("");
@@ -99,6 +100,7 @@
     
     function updatestrand(strnd){
         strand = strnd;
+        
         getsection();
     }
     
@@ -151,6 +153,8 @@
     }
     
     function getlist(quarter){
+        updateRank(quarter);
+        
         qtr = quarter;
         arrays ={} ;
         arrays['level']= lvl;
@@ -164,12 +168,28 @@
         $.ajax({
             type:"GET",
             data:arrays,
-            url: "/gradeSheetAList",
+            url: "/gradeSheetBList",
             success:function(data){
                 $('#report').html(data);
                 document.getElementById("print").style.visibility = "visible";
             }
         });
+    }
+    
+    function updateRank(quarter){
+        arrays ={} ;
+        arrays['level']= lvl;
+        arrays['sy']= '{{$selectedSY}}';
+        arrays['course']= strand;
+        arrays['quarter']= quarter;
+        arrays['semester']= sem;
+        $.ajax({
+               type: "GET", 
+               url: "/setoverallrank/"+sec,
+               data : arrays,
+               success:function(data){
+                   }
+               });
     }
 
 </script>

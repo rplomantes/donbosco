@@ -40,7 +40,7 @@ class Helper extends Controller
             $course = "";
         }
         
-        $subjects = DB::Select("Select distinct subjectcode,subjectname from grades g join $table s on g.idno = s.idno AND g.schoolyear = s.schoolyear where s.level = '$level' $course and subjecttype IN(0,1,5,6) and subjectcode NOT LIKE 'ELE%' and isdisplaycard = 1 AND g.semester = $semester order by sortto");
+        $subjects = DB::Select("Select distinct subjectcode,subjectname from grades g join $table s on g.idno = s.idno AND g.schoolyear = s.schoolyear where s.level = '$level' $course and subjecttype IN(0,1,5,6) and subjectcode NOT LIKE 'ELE%' and isdisplaycard = 1 AND g.semester = $semester and g.schoolyear = $sy order by subjecttype,sortto");
         return view('ajax.selectsubjects',compact('subjects','action','allavailable'));
     }
     
@@ -55,7 +55,7 @@ class Helper extends Controller
 
         $students = RegistrarHelper::getSectionList($sy,$level,$course,$section);
         if($subject == 2){
-            $quarter = self::setAttendanceQuarter($semester,$quarter);
+            $quarter = RegistrarHelper::setAttendanceQuarter($semester,$quarter);
             return view('ajax.sheetAAttendance',compact('students','semester','quarter','sy','level','quarter'));
         }else{
             return view('ajax.sheetAGrade',compact('students','semester','subject','sy'));
@@ -64,11 +64,13 @@ class Helper extends Controller
     
     static function getAdviser($sy,$level,$section,$subjectcode){
         $teacher = "";
+        $name = array();
         $adviser = \App\CtrSubjectTeacher::where('schoolyear',$sy)->where('level',$level)->where('section',$section)->where('subjcode',$subjectcode)->first();
         $currSy = \App\CtrSchoolYear::first()->schoolyear;
         if(count($adviser)> 0){
             $name = \App\User::where('idno',$adviser->instructorid)->first();
-        }else{
+        }
+        if(in_array($subjectcode,array(3,2))){
             if($currSy == $sy){
                 $adviser = \App\CtrSection::where('schoolyear',$sy)->where('section',$section)->where('level',$level)->first();
             }else{
@@ -87,7 +89,7 @@ class Helper extends Controller
     
     static function getSubject($level,$subjectcode){
         $subjectname= "";
-        $subject= \App\CtrSubjects::where('level',$level)->where('subjectcode',$subjectcode)->first();
+        $subject= \App\CtrSubjects::where('level',$level)->where('subjectcode',$subjectcode)->where('isdisplaycard',1)->first();
         
         if(count($subject) > 0){
             $subjectname = ucwords(strtolower($subject->subjectname));
@@ -100,32 +102,4 @@ class Helper extends Controller
         return $subjectname;
     }
     
-    static function setAttendanceQuarter($semester,$quarter){
-        $qtr = array($quarter);
-        switch($semester){
-            case 0;
-                if($quarter == 5){
-                    $qtr = array(1,2,3,4);
-                }
-            break;
-            case 1;
-                if($quarter == 5){
-                    $qtr = array(1,2);
-                }
-            break;
-            case 2;
-                if($quarter == 1){
-                    $qtr = array(3);
-                }
-                if($quarter == 2){
-                    $qtr = array(4);
-                }
-                if($quarter == 5){
-                    $qtr = array(3,4);
-                }
-            break;
-        }
-        
-        return $qtr;
-    }
 }

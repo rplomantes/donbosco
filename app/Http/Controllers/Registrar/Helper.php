@@ -31,6 +31,7 @@ class Helper extends Controller
         
         return $students;
     }
+    
     static function getGradeQuarter($quarter){
         switch ($quarter){
             case 1; 
@@ -50,6 +51,35 @@ class Helper extends Controller
            break; 
         }
         return $qrt;
+    }
+    
+    static function setAttendanceQuarter($semester,$quarter){
+        $qtr = array($quarter);
+        switch($semester){
+            case 0;
+                if($quarter == 5){
+                    $qtr = array(1,2,3,4);
+                }
+            break;
+            case 1;
+                if($quarter == 5){
+                    $qtr = array(1,2);
+                }
+            break;
+            case 2;
+                if($quarter == 1){
+                    $qtr = array(3);
+                }
+                if($quarter == 2){
+                    $qtr = array(4);
+                }
+                if($quarter == 5){
+                    $qtr = array(3,4);
+                }
+            break;
+        }
+        
+        return $qtr;
     }
     
     static function getSubjectType($subjecttypes){
@@ -126,7 +156,7 @@ class Helper extends Controller
         return $short;
     }
     
-    static function getLevelSubjects($level,$strand,$sy){
+    static function getLevelSubjects($level,$strand,$sy,$semester){
         $currSy = \App\RegistrarSchoolyear::first()->schoolyear;
         if($strand != "null"){
             $strand = "and s.strand='".$strand."'";
@@ -141,10 +171,14 @@ class Helper extends Controller
             $table = 'status_histories';
         }
         
-        $subjects = DB::Select("Select * from grades form grades g join $table s "
-                . "ON s.idno = g.idno AND s.schoolyear = g.schoolyear "
-                . "WHERE s.schoolyear = '$sy' and s.status = 2 and s.level = '$level' "
-                . "AND g.subjecttype IN(0,1,5,6) $strand group by subjectcode "
+        $subjects = DB::Select("Select subjectcode,subjectname,subjecttype from grades g join $table s "
+                . "on g.idno = s.idno AND g.schoolyear = s.schoolyear "
+                . "where s.level = '$level' $strand "
+                . "and subjecttype IN(0,1,5,6) "
+                . "and isdisplaycard = 1 "
+                . "AND g.semester = $semester "
+                . "and g.schoolyear = $sy "
+                . "group by subjectcode "
                 . "order by subjecttype,sortto");
         
         return $subjects;

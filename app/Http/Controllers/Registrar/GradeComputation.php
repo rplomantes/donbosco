@@ -75,7 +75,7 @@ class GradeComputation extends Controller
         
         foreach($grades as $grade){
             if(in_array($grade->subjecttype,$subjecttype) && $grade->semester == $sem && $grade->$field != 0){
-                $average = $average + $grade->$field * ($grade->weighted/100);
+                $average = $average + round($grade->$field * ($grade->weighted/100),$gradeCondition->decimal);
             }
         }
         
@@ -84,7 +84,7 @@ class GradeComputation extends Controller
         }
         
         if($average < 100){
-            $average = number_format(round($average,$gradeCondition->decimal),$gradeCondition->decimal);
+            $average = number_format($average,$gradeCondition->decimal,$gradeCondition->decimal);
         }else{
             $average = round($average,0);
         }

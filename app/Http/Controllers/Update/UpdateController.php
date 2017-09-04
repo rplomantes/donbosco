@@ -808,35 +808,47 @@ class UpdateController extends Controller
         }
             function updatecdbaccounting(){
                  //$populates = \App\ForwardedCbd::get();
-                $populates = DB::Select("Select * from forwarded_cbd2");
+//                $populates = DB::Select("Select * from journal_old");
+//            foreach($populates as $populate){
+//                $newacct = new \App\Accounting;
+//                $newacct->refno = $populate->VOUCHER_NO;
+//                $newacct->transactiondate = $populate->TR_DATE;
+//                $newacct->referenceid = $populate->VOUCHER_NO;
+//                $newacct->accountname = $populate->accountingname;
+//                $newacct->accountcode = $populate->accountingcode;
+//                $newacct->acct_department = $populate->main_department;
+//                $newacct->sub_department = $populate->sub_department;
+//                $newacct->fiscalyear = '2016';
+//                $newacct->isfinal = '1';
+//                $newacct->type = '3';
+//                if($populate->DEBIT == "FALSE" || $populate->DEBIT == "0"){
+//                    $newacct->cr_db_indic = '1';
+//                    $newacct->credit=$populate->creditamount;
+//                }else{
+//                    $newacct->cr_db_indic = '0';
+//                    $newacct->debit=$populate->debitamount;
+//                }
+//                $newacct->save();                
+//            }
+            $populates = DB::Select("Select *,sum(credit) as total from accountings group by refno");
             foreach($populates as $populate){
-                $newacct = new \App\Accounting;
-                $newacct->refno = $populate->VOUCHER_NO;
-                $newacct->transactiondate = $populate->TR_DATE;
-                $newacct->referenceid = $populate->VOUCHER_NO;
-                $newacct->accountname = $populate->acctname;
-                $newacct->accountcode = $populate->acctcode;
-                $newacct->acct_department = $populate->acct_department;
-                $newacct->sub_department = $populate->sub_department;
-                $newacct->fiscalyear = '2016';
-                $newacct->isfinal = '1';
-                $newacct->type = '4';
-                if($populate->DEBIT == "FALSE" || $populate->DEBIT == "0"){
-                    $newacct->cr_db_indic = '1';
-                    $newacct->credit=$populate->ACCOUNT_AMOUNT;
-                }else{
-                    $newacct->cr_db_indic = '0';
-                    $newacct->debit=$populate->ACCOUNT_AMOUNT;
+                $expalains = DB::Select("Select * from journal_old where VOUCHER_NO = $populate->refno group by VOUCHER_NO");
+                $newremark = new \App\AccountingRemark;
+                $newremark->refno = $populate->refno;
+                $newremark->trandate = $populate->transactiondate;
+                foreach($expalains as $expalain){
+                    $newremark->remarks = $expalain->EXPLANATION;
+                    $newremark->posted_by = $expalain->PREPARED_BY;                    
                 }
-                $newacct->save();
-                
+                $newremark->save();                
             }
+
             return count($populates);
             }
             
             function updatecdbdrcr(){
-                $entry_type = "4";
-                $updates = \App\Accounting::where('type','4')->get();
+                $entry_type = "3";
+                $updates = \App\Accounting::where('type','3')->get();
                     foreach ($updates as $update){
                         if($update->cr_db_indic == '1'){
                             $add = new \App\Credit;
@@ -855,7 +867,7 @@ class UpdateController extends Controller
                          $add->acct_department = $update->acct_department;
                          $add->sub_department = $update->sub_department;
                          $add->fiscalyear = $update->fiscalyear;
-                         $add->postedby = 'larabelle';
+                         $add->postedby = 'vicky';
                          $add->save();
                          
                     }

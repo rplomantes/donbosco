@@ -90,4 +90,18 @@ class Helper extends Controller
             $nextrank++;
         }
     }
+    
+    static function rankingField($semester,$quarter,$subject){
+        if($quarter == 5){
+            if($semester == 0){
+                $rankfield = $subject."final1";
+            }else{
+                $rankfield = $subject."final".$semester;
+            }
+        }else{
+            $rankfield = $subject."".$quarter;
+        }
+        
+        return $rankfield;
+    }
 }

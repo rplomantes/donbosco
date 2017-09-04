@@ -98,6 +98,9 @@
     
     function updatestrand(strnd){
         strand = strnd;
+        document.getElementById("semester").style.display = "none";
+        document.getElementById("sem").selectedIndex = "0";
+        $('#subject').html("");
         getsection();
     }
     

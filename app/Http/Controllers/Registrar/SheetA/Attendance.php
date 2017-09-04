@@ -20,7 +20,7 @@ class Attendance extends Controller
     
     function printSheetA($sy,$level,$course,$section,$semester,$qtr){
         $students = RegistrarHelper::getSectionList($sy,$level,$course,$section);
-        $quarter = SheetAHelper::setAttendanceQuarter($semester,$qtr);
+        $quarter = RegistrarHelper::setAttendanceQuarter($semester,$qtr);
         return view('registrar.sheetA.printAttendance',compact('students','section','semester','quarter','sy','level','quarter','qtr'));
     }
 }

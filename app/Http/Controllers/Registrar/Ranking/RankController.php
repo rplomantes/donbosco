@@ -31,7 +31,7 @@ class RankController extends Controller
         }
         
         $this->setRankingAcad($level,$section,$course,$sy,$quarter,$semester);
-        $this->setRankingTech($level,$section,$course,$sy,$quarter,$semester);
+        //$this->setRankingTech($level,$section,$course,$sy,$quarter,$semester);
     }
     
     function setRankingAcad($level,$section,$course,$sy,$quarter,$semester){
@@ -49,14 +49,11 @@ class RankController extends Controller
             $studentAverages = RankHelper::weightedStudentGrades($subjecttype,$section,$course,$quarter,$semester,$subjectsetting);
         }
         
-        if($quarter == 5){
-            if($semester == 0){
-                $rankfield = "acad_level_final1";
-            }else{
-                $rankfield = "acad_level_final".$semester;
-            }
+        
+        if($section == ""){
+            $rankfield = RankHelper::rankingField($semester,$quarter,'acad_level_');
         }else{
-            $rankfield = "acad_level_".$quarter;
+            $rankfield = RankHelper::rankingField($semester,$quarter,'acad_');
         }
         
         RankHelper::setRanking($studentAverages, $sy, $rankfield);
@@ -74,22 +71,18 @@ class RankController extends Controller
                 $studentAverages = RankHelper::weightedStudentGrades($subjecttype,$section,$course,$quarter,$semester,$subjectsetting);
             }
 
-            if($quarter == 5){
-                if($semester == 0){
-                    $rankfield = "tech_level_final1";
-                }else{
-                    $rankfield = "tech_level_final".$semester;
-                }
-            }else{
-                $rankfield = "tech_level_".$quarter;
-            }
+        if($section == ""){
+            $rankfield = RankHelper::rankingField($semester,$quarter,'tech_level_');
+        }else{
+            $rankfield = RankHelper::rankingField($semester,$quarter,'tech_');
+        }
             
-            $log = new \App\Log();
-            $log->action = $rankfield;
-            $log->save();
-            
-            RankHelper::setRanking($studentAverages, $sy, $rankfield);
-            return $studentAverages;
+        $log = new \App\Log();
+        $log->action = $rankfield;
+        $log->save();
+
+        RankHelper::setRanking($studentAverages, $sy, $rankfield);
+        return $studentAverages;
         
     }
 }
