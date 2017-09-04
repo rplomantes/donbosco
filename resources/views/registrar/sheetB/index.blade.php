@@ -47,7 +47,7 @@
             <button id="print" class="col-md-12 btn btn-danger" onclick="printsheetA()">PRINT</button>
         </div>
     </div>
-    <div class="col-md-8" id="report">
+    <div class="col-md-8" id="report" style="overflow-x: scroll">
     </div>
 </div>
 <script>
@@ -144,7 +144,7 @@
         arrays['level']= lvl;
         $.ajax({
                type: "GET", 
-               url: "/getlevelquarter/getlist",
+               url: "/getlevelquarter/updateRank",
                data : arrays,
                success:function(data){
                    $('#subject').html(data);
@@ -153,7 +153,6 @@
     }
     
     function getlist(quarter){
-        updateRank(quarter);
         
         qtr = quarter;
         arrays ={} ;
@@ -188,6 +187,7 @@
                url: "/setoverallrank/"+sec,
                data : arrays,
                success:function(data){
+                   getlist(quarter)
                    }
                });
     }
