@@ -2,11 +2,56 @@
 use App\Http\Controllers\Registrar\GradeComputation;
 use App\Http\Controllers\Registrar\AttendanceController as Attendance;
 use App\Http\Controllers\Registrar\Ranking\SectionRanking;
+use App\Http\Controllers\Registrar\SheetA\Helper as SheetAHelper;
+use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
 
 $acad = 0;
 $tech = 0;
 ?>
-<table class="table table-bordered" style="font-size: 9pt;">
+
+<table width="100%" class="print-header">
+    <tr>
+        <td rowspan="3" style="text-align: right;padding-left: 0px;vertical-align: top" class="logo" width="55px">
+            <img src="{{asset('images/logo.png')}}"  style="display: inline-block;height:50px">
+        </td>
+        <td style="padding-left: 0px;">
+            <span style="font-size:12pt; font-weight: bold">Don Bosco Technical Institute</span>
+        </td>
+        <td style="text-align: center;font-size:12pt; font-weight: bold">
+            GENERATED SHEET B
+        </td>
+        <td style="text-align: right;font-size:12pt;">
+            DAYS OF SCHOOL: <span id="dos">{{RegistrarHelper::quarterattendance($sy,$level,$quarter)}} Days</span>
+        </td>
+
+    </tr>
+    <tr>
+        <td style="font-size:10pt;padding-left: 0px;">Chino Roces Ave., Makati City </td>
+        <td style="text-align:center;font-weight: bold;">
+            <b id="sy">SCHOOL YEAR {{$sy}} - {{intval($sy)+1}}</b>
+        </td>    
+        <td style="text-align: right;font-size:12pt;">ADVISER:<span id="adviser">{{SheetAHelper::getAdviser($sy,$level,$section,2)}}</span></td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+                <td style="text-align: center;font-size:12pt; font-weight: bold"><span id="qtr">
+            @if($quarter == 1)
+            FIRST
+            @elseif($quarter == 2)
+            SECOND
+            @elseif($quarter == 3)
+            THIRD
+            @elseif($quarter == 4)
+            FOURTH
+            @elseif($quarter == 5)
+            FINAL
+            @endif
+            </span> GRADING PERIOD</td>
+        <td style="text-align: right;font-size:12pt;">Grade and Section:<span id="year">{{$level}} / {{$section}}</span></td>
+    </tr>
+</table>
+
+<table width="100%" border="1" cellspacing="0" style="font-size: 9pt;">
     <tr style="text-align: center">
         <td>CN</td>
         <td>Student Name</td>

@@ -88,7 +88,7 @@ class UpdateController extends Controller
     function updatehsconduct(){
         $quarters = \App\CtrQuarter::first();
 
-        $hsgrades = DB::Select("select * from conduct where SY_EFFECTIVE = '2016' and QTR = $quarters->qtrperiod");
+        $hsgrades = DB::Select("select * from conduct where SY_EFFECTIVE = '2017' and QTR = $quarters->qtrperiod");
         foreach($hsgrades as $hsgrade){
             $newconduct = new \App\ConductRepo;
             $newconduct->OSR = $hsgrade->COM1;
@@ -101,12 +101,12 @@ class UpdateController extends Controller
             $newconduct->schoolyear = $hsgrade->SY_EFFECTIVE;
             $newconduct->idno=$hsgrade->SCODE;
             $newconduct->save();
-            $this->updateconduct($hsgrade->SCODE, 'OSR', $hsgrade->COM1, $hsgrade->QTR, '2016');
-            $this->updateconduct($hsgrade->SCODE, 'DPT', $hsgrade->COM2, $hsgrade->QTR, '2016');
-            $this->updateconduct($hsgrade->SCODE, 'PTY', $hsgrade->COM3, $hsgrade->QTR, '2016');
-            $this->updateconduct($hsgrade->SCODE, 'DI' , $hsgrade->COM4, $hsgrade->QTR, '2016');
-            $this->updateconduct($hsgrade->SCODE, 'PG' , $hsgrade->COM5, $hsgrade->QTR, '2016');
-            $this->updateconduct($hsgrade->SCODE, 'SIS', $hsgrade->COM6, $hsgrade->QTR, '2016');
+            $this->updateconduct($hsgrade->SCODE, 'OSR', $hsgrade->COM1, $hsgrade->QTR, '2017');
+            $this->updateconduct($hsgrade->SCODE, 'DPT', $hsgrade->COM2, $hsgrade->QTR, '2017');
+            $this->updateconduct($hsgrade->SCODE, 'PTY', $hsgrade->COM3, $hsgrade->QTR, '2017');
+            $this->updateconduct($hsgrade->SCODE, 'DI' , $hsgrade->COM4, $hsgrade->QTR, '2017');
+            $this->updateconduct($hsgrade->SCODE, 'PG' , $hsgrade->COM5, $hsgrade->QTR, '2017');
+            $this->updateconduct($hsgrade->SCODE, 'SIS', $hsgrade->COM6, $hsgrade->QTR, '2017');
         }
 
     }

@@ -37,22 +37,36 @@ class SheetBController extends Controller
     static function gradeSheetBList(){
         $level = Input::get('level');
         $sy = Input::get('sy');
-        $course = Input::get('course');
         $semester = Input::get('semester');
         $quarter = Input::get('quarter');
         $section = Input::get('section');
         $strand = Input::get('course');
+        
         $gradeQuarter = self::setQuarter($semester, $quarter);
         $acad_field = RankHelper::rankingField($semester,$quarter,'acad_');
         $tech_field = RankHelper::rankingField($semester,$quarter,'tech_');
         $attendanceQtr = RegistrarHelper::setAttendanceQuarter($semester, $quarter);
         $gradeField = RegistrarHelper::getGradeQuarter($gradeQuarter);
         
-        $students = RegistrarHelper::getSectionList($sy,$level,$course,$section);
+        $students = RegistrarHelper::getSectionList($sy,$level,$strand,$section);
         $subjects = RegistrarHelper::getLevelSubjects($level,$strand,$sy,$semester);
         
-        return view('ajax.sheetBTable',compact('students','level','section','semester','subjects','sy','quarter','strand','attendanceQtr','gradeField','quarter','acad_field','tech_field'));
+        return view('ajax.sheetBTable',compact('students','level','section','semester','subjects','sy','quarter','strand','attendanceQtr','gradeField','acad_field','tech_field'));
         //return $quarter;
+    }
+    
+    function printSheetBList($sy,$level,$strand,$section,$semester,$quarter){
+        
+        $gradeQuarter = self::setQuarter($semester, $quarter);
+        $acad_field = RankHelper::rankingField($semester,$quarter,'acad_');
+        $tech_field = RankHelper::rankingField($semester,$quarter,'tech_');
+        $attendanceQtr = RegistrarHelper::setAttendanceQuarter($semester, $quarter);
+        $gradeField = RegistrarHelper::getGradeQuarter($gradeQuarter);
+        
+        $students = RegistrarHelper::getSectionList($sy,$level,$strand,$section);
+        $subjects = RegistrarHelper::getLevelSubjects($level,$strand,$sy,$semester);
+        
+        return view('registrar.sheetB.printsheetb',compact('students','level','section','semester','subjects','sy','quarter','strand','attendanceQtr','gradeField','acad_field','tech_field'));
     }
     
     static function setQuarter($semester,$quarter){
@@ -70,4 +84,5 @@ class SheetBController extends Controller
         
         return $qtr;
     }
+    
 }

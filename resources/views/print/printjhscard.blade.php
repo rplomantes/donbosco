@@ -189,11 +189,31 @@ use App\Http\Controllers\Registrar\GradeController;
                         @if($grade->subjecttype == 0)
                             <tr style="text-align: center;font-size: 8pt;">
                                 <td style="text-align: left;padding-left:10px;">{{$grade->subjectname}}</td>
-                                <td align="center">{{round($grade->first_grading)}}</td>
-                                <td align="center">{{round($grade->second_grading)}}</td>
-                                <td align="center">{{round($grade->third_grading)}}</td>
-                                <td align="center">{{round($grade->fourth_grading)}}</td>
-                                <td align="center">{{round($grade->final_grade)}}</td>
+                                <td align="center">
+                                    @if($grade->first_grading > 0)
+                                    {{round($grade->first_grading)}}
+                                    @endif
+                                </td>
+                                <td align="center">
+                                    @if($grade->second_grading > 0)
+                                    {{round($grade->second_grading)}}
+                                    @endif
+                                </td>
+                                <td align="center">
+                                    @if($grade->third_grading > 0)
+                                    {{round($grade->third_grading)}}
+                                    @endif
+                                </td>
+                                <td align="center">
+                                    @if($grade->fourth_grading > 0)
+                                    {{round($grade->fourth_grading)}}
+                                    @endif
+                                </td>
+                                <td align="center">
+                                    @if($grade->final_grade > 0)
+                                    {{number_format(round($grade->final_grade,2),2)}}
+                                    @endif
+                                </td>
                                 <td align="center">
                                     @if((round($grade->final_grade,0)) != 0)
                                            <b> {{round($grade->final_grade,0) >= 75 ? "Passed":"Failed"}}</b>

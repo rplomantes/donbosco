@@ -156,7 +156,7 @@
     //Update grades of students
     //Route::get('updategrades','Registrar\AssessmentController@updategrades');
     //Route::get('updatemapeh','Registrar\AssessmentController@updatemapeh');
-    Route::get('updatehsconduct','Update\UpdateController@updatehsconduct');
+    //Route::get('updatehsconduct','Update\UpdateController@updatehsconduct');
     //Route::get('updatehsgrade','Update\UpdateController@updatehsgrade');
     //Route::get('checkno','Update\UpdateController@checkno');
     //Route::get('updatehsattendance','Update\UpdateController@updatehsattendance');
@@ -453,3 +453,4 @@ Route::group(['middleware' => ['web','registrar']], function () {
     
    Route::get('/gradeSheetAList','Registrar\SheetA\Helper@gradeSheetAList');
    Route::get('/gradeSheetBList','Registrar\SheetBController@gradeSheetBList');
+   Route::get('/printsheetb/{sy}/{level}/{strand}/{section}/{sem}/{quarter}','Registrar\SheetBController@printSheetBList');

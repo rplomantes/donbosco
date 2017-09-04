@@ -183,4 +183,15 @@ class Helper extends Controller
         
         return $subjects;
     }
+    
+    static function quarterattendance($sy,$level,$quarter){
+        $noOfDays = "";
+        $attendance = \App\CtrAttendance::where('schoolyear',$sy)->where('level',$level)->where('quarter',$quarter)->first();
+        
+        if($attendance){
+            $noOfDays = number_format($attendance->Jun+$attendance->Jul+$attendance->Aug+$attendance->Sept+$attendance->Oct+$attendance->Nov+$attendance->Dece+$attendance->Jan+$attendance->Feb+$attendance->Mar,1);
+        }
+        
+        return $noOfDays;
+    }
 }

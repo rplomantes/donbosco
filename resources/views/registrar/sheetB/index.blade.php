@@ -9,8 +9,8 @@
         display: none;
     }
 </style>
-<div class="container">
-    <div class="col-md-4">
+<div class="container-fluid">
+    <div class="col-md-3">
         <div class="form-group">
             <label>Schoolyear</label>
             <select class="form-control" id="schoolyear" name="schoolyear" onchange="changeSy(this.value)">
@@ -47,7 +47,7 @@
             <button id="print" class="col-md-12 btn btn-danger" onclick="printsheetA()">PRINT</button>
         </div>
     </div>
-    <div class="col-md-8" id="report" style="overflow-x: scroll">
+    <div class="col-md-9" id="report" style="overflow-x: scroll">
     </div>
 </div>
 <script>
@@ -64,7 +64,9 @@
     
     
     function printsheetA(){
-        window.location.href = "/printattendancesheeta/{{$selectedSY}}/"+lvl+"/"+strand+"/"+sec+"/"+sem+"/"+qtr;
+
+        
+        window.location.href = "/printsheetb/{{$selectedSY}}/"+lvl+"/"+strand+"/"+sec+"/"+sem+"/"+qtr;
     }
    
     
@@ -153,7 +155,7 @@
     }
     
     function getlist(quarter){
-        
+        $('#report').html("<div style='text-align:center;margin-left:auto;margin-right:auto;'><i class='fa fa-circle-o-notch fa-spin fa-3x fa-fw'></i><span >Loading report...</span></div>");
         qtr = quarter;
         arrays ={} ;
         arrays['level']= lvl;
@@ -176,6 +178,7 @@
     }
     
     function updateRank(quarter){
+        $('#report').html("<div style='text-align:center;margin-left:auto;margin-right:auto;'><i class='fa fa-circle-o-notch fa-spin fa-3x fa-fw'></i><span >Calculating Rank...</span></div>");
         arrays ={} ;
         arrays['level']= lvl;
         arrays['sy']= '{{$selectedSY}}';

@@ -46,15 +46,15 @@ class AjaxController extends Controller
         $strand = Input::get('strand');
         $department = Input::get('department');
         $quarters = Input::get('quarter');
-        //$sy = \App\CtrRefSchoolyear::first()->schoolyear;
-        $sy = 2016;
+        $sy = \App\CtrRefSchoolyear::first()->schoolyear;
+        //$sy = 2016;
 
         $this->acadRank($section,$level,$quarters);
         if(Input::get('department') == 'Junior High School'){
         $this->techRank($section,$level,$quarters,$strand);
         }
         
-        $students = DB::Select("Select statuses.idno,class_no,gender,lastname,firstname,middlename,extensionname,statuses.status from users left join status_histories as statuses on users.idno = statuses.idno where statuses.status IN (2,3) and statuses.level = '$level' and statuses.section = '$section' AND statuses.strand = '$strand' and statuses.schoolyear ='$sy' order by class_no ASC");
+        $students = DB::Select("Select statuses.idno,class_no,gender,lastname,firstname,middlename,extensionname,statuses.status from users left join statuses as statuses on users.idno = statuses.idno where statuses.status IN (2,3) and statuses.level = '$level' and statuses.section = '$section' AND statuses.strand = '$strand' and statuses.schoolyear ='$sy' order by class_no ASC");
         //$students = DB::Select("Select statuses.idno,gender,lastname,firstname,middlename,extensionname from users left join statuses on users.idno = statuses.idno where statuses.status= 2 and statuses.level = 'Grade 10' and statuses.section = 'Saint Callisto Caravario' AND statuses.strand = 'Industrial Drafting Technology' order by gender DESC,lastname ASC,firstname ASC");
         if(Input::get('department') != 'Senior High School'){
             $strand = '';
@@ -650,7 +650,7 @@ class AjaxController extends Controller
         if($level == "Grade 7" || $level == "Grade 8" || $level == "Grade 9" || $level == "Grade 10"){
         switch ($quarter){
             case 1;
-                $averages = DB::Select("SELECT grades.idno,ROUND( SUM( first_grading ) / count( grades.idno ) ,0) AS average FROM `grades` left join statuses on statuses.idno = grades.idno WHERE subjecttype IN (0,5,6) AND grades.level = '$level' AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear->schoolyear' AND isdisplaycard = 1 GROUP BY idno ORDER BY `average` DESC");
+                $averages = DB::Select("SELECT grads.idno,ROUND( SUM( first_grading ) / count( grades.idno ) ,0) AS average FROM `grades` left join statuses on statuses.idno = grades.idno WHERE subjecttype IN (0,5,6) AND grades.level = '$level' AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear->schoolyear' AND isdisplaycard = 1 and schoolyear = $sy GROUP BY idno ORDER BY `average` DESC");
             break;
             case 2;
                 $averages = DB::Select("SELECT grades.idno,ROUND( SUM( second_grading ) / count( grades.idno ) ,0) AS average FROM `grades` left join statuses on statuses.idno = grades.idno WHERE subjecttype IN (0,5,6) AND grades.level = '$level' AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear->schoolyear' AND isdisplaycard = 1 GROUP BY idno ORDER BY `average` DESC");
@@ -685,6 +685,7 @@ class AjaxController extends Controller
             }
         }
         else{
+            
         switch ($quarter){
             case 1;
                 $averages = DB::Select("SELECT grades.idno,ROUND( SUM( first_grading ) / count( grades.idno ) ,2) AS average FROM `grades` left join statuses on statuses.idno = grades.idno WHERE subjecttype IN (0,5,6) AND grades.level = '$level' AND statuses.section LIKE '$section' AND grades.schoolyear = '$schoolyear->schoolyear' AND isdisplaycard = 1 GROUP BY idno ORDER BY `average` DESC");
