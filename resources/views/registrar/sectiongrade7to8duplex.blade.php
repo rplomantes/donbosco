@@ -88,7 +88,7 @@
             </form>
         </nav-->
             
-        <div class="body" id="body">
+        <div class="body" id="body" >
         <?php $card = 1?>
         @foreach($collection as $info)
         <div class="front" style="padding-top: 40px;">

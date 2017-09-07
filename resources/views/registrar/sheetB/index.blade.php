@@ -10,6 +10,7 @@
     }
 </style>
 <div class="container-fluid">
+    <div class="col-md-12"><h3>Sheet B</h3></div>
     <div class="col-md-3">
         <div class="form-group">
             <label>Schoolyear</label>
@@ -129,7 +130,7 @@
     function updatesection(section){
         sec = section;
 
-            getlist(qtr);
+            updateRank(qtr);
 
     }
     function getsemester(){
@@ -156,7 +157,6 @@
     
     function getlist(quarter){
         $('#report').html("<div style='text-align:center;margin-left:auto;margin-right:auto;'><i class='fa fa-circle-o-notch fa-spin fa-3x fa-fw'></i><span >Loading report...</span></div>");
-        qtr = quarter;
         arrays ={} ;
         arrays['level']= lvl;
         arrays['sy']= '{{$selectedSY}}';
@@ -180,6 +180,7 @@
     function updateRank(quarter){
         $('#report').html("<div style='text-align:center;margin-left:auto;margin-right:auto;'><i class='fa fa-circle-o-notch fa-spin fa-3x fa-fw'></i><span >Calculating Rank...</span></div>");
         arrays ={} ;
+        qtr = quarter;
         arrays['level']= lvl;
         arrays['sy']= '{{$selectedSY}}';
         arrays['course']= strand;
@@ -190,7 +191,12 @@
                url: "/setoverallrank/"+sec,
                data : arrays,
                success:function(data){
+                   
                    getlist(quarter)
+                   
+                   },
+                   error:function(){
+                       getlist(quarter)
                    }
                });
     }

@@ -49,7 +49,7 @@
         
 
         <div class="back">
-            <table style="margin-top: 30px;margin-bottom:30px;margin-left: .5cm;margin-right:.5cm">
+            <table style="margin-top: 60px;margin-bottom:30px;margin-left: .5cm;margin-right:.5cm">
                 <tr>
                     <td style="width:8.33cm" id="com0">
                         <table class="padded grades" border = '1' cellspacing="0" cellpadding = "0" width="100%" class="reports" style="margin-top: auto;margin-bottom: auto;">
@@ -411,7 +411,7 @@
 	        </div>
 
         <div class="front">
-        <table style="margin-top: 110px;margin-bottom:30px;margin-left: .5cm;margin-right:.5cm" align="center">
+        <table style="margin-top: 80px;margin-bottom:30px;margin-left: .5cm;margin-right:.5cm" align="center">
                     <tr>
                         <td style="width:8.33cm" id="com3">
                         <div  id="MATH">

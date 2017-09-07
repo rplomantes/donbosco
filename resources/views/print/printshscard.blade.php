@@ -1,4 +1,6 @@
-<?php use App\Http\Controllers\Registrar\GradeController; ?>
+<?php use App\Http\Controllers\Registrar\GradeController; 
+use App\Http\Controllers\Registrar\GradeComputation;
+?>
 <html>
     <head>
         <script src="{{asset('/js/jquery.js')}}"></script>
@@ -56,9 +58,12 @@
     <body>
 
         <div class="body">
-        <div class="front" style="padding-top: 50px;">
-            <div style="z-index: 3;position: relative;max-height: 0px;bottom:5px;right:-20px;">
+        <div class="front" style="padding-top: 30px;">
+            <div style="z-index: 3;position: relative;max-height: 0px;bottom:5px;right:-10px;">
                 <img src="{{asset('images/DBTI.png')}}"  style=";width:140px;">
+            </div>
+            <div style="z-index: 3;position: relative;max-height: 0px;bottom:0px;right:-400px;">
+                <img src="{{asset('images/boscorale.png')}}"  style=";width:120px;">
             </div>
         <table class="parent" width="100%" style="z-index: 1;padding:10px;margin-left: auto;margin-right: auto;margin-bottom: .8cm;">
             <thead>
@@ -213,7 +218,9 @@
                                     @endif
                                 </td >
                                 <td>
-                                    {{round($grade->final_grade,0)}}
+                                    @if($grade->final_grading > 0)
+                                        {{round($grade->final_grade,0)}}
+                                    @endif
                                 </td>                
                             </tr>
                         @endif
@@ -266,7 +273,7 @@
                             <b>GENERAL AVERAGE for the Semester</b>
                         </td>
                         <td>
-                            {{GradeController::gradeQuarterAve(array(0,5,6),array($sem),5,$grades,$level)}}
+                            {{GradeComputation::computeQuarterAverage($sy,$level,array(5,6),0,1,$grades)}}
                         </td>
                     </tr>
                 </table>
@@ -342,21 +349,28 @@
                     <tr>
                         <td style="text-align: left;padding-left: 10px;border: 1px solid">{{$grade->subjectname}}</td>
                         <td style="border:1px solid">{{$grade->points}}</td>
-                        @if($sem ==1)
-                            <td style="border:1px solid">
-                                {{round($grade->first_grading)}}
-                            </td>
-                            <td style="border:1px solid">
-                                {{round($grade->second_grading)}}
-                            </td>
-                        @else
-                            <td style="border:1px solid">
-                                {{round($grade->third_grading)}}
-                            </td>
-                            <td style="border:1px solid">
-                                {{round($grade->fourth_grading)}}
-                            </td>
-                        @endif
+                        <td style="border:1px solid">
+                            @if($sem ==1)
+                                @if($grade->first_grading > 0)
+                                    {{round($grade->first_grading,0)}}
+                                @endif
+                            @else
+                                @if($grade->third_grading > 0)
+                                    {{round($grade->third_grading,0)}}
+                                @endif
+                            @endif
+                        </td>
+                        <td style="border:1px solid">
+                            @if($sem ==1)
+                                @if($grade->second_grading > 0)
+                                    {{round($grade->second_grading,0)}}
+                                @endif
+                            @else
+                                @if($grade->fourth_grading > 0)
+                                    {{round($grade->fourth_grading,0)}}
+                                @endif
+                            @endif
+                        </td >
 
                         @if($length == $counter)
                         <td style="border:1px solid"><b>FINAL GRADE</b></td>
@@ -371,22 +385,19 @@
                             <td style="border:1px solid"><b>100</b></td>
                             @if($sem ==1)
                                 <?php 
-                                    $qtr1 = GradeController::conductQuarterAve(3,1,$grades);
-                                    $qtr2 = GradeController::conductQuarterAve(3,2,$grades);
+                                    $qtr1 = GradeComputation::computeQuarterAverage($sy,$level,array(3),0,1,$grades);
+                                    $qtr2 = GradeComputation::computeQuarterAverage($sy,$level,array(3),0,2,$grades);
                                 ?>
                             @else
                                 <?php 
-                                    $qtr1 = GradeController::conductQuarterAve(3,3,$grades);
-                                    $qtr2 = GradeController::conductQuarterAve(3,4,$grades);
+                                    $qtr1 = GradeComputation::computeQuarterAverage($sy,$level,array(3),0,3,$grades);
+                                    $qtr2 = GradeComputation::computeQuarterAverage($sy,$level,array(3),0,4,$grades);
                                 ?>
                             @endif
                             <td align="center" style="border: 1px solid"><b>{{$qtr1}}</b></td>
                             <td align="center" style="border: 1px solid"><b>{{$qtr2}}</b></td>
-                            <?php $conduct = round(($qtr1+$qtr2)/2,0); ?>
                             <td style="border:1px solid"><b>
-                                    @if($qtr2 != 0)
-                                    {{$conduct}}
-                                    @endif
+                                    {{GradeComputation::computeQuarterAverage($sy,$level,array(3),0,5,$grades)}}
                                 </b></td>
                             
                         </tr>
@@ -529,11 +540,11 @@
                     </tr>
                                                                     <tr style="text-align: center">
                         <td class="print-size"></td>
-                        <td class="print-size"><div style="border-bottom: 1px solid;width: 80%;margin-left: auto;margin-right: auto"><img src="{{asset('images/HS_PRINCIPAL.png')}}"  style="display: inline-block;width:180px"></div></td> 
+                        <td class="print-size"><div style="border-bottom: 1px solid;width: 80%;margin-left: auto;margin-right: auto;height:60px"><img src="{{asset('images/SirDarwin 001.png.png')}}"  style="display: inline-block;width:90px"></div></td>
                     </tr>
                     <tr style="text-align: center;">
                         <td></td>
-                        <td class="print-size" >Ms. Violeta F. Roxas</td>
+                        <td class="print-size" >Mr. Darwin B. Buensuceso, MAEd</td>
                     </tr>
                     <tr style="text-align: center">
                         <td class="print-size" ></td>

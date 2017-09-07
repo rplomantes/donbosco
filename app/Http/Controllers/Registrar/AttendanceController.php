@@ -34,8 +34,8 @@ class AttendanceController extends Controller
         if(count($getdayp)>0){
             foreach($getdayp as $getdayp){
                 $dayp = $dayp+($getdayp->Jun+$getdayp->Jul+$getdayp->Aug+$getdayp->Sept+$getdayp->Oct+$getdayp->Nov+$getdayp->Dece+$getdayp->Jan+$getdayp->Feb+$getdayp->Mar);
-                $dayp = number_format($dayp);
             }
+                $dayp = number_format($dayp,1);
         }else{
             $dayp = "";
         }
@@ -43,8 +43,8 @@ class AttendanceController extends Controller
         if(count($getdayt)>0){
             foreach($getdayt as $getdayt){
                 $dayt = $dayt+($getdayt->Jun+$getdayt->Jul+$getdayt->Aug+$getdayt->Sept+$getdayt->Oct+$getdayt->Nov+$getdayt->Dece+$getdayt->Jan+$getdayt->Feb+$getdayt->Mar);
-                $dayt = number_format($dayt);
             }
+                $dayt = number_format($dayt,1);
         }else{
             $dayt = "";
         }
@@ -52,8 +52,8 @@ class AttendanceController extends Controller
         if(count($getdaya)>0){
             foreach($getdaya as $getdaya){
                 $daya = $daya+($getdaya->Jun+$getdaya->Jul+$getdaya->Aug+$getdaya->Sept+$getdaya->Oct+$getdaya->Nov+$getdaya->Dece+$getdaya->Jan+$getdaya->Feb+$getdaya->Mar);
-                $daya = number_format($daya);
             }
+                $daya = number_format($daya,1);
         }else{
             $daya = "";
         }

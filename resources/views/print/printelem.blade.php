@@ -82,9 +82,12 @@ use App\Http\Controllers\Registrar\GradeComputation;
     <body>
         
         <div class="body" id="body">
-        <div class="front" style="padding-top: 40px;">
-            <div style="z-index: 3;position: relative;max-height: 0px;bottom:5px;right:-30px;">
+        <div class="front" style="padding-top: 20px;">
+            <div style="z-index: 3;position: relative;max-height: 0px;bottom:5px;right:-10px;">
                 <img src="{{asset('images/DBTI.png')}}"  style=";width:140px;">
+            </div>
+            <div style="z-index: 3;position: relative;max-height: 0px;bottom:0px;right:-400px;">
+                <img src="{{asset('images/boscorale.png')}}"  style=";width:120px;">
             </div>
         <table class="parent" width="100%" style="z-index: 1;margin-left: auto;margin-right: auto;margin-bottom: .8cm;">
             <thead>
@@ -319,6 +322,8 @@ use App\Http\Controllers\Registrar\GradeComputation;
             </tr>
             
         </table>
+
+            
         <div class="page-break"></div>
         </div>
 
@@ -520,7 +525,7 @@ use App\Http\Controllers\Registrar\GradeComputation;
                     </tr>
                                                                     <tr style="text-align: center">
                         <td class="print-size"></td>
-                        <td class="print-size"><div style="border-bottom: 1px solid;width: 80%;margin-left: auto;margin-right: auto;height:25px"><img src="{{asset('images/HS_PRINCIPAL.png')}}"  style="display: inline-block;width:180px"></div></td> 
+                        <td class="print-size"><div style="border-bottom: 1px solid;width: 80%;margin-left: auto;margin-right: auto;height:25px"><img src="{{asset('images/elem_sig.png')}}"  style="display: inline-block;width:180px"></div></td> 
                     </tr>
                     <tr style="text-align: center;">
                         <td class="print-size" >

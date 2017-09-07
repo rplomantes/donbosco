@@ -147,7 +147,7 @@
                                             <li><a href="{{url('importGrade')}}"><i class="fa fa-btn"></i>Import Grades</a></li>
                                             <li><a href="{{url('reportcards')}}"><i class="fa fa-btn"></i>Report Card</a></li>
                                             <li><hr></li>
-                                            <li><a href="{{url('sheetb')}}"><i class="fa fa-btn"></i>Sheet B</a></li>
+                                            <li><a href="{{url('sheetB',$sy)}}"><i class="fa fa-btn"></i>Sheet B</a></li>
                                             <li><a href="{{url('gradesheeta',$sy)}}"><i class="fa fa-btn"></i>Sheet A Subjects/Conduct</a></li>
                                             <li><a href="{{url('electivesheeta',$sy)}}"><i class="fa fa-btn"></i>Sheet A Elective</a></li>
                                             

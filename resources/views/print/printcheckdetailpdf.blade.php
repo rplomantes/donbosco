@@ -12,7 +12,7 @@
             }
         </style>
     </head>
-    <body style="vertical-align:middle;margin-left:302.8px">
+    <body style="vertical-align:middle;margin-left:302.8px;margin-top:20px;">
         <table border ="0" width="576px" style="margin-top:275px;margin-bottom:auto;">
             <tr><td width="50" height="30px" colspan="3">&nbsp;</td><td  align="left" valign="bottom" ><b><span class="date">{{date('M d, Y',strtotime($date))}}</span></b></td></tr>
             <tr><td></td><td width="45px">&nbsp;</td><td height ="20" width="455px" valign="bottom"><span class="payee" style="font-size:13px">{{strtoupper($payee)}}</span></td><td valign="bottom" align="left" width="200px"><span class="amount">*{{number_format($amount,2)}}*</span></td></tr>

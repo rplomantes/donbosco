@@ -20,12 +20,12 @@
         @if($sem==1)
         <td style="text-align: center">
             @if($grade->first_grading != 0)
-            {{$grade->first_grading}}
+            {{round($grade->first_grading,0)}}
             @endif
         </td>
         <td style="text-align: center">
             @if($grade->section_grading != 0)
-            {{$grade->second_grading}}
+            {{round($grade->second_grading,0)}}
             @endif
         </td>
         @elseif($sem==2)
@@ -44,7 +44,7 @@
             <?php 
             $running_ave = 0;
             if($sem ==1){
-                $running_ave = round(($grade->first_grading+$grade->second_grading)/2,0);
+                $running_ave = round(($grade->first_grading+$grade->second_grading)/1,0);
             }elseif($sem == 2){
                 $running_ave = round(($grade->third_grading+$grade->fourth_grading)/2,0);
             }

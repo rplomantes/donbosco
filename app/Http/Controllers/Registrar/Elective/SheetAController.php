@@ -17,7 +17,7 @@ class SheetAController extends Controller
         $currSY = \App\ctrSchoolYear::first()->schoolyear;
         $levels = \App\CtrElectiveSection::groupBy('level')->get();
         
-        return view('elective.sheeta_index',compact('selectedSY','currSY','levels'));
+        return view('registrar.elective.sheeta_index',compact('selectedSY','currSY','levels'));
     }
     
     function printElective($section){
@@ -26,7 +26,7 @@ class SheetAController extends Controller
         $adviser = Helper::electiveadviser($section);
         $sectionname = Helper::sectionName($section);
         $quarter = \App\CtrQuarter::first()->quarter;
-        return view('elective.sheeta_print',compact('section','students','sem','adviser','sectionname','info','quarter'));
+        return view('registrar.elective.sheeta_print',compact('section','students','sem','adviser','sectionname','info','quarter'));
     }
     
 }

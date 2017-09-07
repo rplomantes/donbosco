@@ -145,7 +145,7 @@
                                     <?php 
                                     $running_ave = 0;
                                     if($info->sem ==1){
-                                        $running_ave = round(($grade->first_grading+$grade->second_grading)/2,0);
+                                        $running_ave = round(($grade->first_grading+$grade->second_grading)/1,0);
                                     }elseif($info->sem == 2){
                                         $running_ave = round(($grade->third_grading+$grade->fourth_grading)/2,0);
                                     }

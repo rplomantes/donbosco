@@ -24,14 +24,17 @@ class RankController extends Controller
             $section = "";
         }
         
-        if($course != "NULL"){
-            $course = "AND s.strand LIKE '".$course."'" ;
-        } else{
+        if($course == "NULL" || $course == "null"){
             $course = "";
+        } else{
+            $course = "AND s.strand LIKE '".$course."'" ;
+            
         }
         
-        $this->setRankingAcad($level,$section,$course,$sy,$quarter,$semester);
-        //$this->setRankingTech($level,$section,$course,$sy,$quarter,$semester);
+        $rank = $this->setRankingAcad($level,$section,$course,$sy,$quarter,$semester);
+        $this->setRankingTech($level,$section,$course,$sy,$quarter,$semester);
+        
+        return 'me';
     }
     
     function setRankingAcad($level,$section,$course,$sy,$quarter,$semester){
@@ -56,7 +59,7 @@ class RankController extends Controller
             $rankfield = RankHelper::rankingField($semester,$quarter,'acad_');
         }
         
-        RankHelper::setRanking($studentAverages, $sy, $rankfield);
+        $rank = RankHelper::setRanking($studentAverages, $sy, $rankfield);
         return $studentAverages;
     }
     

@@ -25,7 +25,7 @@ class ReportCardController extends Controller
         
         
         foreach($infos as $info){
-            $name = $info->lastname.", ".$info->firstname." ".substr($info->middlename,0,1);
+            $name = $info->lastname.", ".$info->firstname." ".substr($info->middlename,0,1).".";
             $lrn = $info->lrn;
             $birthdate = $info->birthDate;
             $gender = $info->gender;

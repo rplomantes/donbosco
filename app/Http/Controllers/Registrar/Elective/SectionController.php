@@ -17,7 +17,7 @@ class SectionController extends Controller
     function electiveSection(){
         $levels = \App\CtrElectiveSection::groupBy('level')->get();
         $schoolyear = \App\CtrSchoolYear::first()->schoolyear;
-        return view('elective.section',compact('levels','schoolyear'));
+        return view('registrar.elective.section',compact('levels','schoolyear'));
     }
     
     function printSection($section){
@@ -32,7 +32,7 @@ class SectionController extends Controller
         
         $pdf = \App::make('dompdf.wrapper');
         $pdf->setPaper("Legal", "portrait");
-        $pdf->loadView('elective.section_print',compact('students','advisername','sectioninfo'));
+        $pdf->loadView('registrar.elective.section_print',compact('students','advisername','sectioninfo'));
         return $pdf->stream();
     }
 }

@@ -84,7 +84,7 @@ class GradeComputation extends Controller
         }
         
         if($average < 100){
-            $average = number_format($average,$gradeCondition->decimal,$gradeCondition->decimal);
+            $average = number_format($average,$gradeCondition->decimal);
         }else{
             $average = round($average,0);
         }

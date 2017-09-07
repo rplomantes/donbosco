@@ -26,8 +26,9 @@ class Helper extends Controller
                 . "WHERE g.subjecttype IN ($subjects) $section "
                 . "AND g.level = '$subjectsetting->level' "
                 . "AND g.schoolyear = '$subjectsetting->schoolyear' "
-                . "AND g.isdisplaycard = 1 "
+                . "AND g.isdisplaycar = 1 "
                 . "AND g.semester = $semester "
+                . "AND g.$gradefield >0 "
                 . "$course "
                 . "GROUP BY idno ORDER BY `average` DESC");
         
@@ -45,7 +46,7 @@ class Helper extends Controller
         }
         
         $subjects = RegistrarHelper::getSubjectType($subjecttype);        
-        $averages = DB::Select("SELECT g.idno, ROUND( SUM( $gradefield *(weighted/100)),$subjectsetting->decimal ) AS average "
+        $averages = DB::Select("SELECT g.idno, SUM( ROUND( $gradefield *(weighted/100),$subjectsetting->decimal) ) AS average "
                 . "FROM grades g left join $table s on s.idno = g.idno "
                 . "AND s.schoolyear = g.schoolyear "
                 . "WHERE g.subjecttype IN ($subjects) $section "

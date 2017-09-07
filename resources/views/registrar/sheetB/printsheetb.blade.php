@@ -8,8 +8,12 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
 $acad = 0;
 $tech = 0;
 ?>
-
-<table width="100%" class="print-header">
+<html>
+    <head>
+        <link href="{{ asset('/css/fonts.css') }}" rel="stylesheet">
+    </head>
+    <body>
+        <table width="100%" class="print-header">
     <tr>
         <td rowspan="3" style="text-align: right;padding-left: 0px;vertical-align: top" class="logo" width="55px">
             <img src="{{asset('images/logo.png')}}"  style="display: inline-block;height:50px">
@@ -47,14 +51,22 @@ $tech = 0;
             FINAL
             @endif
             </span> GRADING PERIOD</td>
-        <td style="text-align: right;font-size:12pt;">Grade and Section:<span id="year">{{$level}} / {{$section}}</span></td>
+        <td style="text-align: right;font-size:12pt;">Gr and Sec:<span id="year">{{$level}} / {{$section}}</span></td>
     </tr>
+    @if(in_array($level,array('Grade 9','Grade 10')))
+    <tr>
+        <td style="font-size:10pt;padding-left: 0px;"></td>
+        <td style="text-align:center;font-weight: bold;"></td>    
+        <td style="text-align: right;font-size:12pt;">Strand: <span id="adviser">{{$strand}}</span></td>
+    </tr>
+    @endif
 </table>
 
-<table width="100%" border="1" cellspacing="0" style="font-size: 9pt;">
+        <table width="100%" border="1" cellspacing="0" style="font-size: 9pt;">
+    <thead>
     <tr style="text-align: center">
         <td>CN</td>
-        <td>Student Name</td>
+        <td width='300px;'>Student Name</td>
         @if(count($subjects) > 0)
         
             @foreach($subjects as $subject)
@@ -64,8 +76,8 @@ $tech = 0;
                 @endif
             @endforeach
             @if($acad > 0)
-            <td>ACAD GEN AVE</td>
-            <td>ACAD RANK</td>
+            <td>ACAD<br> GEN AVE</td>
+            <td>ACAD<br> RANK</td>
             @endif
             
             @foreach($subjects as $subject)
@@ -76,8 +88,8 @@ $tech = 0;
             @endforeach
             
             @if($tech > 0)
-            <td>TECH GEN AVE</td>
-            <td>TECH RANK</td>
+            <td>TECH<br> GEN AVE</td>
+            <td>TECH<br> RANK</td>
             @endif
             
             <td>GMRC</td>
@@ -87,6 +99,7 @@ $tech = 0;
             
         @endif
     </tr>
+    </thead>
     @foreach($students as $student)
     <?php 
             $grades = \App\Grade::where('idno',$student->idno)->where('schoolyear',$sy)->get();
@@ -94,8 +107,8 @@ $tech = 0;
             $name = App\User::where('idno',$student->idno)->first();
             ?>
     <tr style="text-align: center">
-        <td>{{$student->class_no}}</td>
-        <td style="text-align: left">{{$name->lastname}}, {{$name->firstname}} @if($name->middlename != ""){{substr($name->middlename,0,1)}}. @endif 
+        <td width='50px'>{{$student->class_no}}</td>
+        <td style="text-align: left;font-size: 8pt;">{{$name->lastname}}, {{$name->firstname}} @if($name->middlename != ""){{substr($name->middlename,0,1)}}. @endif 
             @if($student->status ==3)
                 <span style='float: right;color: red;font-weight: bold'>DROPPED</span>
             @endif
@@ -116,7 +129,7 @@ $tech = 0;
         @endforeach
         
             @if($acad > 0)
-            <td>{{GradeComputation::computeQuarterAverage($sy,$level,array(0,5,6),$semester,$quarter,$grades)}}</td>
+            <td style="font-weight: bold">{{GradeComputation::computeQuarterAverage($sy,$level,array(0,5,6),$semester,$quarter,$grades)}}</td>
             <td>{{SectionRanking::getStudentRank($student->idno,$sy,$acad_field)}}</td>
             @endif
             
@@ -135,7 +148,7 @@ $tech = 0;
         @endforeach
         
             @if($tech > 0)
-            <td>{{GradeComputation::computeQuarterAverage($sy,$level,array(1),$semester,$quarter,$grades)}}</td>
+            <td style="font-weight: bold">{{GradeComputation::computeQuarterAverage($sy,$level,array(1),$semester,$quarter,$grades)}}</td>
             <td>{{SectionRanking::getStudentRank($student->idno,$sy,$tech_field)}}</td>
             @endif
             
@@ -145,4 +158,6 @@ $tech = 0;
             <td style="text-align: center">{{$attendance[1]}}</td>
     </tr>
     @endforeach
-</table>
+</table>  
+    </body>
+</html>

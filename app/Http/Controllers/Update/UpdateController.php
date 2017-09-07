@@ -132,8 +132,10 @@ class UpdateController extends Controller
         
         $cupate = \App\Grade::where('idno',$idno)->where('subjectcode',$ctype)->where('schoolyear',$schoolyear)->first();
         if(count($cupate)>0){
+            if($cupate->$qtrname == 0){
         $cupate->$qtrname=$cvalue;
         $cupate->update();
+            }
         }
           }
         }
@@ -808,40 +810,40 @@ class UpdateController extends Controller
         }
             function updatecdbaccounting(){
                  //$populates = \App\ForwardedCbd::get();
-//                $populates = DB::Select("Select * from journal_old");
-//            foreach($populates as $populate){
-//                $newacct = new \App\Accounting;
-//                $newacct->refno = $populate->VOUCHER_NO;
-//                $newacct->transactiondate = $populate->TR_DATE;
-//                $newacct->referenceid = $populate->VOUCHER_NO;
-//                $newacct->accountname = $populate->accountingname;
-//                $newacct->accountcode = $populate->accountingcode;
-//                $newacct->acct_department = $populate->main_department;
-//                $newacct->sub_department = $populate->sub_department;
-//                $newacct->fiscalyear = '2016';
-//                $newacct->isfinal = '1';
-//                $newacct->type = '3';
-//                if($populate->DEBIT == "FALSE" || $populate->DEBIT == "0"){
-//                    $newacct->cr_db_indic = '1';
-//                    $newacct->credit=$populate->creditamount;
-//                }else{
-//                    $newacct->cr_db_indic = '0';
-//                    $newacct->debit=$populate->debitamount;
-//                }
-//                $newacct->save();                
-//            }
-            $populates = DB::Select("Select *,sum(credit) as total from accountings group by refno");
+                $populates = DB::Select("Select * from journal_old");
             foreach($populates as $populate){
-                $expalains = DB::Select("Select * from journal_old where VOUCHER_NO = $populate->refno group by VOUCHER_NO");
-                $newremark = new \App\AccountingRemark;
-                $newremark->refno = $populate->refno;
-                $newremark->trandate = $populate->transactiondate;
-                foreach($expalains as $expalain){
-                    $newremark->remarks = $expalain->EXPLANATION;
-                    $newremark->posted_by = $expalain->PREPARED_BY;                    
+                $newacct = new \App\Accounting;
+                $newacct->refno = "j".$populate->VOUCHER_NO;
+                $newacct->transactiondate = $populate->TR_DATE;
+                $newacct->referenceid = $populate->VOUCHER_NO;
+                $newacct->accountname = $populate->accountingname;
+                $newacct->accountcode = $populate->accountingcode;
+                $newacct->acct_department = $populate->main_department;
+                $newacct->sub_department = $populate->sub_department;
+                $newacct->fiscalyear = '2016';
+                $newacct->isfinal = '1';
+                $newacct->type = '3';
+                if($populate->DEBIT == "FALSE" || $populate->DEBIT == "0"){
+                    $newacct->cr_db_indic = '1';
+                    $newacct->credit=$populate->creditamount;
+                }else{
+                    $newacct->cr_db_indic = '0';
+                    $newacct->debit=$populate->debitamount;
                 }
-                $newremark->save();                
+                $newacct->save();                
             }
+//            $populates = DB::Select("Select *,sum(credit) as total from accountings group by refno");
+//            foreach($populates as $populate){
+//                $expalains = DB::Select("Select * from journal_old where VOUCHER_NO = $populate->refno group by VOUCHER_NO");
+//                $newremark = new \App\AccountingRemark;
+//                $newremark->refno = $populate->refno;
+//                $newremark->trandate = $populate->transactiondate;
+//                foreach($expalains as $expalain){
+//                    $newremark->remarks = $expalain->EXPLANATION;
+//                    $newremark->posted_by = $expalain->PREPARED_BY;                    
+//                }
+//                $newremark->save();                
+//            }
 
             return count($populates);
             }

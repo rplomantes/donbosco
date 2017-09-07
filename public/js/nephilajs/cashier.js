@@ -217,8 +217,16 @@ function dosubmit(){
         }
         
     }else{
-        document.getElementById('submit').style.visibility="hidden";
-        document.getElementById('receivecash').focus();
+        
+        var submit = document.getElementById('submit');
+        if(submit !== null){
+            submit.style.visibility="hidden";
+        }
+        var receive = document.getElementById('receivecash');
+        if(receive !== null){
+            receive.focus();
+        }
+        
         return false;
     }
     

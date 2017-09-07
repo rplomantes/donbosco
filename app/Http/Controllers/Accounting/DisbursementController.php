@@ -47,7 +47,7 @@ class DisbursementController extends Controller
            $voucherno = $disbursement->voucherno;
            $checkno = $disbursement->checkno;
            $pdfprint = \App::make('dompdf.wrapper');
-           $pdfprint->setPaper([0,0,1092,612],'portrait');
+           $pdfprint->setPaper([0,0,1092,570],'portrait');
            $pdfprint->loadView('print.printcheckdetailpdf',compact('payee','amount','date','amountinwords','voucherno','checkno'));
            return $pdfprint->stream();
        }
@@ -58,7 +58,7 @@ class DisbursementController extends Controller
            $accountings = \App\Accounting::where('refno',$refno)->get();
            $amountinwords = $this->convert_number_to_words($disbursement->amount);
            $pdf = \App::make('dompdf.wrapper');
-           $pdf->setPaper([0,0,1092,612],'portrait');
+           $pdf->setPaper([0,0,1092,570],'portrait');
            $pdf->loadView('print.printcheckvoucher',compact('disbursement','accountings','amountinwords'));
            return $pdf->stream();
        }

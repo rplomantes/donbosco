@@ -424,6 +424,34 @@ $(document).ready(function(){
 	}
   }, false);
   
+  
+  $('#subsidiary').keydown( function(e) {
+    var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+    if(key == 13) {
+        $("#department").focus();
+    }
+});
+
+  $('#department').keydown( function(e) {
+    var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+    if(key == 13) {
+        $("#entrytype").focus();
+    }
+});
+
+  $('#entrytype').keydown( function(e) {
+    var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+    if(key == 13) {
+        $("#amount").focus();
+    }
+});
+
+  $('#entrytype').keydown( function(e) {
+    var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+    if(key == 13) {
+        $("#amount").focus();
+    }
+});
 </script>
 
 

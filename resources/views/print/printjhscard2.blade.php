@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\Registrar\GradeController;
+use App\Http\Controllers\Registrar\GradeComputation;
 ?>
 <html>
     <head>
@@ -81,11 +82,14 @@ use App\Http\Controllers\Registrar\GradeController;
     <body>
         
         <div class="body" id="body">
-        <div class="front" style="padding-top: 40px;">
-            <div style="z-index: 3;position: relative;max-height: 0px;bottom:5px;right:-30px;">
+        <div class="front" style="padding-top: 30px;">
+            <div style="z-index: 3;position: relative;max-height: 0px;bottom:5px;right:-10px;">
                 <img src="{{asset('images/DBTI.png')}}"  style=";width:140px;">
             </div>
-        <table class="parent" width="100%" style="z-index: 1;margin-left: auto;margin-right: auto;margin-bottom: .8cm;">
+            <div style="z-index: 3;position: relative;max-height: 0px;bottom:0px;right:-400px;">
+                <img src="{{asset('images/boscorale.png')}}"  style=";width:120px;">
+            </div>
+        <table class="parent" width="100%" style="margin-left: auto;margin-right: auto;margin-bottom: .8cm;">
             <thead>
             <tr>
                 <td style="padding-left: 0px;">
@@ -228,15 +232,15 @@ use App\Http\Controllers\Registrar\GradeController;
                         <td style="text-align: right;">
                             <b>ACADEMIC AVERAGE&nbsp;&nbsp;&nbsp;</b>
                         </td>
-                        <td align="center"><b>{{GradeController::gradeQuarterAve(array(0),array(0),1,$grades,$level)}}</b></td>
-                        <td align="center"><b>{{GradeController::gradeQuarterAve(array(0),array(0),2,$grades,$level)}}</b></td>
-                        <td align="center"><b>{{GradeController::gradeQuarterAve(array(0),array(0),3,$grades,$level)}}</b></td>
-                        <td align="center"><b>{{GradeController::gradeQuarterAve(array(0),array(0),4,$grades,$level)}}</b></td>
-                        <td align="center"><b>{{GradeController::gradeQuarterAve(array(0),array(0),5,$grades,$level)}}</b></td>
+                        <td align="center"><b>{{GradeComputation::computeQuarterAverage($sy,$level,array(0),0,1,$grades)}}</b></td>
+                        <td align="center"><b>{{GradeComputation::computeQuarterAverage($sy,$level,array(0),0,2,$grades)}}</b></td>
+                        <td align="center"><b>{{GradeComputation::computeQuarterAverage($sy,$level,array(0),0,3,$grades)}}</b></td>
+                        <td align="center"><b>{{GradeComputation::computeQuarterAverage($sy,$level,array(0),0,4,$grades)}}</b></td>
+                        <td align="center"><b>{{GradeComputation::computeQuarterAverage($sy,$level,array(0),0,5,$grades)}}</b></td>
 
                         <td><b>
-                        @if((round(GradeController::gradeQuarterAve(array(0),array(0),5,$grades,$level),0)) != 0)
-                            {{round(GradeController::gradeQuarterAve(array(0),array(0),5,$grades,$level),0) >= 75 ? "Passed":"Failed"}}
+                        @if(GradeComputation::computeQuarterAverage($sy,$level,array(0),0,5,$grades) != "")
+                            {{GradeComputation::computeQuarterAverage($sy,$level,array(0),0,5,$grades) >= 75 ? "Passed":"Failed"}}
                         @endif
                         </b></td>
                         
@@ -266,11 +270,31 @@ use App\Http\Controllers\Registrar\GradeController;
                                 <span style='float: right;margin-right: 50px'>({{$grade->weighted}}%)</span>
                                 @endif
                             </td>
-                            <td align="center">{{round($grade->first_grading)}}</td>
-                            <td align="center">{{round($grade->second_grading)}}</td>
-                            <td align="center">{{round($grade->third_grading)}}</td>
-                            <td align="center">{{round($grade->fourth_grading)}}</td>
-                            <td align="center">{{round($grade->final_grade)}}</td>
+                            <td align="center">
+                                @if($grade->first_grading > 0)
+                                {{round($grade->first_grading)}}
+                                @endif
+                            </td>
+                            <td align="center">
+                                @if($grade->second_grading > 0)
+                                {{round($grade->second_grading)}}
+                                @endif
+                            </td>
+                            <td align="center">
+                                @if($grade->third_grading > 0)
+                                {{round($grade->third_grading)}}
+                                @endif
+                            </td>
+                            <td align="center">
+                                @if($grade->fourth_grading > 0)
+                                {{round($grade->fourth_grading)}}
+                                @endif
+                            </td>
+                            <td align="center">
+                                @if($grade->final_grade > 0)
+                                {{number_format(round($grade->final_grade,2),2)}}
+                                @endif
+                            </td>
                             <td class="print-size">
                                     @if((round($grade->final_grade,0)) != 0)
                                            <b> {{round($grade->final_grade,0) >= 75 ? "Passed":"Failed"}}</b>
@@ -283,15 +307,16 @@ use App\Http\Controllers\Registrar\GradeController;
                         <tr style="text-align: center;font-weight: bold">
                             <td class="print-size" style="text-align: right"><b>TECHNICAL AVERAGE&nbsp;&nbsp;&nbsp;</b></td>
 
-                            <td align="center">{{GradeController::weightedgradeQuarterAve(array(1),array(0),1,$grades,$level)}}</td>
-                            <td align="center">{{GradeController::weightedgradeQuarterAve(array(1),array(0),2,$grades,$level)}}</td>
-                            <td align="center">{{GradeController::weightedgradeQuarterAve(array(1),array(0),3,$grades,$level)}}</td>
-                            <td align="center">{{GradeController::weightedgradeQuarterAve(array(1),array(0),4,$grades,$level)}}</td>
-                            <td align="center">{{GradeController::weightedgradeQuarterAve(array(1),array(0),5,$grades,$level)}}</td>
+                            <td align="center">{{GradeComputation::computeQuarterAverage($sy,$level,array(1),0,1,$grades)}}</td>
+                            <td align="center">{{GradeComputation::computeQuarterAverage($sy,$level,array(1),0,2,$grades)}}</td>
+                            <td align="center">{{GradeComputation::computeQuarterAverage($sy,$level,array(1),0,3,$grades)}}</td>
+                            <td align="center">{{GradeComputation::computeQuarterAverage($sy,$level,array(1),0,4,$grades)}}</td>
+                            <td align="center">{{GradeComputation::computeQuarterAverage($sy,$level,array(1),0,5,$grades)}}</td>
                             <td class="print-size">
-                                @if((round(GradeController::weightedgradeQuarterAve(array(1),array(0),5,$grades,$level),0)) != 0)
-                                    {{round(GradeController::weightedgradeQuarterAve(array(1),array(0),5,$grades,$level),0) >= 75 ? "Passed":"Failed"}}
+                                @if(GradeComputation::computeQuarterAverage($sy,$level,array(1),0,5,$grades) != "")
+                                    {{GradeComputation::computeQuarterAverage($sy,$level,array(1),0,5,$grades) >= 75 ? "Passed":"Failed"}}
                                 @endif
+                                
                             </td>
                         </tr>
                         @else
@@ -382,10 +407,27 @@ use App\Http\Controllers\Registrar\GradeController;
                         <tr>
                             <td style="border: 1px solid">{{$grade->subjectname}}</td>
                             <td align="center" style="border: 1px solid">{{round($grade->points)}}</td>
-                            <td align="center" style="border: 1px solid">{{round($grade->first_grading)}}</td>
-                            <td align="center" style="border: 1px solid">{{round($grade->second_grading)}}</td>
-                            <td align="center" style="border: 1px solid">{{round($grade->third_grading)}}</td>
-                            <td align="center" style="border: 1px solid">{{round($grade->fourth_grading)}}</td>
+                            <td align="center" style="border: 1px solid">
+                                    @if($grade->first_grading > 0)
+                                    {{round($grade->first_grading)}}
+                                    @endif
+                            </td>
+                            <td align="center" style="border: 1px solid">
+                                    @if($grade->second_grading > 0)
+                                    {{round($grade->second_grading)}}
+                                    @endif
+                            </td>
+                            <td align="center" style="border: 1px solid">
+                                    @if($grade->third_grading > 0)
+                                    {{round($grade->third_grading)}}
+                                    @endif
+                            </td>
+                            <td align="center" style="border: 1px solid">
+                                    @if($grade->fourth_grading > 0)
+                                    {{round($grade->fourth_grading)}}
+                                    @endif
+                            </td>
+
                             @if($length == $counter)
                             <td style="border: 1px solid;border-right: 1px solid;"><b>FINAL GRADE</b></td>
                             @endif
@@ -396,11 +438,11 @@ use App\Http\Controllers\Registrar\GradeController;
                 <tr style="font-weight: bold">
                     <td align="center" style="border: 1px solid">CONDUCT GRADE</td>
                     <td align="center" style="border: 1px solid">100</td>
-                    <td align="center" style="border: 1px solid">{{GradeController::conductQuarterAve(3,1,$grades)}}</td>
-                    <td align="center" style="border: 1px solid">{{GradeController::conductQuarterAve(3,2,$grades)}}</td>
-                    <td align="center" style="border: 1px solid">{{GradeController::conductQuarterAve(3,3,$grades)}}</td>
-                    <td align="center" style="border: 1px solid">{{GradeController::conductQuarterAve(3,4,$grades)}}</td>
-                    <td align="center" style="border: 1px solid">{{round(GradeController::conductTotalAve($grades,0),0)}}</td>
+                    <td align="center" style="border: 1px solid;font-weight: bold;">{{GradeComputation::computeQuarterAverage($sy,$level,array(3),0,1,$grades)}}</td>
+                    <td align="center" style="border: 1px solid;font-weight: bold;">{{GradeComputation::computeQuarterAverage($sy,$level,array(3),0,2,$grades)}}</td>
+                    <td align="center" style="border: 1px solid;font-weight: bold;">{{GradeComputation::computeQuarterAverage($sy,$level,array(3),0,3,$grades)}}</td>
+                    <td align="center" style="border: 1px solid;font-weight: bold;">{{GradeComputation::computeQuarterAverage($sy,$level,array(3),0,4,$grades)}}</td>
+                    <td align="center" style="border: 1px solid;font-weight: bold;">{{GradeComputation::computeQuarterAverage($sy,$level,array(3),0,5,$grades)}}</td>
                 </tr>
 
                 </table>
@@ -534,13 +576,13 @@ use App\Http\Controllers\Registrar\GradeController;
                     </tr>
                                                                     <tr style="text-align: center">
                         <td class="print-size"></td>
-                        <td class="print-size"><div style="border-bottom: 1px solid;width: 80%;margin-left: auto;margin-right: auto;height:25px"><img src="{{asset('images/HS_PRINCIPAL.png')}}"  style="display: inline-block;width:180px"></div></td> 
+                        <td class="print-size"><div style="border-bottom: 1px solid;width: 80%;margin-left: auto;margin-right: auto;height:60px"><img src="{{asset('images/SirDarwin 001.png.png')}}"  style="display: inline-block;width:90px"></div></td> 
                     </tr>
                     <tr style="text-align: center;">
                         <td class="print-size" >
 
                         </td>
-                        <td class="print-size" >Ms. Violeta F. Roxas</td>
+                        <td class="print-size" >Mr. Darwin B. Buensuceso, MAEd</td>
                     </tr>
                     <tr style="text-align: center">
                         <td class="print-size" ></td>
@@ -571,5 +613,3 @@ use App\Http\Controllers\Registrar\GradeController;
     </div>    
         </body>
 </html>
-
-
