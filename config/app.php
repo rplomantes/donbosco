@@ -150,6 +150,7 @@ return [
         Barryvdh\DomPDF\ServiceProvider::class,
         'Maatwebsite\Excel\ExcelServiceProvider',
         Khill\Lavacharts\Laravel\LavachartsServiceProvider::class,
+        Fx3costa\LaravelChartJs\Providers\ChartjsServiceProvider::class,
 
         /*
          * Application Service Providers...

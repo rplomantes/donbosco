@@ -15,6 +15,7 @@ class Helper extends Controller
         if($currSY == $sy){
             $table = 'statuses';
         }
+        
         else{
             $table = 'status_histories';
         }
@@ -46,9 +47,12 @@ class Helper extends Controller
             case 4;
                 $qrt = "fourth_grading";
            break; 
-            default:
+            case 5;
                 $qrt = "final_grade";
-           break; 
+           break;
+            default:
+                $qrt = "period";
+                break;
         }
         return $qrt;
     }
@@ -193,5 +197,21 @@ class Helper extends Controller
         }
         
         return $noOfDays;
+    }
+    
+    static function setQuarter($semester,$quarter){
+        $qtr = $quarter;
+        switch($semester){
+            case 2;
+                if($quarter == 1){
+                    $qtr = 3;
+                }
+                if($quarter == 2){
+                    $qtr = 4;
+                }
+            break;
+        }
+        
+        return $qtr;
     }
 }

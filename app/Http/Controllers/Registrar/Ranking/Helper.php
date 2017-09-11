@@ -26,7 +26,7 @@ class Helper extends Controller
                 . "WHERE g.subjecttype IN ($subjects) $section "
                 . "AND g.level = '$subjectsetting->level' "
                 . "AND g.schoolyear = '$subjectsetting->schoolyear' "
-                . "AND g.isdisplaycar = 1 "
+                . "AND g.isdisplaycard = 1 "
                 . "AND g.semester = $semester "
                 . "AND g.$gradefield >0 "
                 . "$course "

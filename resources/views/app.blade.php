@@ -25,6 +25,7 @@
 	<link href="{{ asset('/css/datepicker.css') }}" rel="stylesheet">
         <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet">
         <link href="{{ asset('font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('/tablesorter/themes/blue/style.css')}}">
         
 
         
@@ -84,6 +85,7 @@
         <script src="{{asset('/js/bootstrap.min.js')}}"></script>
         <script src="{{asset('/js/fileinput.js')}}"></script>
         <script src="{{asset('/js/bootstrap-datepicker.js')}}"></script>
+        <script src="{{asset('/tablesorter/jquery.tablesorter.js')}}"></script>
         
         </head>
 <body> 

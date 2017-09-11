@@ -82,7 +82,7 @@ use App\Http\Controllers\Registrar\GradeComputation;
     <body>
         
         <div class="body" id="body">
-        <div class="front" style="padding-top: 30px;">
+        <div class="front" style="padding-top: 40px;">
             <div style="z-index: 3;position: relative;max-height: 0px;bottom:5px;right:-10px;">
                 <img src="{{asset('images/DBTI.png')}}"  style=";width:140px;">
             </div>
@@ -305,6 +305,21 @@ use App\Http\Controllers\Registrar\GradeComputation;
                         <tr style="text-align: center;font-weight: bold">
                             <td class="print-size" style="text-align: right"><b>TECHNICAL AVERAGE&nbsp;&nbsp;&nbsp;</b></td>
 
+                            <td align="center">{{GradeController::weightedgradeQuarterAve(array(1),array(0),1,$grades,$level)}}</td>
+                            <td align="center">{{GradeController::weightedgradeQuarterAve(array(1),array(0),2,$grades,$level)}}</td>
+                            <td align="center">{{GradeController::weightedgradeQuarterAve(array(1),array(0),3,$grades,$level)}}</td>
+                            <td align="center">{{GradeController::weightedgradeQuarterAve(array(1),array(0),4,$grades,$level)}}</td>
+                            <td align="center">{{GradeController::weightedgradeQuarterAve(array(1),array(0),5,$grades,$level)}}</td>
+                            <td class="print-size">
+                                @if((round(GradeController::weightedgradeQuarterAve(array(1),array(0),5,$grades,$level),0)) != 0)
+                                    {{round(GradeController::weightedgradeQuarterAve(array(1),array(0),5,$grades,$level),0) >= 75 ? "Passed":"Failed"}}
+                                @endif
+                            </td>
+                        </tr>
+                        @else
+                        <tr style="text-align: center;font-weight:bold">
+                            <td class="print-size" style="text-align: right"><b>TECHNICAL AVERAGE&nbsp;&nbsp;&nbsp;</b></td>
+
                             <td align="center">{{GradeComputation::computeQuarterAverage($sy,$level,array(1),0,1,$grades)}}</td>
                             <td align="center">{{GradeComputation::computeQuarterAverage($sy,$level,array(1),0,2,$grades)}}</td>
                             <td align="center">{{GradeComputation::computeQuarterAverage($sy,$level,array(1),0,3,$grades)}}</td>
@@ -315,21 +330,6 @@ use App\Http\Controllers\Registrar\GradeComputation;
                                     {{GradeComputation::computeQuarterAverage($sy,$level,array(1),0,5,$grades) >= 75 ? "Passed":"Failed"}}
                                 @endif
                                 
-                            </td>
-                        </tr>
-                        @else
-                        <tr style="text-align: center;font-weight:bold">
-                            <td class="print-size" style="text-align: right"><b>TECHNICAL AVERAGE&nbsp;&nbsp;&nbsp;</b></td>
-
-                            <td align="center">{{GradeController::gradeQuarterAve(array(1),array(0),1,$grades,$level)}}</td>
-                            <td align="center">{{GradeController::gradeQuarterAve(array(1),array(0),2,$grades,$level)}}</td>
-                            <td align="center">{{GradeController::gradeQuarterAve(array(1),array(0),3,$grades,$level)}}</td>
-                            <td align="center">{{GradeController::gradeQuarterAve(array(1),array(0),4,$grades,$level)}}</td>
-                            <td align="center">{{GradeController::gradeQuarterAve(array(1),array(0),5,$grades,$level)}}</td>
-                            <td class="print-size">
-                                @if((round(GradeController::gradeQuarterAve(array(1),array(0),5,$grades,$level),0)) != 0)
-                                    {{round(GradeController::gradeQuarterAve(array(1),array(0),5,$grades,$level),0) >= 75 ? "Passed":"Failed"}}
-                                @endif
                             </td>
                         </tr>
                         @endif
@@ -573,7 +573,7 @@ use App\Http\Controllers\Registrar\GradeComputation;
                     </tr>
                                                                     <tr style="text-align: center">
                         <td class="print-size"></td>
-                        <td class="print-size"><div style="border-bottom: 1px solid;width: 80%;margin-left: auto;margin-right: auto;height:60px"><img src="{{asset('images/SirDarwin 001.png.png')}}"  style="display: inline-block;width:90px"></div></td> 
+                        <td class="print-size"><div style="border-bottom: 1px solid;width: 80%;margin-left: auto;margin-right: auto;height:60px"><img src="{{asset('images/SirDarwin 001.png')}}"  style="display: inline-block;width:90px"></div></td> 
                     </tr>
                     <tr style="text-align: center;">
                         <td class="print-size" >
@@ -610,5 +610,3 @@ use App\Http\Controllers\Registrar\GradeComputation;
     </div>    
         </body>
 </html>
-
-

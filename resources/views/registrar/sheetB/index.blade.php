@@ -56,7 +56,7 @@
     var sec = "null";
     var strand = "null";
     var sem = 0;
-    var qtr = 2;
+    var qtr = 0;
     
     
     function changeSy(schoolyear){

@@ -13,28 +13,24 @@ class GenLedgerController extends Controller
 	$this->middleware(['auth','acct']);
     }
     
-    function index($basic,$title,$todate = null){
+    function index($basic,$title,$fromdate,$todate){
         $fiscalyear = \App\CtrFiscalyear::first();
 
-        $from = $fiscalyear->fiscalyear."-05-01";
-        if($todate == null){
-        $to = date("Y-m-d",strtotime(\Carbon\Carbon::now()));
-        }else{
-            $to = $todate;
-        }
+        $from = $fromdate;
+        $to = $todate;
 
-        $date1 = date_create('2011-05-01');
-        $date2 = date_create($to);
+        $date1 = date_create(date("Y-m",strtotime($fromdate))."-01");
+        $date2 = date_create(date("Y-m",strtotime($todate))."-01");
         $difference=date_diff($date1,$date2);
         $diff =$difference->format("%m")+1;
 
         return view("accounting.generalledger",compact('from','to','diff','title','basic','fiscalyear'));
     }
     
-    function printledger($basic,$title,$todate = null){
+    function printledger($basic,$title,$fromdate,$todate){
         $fiscalyear = \App\CtrFiscalyear::first();
 
-        $from = $fiscalyear->fiscalyear."-05-01";
+        $from = $fromdate;
         if($todate == null){
         $to = date("Y-m-d",strtotime(\Carbon\Carbon::now()));
         }else{

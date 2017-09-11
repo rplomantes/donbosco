@@ -810,28 +810,28 @@ class UpdateController extends Controller
         }
             function updatecdbaccounting(){
                  //$populates = \App\ForwardedCbd::get();
-                $populates = DB::Select("Select * from journal_old");
-            foreach($populates as $populate){
-                $newacct = new \App\Accounting;
-                $newacct->refno = "j".$populate->VOUCHER_NO;
-                $newacct->transactiondate = $populate->TR_DATE;
-                $newacct->referenceid = $populate->VOUCHER_NO;
-                $newacct->accountname = $populate->accountingname;
-                $newacct->accountcode = $populate->accountingcode;
-                $newacct->acct_department = $populate->main_department;
-                $newacct->sub_department = $populate->sub_department;
-                $newacct->fiscalyear = '2016';
-                $newacct->isfinal = '1';
-                $newacct->type = '3';
-                if($populate->DEBIT == "FALSE" || $populate->DEBIT == "0"){
-                    $newacct->cr_db_indic = '1';
-                    $newacct->credit=$populate->creditamount;
-                }else{
-                    $newacct->cr_db_indic = '0';
-                    $newacct->debit=$populate->debitamount;
-                }
-                $newacct->save();                
-            }
+//                $populates = DB::Select("Select * from journal_old");
+//            foreach($populates as $populate){
+//                $newacct = new \App\Accounting;
+//                $newacct->refno = "j".$populate->VOUCHER_NO;
+//                $newacct->transactiondate = $populate->TR_DATE;
+//                $newacct->referenceid = $populate->VOUCHER_NO;
+//                $newacct->accountname = $populate->accountingname;
+//                $newacct->accountcode = $populate->accountingcode;
+//                $newacct->acct_department = $populate->main_department;
+//                $newacct->sub_department = $populate->sub_department;
+//                $newacct->fiscalyear = '2016';
+//                $newacct->isfinal = '1';
+//                $newacct->type = '3';
+//                if($populate->DEBIT == "FALSE" || $populate->DEBIT == "0"){
+//                    $newacct->cr_db_indic = '1';
+//                    $newacct->credit=$populate->creditamount;
+//                }else{
+//                    $newacct->cr_db_indic = '0';
+//                    $newacct->debit=$populate->debitamount;
+//                }
+//                $newacct->save();                
+//            }
 //            $populates = DB::Select("Select *,sum(credit) as total from accountings group by refno");
 //            foreach($populates as $populate){
 //                $expalains = DB::Select("Select * from journal_old where VOUCHER_NO = $populate->refno group by VOUCHER_NO");
@@ -844,8 +844,11 @@ class UpdateController extends Controller
 //                }
 //                $newremark->save();                
 //            }
-
-            return count($populates);
+                $month1 = \App\AttendanceRepo::where('qtrperiod',1)->where('idno','161306')->where('schoolyear','2016')->where('month','JUN')->orderBy('id','DESC')->first();
+                $month1->age = 7;
+            //return count($populates);
+                echo print_r($month1);
+                return $month1;
             }
             
             function updatecdbdrcr(){
@@ -924,5 +927,54 @@ class UpdateController extends Controller
                 
                 }
                 
+            }
+            
+            function givePass(){
+                $users = \App\User::where('accesslevel',30)->where('password','')->get();
+                foreach($users as $user){
+                    $account = \App\User::find($user->id);
+                    $account->password = bcrypt($user->idno);
+                    $account->save();
+                }
+            }
+            
+            function fixDepartment(){
+                $fixes = DB::Select("Select * from ledgers where schoolyear = '2017' and acct_department='' and accountingcode = '120100'");
+                
+                foreach($fixes as $fix){
+                    $acct_dept = "";
+                    $sub_dept = "";
+                    $ctr = \App\CtrPaymentSchedule::where('schoolyear','2017')->where('level',$fix->level)->where('accountingcode',$fix->accountingcode)->where('accountingcode',$fix->accountingcode)->first();
+                    
+                    if($ctr){
+                        $acct_dept = $ctr->acct_department;
+                        $sub_dept = $ctr->sub_department;
+                    }
+                    echo $acct_dept." - ".$fix->id." - ".$ctr."<br>";
+                    $account = \App\Ledger::find($fix->id);
+                    $account->acct_department = $acct_dept;
+                    $account->sub_department = $sub_dept;
+                    $account->save();
+                }
+            }
+            
+            function fixDepartmentCredit(){
+                $credits = DB::Select("Select * from credits where acct_department='' and entry_type = 1 and schoolyear = 2017");
+                //$credits = \App\Credit::where('acct_department','')->where('entry_type',1)->get();
+                foreach($credits as $credit){
+                    $acct_dept = "";
+                    $sub_dept = "";
+                    $ledger = \App\Ledger::find($credit->referenceid);
+                    
+                    if($ledger){
+                        $acct_dept = $ledger->acct_department;
+                        $sub_dept = $ledger->sub_department;
+                    }
+                    echo $acct_dept." - ".$ledger->id." - ".$ledger."<br>";
+                    $account = \App\Credit::find($credit->id);
+                    $account->acct_department = $acct_dept;
+                    $account->sub_department = $sub_dept;
+                    $account->save();
+                }
             }
 }

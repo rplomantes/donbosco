@@ -106,7 +106,39 @@ class AttendanceController extends Controller
                 $month1 = \App\AttendanceRepo::where('qtrperiod',4)->where('idno',$idno)->where('schoolyear',$sy)->where('month',"JAN")->orderBy('id','DESC')->first();
                 $month2 = \App\AttendanceRepo::where('qtrperiod',4)->where('idno',$idno)->where('schoolyear',$sy)->where('month',"FEB")->orderBy('id','DESC')->first();
                 $month3 = \App\AttendanceRepo::where('qtrperiod',4)->where('idno',$idno)->where('schoolyear',$sy)->where('month',"MAR")->orderBy('id','DESC')->first();
-            break;                
+            break;
+            default;
+                $dayp = 0;
+                $dayt = 0;
+                $daya = 0;
+                
+                $totaldayp = \App\Attendance::where('idno',$idno)->where('schoolyear',$sy)->orderBy('sortto')->where('attendancetype','DAYP')->first();
+                $totaldayt = \App\Attendance::where('idno',$idno)->where('schoolyear',$sy)->orderBy('sortto')->where('attendancetype','DAYT')->first();
+                $totaldaya = \App\Attendance::where('idno',$idno)->where('schoolyear',$sy)->orderBy('sortto')->where('attendancetype','DAYA')->first();
+                
+                if($totaldayp){
+                    $dayp = $totaldayp->Jul+$totaldayp->Aug+$totaldayp->Sept+$totaldayp->Oct+$totaldayp->Nov+$totaldayp->Dece+$totaldayp->Jan+$totaldayp->Feb+$totaldayp->Mar+$totaldayp->Jun;
+                }
+                
+                if($totaldayt){
+                    $dayt = $totaldayt->Jul+$totaldayt->Aug+$totaldayt->Sept+$totaldayt->Oct+$totaldayt->Nov+$totaldayt->Dece+$totaldayt->Jan+$totaldayt->Feb+$totaldayt->Mar+$totaldayt->Jun;
+                }
+                if($totaldaya){
+                    $daya = $totaldaya->Jul+$totaldaya->Aug+$totaldaya->Sept+$totaldaya->Oct+$totaldaya->Nov+$totaldaya->Dece+$totaldaya->Jan+$totaldaya->Feb+$totaldaya->Mar+$totaldaya->Jun;
+                }
+                $month1 = \App\Attendance::where('idno',$idno)->where('schoolyear',$sy)->orderBy('sortto')->where('attendancetype','DAYP')->first();
+                $month1->DAYP = $dayp;
+                $month1->DAYT = $dayt;
+                $month1->DAYA = $daya;
+                $month2 = \App\Attendance::where('idno',$idno)->where('schoolyear',$sy)->orderBy('sortto')->where('attendancetype','DAYT')->first();
+                $month2->DAYP = 0;
+                $month2->DAYT = 0;
+                $month2->DAYA = 0;
+                $month3 = \App\Attendance::where('idno',$idno)->where('schoolyear',$sy)->orderBy('sortto')->where('attendancetype','DAYA')->first();
+                $month3->DAYP = 0;
+                $month3->DAYT = 0;
+                $month3->DAYA = 0;
+                break;
         }
         
         return array($month1,$month2,$month3);

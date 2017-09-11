@@ -161,6 +161,8 @@ class CashierController extends Controller
     }
     
     function payment(Request $request){
+        
+        
         $account=null;
         $orno = $this->getOR();
         $refno = $this->getRefno();
@@ -168,7 +170,7 @@ class CashierController extends Controller
         $plandiscount = 0;
         $otherdiscount = array();
         $change = 0;
-
+        
         $this->reset_or();
         if($request->totaldue > 0 ){
         $totaldue = $request->totaldue;   

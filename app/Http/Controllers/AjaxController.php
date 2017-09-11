@@ -629,7 +629,7 @@ class AjaxController extends Controller
             $data = $data."</td></tr></table>";
             $data = $data."</td></tr><tr><td>";
             
-            $data = $data."<table class=\"table table-stripped\" style=\"page-break-after:always\"><thead><td>Id No</td><td>Name</td><td width='100px'>Birth Date</td><td>Contact No</td><td>Father</td><td>Contact No</td><td>Mother</td><td>Contact No.</td></thead>";
+            $data = $data."<table width='100%' class=\"table table-stripped\" style=\"page-break-after:always\"><thead><td>Id No</td><td>Name</td><td width='100px'>Birth Date</td><td>Contact No</td><td>Father</td><td>Contact No</td><td>Mother</td><td>Contact No.</td></thead>";
             foreach($lists as $list){
             $data = $data . "<tr><td>".$list->idno . "</td><td>". $list->lastname.", ".$list->firstname. " " . $list->middlename . " </td><td>";
             $data = $data . " $list->birthDate</td><td>";
@@ -1023,6 +1023,10 @@ class AjaxController extends Controller
                 $acctdepartment = \App\CtrAcctDep::where('sub_department',$subDepartment)->first();
                 if(count($acctdepartment)>0){
                   $department = $acctdepartment->main_department;  
+                }
+                
+                if($subDepartment == "None"){
+                  $department = "None";
                 }
                 return $department;
             }

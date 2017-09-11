@@ -113,7 +113,7 @@
                                         <span class="caret"></span></a>
                                         <ul class="dropdown-menu" role="menu">
                                             <li>
-                                                <a href ="{{url('generalledger/0/0',array(date('Y-m-d')))}}"><i class="fa fa-btn"></i>General Ledger</a>
+                                                <a href ="{{url('generalledger/0/0',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>General Ledger</a>
                                                 <a href ="{{url('trialbalance',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Trial Balance</a>
                                                 
                                             </li>  

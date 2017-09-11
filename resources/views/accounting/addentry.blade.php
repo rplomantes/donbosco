@@ -41,11 +41,11 @@ $departments = DB::Select("Select * from ctr_acct_dept order by sub_department")
     });
   </script>
   <div class="container-fluid">
-      <div class="col-md-2">
-      Date
+      <div class="col-md-1">
+          <h4>Date:</h4>
       </div>
-      <div class="col-md-5">
-          <input type="text" name="acctcode" id="acctcode" class="form-control" readonly="readonly" style="background-color: #ddd;color: red">
+      <div class="col-md-2">
+          <input type="text" name="acctcode" id="acctcode" class="form-control" style="background-color: #ddd;color: red">
       </div>
   </div>
   <div class="col-md-3">

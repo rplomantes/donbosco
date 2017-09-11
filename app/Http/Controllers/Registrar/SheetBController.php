@@ -16,7 +16,7 @@ class SheetBController extends Controller
         $currSY = \App\ctrSchoolYear::first()->schoolyear;
         $levels = \App\CtrLevel::get();
         
-        return view('registrar.sheetB.index',compact('selectedSY','currSY','levels'));   
+        return view('registrar.sheetB.index',compact('selectedSY','currSY','levels'));
     }
     
     function finalSheetB($quarter,$level,$section,$strand = null){
@@ -52,12 +52,11 @@ class SheetBController extends Controller
         $subjects = RegistrarHelper::getLevelSubjects($level,$strand,$sy,$semester);
         
         return view('ajax.sheetBTable',compact('students','level','section','semester','subjects','sy','quarter','strand','attendanceQtr','gradeField','acad_field','tech_field'));
-        //return $quarter;
     }
     
     function printSheetBList($sy,$level,$strand,$section,$semester,$quarter){
         
-        $gradeQuarter = self::setQuarter($semester, $quarter);
+        $gradeQuarter = RegistrarHelper::setQuarter($semester, $quarter);
         $acad_field = RankHelper::rankingField($semester,$quarter,'acad_');
         $tech_field = RankHelper::rankingField($semester,$quarter,'tech_');
         $attendanceQtr = RegistrarHelper::setAttendanceQuarter($semester, $quarter);
@@ -69,20 +68,5 @@ class SheetBController extends Controller
         return view('registrar.sheetB.printsheetb',compact('students','level','section','semester','subjects','sy','quarter','strand','attendanceQtr','gradeField','acad_field','tech_field'));
     }
     
-    static function setQuarter($semester,$quarter){
-        $qtr = $quarter;
-        switch($semester){
-            case 2;
-                if($quarter == 1){
-                    $qtr = 3;
-                }
-                if($quarter == 2){
-                    $qtr = 4;
-                }
-            break;
-        }
-        
-        return $qtr;
-    }
     
 }

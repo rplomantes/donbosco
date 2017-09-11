@@ -268,8 +268,8 @@
     
     Route::get('trialbalance/{fromtran}/{totran}','Accounting\TrialBalanceController@viewtrilaBalance');
     Route::get('printtrialbalance/{fromtran}/{totran}','Accounting\TrialBalanceController@printtrilaBalance');
-    Route::get('generalledger/{basic}/{title}/{todate?}','Accounting\GenLedgerController@index');
-    Route::get('generalledger/print/{basic}/{title}/{todate?}','Accounting\GenLedgerController@printledger');
+    Route::get('generalledger/{basic}/{title}/{fromdate}/{todate}','Accounting\GenLedgerController@index');
+    Route::get('generalledger/print/{basic}/{title}/{fromdate}/{todate}','Accounting\GenLedgerController@printledger');
     Route::get('balancesheet','Vincent\BalanceSheetController@index');
     Route::get('dmreport/{trandate}','Accounting\DMReportController@index');
     
@@ -423,6 +423,9 @@ Route::group(['middleware' => ['web','registrar']], function () {
     Route::get('/printattendancesheeta/{sy}/{level}/{course}/{section}/{semester}/{qtr}','Registrar\SheetA\Attendance@printSheetA');
     
     Route::get('/sheetB/{selectedSY}','Registrar\SheetBController@index');
+    Route::get('/printsheetb/{sy}/{level}/{strand}/{section}/{sem}/{quarter}','Registrar\SheetBController@printSheetBList');
+    
+    Route::get('/overallRank/{selectedSY}','Registrar\Ranking\OverallRanking@index');
     
     Route::get('/electivesheeta/{selectedSY}','Registrar\Elective\SheetAController@index');
     Route::get('/printelectivesheeta/{section}','Registrar\Elective\SheetAController@printElective');
@@ -442,15 +445,19 @@ Route::group(['middleware' => ['web','registrar']], function () {
    
     });
     
+    Route::get('/givePass','Update\UpdateController@givePass');
+    Route::get('/fixDepartment','Update\UpdateController@fixDepartment');
+    Route::get('/fixDepartmentCredit','Update\UpdateController@fixDepartmentCredit');
     
     
 });
    Route::get('/getstudent/{accesslevel}/{search}','Miscellaneous\AjaxController@findstudent');
    Route::get('setoverallrank/{section?}','Registrar\Ranking\RankController@setRank');
-   Route::get('/getoverallrank', 'Registrar\Ranking\OverallRanking@getOARanking');
+   
    
    Route::get('/viewpromotion/{sy}/{level}','Registrar\PromotionController@viewreport');
     
    Route::get('/gradeSheetAList','Registrar\SheetA\Helper@gradeSheetAList');
    Route::get('/gradeSheetBList','Registrar\SheetBController@gradeSheetBList');
-   Route::get('/printsheetb/{sy}/{level}/{strand}/{section}/{sem}/{quarter}','Registrar\SheetBController@printSheetBList');
+   Route::get('/overallRankList', 'Registrar\Ranking\OverallRanking@getOARanking');
+   

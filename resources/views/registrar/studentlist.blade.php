@@ -1,6 +1,13 @@
 @extends('app')
 @section('content')
+<style media="print">
 
+    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td 
+    {
+    padding: 2px;
+    font-size: 13px;
+    }
+</style>
 <div class="container">
     <h3 class="no-print">STUDENT CONTACT</h3>
     <div class="col-md-6" class="no-print">

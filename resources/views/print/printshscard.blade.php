@@ -58,7 +58,7 @@ use App\Http\Controllers\Registrar\GradeComputation;
     <body>
 
         <div class="body">
-        <div class="front" style="padding-top: 30px;">
+        <div class="front" style="padding-top: 20px;">
             <div style="z-index: 3;position: relative;max-height: 0px;bottom:5px;right:-10px;">
                 <img src="{{asset('images/DBTI.png')}}"  style=";width:140px;">
             </div>
@@ -152,7 +152,7 @@ use App\Http\Controllers\Registrar\GradeComputation;
                                 {{$gender}}
                             </td>
                             <td colspan="2" style="font-size:10pt;padding-left: 0px;"  >
-                                <b style="display: inline-block;vertical-align: top;">Adviser:&nbsp;</b><div style="display: inline-block;width: 75%;">{{$adviser}}</div>
+                                <b style="display: inline-block;vertical-align: top;">Adviser:&nbsp;</b><div style="display: inline-block;width: 75%;height:10px">{{$adviser}}</div>
                             </td>
 
                         </tr>
@@ -540,7 +540,7 @@ use App\Http\Controllers\Registrar\GradeComputation;
                     </tr>
                                                                     <tr style="text-align: center">
                         <td class="print-size"></td>
-                        <td class="print-size"><div style="border-bottom: 1px solid;width: 80%;margin-left: auto;margin-right: auto;height:60px"><img src="{{asset('images/SirDarwin 001.png.png')}}"  style="display: inline-block;width:90px"></div></td>
+                        <td class="print-size"><div style="border-bottom: 1px solid;width: 80%;margin-left: auto;margin-right:auto;height:60px;"><img src="{{asset('images/SirDarwin 001.png')}}"  style="display: inline-block;width:90px"></div></td> 
                     </tr>
                     <tr style="text-align: center;">
                         <td></td>
@@ -571,3 +571,4 @@ use App\Http\Controllers\Registrar\GradeComputation;
         </div>
     </body>
 </html>
+

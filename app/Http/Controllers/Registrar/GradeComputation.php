@@ -127,25 +127,25 @@ class GradeComputation extends Controller
     
     static function pointedTotalAve($subjecttype,$sem,$grades,$field,$gradeCondition){
         $grade = 0;
-        if($sem ==0){
-            $first =  self::pointedGrade($subjecttype,1,$sem,$grades,$field,$gradeCondition);
-            $second = self::pointedGrade($subjecttype,2,$sem,$grades,$field,$gradeCondition);
-            $third =  self::pointedGrade($subjecttype,3,$sem,$grades,$field,$gradeCondition);
-            $fourth = self::pointedGrade($subjecttype,4,$sem,$grades,$field,$gradeCondition);
+        if($sem == 0){
+            $first =  self::pointedGrade($subjecttype,1,$sem,$grades,'first_grading',$gradeCondition);
+            $second = self::pointedGrade($subjecttype,2,$sem,$grades,'second_grading',$gradeCondition);
+            $third =  self::pointedGrade($subjecttype,3,$sem,$grades,'third_grading',$gradeCondition);
+            $fourth = self::pointedGrade($subjecttype,4,$sem,$grades,'fourth_grading',$gradeCondition);
             
-            if($fourth != ""){
-                $grade = ($first+$second+$third+$fourth)/4;                
+            if($fourth != ""){   
+                $grade = ($first+$second+$third+$fourth)/4;
             }
         }elseif($sem ==1){
-            $first =  self::pointedGrade($subjecttype,1,$sem,$grades,$field,$gradeCondition);
-            $second = self::pointedGrade($subjecttype,2,$sem,$grades,$field,$gradeCondition);
+            $first =  self::pointedGrade($subjecttype,1,$sem,$grades,'first_grading',$gradeCondition);
+            $second = self::pointedGrade($subjecttype,2,$sem,$grades,'second_grading',$gradeCondition);
 
             if($second != ""){
                 $grade = ($first+$second)/2;
             }
         }elseif($sem ==2){
-            $third =  self::pointedGrade($subjecttype,3,$sem,$grades,$field,$gradeCondition);
-            $fourth = self::pointedGrade($subjecttype,4,$sem,$grades,$field,$gradeCondition);
+            $third =  self::pointedGrade($subjecttype,3,$sem,$grades,'third_grading',$gradeCondition);
+            $fourth = self::pointedGrade($subjecttype,4,$sem,$grades,'fourth_grading',$gradeCondition);
             
             if($fourth != ""){
                 $grade = ($third+$fourth)/2;

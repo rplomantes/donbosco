@@ -123,13 +123,13 @@ use App\Http\Controllers\Registrar\GradeComputation;
                             <td width="16%" style="font-size:10pt;padding-left: 0px;">
                                 <b>Name:</b>
                             </td>
-                            <td width="47%" style="font-size:10pt;padding-left: 0px;">
+                            <td width="50%" style="font-size:10pt;padding-left: 0px;">
                                 <b>{{$name}}</b>
                             </td>
                             <td width="16%" style="font-size:10pt;padding-left: 0px;">
                                 <b>Student No:</b>
                             </td>
-                            <td width="23%" style="font-size:10pt;padding-left: 0px;">
+                            <td width="20%" style="font-size:10pt;padding-left: 0px;">
                                 <b>{{$idno}}</b>
                             </td>
                         </tr>
@@ -322,8 +322,6 @@ use App\Http\Controllers\Registrar\GradeComputation;
             </tr>
             
         </table>
-
-            
         <div class="page-break"></div>
         </div>
 
@@ -535,7 +533,7 @@ use App\Http\Controllers\Registrar\GradeComputation;
                     </tr>
                     <tr style="text-align: center">
                         <td class="print-size" ></td>
-                        <td class="print-size" ><b>Grade School - Principal</b></td>
+                        <td class="print-size" ><b>Elementary - Principal</b></td>
                     </tr>
                 </table>
             </td>

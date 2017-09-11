@@ -13,52 +13,55 @@ use DB;
 
 class OverallRanking extends Controller
 {
-    function index($sy){
-        $levels = \App\CtrLevel::all();
-        return view('registrar.overallrank',compact('levels','sy'));
+    function index($selectedSY){
+        $currSY = \App\ctrSchoolYear::first()->schoolyear;
+        $levels = \App\CtrLevel::get();
+        return view('registrar.overallrank.index',compact('selectedSY','currSY','levels'));
     }
     
     function getOARanking(){
         $level = Input::get('level');
         $sy = Input::get('sy');
-        $course = Input::get('course');
-        $quarter = Input::get('quarter');
         $semester = Input::get('semester');
-        $currSy = \App\RegistrarSchoolyear::first()->schoolyear;
+        $quarter = Input::get('quarter');
+        $section = Input::get('section');
+        $strand = Input::get('course');
+        $sort = Input::get('sort');
+        
+        $gradeQuarter = RegistrarHelper::setQuarter($semester, $quarter);
         $acad_field = RankHelper::rankingField($semester,$quarter,'acad_level_');
         $tech_field = RankHelper::rankingField($semester,$quarter,'tech_level_');
+        $attendanceQtr = RegistrarHelper::setAttendanceQuarter($semester, $quarter);
+        $gradeField = RegistrarHelper::getGradeQuarter($gradeQuarter);
         
-        if($course != "NULL" || $course != "All"){
-            $course = "AND s.strand LIKE '".$course."'" ;
-        } else{
-            $course = "";
-        }
+        //$students = RegistrarHelper::getSectionList($sy,$level,$strand,$section);
+        $students = $this->getStudents($sy,$level,$strand);
+        $subjects = RegistrarHelper::getLevelSubjects($level,$strand,$sy,$semester);
         
-        $gradefield = RegistrarHelper::getGradeQuarter($quarter);
-        $students = $this->getStudents($sy,$currSy,$acad_field,$tech_field,$level,$course);
-        $subjects = $this->getSubjects($sy,$currSy,$level,$course,$semester);
-
-        return view('ajax.overallrank',compact('students','subjects','gradefield','level','sy','semester','quarter'));
+        return view('ajax.overallRank',compact('students','level','section','semester','subjects','sy','quarter','strand','attendanceQtr','gradeField','acad_field','tech_field','sort'))->render();
         
     }
     
 
     
-    function getStudents($sy,$currSy,$acad_field,$tech_field,$level,$course){
-        if($currSy == $sy){
+    function getStudents($sy,$level,$course){
+        $currSY = \App\CtrSchoolYear::first()->schoolyear;
+        if($currSY == $sy){
             $table = 'statuses';
         }
         else{
             $table = 'status_histories';
         }
-        
-        $students = DB::Select("Select s.idno,section,$acad_field as acad,$tech_field as tech from $table s "
-                . "left join rankings r on s.idno = r.idno and s.schoolyear = r.schoolyear "
-                . "where s.schoolyear = '$sy' "
-                . "and s.level  = '$level' "
-                . "AND s.status IN(2,3)"
-                . "$course "
-                . "group by s.idno order by $acad_field = 0, $acad_field ASC");
+        if($course != "null"){
+            $course = "and strand='".$course."'";
+        }else{
+            $course = "";
+        }
+        $students = DB::Select("Select * from  $table "
+                . "where level = '$level' $course "
+                . "AND status IN(2,3) "
+                . "AND section !=''"
+                . "ORDER BY class_no");
         
         return $students;
     }

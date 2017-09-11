@@ -45,7 +45,7 @@
             <dt>Covered Period: </dt>
             <dd>
                 <div class='col-md-5' style='padding-left: 0px;padding-right: 0px;'>
-                    <input class="form-control col-md-5" readonly="readonly" id="fromdate" name="fromdate" value='{{$from}}'>
+                    <input class="form-control col-md-5" id="fromdate" name="fromdate" value='{{$from}}'>
                 </div>
                 <div class='col-md-2' style='padding-left: 0px;padding-right: 0px;text-align: center;height: 34px;    padding: 6px 12px;'><b>to</b></div>
                 <div class='col-md-5' style='padding-left: 0px;padding-right: 0px;'><input class='form-control col-md-5' id="todate" name="todate" value="{{$to}}"></div>
@@ -114,10 +114,10 @@
                 @endif
             </table>
             <?php 
-            $date = $fiscalyear->fiscalyear;
+            $date = date("Y",strtotime($from));
             $endOfCycle = $diff;
             $count = 0;
-            $startmonth = 5;
+            $startmonth = date("m",strtotime($from));
             $monthlytotal = 0;
 
             $monthlytotal = $monthlytotal+$beginningtotal;
@@ -143,9 +143,9 @@
             $monthlycredit = 0;
                 
             ?>
-                
+
                 @if(count($debitentry)>0)
-                <div><h5><u><i><b>{{date("F Y",strtotime($currmonth))}}</b></i></u></h5></div>
+                <div><h5><u><i><b>{{date("F Y",strtotime($currmonth))}}</b></i></u></h5></div>                
                 <table width="100%" class="table table-bordered">
                     @foreach($debitentry as $entry)
                         @if($entry->entry_type == 1)
@@ -269,7 +269,7 @@
                     <tr  style="text-align: right"><td width="25%"  style="text-align: left"><b>Balance as of</b> {{date("M d Y",strtotime($to))}}</td><td width="25%"><u>{{number_format($monthlygranddebit,2)}}</u></td><td width="25%"><u>{{number_format($monthlygrandcredit,2)}}</u></td><td width="25%"><u>{{number_format($totalbalance,2)}}</u></td></tr>
                 </table>
         @endforeach
-        <a href="{{url("generalledger/print",array($basic,$title,$to))}}" class="btn btn-primary col-md-12">Print</a>
+        <a href='{{url("generalledger/print",array($basic,$title,$from,$to))}}' class="btn btn-primary col-md-12">Print</a>
     @endif
     
     
@@ -292,7 +292,7 @@
     }
     
     function gotopage(){
-        window.location = "/generalledger/"+$('#accounts').val()+"/"+$('#title').val()+"/"+$('#todate').val()
+        window.location = "/generalledger/"+$('#accounts').val()+"/"+$('#title').val()+"/"+$('#fromdate').val()+"/"+$('#todate').val()
     }
             
 </script>

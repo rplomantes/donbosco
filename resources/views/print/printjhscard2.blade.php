@@ -576,7 +576,7 @@ use App\Http\Controllers\Registrar\GradeComputation;
                     </tr>
                                                                     <tr style="text-align: center">
                         <td class="print-size"></td>
-                        <td class="print-size"><div style="border-bottom: 1px solid;width: 80%;margin-left: auto;margin-right: auto;height:60px"><img src="{{asset('images/SirDarwin 001.png.png')}}"  style="display: inline-block;width:90px"></div></td> 
+                        <td class="print-size"><div style="border-bottom: 1px solid;width: 80%;margin-left: auto;margin-right: auto;height:60px"><img src="{{asset('images/SirDarwin 001.png')}}"  style="display: inline-block;width:90px"></div></td> 
                     </tr>
                     <tr style="text-align: center;">
                         <td class="print-size" >
@@ -613,3 +613,6 @@ use App\Http\Controllers\Registrar\GradeComputation;
     </div>    
         </body>
 </html>
+
+
+
