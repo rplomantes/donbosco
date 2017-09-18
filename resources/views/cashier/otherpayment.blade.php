@@ -641,6 +641,17 @@ $checkno = \App\Dedit::distinct('check_number')->pluck('check_number')->toArray(
                 }
         }
         
+        
     </script>    
 <script src="{{url('/js/nephilajs/cashier.js')}}"></script>    
+<script>
+            $('#cash').keypress(function(e){
+            
+            if(e.keyCode == 13){
+                if(parseFloat($('#cash').val()) >= parseFloat($('#totalcredit').val())){
+                    $('#remarks').focus();
+                }
+            }
+        });
+</script>
 @stop
