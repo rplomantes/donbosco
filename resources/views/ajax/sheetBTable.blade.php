@@ -3,6 +3,7 @@ use App\Http\Controllers\Registrar\GradeComputation;
 use App\Http\Controllers\Registrar\AttendanceController as Attendance;
 use App\Http\Controllers\Registrar\Ranking\SectionRanking;
 
+
 $acad = 0;
 $tech = 0;
 ?>

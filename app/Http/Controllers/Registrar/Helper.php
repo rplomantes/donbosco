@@ -214,4 +214,28 @@ class Helper extends Controller
         
         return $qtr;
     }
+    
+    static function info($idno){
+        $name = "";
+        $sydate = date("Y-m-d");
+        $infos = \App\StudentInfo::where('idno',$idno)->first();
+        $student = \App\User::where('idno',$idno)->first();
+        $currage = "0";
+        
+        if(count($infos)>0){
+            
+            $age_year = date_diff(date_create($infos->birthDate), date_create($sydate))->y;
+            $age= $age_year+1;
+            $currage = $age;
+            
+            $infos->age = $currage;
+            $infos->gender = $student->gender;
+            $infos->name = $student->lastname.", ".$student->firstname." ".$student->middlename;;
+            
+            
+            return $infos;
+        }else{
+            return array();
+        }
+    }
 }

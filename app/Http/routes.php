@@ -2,6 +2,8 @@
     Route::group(['middleware' => 'web'], function () {
     Route::auth();
     
+    Route::get('/gradeMigration2','Update\UpdateController@gradeMigration2');
+    
     Route::get('/studentinfo/{idno}','Miscellaneous\StudentInfoController@index');
     Route::get('/disbursementtotal', 'Economer\DisbursementSummary@index');
     Route::get('/acadincome/{schoolyear}', 'Accounting\AcademicDeptincomeController@index');
@@ -438,6 +440,8 @@ Route::group(['middleware' => ['web','registrar']], function () {
     Route::get('/printpromotion/{sy}/{level}','Registrar\PromotionController@printpromotion');
     Route::post('/savepromotion/{sy}/{level}','Registrar\PromotionController@savepromotion');
     
+    Route::get('/changegrade/{idno}/{sy}','Registrar\Grade\ChangeGrade@index');
+    
     
    Route::get('/sheetA/{record}',function($record){
        $levels = \App\CtrLevel::get();
@@ -445,9 +449,13 @@ Route::group(['middleware' => ['web','registrar']], function () {
    
     });
     
-    Route::get('/givePass','Update\UpdateController@givePass');
+    Route::get('/getUnearned','Update\UpdateController@getUnearned');
     Route::get('/fixDepartment','Update\UpdateController@fixDepartment');
     Route::get('/fixDepartmentCredit','Update\UpdateController@fixDepartmentCredit');
+    Route::get('/givePass','Update\UpdateController@givePass');
+    
+    //Route::get('/getfiscalyear/{date}','Accounting\Helper@getfiscalyear');
+    
     
     
 });
@@ -460,4 +468,5 @@ Route::group(['middleware' => ['web','registrar']], function () {
    Route::get('/gradeSheetAList','Registrar\SheetA\Helper@gradeSheetAList');
    Route::get('/gradeSheetBList','Registrar\SheetBController@gradeSheetBList');
    Route::get('/overallRankList', 'Registrar\Ranking\OverallRanking@getOARanking');
+   Route::get('/getGradeForm/{subjecttype}', 'Registrar\Grade\ChangeGrade@getForm');
    

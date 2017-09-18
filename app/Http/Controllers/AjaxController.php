@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Input;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Accounting\Helper as AcctHelper;
 
 class AjaxController extends Controller
 {
@@ -1071,7 +1072,9 @@ class AjaxController extends Controller
                     $referenceid = Input::get("referenceid");
                     $amount = Input::get('totalcredit');
                     $entry_type=Input::get('entry_type');
-                    \App\Accounting::where('refno',$refno)->update(['isfinal' => '1','transactiondate'=>\Carbon\Carbon::now()]);
+                    $transactiondate=Input::get('date');
+                    $fiscalyear = AcctHelper::getfiscalyear($transactiondate);
+                    \App\Accounting::where('refno',$refno)->update(['isfinal' => '1','transactiondate'=>$transactiondate,'fiscalyear'=>$fiscalyear]);
                     $updates = \App\Accounting::where('refno',$refno)->get();
                     foreach ($updates as $update){
                         if($update->cr_db_indic == '1'){
@@ -1081,7 +1084,7 @@ class AjaxController extends Controller
                             $add = new \App\Dedit;
                             $add->amount=$update->debit;
                         }
-                         $add->transactiondate = \Carbon\Carbon::now();
+                         $add->transactiondate = $transactiondate;
                          $add->refno = $update->refno;
                          $add->receiptno = $update->referenceid;
                          $add->accountingcode = $update->accountcode;

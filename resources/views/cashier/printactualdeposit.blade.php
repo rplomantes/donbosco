@@ -96,8 +96,8 @@
   
     <hr>
     <h5>Encashment</h5>
-        <table width="905">
-            <tr><td>Bank</td><td>Amount</td></tr>
+        <table width="90%">
+            <tr><td>Bank</td><td  align="right">Amount</td></tr>
                 @if(count($encashments)=='0')
                     <tr><td colspan="2">No Encashment Yet!!..</td></tr>
                 @else

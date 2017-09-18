@@ -52,6 +52,11 @@
 				<ul class="nav navbar-nav">
                                 <li><a href="#">DBTI - Makati School Information System</a></li>
                                 <li><a href="/">Home</a></li>
+                                @if(!Auth::guest())
+                                @if((Auth::user()->accesslevel == env('USER_ELEM') || Auth::user()->accesslevel == env('USER_JHS') || Auth::user()->accesslevel == env('USER_SHS') || Auth::user()->accesslevel == env('USER_CLINIC'))
+                                <li><a href="{{url('studentlist')}}"><i class="fa fa-btn"></i>Student Contact</a></li>
+                                @endif
+                                @endif
                                 </ul>
 
                             <ul class="nav navbar-nav navbar-right">

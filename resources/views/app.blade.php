@@ -155,7 +155,7 @@
                                             
                                             <li><a href="{{url('attendancesheeta',$sy)}}"><i class="fa fa-btn"></i>Sheet A Attendance</a></li>
                                             <li><hr></li>
-                                            <li><a href="{{url('overallrank')}}"><i class="fa fa-btn"></i>Overall Ranking</a></li>
+                                            <li><a href="{{url('overallRank',$sy)}}"><i class="fa fa-btn"></i>Overall Ranking</a></li>
                                             <li><a href="{{url('finalreport')}}"><i class="fa fa-btn"></i>Final Report</a></li>
                                          </ul>   
                                         

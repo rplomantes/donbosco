@@ -1591,10 +1591,13 @@ class CashierController extends Controller
         $debits = DB::Select("select sum(amount) as amount, sum(checkamount) as checkamount, "
                     . " depositto from dedits where paymenttype = '1' and isreverse = '0' and postedby = '"
                     . \Auth::user()->idno . "' and transactiondate = '$transactiondate' group by depositto");
+//            $encashments = DB::Select("select whattype, sum(amount) as amount from encashments where "
+//                    . "isreverse = '0' and postedby ='". \Auth::user()->idno ."' and transactiondate = '$transactiondate' "
+//                    . "group by whattype");
+            
             $encashments = DB::Select("select whattype, sum(amount) as amount from encashments where "
                     . "isreverse = '0' and postedby ='". \Auth::user()->idno ."' and transactiondate = '$transactiondate' "
                     . "group by whattype");
-            
             $debitstotal= DB::Select("select sum(amount) as amount, sum(checkamount) as checkamount "
                     . "  from dedits where paymenttype = '1' and isreverse = '0' and postedby = '"
                     . \Auth::user()->idno . "' and transactiondate = '$transactiondate'");

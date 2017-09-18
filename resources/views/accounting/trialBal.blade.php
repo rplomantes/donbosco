@@ -1,6 +1,8 @@
 @extends('appaccounting')
 @section('content')
-
+<?php 
+use App\Http\Controllers\Accounting\Helper as AcctHelper;
+?>
 <div class="container">
     <h5>Trial Balance</h5>
     <p><b>Period Covered</b></p>
@@ -20,17 +22,38 @@
             ?>
             <thead><tr><th>Acct No.</th><th>Account Title</th><th>Debit</th><th>Credit</th></tr></thead>
             @foreach($trials as $trial)
-            <?php 
-            $totaldebit = $totaldebit + $trial->debit;
-            $totalcredit = $totalcredit + $trial->credits;
-            ?>        
+ 
             <tr><td>{{$trial->accountingcode}}</td><td>{{$trial->accountname}}</td><td style="text-align: right">
-                    @if($trial->debit > 0)
-                    {{number_format($trial->debit, 2, '.', ', ')}}
+                    @if(in_array(substr($trial->accountingcode,0,1),array(1,5)))
+                        @if(round(AcctHelper::getaccttotal($trial->credits,$trial->debit,$trial->accountingcode),2)<0)
+                        (
+                        @endif
+                    {{number_format(abs(AcctHelper::getaccttotal($trial->credits,$trial->debit,$trial->accountingcode)),2)}}
+                        @if(round(AcctHelper::getaccttotal($trial->credits,$trial->debit,$trial->accountingcode),2)<0)
+                        )
+                        @endif
+<?php
+                    $totaldebit = $totaldebit + round(AcctHelper::getaccttotal($trial->credits,$trial->debit,$trial->accountingcode),2);
+?>
+@else
+{{number_format(0,2)}}
                     @endif
+
                 </td><td style="text-align: right">
-                    @if($trial->credits > 0)
-                    {{number_format($trial->credits, 2, '.', ', ')}}
+                    @if(in_array(substr($trial->accountingcode,0,1),array(2,3,4)))
+                        @if(round(AcctHelper::getaccttotal($trial->credits,$trial->debit,$trial->accountingcode),2)<0)
+                        (
+                        @endif
+                    {{number_format(abs(AcctHelper::getaccttotal($trial->credits,$trial->debit,$trial->accountingcode)),2)}}
+                        @if(round(AcctHelper::getaccttotal($trial->credits,$trial->debit,$trial->accountingcode),2)<0)
+                        )
+                        @endif
+<?php
+                    $totalcredit = $totalcredit + round(AcctHelper::getaccttotal($trial->credits,$trial->debit,$trial->accountingcode),2);
+?>
+@else
+{{number_format(0,2)}}
+
                     @endif
                 </td></tr>
             @endforeach

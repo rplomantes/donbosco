@@ -60,14 +60,14 @@
     
     
     function changeSy(schoolyear){
-        window.location.href = "/gradesheeta/"+schoolyear;
+        window.location.href = "/sheetB/"+schoolyear;
     }
     
     
     function printsheetA(){
 
         
-        window.location.href = "/printsheetb/{{$selectedSY}}/"+lvl+"/"+strand+"/"+sec+"/"+sem+"/"+qtr;
+        window.open("/printsheetb/{{$selectedSY}}/"+lvl+"/"+strand+"/"+sec+"/"+sem+"/"+qtr);
     }
    
     

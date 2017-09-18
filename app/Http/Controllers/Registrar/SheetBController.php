@@ -42,7 +42,7 @@ class SheetBController extends Controller
         $section = Input::get('section');
         $strand = Input::get('course');
         
-        $gradeQuarter = self::setQuarter($semester, $quarter);
+        $gradeQuarter = RegistrarHelper::setQuarter($semester, $quarter);
         $acad_field = RankHelper::rankingField($semester,$quarter,'acad_');
         $tech_field = RankHelper::rankingField($semester,$quarter,'tech_');
         $attendanceQtr = RegistrarHelper::setAttendanceQuarter($semester, $quarter);

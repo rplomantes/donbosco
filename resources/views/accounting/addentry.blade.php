@@ -45,7 +45,7 @@ $departments = DB::Select("Select * from ctr_acct_dept order by sub_department")
           <h4>Date:</h4>
       </div>
       <div class="col-md-2">
-          <input type="text" name="acctcode" id="acctcode" class="form-control" style="background-color: #ddd;color: red">
+          <input type="text" name="date" id="date" class="form-control" style="background-color: #ddd;color: red">
       </div>
   </div>
   <div class="col-md-3">
@@ -120,7 +120,7 @@ $departments = DB::Select("Select * from ctr_acct_dept order by sub_department")
         <div class="col-md-4">
             <button class="form-control btn btn-primary processbtn" id="processbtn">Process Entry</button>
         </div>
-           
+        
     </div>    
      
 </div>  
@@ -204,6 +204,7 @@ $(document).ready(function(){
               arrays['idno']="{{Auth::user()->idno}}";
               arrays['totalcredit']=$("#totalcredit").val();
               arrays['entry_type']=$("#entry_type").val();
+              arrays['date']=$("#date").val();
               $.ajax({
                   type:"GET",
                   url:"/postacctgremarks",

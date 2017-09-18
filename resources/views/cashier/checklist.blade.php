@@ -29,7 +29,7 @@
     $summary = 0;
     ?>
     @foreach($checklists as $checklist)
-    @if(($checklist->checkamount>0) && ($checklist->bank_branch =="CBC"))
+    @if(($checklist->bank_branch == 'CBC')&&($checklist->checkamount>0) && (in_array($checklist->depositto,array('China Bank'))))
     <tr><td>{{$checklist->receiptno}}</td><td>{{$checklist->receivefrom}}</td><td>{{$checklist->bank_branch}}</td><td>{{$checklist->check_number}}</td><td align="right">{{number_format($checklist->checkamount,2)}}</td></tr>
     <?php $total = $total + $checklist->checkamount; ?>
     @endif
@@ -43,7 +43,7 @@
 <table class="table table-striped"><tr><td>OR No</td><td>Name</td><td>Bank</td><td>Check No</td><td align="right">Amount</td></tr>
     <?php $total = 0;?>
     @foreach($checklists as $checklist)
-    @if(($checklist->checkamount>0) && ($checklist->bank_branch !="CBC"))
+    @if(($checklist->bank_branch != 'CBC')&&($checklist->checkamount>0)) 
     <tr><td>{{$checklist->receiptno}}</td><td>{{$checklist->receivefrom}}</td><td>{{$checklist->bank_branch}}</td><td>{{$checklist->check_number}}</td><td align="right">{{number_format($checklist->checkamount,2)}}</td></tr>
     <?php $total = $total + $checklist->checkamount; ?>
     @endif

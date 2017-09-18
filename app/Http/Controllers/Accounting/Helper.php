@@ -13,7 +13,7 @@ class Helper extends Controller
         $total = 0;
         
         $accountingcode = substr($accountingcode,0,1);
-        if($accountingcode == 1 || $accountingcode == 3 || $accountingcode == 5){
+        if($accountingcode == 1  || $accountingcode == 5){
             $total = $debit - $credit;
         }else{
             $total = $credit - $debit;
@@ -38,5 +38,18 @@ class Helper extends Controller
         }
             
             return $creditaccts - $debitaccts;
+    }
+    
+    static function getfiscalyear($date){
+        $month = date_create(date("M",strtotime($date)));
+        $year = date_create(date("Y",strtotime($date)));
+        
+        if(((int)$month->format("m")) <= 4){
+            $fiscalyear = $year->format("Y")-1;
+        }else{
+            $fiscalyear = $year->format("Y");
+        }
+        
+        return $fiscalyear;
     }
 }

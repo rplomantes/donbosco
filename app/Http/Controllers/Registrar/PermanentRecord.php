@@ -41,11 +41,21 @@ class PermanentRecord extends Controller
             $grade10 = 1;
         }
         
+        $new = \App\Grade::where('idno',$idno)->where('level','Grade 7')->where('schoolyear','2016')->exists();
         $pdf = \App::make('dompdf.wrapper');
         $pdf->setPaper([0,0,612.00,1008.00], 'portrait');
-        $pdf->loadView("print.juniorOldPermanentRec",compact('idno','header','grade7','grade8','grade9','grade10'));
+        if($new){
+            $pdf->loadView("registrar.permanentRecord.jhsPermanentRecord",compact('idno','header','grade7','grade8','grade9','grade10'));
+        }else{
+            $pdf->loadView("print.juniorOldPermanentRec",compact('idno','header','grade7','grade8','grade9','grade10'));
+        }
+        
         return $pdf->stream();
         //return view("print.juniorOldPermanentRec",compact('idno','header','grade7','grade8','grade9','grade10'));
+    }
+    
+    static function hsGradeTemp($idno,$level){
+        return view("registrar.permanentRecord.jhsLevelLayout",compact('idno','level'))->render();
     }
     
     static function syInfo($idno,$level){

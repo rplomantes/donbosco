@@ -1,3 +1,5 @@
+ var allowsubmit = 1;
+ 
  function validate(evt) {
   var theEvent = evt || window.event;
   var key = theEvent.keyCode || theEvent.which;
@@ -207,13 +209,18 @@ function dosubmit(){
     
 
     
-    if(confirm("Continue to process payment ?")){
+    if(confirm("Continue to process payment now?")){
         if(eval(totaldebit) !== 0){
+            if(allowsubmit == 0){
+                return false;
+            }
+            allowsubmit = 0;
             return true;
 
         }else{
             alert("Cannot continue transaction.");
             return false;
+
         }
         
     }else{

@@ -209,7 +209,7 @@
                             $monthlytotal = $monthlytotal + ($monthlycredit-$monthlydebit);
                             }
                             elseif($basic == 3){
-                            $monthlytotal = $monthlytotal + ($monthlydebit-$monthlycredit);
+                            $monthlytotal = $monthlytotal + ($monthlycredit-$monthlydebit);
                             }
                             elseif($basic == 4){
                             $monthlytotal = $monthlytotal + ($monthlycredit-$monthlydebit);
@@ -254,7 +254,7 @@
                                 $totalbalance = $monthlygrandcredit-$monthlygranddebit;
                             }
                             elseif($basic == 3){
-                                $totalbalance = $monthlygranddebit-$monthlygrandcredit;
+                                $totalbalance = $monthlygrandcredit-$monthlygranddebit;
                             }
                             elseif($basic == 4){
                                 $totalbalance = $monthlygrandcredit-$monthlygranddebit;
