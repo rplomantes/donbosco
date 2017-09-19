@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Registrar\AttendanceController;
 use App\Http\Controllers\Registrar\GradeController;
 use View;
+use App\Http\Controllers\Registrar\GradeComputation;
 
 class PermanentRecord extends Controller
 {
@@ -41,11 +42,13 @@ class PermanentRecord extends Controller
             $grade10 = 1;
         }
         
+        $oldrec = self::prevSchoolRec('Grade 6',$idno);
+        
         $new = \App\Grade::where('idno',$idno)->where('level','Grade 7')->where('schoolyear','2016')->exists();
         $pdf = \App::make('dompdf.wrapper');
         $pdf->setPaper([0,0,612.00,1008.00], 'portrait');
         if($new){
-            $pdf->loadView("registrar.permanentRecord.jhsPermanentRecord",compact('idno','header','grade7','grade8','grade9','grade10'));
+            $pdf->loadView("registrar.permanentRecord.jhsPermanentRecord",compact('idno','header','grade7','grade8','grade9','grade10','oldrec'));
         }else{
             $pdf->loadView("print.juniorOldPermanentRec",compact('idno','header','grade7','grade8','grade9','grade10'));
         }
@@ -254,6 +257,34 @@ class PermanentRecord extends Controller
         }else{
             return "Student information dont exist";
         }
+    }
+    
+    static function prevSchoolRec($level,$idno){
+        $school = "";
+        $sy = "";
+        $average = "";
+        
+        $prevschoolrec = \App\PrevSchoolRec::where('level',$level)->where('idno',$idno)->first();
+        if(count($prevschoolrec)>0){
+            $school = $prevschoolrec->school;
+            $sy = $prevschoolrec->schoolyear;
+            $average = $prevschoolrec->finalrate;
+        }else{
+            $oldrec = \App\Grade::where('level',$level)->where('idno',$idno)->where('subjecttype',0)->get();
+            
+            if(count($oldrec)>0){
+                $school = "DON BOSCO TECHNICAL INSTITUTE";
+                $average = GradeController::gradeQuarterAve(array(0),array(0),5,$oldrec,'Grade 10');
+                foreach($oldrec as $oldrec){
+                    $sy = $oldrec->schoolyear;
+                }
+                $average = GradeComputation::computeQuarterAverage($sy, $level, 0, 0, 5, $oldrec);
+                
+
+            }
+        }
+        
+        return array($school,$sy,$average);
     }
     
 

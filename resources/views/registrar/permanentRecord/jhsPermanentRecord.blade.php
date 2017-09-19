@@ -97,11 +97,11 @@ $info = Registrarhelper::info($idno);
     <table width="100%" style="font-size: 9pt">
         <tr>
             <td width="26%">Elementary Education Completed:</td>
-            <td width="22%" class="underscore"></td>
+            <td width="22%" class="underscore">{{$oldrec[0]}}</td>
             <td width="9%">Schoolyear:</td>
-            <td width="16%" class="underscore"></td>
+            <td width="16%" class="underscore">{{$oldrec[1]}} - {{$oldrec[1]+1}}</td>
             <td width="7%">Average:</td>
-            <td width="10%" class="underscore"></td>
+            <td width="10%" class="underscore">{{$oldrec[2]}}</td>
         </tr>
     </table>
     @endif
