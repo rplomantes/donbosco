@@ -206,6 +206,7 @@ class TvetController extends Controller
                 $sheet->setBorder('A1:AT4', 'double');
                 
             });
+            
         })->export('xls');
     }
 }

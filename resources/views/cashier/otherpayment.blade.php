@@ -643,7 +643,7 @@ $checkno = \App\Dedit::distinct('check_number')->pluck('check_number')->toArray(
         
         
     </script>    
-<script src="{{url('/js/nephilajs/cashier.js')}}"></script>    
+<script src="{{url('/js/nephilajs/cashier.js')}}"></script>
 <script>
             $('#cash').keypress(function(e){
             

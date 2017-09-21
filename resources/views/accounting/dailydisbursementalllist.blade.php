@@ -4,8 +4,16 @@ $lists = \App\Disbursement::whereBetween('transactiondate', array($fromdate,$tod
 $banktotal = DB::Select("Select sum(amount) as amount, bank from disbursements where (transactiondate between '$fromdate' and '$todate')  and isreverse = '0' group by bank");
 $total=0;
 $totalbank=0;
+$template = 'appaccounting';
+if(in_array(Auth::user()->accesslevel,array(env('USER_ACCOUNTING'),env('USER_ACCOUNTING_HEAD')))){
+    $template = 'appaccounting';
+}elseif(in_array(Auth::user()->accesslevel,array(env('USER_ADMIN')))){
+    $template = 'appadmin';
+}
 ?>
-@extends('appaccounting')
+
+@extends($template)
+
 @section("content")
 <div class="container">
  <h3>Disbursement Daily Summary</h3>
@@ -45,7 +53,7 @@ $totalbank=0;
      }
      ?>
      @endforeach
-     <tr><td colspan="4">Total</td><td align="right"><b>{{number_format($total,2)}}</b></td>
+     <tr><td colspan="5">Total</td><td align="right"><b>{{number_format($total,2)}}</b></td>
  </table>
  <br>
  <h5>Bank Account Summary</h5>

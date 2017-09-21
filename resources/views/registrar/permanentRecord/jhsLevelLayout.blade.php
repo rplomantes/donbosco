@@ -7,7 +7,7 @@ use App\Http\Controllers\Registrar\GradeComputation;
 <table style="font-size: 7pt;border: 3px solid" width="100%" border="1" cellspacing="0">
 <tr style="font-size: 8pt">
     <td style="border-bottom: 2pt solid;border-left: 2pt solid;border-right: 2pt solid;height: 21.6px" colspan="6" class="border_top">
-        <?php $grade7info = PermanentRecord::syInfo($idno,'Grade 7'); ?>
+        <?php $grade7info = PermanentRecord::syInfo($idno,$level); ?>
         @if(count($grade7info)>0)
         <?php 
         $grade7Grades  = \App\Grade::whereIn('schoolyear',array($grade7info->schoolyear,($grade7info->schoolyear+1)." SUMMER"))->where('idno',$idno)->where('isdisplaycard',1)->orderBy('sortto','ASC')->get();
@@ -34,6 +34,14 @@ use App\Http\Controllers\Registrar\GradeComputation;
     <td style="font-size: 7pt">3</td>
     <td style="font-size: 7pt">4</td>
     <td style="font-size: 7pt">Final</td>
+</tr>
+<tr class="border_left border_right">
+    <td ><b>CONDUCT GRADE</b></td>
+    <td style="font-size: 7pt;text-align: center;">{{GradeComputation::computeQuarterAverage($grade7info->schoolyear,$level,array(3),0,1,$grade7Grades)}}</td>
+    <td style="font-size: 7pt;text-align: center;">{{GradeComputation::computeQuarterAverage($grade7info->schoolyear,$level,array(3),0,2,$grade7Grades)}}</td>
+    <td style="font-size: 7pt;text-align: center;">{{GradeComputation::computeQuarterAverage($grade7info->schoolyear,$level,array(3),0,3,$grade7Grades)}}</td>
+    <td style="font-size: 7pt;text-align: center;">{{GradeComputation::computeQuarterAverage($grade7info->schoolyear,$level,array(3),0,4,$grade7Grades)}}</td>
+    <td style="font-size: 7pt;text-align: center;">{{GradeComputation::computeQuarterAverage($grade7info->schoolyear,$level,array(3),0,5,$grade7Grades)}}</td>
 </tr>
 <tr class="border_left border_right border_top">
     <td colspan="6" style="height: 22px">ACADEMIC SUBJECTS</td>

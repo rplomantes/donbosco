@@ -11,7 +11,7 @@ use App\Http\Controllers\Accounting\OfficeSumController;
 class DeptIncomeController extends Controller
 {
     public function __construct(){
-	$this->middleware(['auth','acct']);
+	$this->middleware(['auth']);
     }
     
     function index($acctcode,$fromtran,$totran){

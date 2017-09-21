@@ -285,7 +285,7 @@ $checkno = \App\Dedit::distinct('check_number')->pluck('check_number')->toArray(
              <input type="hidden" id="penalty" name="penalty" value="{{$penalty}}">
             
              <table class="table table-responsive table-bordered">
-                <tr><td>Main Account</td><td align="right"><input onkeypress = "validate(event)"  onkeydown = "duenosubmit(event)"   type="text" name="totaldue" id="totaldue" style="text-align:right" class="form-control" value="<?php echo number_format($totaldue,2,'.','');?>"></td></tr>
+                <tr><td>Main Account</td><td align="right"><input class='divide' onkeypress = "validate(event)"  onkeydown = "duenosubmit(event)"   type="text" name="totaldue" id="totaldue" style="text-align:right" class="form-control" value="<?php echo number_format($totaldue,2,'.','');?>"></td></tr>
                 @if(count($previousbalances)> 0 )
                 
                     
@@ -365,6 +365,20 @@ $checkno = \App\Dedit::distinct('check_number')->pluck('check_number')->toArray(
    
 <script src="{{url('/js/nephilajs/cashier.js')}}"></script>    
 <script src="{{url('/js/nephilajs/getpaymenttype.js')}}"></script>
-
+<script>
+//    $('.divide').keyup(function(e){        
+//        
+//        if(e.keyCode >= 48 || e.keyCode <= 57){
+//            var value= $('.divide').val();
+//            var string = value.replace(',','')
+//            $(this).val(formatNumber(string));
+//        }
+//    });
+//    
+//    function formatNumber (num) {
+//        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+//    }
+            
+</script>
 
 @stop

@@ -87,7 +87,7 @@ class MainController extends Controller
                     return view("book.index",compact('students'));
                    break;
                
-               case env('USER_ECONOMIC_ADMIN');
+               case env('USER_ADMIN');
                    
                    return view('economic.index');
                    //return "me";

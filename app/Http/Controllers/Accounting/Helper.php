@@ -9,11 +9,11 @@ use App\Http\Controllers\Controller;
 
 class Helper extends Controller
 {
-    static function getaccttotal($credit,$debit,$accountingcode){
+    static function getaccttotal($credit,$debit,$entry){
         $total = 0;
         
-        $accountingcode = substr($accountingcode,0,1);
-        if($accountingcode == 1  || $accountingcode == 5){
+        
+        if($entry == 'debit'){
             $total = $debit - $credit;
         }else{
             $total = $credit - $debit;

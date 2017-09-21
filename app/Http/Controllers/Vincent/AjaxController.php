@@ -17,7 +17,8 @@ class AjaxController extends Controller
         $user->reference_number = $refno + 1;
         $user->update(); 
         
-        $sy = \App\RegistrarSchoolyear::first(); 
+        
+        $sy = \App\CtrRegistrationSchoolyear::first();
             for($i=strlen($varrefno); $i< 3 ;$i++){
                 $varrefno = "0" . $varrefno;    
             }

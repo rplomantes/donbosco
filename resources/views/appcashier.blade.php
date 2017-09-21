@@ -42,6 +42,8 @@
         <script src="{{asset('/js/bootstrap.min.js')}}"></script>
         <script src="{{asset('/js/fileinput.js')}}"></script>
         <script src="{{asset('/js/bootstrap-datepicker.js')}}"></script>
+        <script src="{{asset('/numberInputFormatting/jquery.masknumber.js')}}"></script>
+        
         </head>
 <body> 
 <div class= "container-fluid">

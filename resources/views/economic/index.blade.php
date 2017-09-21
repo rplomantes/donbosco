@@ -1,4 +1,4 @@
-@extends('appaccounting')
+@extends('appadmin')
 @section('content')
 <div class="container-fluid">
     <div class="col-md-3">

@@ -124,7 +124,7 @@
                                         <li>
                                         <a href="{{url('/')}}" >Home</a>
                                         
-                                        <?php $prereg = \App\RegistrarSchoolyear::first();?>
+                                        <?php $prereg = App\CtrRegistrationSchoolyear::first();?>
                                         </li>
                                         
                                          <li class="dropdown">

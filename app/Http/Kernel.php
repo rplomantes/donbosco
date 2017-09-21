@@ -47,6 +47,7 @@ class Kernel extends HttpKernel
         'auth' => \App\Http\Middleware\Authenticate::class,
         'maker' => \App\Http\Middleware\UserMaker::class,
         'acct' => \App\Http\Middleware\Accounting::class,
+        'admin' => \App\Http\Middleware\adminusers::class,
         'registrar' => \App\Http\Middleware\registrarModules::class,
         'accounting' => \App\Http\Middleware\accountingModules::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,

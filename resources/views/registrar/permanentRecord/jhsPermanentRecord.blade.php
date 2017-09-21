@@ -56,7 +56,7 @@ $info = Registrarhelper::info($idno);
             <td width="11%" class="underscore">{{$info->gender}}</td>
             <td width="2%" style="padding-top: 9pt;"></td>
             <td width="11%" style="font-size: 8.5pt">Date of Birth:</td>
-            <td width="17%" class="underscore">{{$info->age}}</td>
+            <td width="17%" class="underscore">{{$info->birthDate}}</td>
         </tr>
         <tr>
             <td style="font-size: 8.5pt">Place of Birth:</td>
@@ -98,8 +98,8 @@ $info = Registrarhelper::info($idno);
         <tr>
             <td width="26%">Elementary Education Completed:</td>
             <td width="22%" class="underscore">{{$oldrec[0]}}</td>
-            <td width="9%">Schoolyear:</td>
-            <td width="16%" class="underscore">{{$oldrec[1]}} - {{$oldrec[1]+1}}</td>
+            <td width="10%">School Year:</td>
+            <td width="15%" class="underscore">{{$oldrec[1]}} - {{$oldrec[1]+1}}</td>
             <td width="7%">Average:</td>
             <td width="10%" class="underscore">{{$oldrec[2]}}</td>
         </tr>

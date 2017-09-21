@@ -15,7 +15,8 @@ class AjaxController extends Controller
 {
     //
     public function getid($varid){
-        if(Request::ajax()){
+        if(Request::ajax())
+            {
         $user = \App\User::find($varid);
         $refno = $user->reference_number;
         $varrefno = strval($refno);
@@ -39,7 +40,8 @@ class AjaxController extends Controller
              //   $varrefno = $value.$intval;
          // return $user->idref;  
         return $varrefno;
-        }else{
+        }
+        else{
         return "Invalid Request";   
            
         }
@@ -944,12 +946,12 @@ class AjaxController extends Controller
             }
             $data = $data . "</table>";
             }
-            if($status->level == "Grade 11" ||$status->level == "Grade 12" ){
-                $data = $data . "<a class='btn btn-danger' href='/card/".Input::get('idno')."/".Input::get('sy')."/1'>Print 1st Sem</a><span width='50px'>&nbsp;</span>";
-                $data = $data . "<a class='btn btn-danger' href='/card/".Input::get('idno')."/".Input::get('sy')."/2'>Print 2nd Sem</a>";
-            }else{
-                $data = $data . "<a class='btn btn-danger' href='/card/".Input::get('idno')."/".Input::get('sy')."'>Print</a>";
-            }
+//            if($status->level == "Grade 11" ||$status->level == "Grade 12" ){
+//                $data = $data . "<a class='btn btn-danger' href='/card/".Input::get('idno')."/".Input::get('sy')."/1'>Print 1st Sem</a><span width='50px'>&nbsp;</span>";
+//                $data = $data . "<a class='btn btn-danger' href='/card/".Input::get('idno')."/".Input::get('sy')."/2'>Print 2nd Sem</a>";
+//            }else{
+//                $data = $data . "<a class='btn btn-danger' href='/card/".Input::get('idno')."/".Input::get('sy')."'>Print</a>";
+//            }
             
             return $data;
         }
@@ -1199,9 +1201,13 @@ class AjaxController extends Controller
                     $newdisbursement->postedby=$idno;
                     $newdisbursement->save();
                     
-                    $incrementreceipt = \App\User::where('idno',$idno)->first();
-                    $incrementreceipt->disbursementno = $incrementreceipt->disbursementno + 1;
-                    $incrementreceipt->update();
+                    $lastdisbursement = \App\Disbursement::max('voucherno');
+                    
+//                    $incrementreceipt = \App\User::where('idno',$idno)->first();
+//                    $incrementreceipt->disbursementno = $incrementreceipt->disbursementno + 1;
+//                    $incrementreceipt->update();
+                  \App\User::whereIn('accesslevel',array(env('USER_ACCOUNTING_HEAD'),env('USER_ACCOUNTING')))
+                          ->update(['disbursementno' =>$lastdisbursement+1]);
                   return "true";  
                 }
             }

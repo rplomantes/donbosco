@@ -854,8 +854,8 @@ class UpdateController extends Controller
             }
             
             function updatecdbdrcr(){
-                $entry_type = "3";
-                $updates = \App\Accounting::where('type','3')->get();
+                $entry_type = "7";
+                $updates = \App\Accounting::where('type','7')->get();
                     foreach ($updates as $update){
                         if($update->cr_db_indic == '1'){
                             $add = new \App\Credit;
@@ -874,7 +874,7 @@ class UpdateController extends Controller
                          $add->acct_department = $update->acct_department;
                          $add->sub_department = $update->sub_department;
                          $add->fiscalyear = $update->fiscalyear;
-                         $add->postedby = 'vicky';
+                         $add->postedby = 'system';
                          $add->save();
                          
                     }
@@ -941,23 +941,24 @@ class UpdateController extends Controller
             }
             
             function fixDepartment(){
-                $fixes = DB::Select("Select * from ledgers where schoolyear = '2017' and acct_department='' and accountingcode = '120100'");
-                
-                foreach($fixes as $fix){
-                    $acct_dept = "";
-                    $sub_dept = "";
-                    $ctr = \App\CtrPaymentSchedule::where('schoolyear','2017')->where('level',$fix->level)->where('accountingcode',$fix->accountingcode)->where('accountingcode',$fix->accountingcode)->first();
-                    
-                    if($ctr){
-                        $acct_dept = $ctr->acct_department;
-                        $sub_dept = $ctr->sub_department;
-                    }
-                    echo $acct_dept." - ".$fix->id." - ".$ctr."<br>";
-                    $account = \App\Ledger::find($fix->id);
-                    $account->acct_department = $acct_dept;
-                    $account->sub_department = $sub_dept;
-                    $account->save();
-                }
+                $fixes = DB::Select("Select * from ledgers where schoolyear = ' 2016' and acct_department=''");
+//                
+//                foreach($fixes as $fix){
+//                    $acct_dept = "";
+//                    $sub_dept = "";
+//                    $ctr = \App\CtrPaymentSchedule::where('level',$fix->level)->where('accountingcode',$fix->accountingcode)->where('accountingcode',$fix->accountingcode)->first();
+//                    
+//                    if($ctr){
+//                        $acct_dept = $ctr->acct_department;
+//                        $sub_dept = $ctr->sub_department;
+//                    }
+//                    echo $acct_dept." - ".$fix->id." - ".$ctr."<br>";
+//                    $account = \App\Ledger::find($fix->id);
+//                    $account->acct_department = $acct_dept;
+//                    $account->sub_department = $sub_dept;
+//                    $account->save();
+//                }
+                return $fixes;
             }
             
             function fixDepartmentCredit(){
@@ -996,47 +997,33 @@ class UpdateController extends Controller
             }
             
             function gradeMigration2(){
-                $grades  = DB::connection('dbti2test')->select("Select * from grade where SY_EFFECTIVE = 2012");
+                $grades  = DB::select("Select * from old_grades where sy_effective = 2015");
                 ini_set("memory_limit","850M"); 
                 set_time_limit('1000'); 
                 
                 foreach($grades as $grade ){
-                    $student = \App\User::where('idno',$grade->SCODE)->exists();
+                    $student = \App\User::where('idno',$grade->scode)->exists();
                     if($student){
-                        $exist = \App\Grade::where('idno',$grade->SCODE)->where('schoolyear',$grade->SY_EFFECTIVE)->where('subjectcode',$grade->SUBJ_CODE)->exists();
+                        $exist = \App\Grade::where('idno',$grade->scode)->where('schoolyear',$grade->sy_effective)->where('subjectcode',$grade->subj_code)->exists();
                         if($exist){
-                            $import = \App\Grade::where('idno',$grade->SCODE)->where('schoolyear',$grade->SY_EFFECTIVE)->where('subjectcode',$grade->SUBJ_CODE)->first();
+                            $import = \App\Grade::where('idno',$grade->scode)->where('schoolyear',$grade->sy_effective)->where('subjectcode',$grade->subj_code)->first();
                         }else{
                             $import = new \App\Grade;
-                            $import->idno = $grade->SCODE;
-                            $import->subjectcode = $grade->SUBJ_CODE;
-                            if(in_array($grade->SUBJ_CODE,array('DAYA','DAYP','DAYT'))){
+                            $import->idno = $grade->scode;
+                            $import->subjectcode = $grade->subj_code;
+                            if(in_array($grade->subj_code,array('DAYA','DAYP','DAYT'))){
                                 $import->subjecttype = 2;
                             }else{
                                 $import->subjecttype = 0;
                             }
 
-                            $import->schoolyear = $grade->SY_EFFECTIVE;
+                            $import->schoolyear = $grade->sy_effective;
                         }
 
-                        switch($grade->QTR){
-                            case 1;
-                                $import->first_grading = $grade->GRADE_PASS1;
-                                break;
-                            case 2;
-                                $import->second_grading = $grade->GRADE_PASS1;
-                                break;
-                            case 3;
-                                $import->third_grading = $grade->GRADE_PASS1;
-                                break;
-                            case 4;
-                                $import->fourth_grading = $grade->GRADE_PASS1;
-                                break;
-
-                            default;
-                                $import->final_grade = $grade->GRADE_PASS1;
-                                break;
-                        }
+                        $import->first_grading = $grade->first;
+                        $import->second_grading = $grade->second;
+                        $import->third_grading = $grade->third;
+                        $import->fourth_grading = $grade->fourth;
                         $import->save();                        
                     }
 
