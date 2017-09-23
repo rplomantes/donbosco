@@ -270,15 +270,17 @@ class PermanentRecord extends Controller
             $sy = $prevschoolrec->schoolyear;
             $average = $prevschoolrec->finalrate;
         }else{
-            $oldrec = \App\Grade::where('level',$level)->where('idno',$idno)->where('subjecttype',0)->get();
+            $oldrecs = \App\Grade::where('level',$level)->where('idno',$idno)->where('subjecttype',0)->get();
             
-            if(count($oldrec)>0){
+            if(count($oldrecs)>0){
                 $school = "DON BOSCO TECHNICAL INSTITUTE";
-                $average = GradeController::gradeQuarterAve(array(0),array(0),5,$oldrec,'Grade 10');
-                foreach($oldrec as $oldrec){
+                //$average = GradeController::gradeQuarterAve(array(0),array(0),5,$oldrec,$level);
+                
+                foreach($oldrecs as $oldrec){
                     $sy = $oldrec->schoolyear;
                 }
-                $average = GradeComputation::computeQuarterAverage($sy, $level, 0, 0, 5, $oldrec);
+                
+                $average = GradeComputation::computeQuarterAverage($sy, $level, array(0), 0, 5, $oldrecs);
                 
 
             }

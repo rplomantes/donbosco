@@ -32,7 +32,7 @@ class GradeComputation extends Controller
     }
     
     static function computeQuarterAverage($sy,$level,$subjecttype,$sem,$quarter,$grades){
-
+        
         $gradeCondition = \App\GradesSetting::where('schoolyear',$sy)->where('level',$level)->whereIn('subjecttype',$subjecttype)->first();
         $field = RegistrarHelper::getGradeQuarter($quarter);
         
@@ -51,7 +51,6 @@ class GradeComputation extends Controller
     static function averageGrade($subjecttype,$sem,$grades,$field,$gradeCondition){
         $total = 0;
         $average = 0;
-        
         foreach($grades as $grade){
             if(in_array($grade->subjecttype,$subjecttype) && $grade->semester == $sem && $grade->$field != 0){
                 $total = $total + 1;

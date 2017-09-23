@@ -18,7 +18,7 @@ $info = Registrarhelper::info($idno);
             margin-right: -20px;
             margin-top: -40px;
             font-family: dejavu sans;
-            
+            page-break-after: avoid;
         }
         .underscore{
             border-bottom: 1px solid;
@@ -50,7 +50,12 @@ $info = Registrarhelper::info($idno);
     <table width="100%" style="font-size: 9pt" cellspacing="2" >
         <tr>
             <td width="11.5%">Name:</td>
-            <td width="34.5%" class="underscore">{{$info->name}}</td>
+            <td width="34.5%" 
+                @if(strlen($info->name)>33)
+                style='font-size: 7pt'
+                @endif
+                class="underscore">
+                {{$info->name}}</td>
             <td width="4%" style="padding-top: 9pt;"></td>
             <td width="10%">Gender:</td>
             <td width="11%" class="underscore">{{$info->gender}}</td>
@@ -94,12 +99,12 @@ $info = Registrarhelper::info($idno);
         </tr>
     </table>
     
-    <table width="100%" style="font-size: 9pt">
+    <table width="100%" style="font-size: 8pt">
         <tr>
-            <td width="26%">Elementary Education Completed:</td>
-            <td width="22%" class="underscore">{{$oldrec[0]}}</td>
+            <td width="23%">Elementary Education Completed:</td>
+            <td width="28%" class="underscore">{{$oldrec[0]}}</td>
             <td width="10%">School Year:</td>
-            <td width="15%" class="underscore">{{$oldrec[1]}} - {{$oldrec[1]+1}}</td>
+            <td width="13%" class="underscore">{{$oldrec[1]}} - {{$oldrec[1]+1}}</td>
             <td width="7%">Average:</td>
             <td width="10%" class="underscore">{{$oldrec[2]}}</td>
         </tr>
@@ -125,7 +130,5 @@ $info = Registrarhelper::info($idno);
             </tr>
         </table>
     </div>
-    
-
 </body>
 </html>

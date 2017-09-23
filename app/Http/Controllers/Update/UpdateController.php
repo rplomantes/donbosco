@@ -997,7 +997,7 @@ class UpdateController extends Controller
             }
             
             function gradeMigration2(){
-                $grades  = DB::select("Select * from old_grades where sy_effective = 2015");
+                $grades  = DB::select("Select * from old_grades where sy_effective = 2015 and level = 'Grade 6'");
                 ini_set("memory_limit","850M"); 
                 set_time_limit('1000'); 
                 
@@ -1010,6 +1010,7 @@ class UpdateController extends Controller
                         }else{
                             $import = new \App\Grade;
                             $import->idno = $grade->scode;
+                            $import->level = $grade->level;
                             $import->subjectcode = $grade->subj_code;
                             if(in_array($grade->subj_code,array('DAYA','DAYP','DAYT'))){
                                 $import->subjecttype = 2;
