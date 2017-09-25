@@ -15,6 +15,8 @@
     Route::post('/juniorpermanentrec/{idno}', 'Registrar\PermanentRecord@viewjuniorPermanentRec');
     Route::get('/permanentrecint/{idno}/{sy}', 'Registrar\PermanentRecord@internal');
     
+    Route::post('/elempermanentrec/{idno}', 'Registrar\PermanentRecord@viewelemPermanentRec');
+    
     
     Route::get('/discounting', 'Update\UpdateController@updateDiscount');
     Route::get('/', 'MainController@index');

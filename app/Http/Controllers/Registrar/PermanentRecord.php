@@ -57,6 +57,46 @@ class PermanentRecord extends Controller
         //return view("print.juniorOldPermanentRec",compact('idno','header','grade7','grade8','grade9','grade10'));
     }
     
+    function viewelemPermanentRec($idno,Request $request){
+        $header = 0;
+        $grade1 = 0;
+        $grade2 = 0;
+        $grade3 = 0;
+        $grade4 = 0;
+        $grade5 = 0;
+        $grade6 = 0;
+        
+        if(Input::get('header') != null){
+            $header = 1;
+        }
+        if(Input::get('grade1') != null){
+            $grade1 = 1;
+        }
+        if(Input::get('grade2') != null){
+            $grade2 = 1;
+        }
+        if(Input::get('grade3') != null){
+            $grade3 = 1;
+        }
+        if(Input::get('grade4') != null){
+            $grade4 = 1;
+        }
+        if(Input::get('grade5') != null){
+            $grade5 = 1;
+        }
+        if(Input::get('grade6') != null){
+            $grade6 = 1;
+        }
+        
+        $oldrec = self::prevSchoolRec('Kindergarten',$idno);
+        
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->setPaper([0,0,612.00,1008.00], 'portrait');
+        $pdf->loadView("registrar.permanentRecord.elemPermanentRecord",compact('idno','header','grade1','grade2','grade3','grade4','grade5','grade6','oldrec'));
+        
+        return $pdf->stream();
+    }
+    
     static function hsGradeTemp($idno,$level){
         return view("registrar.permanentRecord.jhsLevelLayout",compact('idno','level'))->render();
     }
