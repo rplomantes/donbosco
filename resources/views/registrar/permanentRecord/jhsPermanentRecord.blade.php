@@ -14,8 +14,8 @@ $info = Registrarhelper::info($idno);
     
     <style>
         body{
-            margin-left: -13.5px;
-            margin-right: -13.5px;
+            margin-left: 30px;
+            margin-right: -5px;
             margin-top: -40px;
             font-family: dejavu sans;
             page-break-after: avoid;
