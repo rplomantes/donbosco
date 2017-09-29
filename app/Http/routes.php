@@ -2,6 +2,7 @@
     Route::group(['middleware' => 'web'], function () {
     Route::auth();
     
+    Route::get('/chart','Economer\OperationIncome@index');
     Route::get('/gradeMigration2','Update\UpdateController@gradeMigration2');
     
     Route::get('/studentinfo/{idno}','Miscellaneous\StudentInfoController@index');

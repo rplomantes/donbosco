@@ -23,10 +23,26 @@
             <input type="text" name="schoolyear" class="form-control"/>
             <span style='font-size: 8px'></span>
         </div>
+        <div class="col-sm-6" style="padding-left: 0px;padding-right: 20px;">
+            <div class='form-group'>
+                <label for='entered'>Date Entered:</label>
+                <input type="text" name="entered" class="form-control"/>
+                <span style='font-size: 8px'></span>
+            </div>
+        </div>
+        <div class="col-sm-6" style="padding-right: 0px;padding-left: 20px;">
+            <div class='form-group'>
+                <label for='left'>Date Left:</label>
+                <input type="text" name="left" class="form-control"/>
+                <span style='font-size: 8px'></span>
+            </div>
+        </div>
+        
         <div class='form-group'>
         <label for='level'>Level:</label>
             <select id='level' name='level' class='form-control'>
-                <option value="Kindergarten" selected="">Kindergarten</option>
+                <option value="Prep" selected="">Preparatory</option>
+                <option value="Kindergarten">Kindergarten</option>
                 <option value="Grade 1">Grade 1</option>
                 <option value="Grade 2">Grade 2</option>
                 <option value="Grade 3">Grade 3</option>
@@ -41,16 +57,24 @@
                 <option value="Grade 12">Grade 12</option>
             </select>
         </div>
-        
-        <div class='form-group'>
-            <label for='grade'>Final Grade:</label>
-            <input type="text" name="grade" class="form-control"/>
-            <span style='font-size: 8px'></span>
+        <div class="col-sm-6" style="padding-left: 0px;padding-right: 20px;">
+            <div class='form-group'>
+                <label for='grade'>Final Grade:</label>
+                <input type="text" name="grade" class="form-control"/>
+            </div>
+        </div>
+        <div class="col-sm-6" style="padding-left: 20px;padding-right: 0px;">
+            <div class='form-group'>
+                <label for='dayp'>Days present:</label>
+                <input type="text" name="dayp" class="form-control"/>
+            </div>
         </div>
         <div class='form-group'>
-            <label for='dayp'>Days present:</label>
-            <input type="text" name="dayp" class="form-control"/>
-            <span style='font-size: 8px'></span>
+        <label for='action'>Action:</label>
+            <select id='level' name='action' class='form-control'>
+                <option value="PROM" selected="">PROM</option>
+                <option value="RET">RET</option>
+            </select>
         </div>
         
         <button class="col-md-12 btn btn-danger">Save</button>

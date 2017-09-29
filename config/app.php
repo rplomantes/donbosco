@@ -206,9 +206,11 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
         'PDF'       => Barryvdh\DomPDF\Facade::class,
+        'Chart'    => Fx3costa\LaravelChartJs\Providers\ChartjsServiceProvider::class,
         'Excel' => 'Maatwebsite\Excel\Facades\Excel',
         'Lava'      => 'Khill\Lavacharts\Laravel\LavachartsFacade',
         'GradeController'   =>  'App\Http\Controllers\Registrar\GradeController',
+        
 
     ],
 

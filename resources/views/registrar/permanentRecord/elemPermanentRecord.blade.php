@@ -15,8 +15,8 @@ $student = \App\User::where('idno',$idno)->first();
     
     <style>
         body{
-            margin-left: -20px;
-            margin-right: -20px;
+            margin-left: -13.5px;
+            margin-right: -13.5px;
             margin-top: -40px;
             font-family: dejavu sans;
             page-break-after: avoid;
@@ -28,8 +28,7 @@ $student = \App\User::where('idno',$idno)->first();
     </style>
 </head>
 <body>
-    <div width="100%" style="position:absolute;top:10px;left:0pt;">
-    @if($header == 1)
+    <div width="100%" @if($header != 1)style="visibility:hidden;@endif">
     <table width="100%">
         <tr><td style="padding-left: 0px;text-align: center;"><span style="font-size:11pt;font-weight: bold">DON BOSCO TECHNICAL INSTITUTE</span></td></tr>
         <tr><td style="font-size:8pt;text-align: center;">Chino Roces Ave., Makati City 1200</td></tr>
@@ -93,87 +92,73 @@ $student = \App\User::where('idno',$idno)->first();
             </td>
         </tr>
     </table>
-    
-    <table width="100%" style="font-size: 9pt" cellspacing="2" >
-        <tr>
-            <td width="11.5%">Name:</td>
-            <td width="34.5%" 
-                @if(strlen($info->name)>33)
-                style='font-size: 7pt'
-                @endif
-                class="underscore">
-                {{$info->name}}</td>
-            <td width="4%" style="padding-top: 9pt;"></td>
-            <td width="10%">Gender:</td>
-            <td width="11%" class="underscore">{{$info->gender}}</td>
-            <td width="2%" style="padding-top: 9pt;"></td>
-            <td width="11%" style="font-size: 8.5pt">Date of Birth:</td>
-            <td width="17%" class="underscore">{{$info->birthDate}}</td>
-        </tr>
-        <tr>
-            <td style="font-size: 8.5pt">Place of Birth:</td>
-            <td class="underscore">{{$info->birthPlace}}</td>
-            <td style="padding-top: 9pt;"></td>
-            <td style="font-size: 8.5pt">Student No.:</td>
-            <td class="underscore">{{$info->idno}}</td>
-            <td style="padding-top: 9pt;"></td>
-            <td>LRN:</td>
-            <td class="underscore">{{$info->lrn}}</td>
-        </tr>
-
-        <tr style="vertical-align: top">
-            <td>Father:</td>
-            <td class="underscore">{{$info->fname}}</td>
-            <td style="padding-top: 9pt;"></td>
-            <td>Address:</td>
-            <td colspan="4" rowspan="2" style="font-size:8.5pt;vertical-align: bottom">
-                <div class="underscore">
-                    {{$info->address1}}
-                    @if($info->address2 != "")
-                    ,{{$info->address2}}
-                    @endif
-                    @if($info->address3 != "")
-                    , {{$info->address3}}
-                    @endif
-                </div>
+    <hr style="border:2px solid;">
+    <div style="text-align: center;font-weight: bold;">PREPARATORY</div>
+    <table border="1" cellspacing="0" width="100%" style="font-size: 7pt;">
+        <tr style="text-align: center;vertical-align: top">
+            <td width="9%">
+                <div style="font-weight: bold">School Year</div>
+                <div>{{$oldrec[1]}} - {{$oldrec[1]+1}}</div>
+            </td>
+            <td width="10%">
+                <div style="font-weight: bold">Date Entered</div>
+                <div>{{$oldrec[4]}}</div>
+            </td>
+            <td width="10%">
+                <div style="font-weight: bold">Date Left</div>
+                <div>{{$oldrec[5]}}</div>
+            </td>
+            <td >
+                <div style="font-weight: bold">School Attended</div>
+                <div>{{$oldrec[0]}}</div>
+            </td>
+            <td width="10%">
+                <div style="font-weight: bold">Grade</div>
+                <div>{{$oldrec[6]}}</div>
+            </td>
+            <td width="10%">
+                <div style="font-weight: bold">Days Present</div>
+                <div>{{$oldrec[3]}}</div>
+            </td>
+            <td width="9%">
+                <div style="font-weight: bold">Final Rating</div>
+                <div>{{$oldrec[2]}}</div>
+            </td>
+            <td width="9%">
+                <div style="font-weight: bold">Prom./Ret.</div>
+                <div> {{$oldrec[7]}}</div>
             </td>
         </tr>
-        <tr>
-            <td>Mother:</td>
-            <td class="underscore">{{$info->mname}}</td>
-            <td style="padding-top: 9pt;"></td>
-            <td></td>
-        </tr>
     </table>
-    
-    <table width="100%" style="font-size: 8pt">
-        <tr>
-            <td width="23%">Elementary Education Completed:</td>
-            <td width="28%" class="underscore">{{$oldrec[0]}}</td>
-            <td width="10%">School Year:</td>
-            <td width="13%" class="underscore">{{$oldrec[1]}} - {{$oldrec[1]+1}}</td>
-            <td width="7%">Average:</td>
-            <td width="10%" class="underscore">{{$oldrec[2]}}</td>
-        </tr>
-    </table>
-    @endif
     </div>
     
-    <div width="100%" style="position:absolute;top:300px;left:0pt;">
-        <table cellspacing="3">
+    <div width="100%">
+        <table width="100%" cellspacing="3">
             <tr>
-                <td width="49%">@if($grade1 == 1){!!PermanentRecord::hsGradeTemp($idno,"Grade 7")!!}@endif</td>
+                <td width="49%">@if($grade1 == 1){!!PermanentRecord::elemGradeTemp($idno,"Grade 1")!!}@endif</td>
                 <td width="2px"></td>
-                <td width="49%">@if($grade2 == 1){!!PermanentRecord::hsGradeTemp($idno,"Grade 9")!!}@endif</td>
+                <td width="49%">@if($grade2 == 1){!!PermanentRecord::elemGradeTemp($idno,"Grade 2")!!}@endif</td>
             </tr>
         </table>
     </div>
-    <div width="100%" style="position:absolute;top:810px;left:0pt;">
-        <table cellspacing="3">
+    
+
+    <div width="100%">
+        <table width="100%" cellspacing="3">
             <tr>
-                <td width="49%">@if($grade3 == 1){!!PermanentRecord::hsGradeTemp($idno,"Grade 8")!!}@endif</td>
+                <td width="49%">@if($grade3 == 1){!!PermanentRecord::elemGradeTemp($idno,"Grade 1")!!}@endif</td>
                 <td width="2px"></td>
-                <td width="49%">@if($grade4 == 1){!!PermanentRecord::hsGradeTemp($idno,"Grade 10")!!}@endif</td>
+                <td width="49%">@if($grade4 == 1){!!PermanentRecord::elemGradeTemp($idno,"Grade 4")!!}@endif</td>
+            </tr>
+        </table>
+    </div>
+    
+    <div width="100%">
+        <table width="100%" cellspacing="3">
+            <tr>
+                <td width="49%">@if($grade5 == 1){!!PermanentRecord::elemGradeTemp($idno,"Grade 1")!!}@endif</td>
+                <td width="2px"></td>
+                <td width="49%">@if($grade6 == 1){!!PermanentRecord::elemGradeTemp($idno,"Grade 6")!!}@endif</td>
             </tr>
         </table>
     </div>

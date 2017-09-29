@@ -12,6 +12,7 @@ use App\Http\Controllers\Registrar\AttendanceController;
 use App\Http\Controllers\Registrar\GradeController;
 use View;
 use App\Http\Controllers\Registrar\GradeComputation;
+use App\Http\Controllers\Registrar\AttendanceController as Attendance;
 
 class PermanentRecord extends Controller
 {
@@ -99,6 +100,10 @@ class PermanentRecord extends Controller
     
     static function hsGradeTemp($idno,$level){
         return view("registrar.permanentRecord.jhsLevelLayout",compact('idno','level'))->render();
+    }
+    
+    static function elemGradeTemp($idno,$level){
+        return view("registrar.permanentRecord.elemLevelLayout",compact('idno','level'))->render();
     }
     
     static function syInfo($idno,$level){
@@ -303,12 +308,21 @@ class PermanentRecord extends Controller
         $school = "";
         $sy = "";
         $average = "";
+        $entered = "";
+        $left = "";
+        $att = "";
+        $action = "";
         
         $prevschoolrec = \App\PrevSchoolRec::where('level',$level)->where('idno',$idno)->first();
         if(count($prevschoolrec)>0){
             $school = $prevschoolrec->school;
             $sy = $prevschoolrec->schoolyear;
             $average = $prevschoolrec->finalrate;
+            $entered = $prevschoolrec->dateEntered;
+            $left = $prevschoolrec->dateLeft;
+            $att = $prevschoolrec->dayp;
+            $action = $prevschoolrec->status;
+            
         }else{
             $oldrecs = \App\Grade::where('level',$level)->where('idno',$idno)->where('subjecttype',0)->get();
             
@@ -321,12 +335,26 @@ class PermanentRecord extends Controller
                 }
                 
                 $average = GradeComputation::computeQuarterAverage($sy, $level, array(0), 0, 5, $oldrecs);
+                $dayp = array();
+                $daya = array();
+                $dayt = array();
+                for($i=1; $i < 5 ;$i++){
+                    if($gradeinfo['sy'] == 2016){
+                        $attendance  = AttendanceController::studentQuarterAttendance($idno,$sy,$i,$level); 
+                    }else{
+                        $attendance  = AttendanceController::studentQuarterAttendance($idno,$sy,array($i),$level); 
+                    }
+
+                    $dayp [] = $attendance[0];
+                }
+                
+                $att = $dayp[0]+$dayp[1]+$dayp[2]+$dayp[3];
                 
 
             }
         }
         
-        return array($school,$sy,$average);
+        return array($school,$sy,$average,$att,$entered,$left,$level,$action);
     }
     
 

@@ -66,9 +66,9 @@
             @if($grade->subjecttype == 0)
 		<?php
                 if($level == "Grade 7" || $level == "Grade 8" || $level == "Grade 9" || $level == "Grade 10"){
-			$total = round(($grade->first_grading+$grade->second_grading+$grade->third_grading+$grade->fourth_grading)/4,0);
+			$total = round(($grade->first_grading+$grade->second_grading+$grade->third_grading+$grade->fourth_grading),0);
 		}else{
-			$total = round($grade->first_grading+$grade->second_grading+$grade->third_grading+$grade->fourth_grading)/4;
+			$total = round($grade->first_grading+$grade->second_grading+$grade->third_grading+$grade->fourth_grading);
 		}
                 $divby++;
                 $totalave = $totalave+$total;

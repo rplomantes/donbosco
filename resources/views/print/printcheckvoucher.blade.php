@@ -6,15 +6,18 @@
         .content td {font-size:10pt}
         .subtitle{font-size: 10pt;font-weight: bold}
 	#footer { position: fixed; bottom:120px;border-top:1px solid gray;width:746px;margin-left:201px;} .pagenum:before {content: counter(page); }
+        #header { position: fixed; top:80px;width:746px;margin-left:201px;}
         </style>
     </head>
-    <body style="margin-top:80px;margin-left:201px;width:749px;margin-bottom:120px;">
+    <body style="margin-top:160px;margin-left:201px;width:749px;margin-bottom:120px;">
 	<div id="footer">Page <span class="pagenum"></span></div>    
+        <div id="header">
         <table width ="100%">
             <tr><td><span class="header">Don Bosco Technical Institute of Makati</span></td><td align="right"><span class="title">Cash Disbursement Voucher</span></i></td></tr>
             <tr><td>Chino Roces Avenue, Makati, Metro Manila</td><td align="right">Voucher No : {{$disbursement->voucherno}}</td></tr>
             <tr><td>&nbsp;</td><td align="right">Date Issued: {{date('M d, Y', strtotime($disbursement->transactiondate))}}</td></tr>
         </table>   
+        </div>
         <hr />
         <table width="100%" class="content">
             <tr><td><b>Payee : </b></td><td colspan="3">{{strtoupper($disbursement->payee)}}</td></tr>

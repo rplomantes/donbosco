@@ -14,8 +14,8 @@ $info = Registrarhelper::info($idno);
     
     <style>
         body{
-            margin-left: -20px;
-            margin-right: -20px;
+            margin-left: -13.5px;
+            margin-right: -13.5px;
             margin-top: -40px;
             font-family: dejavu sans;
             page-break-after: avoid;
@@ -38,7 +38,7 @@ $info = Registrarhelper::info($idno);
         <tr><td style="font-size:8pt;padding-left: 0px;padding-top: 8pt;"></td></tr>
         <tr>
             <td colspan="1" style="padding-left: 0px;">
-                <div style="text-align: center;font-size:10pt;"><b>JUNIOR HIGH SCHOOL PERMANENT RECORD</b></div>
+                <div style="text-align: center;font-size:10pt;"><b>JUNIOR HIGH SCHOOL PERMANENT RECORD (TECHNICAL - ACADEMIC PROGRAM)</b></div>
                 <div style="text-align: center;font-size:9pt;"><b>(FORM 137-OFFICIAL TRANSCRIPT OF RECORDS)</b></div>
             </td>
         </tr>
@@ -50,14 +50,14 @@ $info = Registrarhelper::info($idno);
     <table width="100%" style="font-size: 9pt" cellspacing="2" >
         <tr>
             <td width="11.5%">Name:</td>
-            <td width="34.5%" 
+            <td width="34%" 
                 @if(strlen($info->name)>33)
                 style='font-size: 7pt'
                 @endif
                 class="underscore">
                 {{$info->name}}</td>
             <td width="4%" style="padding-top: 9pt;"></td>
-            <td width="10%">Gender:</td>
+            <td width="10.5%">Gender:</td>
             <td width="11%" class="underscore">{{$info->gender}}</td>
             <td width="2%" style="padding-top: 9pt;"></td>
             <td width="11%" style="font-size: 8.5pt">Date of Birth:</td>

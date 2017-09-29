@@ -1,3 +1,4 @@
+
 <?php 
 use App\Http\Controllers\Accounting\Helper as AcctHelper;
 ?>
@@ -12,6 +13,14 @@ use App\Http\Controllers\Accounting\Helper as AcctHelper;
        
         
  <style>
+@font-face {
+    font-family: calibri;
+    src: url("<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/fonts/Calibri.ttf");
+    font-weight: normal;
+}
+
+
+
     .body table, th  , .body td{
     border: 1px solid black;
     font-size: 10pt;
@@ -47,32 +56,37 @@ th {
     font-size: 12pt;
     font-weight: bold;
 }
+html,body{
+margin-top:80px;
+margin-left:10px;
+margin-right:10px;
+font-family: calibri;
+}
+#header { position: fixed; left: 0px; top: -80px; right: 0px; height: 100px; text-align: center;font-size: 15px; }
         </style>
 	<!-- Fonts -->
 	
         </head>
     <body> 
-        <table border = '0'celpacing="0" cellpadding = "0" width="550px" align="center">
+    <div id="header">
+        <table border = '0'celpacing="0" cellpadding = "0" width="100%" align="center">
             <tr>
-                <td width="10px"><img src = "{{ asset('/images/logo.png') }}" alt="DBTI" align="middle"  width="70px"/></td>
-                <td width="530px">
-                    <p align="center"><span style="font-size:20pt;">Don Bosco Technical Institute of Makati, Inc. </span>
+                <td>
+                    <p align="center"><span style="font-size:12pt;">Don Bosco Technical Institute of Makati, Inc. </span>
                         <br>
                         Chino Roces Ave., Makati City <br>
                         Tel No : 892-01-01
                     </p>
                 </td>
             </tr>
+	    <tr><td style="font-size:12pt;text-align:center;"><b>Trial Balance</b></td></tr>
         </table>
-    
-        <h3 align="center"> Trial Balance</h3>
         <table>
-            <tr><td>From: {{$fromtran}}</td></tr>
-            <tr><td>To: {{$totran}}</td></tr>
-
-            <hr />
+            <tr><td>For the period {{$fromtran}} to {{$totran}}</td></tr>
         </table>    
-        <table class="table table-striped ">
+            <hr/>
+     </div>
+        <table class="table table-striped " style="font-size:12pt;">
             <?php 
             $totaldebit = 0;
             $totalcredit = 0;
@@ -80,7 +94,7 @@ th {
             $entry = count($trials);
             $curr_row = 1;
             ?>
-            <thead style="font-weight: bolder"><tr><td>Acct No.</td><td>Account Title</td><td>Debit</td><td>Credit</td></tr></thead>
+            <thead style="font-weight: bolder"><tr><td width="10%">Acct No.</td><td width="50%">Account Title</td><td width="20%" style="text-align:center">Debit</td><td width="20%" style="text-align:center">Credit</td></tr></thead>
             @foreach($trials as $trial)
 
             <tr><td @if($entry <= $curr_row)style="border-bottom: 1px solid;"@endif
@@ -90,24 +104,19 @@ th {
                     @if($entry == $curr_row)border-bottom: 1px solid;
                     @endif
                     ">
-@if($entry == $curr_row)border-bottom: 1px solid;
-                    @endif
-                    ">
-
-                    @if(in_array(substr($trial->accountingcode,0,1),array(1,5)))
-                        @if(round(AcctHelper::getaccttotal($trial->credits,$trial->debit,$trial->accountingcode),2)<0)
+        @if($trial->entry == 'debit')
+                        @if(round(AcctHelper::getaccttotal($trial->credits,$trial->debit,$trial->entry),2)<0)
                         (
                         @endif
-                    {{number_format(abs(AcctHelper::getaccttotal($trial->credits,$trial->debit,$trial->accountingcode)),2)}}
-                        @if(round(AcctHelper::getaccttotal($trial->credits,$trial->debit,$trial->accountingcode),2)<0)
+                    {{number_format(abs(AcctHelper::getaccttotal($trial->credits,$trial->debit,$trial->entry)),2)}}
+                        @if(round(AcctHelper::getaccttotal($trial->credits,$trial->debit,$trial->entry),2)<0)
                         )
                         @endif
 <?php
-                    $totaldebit = $totaldebit + round(AcctHelper::getaccttotal($trial->credits,$trial->debit,$trial->accountingcode),2);
+                    $totaldebit = $totaldebit + round(AcctHelper::getaccttotal($trial->credits,$trial->debit,$trial->entry),2);
 ?>
 @else
 {{number_format(0,2)}}
-
                     @endif
                 </td>
                 <td style="text-align: right;
@@ -115,17 +124,16 @@ th {
                     border-bottom: 1px solid;
                     @endif
                     ">
-
-                    @if(in_array(substr($trial->accountingcode,0,1),array(2,3,4)))
-                        @if(round(AcctHelper::getaccttotal($trial->credits,$trial->debit,$trial->accountingcode),2)<0)
+                    @if($trial->entry == 'credit')
+                        @if(round(AcctHelper::getaccttotal($trial->credits,$trial->debit,$trial->entry),2)<0)
                         (
                         @endif
-                    {{number_format(abs(AcctHelper::getaccttotal($trial->credits,$trial->debit,$trial->accountingcode)),2)}}
-                        @if(round(AcctHelper::getaccttotal($trial->credits,$trial->debit,$trial->accountingcode),2)<0)
+                    {{number_format(abs(AcctHelper::getaccttotal($trial->credits,$trial->debit,$trial->entry)),2)}}
+                        @if(round(AcctHelper::getaccttotal($trial->credits,$trial->debit,$trial->entry),2)<0)
                         )
                         @endif
 <?php
-                    $totalcredit = $totalcredit + round(AcctHelper::getaccttotal($trial->credits,$trial->debit,$trial->accountingcode),2);
+                    $totalcredit = $totalcredit + round(AcctHelper::getaccttotal($trial->credits,$trial->debit,$trial->entry),2);
 ?>
 @else
 {{number_format(0,2)}}

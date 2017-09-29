@@ -1335,7 +1335,8 @@ class AjaxController extends Controller
             //$strand = '';
             $department = Input::get('department');
             //$department = "Junior High School";
-            $sy = \App\CtrRefSchoolyear::first();
+            //$sy = \App\CtrRefSchoolyear::first();
+            $sy = 2016;
             
             if($strand == ''){
                 $students = DB::Select("Select * from users left join status_histories stat on users.idno = stat.idno left join rankings on rankings.idno = stat.idno and rankings.schoolyear = stat.schoolyear where stat.status IN (2,3) and stat.level = '$level' and stat.section = '$section' and stat.schoolyear=$sy->schoolyear order by class_no ASC");

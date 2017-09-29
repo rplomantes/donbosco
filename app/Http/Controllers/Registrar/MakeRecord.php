@@ -21,10 +21,13 @@ class MakeRecord extends Controller
         $newrecord = new \App\PrevSchoolRec;
         $newrecord->idno = $request->idno;
         $newrecord->schoolyear = $request->schoolyear;
+        $newrecord->dateEntered = $request->entered;
+        $newrecord->dateLeft = $request->left;
         $newrecord->school = $request->school;
         $newrecord->level = $request->level;
         $newrecord->finalrate = $request->grade;
         $newrecord->dayp = $request->dayp;
+        $newrecord->status = $request->action;
         $newrecord->created_by = \Auth::user()->idno;
         $newrecord->save();
         
