@@ -16,7 +16,7 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
     });
 
 //   $( function() {
-//    var checkno = [<?php echo '"'.implode('","', $checkno).'"' ?>];
+//    var checkno = [];
 //    $( "#check_number" ).autocomplete({
 //      source: checkno
 //    });
