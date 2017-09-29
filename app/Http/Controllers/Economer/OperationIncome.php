@@ -7,18 +7,20 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Economer\Charts;
+use DB;
+use App\Http\Controllers\Accounting\Helper as AcctHelper;
 
 class OperationIncome extends Controller
 {
-    function index(){
-        //$fund =$this->bankFund($fromdate,$todate,'prev');
-        //$totalfund = $this->compute($fund);
+    function index($fromdate,$todate){
+        $fund =$this->bankFund($fromdate,$todate,'prev');
+        $totalfund = $this->compute($fund);
         
         $height = 400;
         $width = 600;
         $labels = array('Expense','Income','Assets');
         $colors = array(sprintf("#%06x",rand(0,16777215)),sprintf("#%06x",rand(0,16777215)),sprintf("#%06x",rand(0,16777215)));
-        $data = array(5000,2000,9000);
+        $data = array(5000,2000000,$totalfund);
         $chart = Charts::piechart($width, $height, $labels, $colors, $data);
         
         return view('example',compact('chart'));
@@ -46,8 +48,20 @@ class OperationIncome extends Controller
     
     function compute($accounts){
         $total = 0;
+        $debit = 0;
+        $credit = 0;
         foreach($accounts as $account){
-            //$total = 
+            if($account->entry == "debit"){
+                $debit = $debit + round(AcctHelper::getaccttotal($account->credits,$account->debit,$account->entry),2);
+            }
+            
+            if($account->entry == "credit"){
+                $credit = $credit + round(AcctHelper::getaccttotal($account->credits,$account->debit,$account->entry),2);
+            }
         }
+        
+        $total = $total + $debit;
+        
+        return $total;
     }
 }

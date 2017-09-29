@@ -20,12 +20,12 @@ foreach($payees as $key=>$value){
     });
     });
 
-   $( function() {
-    var checkno = [<?php echo '"'.implode('","', $checkno).'"' ?>];
-    $( "#check_number" ).autocomplete({
-      source: checkno
-    });
-    });
+//   $( function() {
+//    var checkno = [<?php echo '"'.implode('","', $checkno).'"' ?>];
+//    $( "#check_number" ).autocomplete({
+//      source: checkno
+//    });
+//    });
 
    $( function() {
     var payee = [<?php echo '"'.implode('","', $payees).'"' ?>];

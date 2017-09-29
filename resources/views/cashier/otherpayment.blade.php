@@ -16,12 +16,12 @@ $checkno = \App\Dedit::distinct('check_number')->pluck('check_number')->toArray(
     });
     });
 
-   $( function() {
-    var checkno = [<?php echo '"'.implode('","', $checkno).'"' ?>];
-    $( "#check_number" ).autocomplete({
-      source: checkno
-    });
-    });
+//   $( function() {
+//    var checkno = [<?php echo '"'.implode('","', $checkno).'"' ?>];
+//    $( "#check_number" ).autocomplete({
+//      source: checkno
+//    });
+//    });
 </script>
 
 <style>
