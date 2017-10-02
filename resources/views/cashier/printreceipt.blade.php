@@ -64,15 +64,20 @@ body { margin: 0px; }
                 <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total</td><td align="right"><b>{{number_format($debit_cash->amount + $debit_cash->checkamount,2)}}</b></td></tr>
                 <tr><td colspan="2">&nbsp;&nbsp;</td></tr>
                 <tr><td colspan="2">
-                    <table border="0" cellspacing="0" cellpadding="0" style="font-size:9pt">        
-                        <tr><td>Check Amount<td> :</td> </td><td align="right">{{number_format($debit_cash->checkamount,2)}}</td><td rowspan="4" width="10">&nbsp;</td><td rowspan="4" valign="top">Particular : <br> {{$debit_cash->remarks}}</td></tr>
-                        <tr><td>Cash Amount <td> :</td> </td><td align="right">{{number_format($debit_cash->amount,2)}}</td></tr> 
-                        <tr><td>Cash Rendered <td> :</td> </td><td align="right">{{number_format($debit_cash->receiveamount,2)}}</td></tr> 
-                        <tr><td>Change <td> :</td> </td><td align="right">{{number_format($debit_cash->receiveamount-$debit_cash->amount ,2)}}</td></tr> 
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="font-size:9pt">
+                        <tr>
+                            <td width="70">Check Amount</td><td width="1"> :</td>
+                            <td width="60" align="right">{{number_format($debit_cash->checkamount,2)}}</td>
+                            <td rowspan="5" width="10">&nbsp;</td>
+                            <td rowspan="5" valign="top">Particular : <br> {{$debit_cash->remarks}}</td>
+                        </tr>
+                        <tr><td>Cash Amount</td> <td> :</td><td align="right">{{number_format($debit_cash->amount,2)}}</td></tr> 
+                        <tr><td>Cash Rendered</td> <td> :</td><td align="right">{{number_format($debit_cash->receiveamount,2)}}</td></tr> 
+                        <tr><td>Change </td><td> :</td><td align="right">{{number_format($debit_cash->receiveamount-$debit_cash->amount ,2)}}</td></tr> 
                                          
                         @if(isset($status->status))
                             @if($status->status=='2')
-                        <tr><td colspan="2" ><span style="font-size:12pt;font-weight:bold">ENROLLED</span></td></tr>
+                        <tr><td colspan="3" ><span style="font-size:12pt;font-weight:bold">ENROLLED</span></td></tr>
                             @endif
                         @endif
                     </table> 

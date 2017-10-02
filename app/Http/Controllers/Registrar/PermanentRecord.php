@@ -339,7 +339,7 @@ class PermanentRecord extends Controller
                 $daya = array();
                 $dayt = array();
                 for($i=1; $i < 5 ;$i++){
-                    if($gradeinfo['sy'] == 2016){
+                    if($sy == 2016){
                         $attendance  = AttendanceController::studentQuarterAttendance($idno,$sy,$i,$level); 
                     }else{
                         $attendance  = AttendanceController::studentQuarterAttendance($idno,$sy,array($i),$level); 

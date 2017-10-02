@@ -14,8 +14,8 @@ $info = Registrarhelper::info($idno);
     
     <style>
         body{
-            margin-left: 30px;
-            margin-right: -5px;
+            margin-left: -30px;
+            margin-right:-30px;
             margin-top: -40px;
             font-family: dejavu sans;
             page-break-after: avoid;
@@ -50,15 +50,15 @@ $info = Registrarhelper::info($idno);
     <table width="100%" style="font-size: 9pt" cellspacing="2" >
         <tr>
             <td width="11.5%">Name:</td>
-            <td width="34%" 
+            <td width="33%" 
                 @if(strlen($info->name)>33)
                 style='font-size: 7pt'
                 @endif
                 class="underscore">
                 {{$info->name}}</td>
             <td width="4%" style="padding-top: 9pt;"></td>
-            <td width="10.5%">Gender:</td>
-            <td width="11%" class="underscore">{{$info->gender}}</td>
+            <td width="11%">Gender:</td>
+            <td width="11.5%" class="underscore">{{$info->gender}}</td>
             <td width="2%" style="padding-top: 9pt;"></td>
             <td width="11%" style="font-size: 8.5pt">Date of Birth:</td>
             <td width="17%" class="underscore">{{$info->birthDate}}</td>
@@ -79,7 +79,7 @@ $info = Registrarhelper::info($idno);
             <td class="underscore">{{$info->fname}}</td>
             <td style="padding-top: 9pt;"></td>
             <td>Address:</td>
-            <td colspan="4" rowspan="2" style="font-size:8.5pt;vertical-align: bottom">
+            <td colspan="4" rowspan="2" style="font-size:8.5pt;vertical-align: top">
                 <div class="underscore">
                     {{$info->address1}}
                     @if($info->address2 != "")
@@ -112,12 +112,12 @@ $info = Registrarhelper::info($idno);
     @endif
     </div>
     
-    <div width="100%" style="position:absolute;top:300px;left:0pt;">
-        <table cellspacing="3">
+    <div style="position:absolute;top:300px;left:0pt;">
+        <table width="100%" cellspacing="0" border="0">
             <tr>
-                <td width="49%">@if($grade7 == 1){!!PermanentRecord::hsGradeTemp($idno,"Grade 7")!!}@endif</td>
-                <td width="2px"></td>
-                <td width="49%">@if($grade9 == 1){!!PermanentRecord::hsGradeTemp($idno,"Grade 9")!!}@endif</td>
+                <td width="49%">@if($grade7 == 1){!!PermanentRecord::hsGradeTemp($idno,"Grade 7")!!}@else &nbsp; @endif</td>
+                <td width="2%">&nbsp;</td>
+                <td width="49%">@if($grade9 == 1){!!PermanentRecord::hsGradeTemp($idno,"Grade 7")!!}@endif</td>
             </tr>
         </table>
     </div>
