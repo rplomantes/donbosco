@@ -48,7 +48,7 @@ class OfficeSumController extends Controller
             } 
         }
         
-        if($accounttype == 4){
+        if($accounttype == 4 || $accounttype == 3 || $accounttype == 2){
             $total = $credit - $debit;
         }else{
             $total = $debit - $credit;

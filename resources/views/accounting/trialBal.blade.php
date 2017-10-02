@@ -55,7 +55,9 @@ use App\Http\Controllers\Accounting\Helper as AcctHelper;
 {{number_format(0,2)}}
 
                     @endif
-                </td></tr>
+                </td>
+                <td>{{$trial->credits}} - {{$trial->debit}}</td>
+            </tr>
             @endforeach
             <tr><td colspan="2" style="text-align: right"><b>Total</b></td><td style="text-align: right">{{number_format($totaldebit, 2, '.', ', ')}}</td><td style="text-align: right">{{number_format($totalcredit, 2, '.', ', ')}}</td></tr>
         </table>

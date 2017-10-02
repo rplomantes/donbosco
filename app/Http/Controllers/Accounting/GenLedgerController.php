@@ -60,7 +60,7 @@ class GenLedgerController extends Controller
 
         $pdf = \App::make('dompdf.wrapper');
         $pdf->setPaper('legal');
-        $pdf->loadView("print.printgeneralledger",compact('from','to','diff','title','basic','fiscalyear'));
+        $pdf->loadView("print.printgeneralledger",compact('from','to','diff','title','basic','fiscalyear','fromdate','todate'));
         return $pdf->stream();
         
     }

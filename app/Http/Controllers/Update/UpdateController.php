@@ -941,28 +941,29 @@ class UpdateController extends Controller
             }
             
             function fixDepartment(){
-                $fixes = DB::Select("Select * from ledgers where schoolyear = ' 2016' and acct_department=''");
-//                
-//                foreach($fixes as $fix){
-//                    $acct_dept = "";
-//                    $sub_dept = "";
-//                    $ctr = \App\CtrPaymentSchedule::where('level',$fix->level)->where('accountingcode',$fix->accountingcode)->where('accountingcode',$fix->accountingcode)->first();
-//                    
-//                    if($ctr){
-//                        $acct_dept = $ctr->acct_department;
-//                        $sub_dept = $ctr->sub_department;
-//                    }
-//                    echo $acct_dept." - ".$fix->id." - ".$ctr."<br>";
-//                    $account = \App\Ledger::find($fix->id);
-//                    $account->acct_department = $acct_dept;
-//                    $account->sub_department = $sub_dept;
-//                    $account->save();
-//                }
+                //$fixes = DB::Select("Select * from ledgers where schoolyear = 2016 and acct_department='' and payment = 0");
+                $fixes = DB::Select("Select * from ledgers where schoolyear = 2016 and acct_department='' and updated_at >= '2017-05-01 00:00:00'");
+                
+                foreach($fixes as $fix){
+                    $acct_dept = "";
+                    $sub_dept = "";
+                    $ctr = \App\CtrPaymentSchedule::where('level',$fix->level)->where('accountingcode',$fix->accountingcode)->where('accountingcode',$fix->accountingcode)->first();
+                    
+                    if($ctr){
+                        $acct_dept = $ctr->acct_department;
+                        $sub_dept = $ctr->sub_department;
+                    }
+                    echo $acct_dept." - ".$fix->id." - ".$ctr."<br>";
+                    $account = \App\Ledger::find($fix->id);
+                    $account->acct_department = $acct_dept;
+                    $account->sub_department = $sub_dept;
+                    $account->save();
+                }
                 return $fixes;
             }
             
             function fixDepartmentCredit(){
-                $credits = DB::Select("Select * from credits where acct_department='' and entry_type = 1 and schoolyear = 2017");
+                $credits = DB::Select("Select * from credits where acct_department='' and fiscalyear = 2017 and accountingcode !=210400");
                 //$credits = \App\Credit::where('acct_department','')->where('entry_type',1)->get();
                 foreach($credits as $credit){
                     $acct_dept = "";
@@ -973,7 +974,7 @@ class UpdateController extends Controller
                         $acct_dept = $ledger->acct_department;
                         $sub_dept = $ledger->sub_department;
                     }
-                    echo $acct_dept." - ".$ledger->id." - ".$ledger."<br>";
+                    echo $acct_dept." - ".$credit->referenceid." - ".$ledger."<br>";
                     $account = \App\Credit::find($credit->id);
                     $account->acct_department = $acct_dept;
                     $account->sub_department = $sub_dept;

@@ -1,3 +1,8 @@
+<?php 
+use App\Http\Controllers\Accounting\Helper as AcctHelper;
+
+$process = \App\ChartOfAccount::where('acctcode',$title)->first();
+?>
 @extends('appaccounting')
 @section('content')
 <style>
@@ -84,12 +89,28 @@
             <h5><dl class="dl-horizontal"><dt>ACCOUNT TITLE:</dt><dd>{{$account->accounttype}}</dd></dl></h5>
             <h5><dl class="dl-horizontal"><dt>ACCOUNT CODE:</dt><dd>{{$account->acctcode}}</dd></dl></h5>
             <br>
-            <?php 
+            <?php
             $beginningdebit = 0;
             $beginningcredit = 0;
-            $beginningtotal = $beginningdebit-$beginningcredit;
-            $monthlygrandcredit = 0;
-            $monthlygranddebit = 0;
+                $debitentry = DB::Select("SELECT entry_type,sum(if( type='debit', amount, 0 )) as debit,sum(if( type='credit', amount, 0 )) as credit FROM "
+                        . "(SELECT SUM( amount ) + SUM( checkamount ) AS amount, entry_type,  'debit' AS type "
+                        . "FROM dedits "
+                        . "WHERE isreverse =0 AND accountingcode = '$account->acctcode' "
+                        . "AND (transactiondate BETWEEN '$from' AND '$to') GROUP BY entry_type "
+                        . "UNION ALL  "
+                        . "SELECT SUM( amount ) amount, entry_type,  'credit' "
+                        . "FROM credits WHERE isreverse =0 AND accountingcode = '$account->acctcode' "
+                        . "AND (transactiondate BETWEEN '$from' AND '$to') "
+                        . "GROUP BY entry_type) s where entry_type = 7 group by entry_type");
+                
+                foreach($debitentry as $forward){
+                    $beginningdebit = $beginningdebit + $forward->debit;
+                    $beginningcredit = $beginningcredit + $forward->credit;
+                }
+
+            $beginningtotal = AcctHelper::getaccttotal($beginningcredit,$beginningdebit,$process->entry);
+            $monthlygrandcredit = $beginningcredit;
+            $monthlygranddebit = $beginningdebit;
             ?>
             <table width="100%" class="table">
                 <thead>
@@ -137,7 +158,7 @@
                         . "SELECT SUM( amount ) amount, entry_type,  'credit' "
                         . "FROM credits WHERE isreverse =0 AND accountingcode = '$account->acctcode' "
                         . "AND transactiondate LIKE  '".$getmonth."-%' and (transactiondate BETWEEN '$from' AND '$to') "
-                        . "GROUP BY entry_type) s group by entry_type");
+                        . "GROUP BY entry_type) s where entry_type != 7 group by entry_type");
                 
             $monthlydebit = 0;
             $monthlycredit = 0;
@@ -202,21 +223,8 @@
                         ?>
                     @endforeach
                         <?php
-                            if($basic == 1){
-                            $monthlytotal = $monthlytotal + ($monthlydebit-$monthlycredit);
-                            }
-                            elseif($basic == 2){
-                            $monthlytotal = $monthlytotal + ($monthlycredit-$monthlydebit);
-                            }
-                            elseif($basic == 3){
-                            $monthlytotal = $monthlytotal + ($monthlycredit-$monthlydebit);
-                            }
-                            elseif($basic == 4){
-                            $monthlytotal = $monthlytotal + ($monthlycredit-$monthlydebit);
-                            }
-                            elseif($basic == 5){
-                            $monthlytotal = $monthlytotal + ($monthlydebit-$monthlycredit);
-                            }
+                            
+                            $monthlytotal = AcctHelper::getaccttotal($monthlycredit,$monthlydebit,$process->entry);
 
                             $monthlygrandcredit = $monthlygrandcredit +$monthlycredit;
                             $monthlygranddebit = $monthlygranddebit +$monthlydebit;
@@ -247,22 +255,7 @@
                 <table width="100%" class="table">
                     
                         <?php
-                            if($basic == 1){
-                                $totalbalance = $monthlygranddebit-$monthlygrandcredit;
-                            }
-                            elseif($basic == 2){
-                                $totalbalance = $monthlygrandcredit-$monthlygranddebit;
-                            }
-                            elseif($basic == 3){
-                                $totalbalance = $monthlygrandcredit-$monthlygranddebit;
-                            }
-                            elseif($basic == 4){
-                                $totalbalance = $monthlygrandcredit-$monthlygranddebit;
-                            }
-                            elseif($basic == 5){
-                                $totalbalance = $monthlygranddebit-$monthlygrandcredit;
-                            }  
-                        ?>
+                                $totalbalance = AcctHelper::getaccttotal($monthlygrandcredit,$monthlygranddebit,$process->entry);                        ?>
                     @if($basic == 1 || $basic == 2 || $basic == 3)
                         <tr  style="text-align: right"><td width="25%"  style="text-align: left">Monthly Grand Total</td><td width="25%"><u>{{number_format($monthlygranddebit,2)}}</u></td><td width="25%"><u>{{number_format($monthlygrandcredit,2)}}</u></td><td width="25%"></td></tr>
                     @endif

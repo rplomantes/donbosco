@@ -9,7 +9,7 @@
         #header { position: fixed; top:80px;width:746px;margin-left:201px;}
         </style>
     </head>
-    <body style="margin-top:160px;margin-left:201px;width:749px;margin-bottom:120px;">
+    <body style="margin-top:280px;margin-left:201px;width:749px;margin-bottom:120px;">
 	<div id="footer">Page <span class="pagenum"></span></div>    
         <div id="header">
         <table width ="100%">
@@ -17,7 +17,6 @@
             <tr><td>Chino Roces Avenue, Makati, Metro Manila</td><td align="right">Voucher No : {{$disbursement->voucherno}}</td></tr>
             <tr><td>&nbsp;</td><td align="right">Date Issued: {{date('M d, Y', strtotime($disbursement->transactiondate))}}</td></tr>
         </table>   
-        </div>
         <hr />
         <table width="100%" class="content">
             <tr><td><b>Payee : </b></td><td colspan="3">{{strtoupper($disbursement->payee)}}</td></tr>
@@ -26,6 +25,8 @@
              <tr><td><b>Particular :</b> </td><td colspan="3"><i>{{$disbursement->remarks}}</i></td></tr>    
         </table> 
         <hr />
+        </div>
+
         <?php
         $debit=0;$credit=0;
         ?>

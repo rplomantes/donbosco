@@ -289,14 +289,14 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
                 @if(count($previousbalances)> 0 )
                 
                     
-                        <tr><td>Previous Balance</td><td><input type="text" onkeypress = "validate(event)" onkeydown = "submitprevious(event,this.value)" name="previous" id="previous" style="text-align:right" class="form-control" value="{{$totalprevious}}"></td></tr>
+                        <tr><td>Previous Balance</td><td><input type="text" onkeypress = "validate(event)" onkeydown = "submitprevious(event,this.value)" name="previous" id="previous" style="text-align:right" class="form-control divide" value="{{$totalprevious}}"></td></tr>
                 @else   
                 <input type="hidden" name="previous" id="previous" value="0">
                 @endif
                 @if(count($othercollections)>0)
                 @foreach($othercollections as $coll)
                     @if(round($coll->amount - $coll->payment - $coll->debitmemo,5) > 0)
-                         <tr><td>{{$coll->description}}</td><td><input type="text" name="other[{{$coll->id}}]"  class="other" style="text-align:right" class="form-control" onkeypress = "validate(event)" onkeydown = "submitother(event,this.value,'{{$coll->amount-$coll->payment-$coll->debitmemo}}','{{$coll->id}}')" value="{{$coll->amount-($coll->payment+$coll->debitmemo)}}"></td></tr>
+                         <tr><td>{{$coll->description}}</td><td><input type="text" name="other[{{$coll->id}}]"  class="other divide" style="text-align:right" class="form-control" onkeypress = "validate(event)" onkeydown = "submitother(event,this.value,'{{$coll->amount-$coll->payment-$coll->debitmemo}}','{{$coll->id}}')" value="{{$coll->amount-($coll->payment+$coll->debitmemo)}}"></td></tr>
                     @endif
                @endforeach
                 @endif
@@ -334,14 +334,14 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
                         <td><input type="checkbox" name="iscbc" id="iscbc" value="cbc" onkeydown="submitiscbc(event,this.checked)"> China Bank Check<label>Check Number</label>
                         <input  type="text" name="check_number" id="check_number" onkeydown = "nosubmit(event,'receivecheck')" class="form form-control">
                         </td></tr>
-                        <tr><td colspan="2"><label>Check Amount</label><input style ="text-align: right" type="text" name="receivecheck" id="receivecheck" onkeypress="validate(event)" onkeydown="submitcheck(event,this.value)"  placeholder="0.00" class="form form-control">
+                        <tr><td colspan="2"><label>Check Amount</label><input style ="text-align: right" type="text" name="receivecheck" id="receivecheck" onkeypress="validate(event)" onkeydown="submitcheck(event,this.value)"  placeholder="0.00" class="form form-control divide">
                         </td></tr>
                                        
                         </table>
                         <div style="color:red;font-weight: bold" id="cashdiff"></div>
                 </td> </tr>
-                <tr><td colspan="2"><label>FAPE:</label><input style ="text-align: right" type="text" placeholder="0.00" name="fape" id="fape" onkeypress="validate(event)" onkeydown="submitfape(event,this.value)" class="form form-control">
-                <tr><td colspan="2"><label>Cash Amount Rendered:</label><input style ="text-align: right" type="text" placeholder="0.00" name="receivecash" id="receivecash" onkeypress="validate(event)" onkeydown="submitcash(event,this.value)" class="form form-control">
+                <tr><td colspan="2"><label>FAPE:</label><input style ="text-align: right" type="text" placeholder="0.00" name="fape" id="fape" onkeypress="validate(event)" onkeydown="submitfape(event,this.value)" class="form form-control divide">
+                <tr><td colspan="2"><label>Cash Amount Rendered:</label><input style ="text-align: right" type="text" placeholder="0.00" name="receivecash" id="receivecash" onkeypress="validate(event)" onkeydown="submitcash(event,this.value)" class="form form-control divide">
                         </td></tr>
                 <tr><td colspan="2"><label>Change:</label><input style ="text-align: right" type="text" value="0" name="change" id="change" onkeypress="validate(event)" readonly class="form form-control">
                         </td></tr>
@@ -366,12 +366,17 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
 <script src="{{url('/js/nephilajs/cashier.js')}}"></script>    
 <script src="{{url('/js/nephilajs/getpaymenttype.js')}}"></script>
 <script>
-//    $('.divide').keyup(function(e){        
-//        
+//    $('.divide').keyup(function(e){
 //        if(e.keyCode >= 48 || e.keyCode <= 57){
-//            var value= $('.divide').val();
-//            var string = value.replace(',','')
-//            $(this).val(formatNumber(string));
+//            var value= $(this).val();
+//            var string = value.replace(/,/g,'')
+//            var patt = new RegExp(/(\d+)+[.]+(\d+)/g);
+//            var res = patt.test(string);
+//            if(!res){
+//                
+//                $(this).val(formatNumber(string));                
+//            }
+//
 //        }
 //    });
 //    

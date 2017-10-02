@@ -63,11 +63,13 @@ margin-right:10px;
 font-family: calibri;
 }
 #header { position: fixed; left: 0px; top: -80px; right: 0px; height: 100px; text-align: center;font-size: 15px; }
+#footer { position: fixed; bottom:0px;border-top:1px solid gray;} .pagenum:before {content: counter(page); }
         </style>
 	<!-- Fonts -->
 	
         </head>
     <body> 
+        <div id="footer">Page <span class="pagenum"></span></div>    
     <div id="header">
         <table border = '0'celpacing="0" cellpadding = "0" width="100%" align="center">
             <tr>
@@ -80,11 +82,10 @@ font-family: calibri;
                 </td>
             </tr>
 	    <tr><td style="font-size:12pt;text-align:center;"><b>Trial Balance</b></td></tr>
+            <tr><td style="text-align:center;"><b>For the period</b> {{date('M d, Y', strtotime($fromtran))}} to {{date('M d, Y', strtotime($totran))}}</td></tr>
         </table>
-        <table>
-            <tr><td>For the period {{$fromtran}} to {{$totran}}</td></tr>
-        </table>    
             <hr/>
+            <img src="<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/images/DBTI.png"  style="position:absolute;width:108px;height:auto;top:10px;left:120px;">
      </div>
         <table class="table table-striped " style="font-size:12pt;">
             <?php 
