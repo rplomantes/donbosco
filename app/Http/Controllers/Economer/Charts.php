@@ -8,7 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 class Charts extends Controller
 {
-    static function piechart($width,$height,$labels,$colors,$data){
+    static function piechart($width,$height,$position,$labels,$colors,$data){
         $chartjs = app()->chartjs
                 ->name('pieChartTest')
                 ->type('pie')
@@ -18,10 +18,14 @@ class Charts extends Controller
                     [
                         'backgroundColor' => $colors,
                         'hoverBackgroundColor' => $colors,
-                        'data' => $data
+                        'data' => $data,
                     ]
                 ])
-                ->options([]);
+                ->options([
+                    'legend'=>[
+                        'position'=>$position
+                    ]
+                ]);
 
         return $chartjs;
 

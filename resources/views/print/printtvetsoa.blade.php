@@ -104,8 +104,41 @@ th {
        ?>
        @endforeach
     
-    <br>
-    
+   <table style="font-size: 9pt;"><tr style="text-align: right"><td width="100px">Total Training Fee</td><td>TraineesContribution</td><td>Sponsor</td><td>Payment</td><td>Subsidy</td><td>Balance</td></tr>
+       <?php
+       $totamount = 0; $totdiscount=0; $totalsponsor=0; $totsubsidy=0;
+       $totpayment = 0;
+       
+       ?>
+       @foreach($balances as $balance)
+       <?php
+       $totamount = $totamount + $balance->amount;
+       $totdiscount = $totdiscount + $balance->discount;
+       $totalsponsor = $totalsponsor + $balance->sponsor;
+       $totsubsidy = $totsubsidy+$balance->subsidy;
+       $totpayment = $totpayment+$balance->payment;
+       
+       ?>
+       
+       <tr><td align="right">{{number_format($balance->amount,2)}}</td><td  align="right">{{number_format($balance->trainees,2)}}</td>
+           </td><td align="right">{{number_format($balance->sponsor,2)}}</td>
+           <td align="right">{{number_format($balance->payment,2)}}</td><td align="right">{{number_format($balance->subsidy+$balance->discount,2)}}</td><td align="right">{{number_format($balance->amount-$balance->discount-$balance->payment-$balance->subsidy-$balance->sponsor,2)}}</td></tr>
+       
+       @endforeach
+       
+
+        <tr  style="text-align: right"><td>Account Description</td><td>Amount</td><td width="100px">Less: Discount</td><td>Payment</td><td>DM</td><td>Balance</td></tr>
+       @foreach($others as $other)
+            @if($other->categoryswitch > 6 && $other->categoryswitch < 10)
+
+		@if($other->amount-($other->discount+$other->debitmemo+$other->payment) > 0)
+            <tr><td>{{$other->receipt_details}}</td><td align="right">{{number_format($other->amount,2)}}</td>
+                <td align="right">{{number_format($other->discount,2)}}</td><td align="right">{{number_format($other->payment,2)}}</td>
+                <td align="right">{{number_format($other->debitmemo,2)}}</td><td align="right">{{number_format($other->amount-$other->discount-$other->payment-$other->debitmemo,2)}}</td></tr>
+		@endif
+            @endif
+       @endforeach
+    </table>
     <table style="font-size: 9pt;margin-top: 20px">
         <thead>
             <tr><td colspan="3" style="font-size: 9pt;font-weight: bold"><b><u>Transaction History</u></b></td></tr>

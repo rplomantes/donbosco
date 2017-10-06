@@ -3,6 +3,7 @@
     Route::auth();
     
     Route::get('/chart/{fromdate}/{todate}','Economer\OperationIncome@index');
+    Route::get('/bankfund/{fromdate}/{todate}','Admin\BankFunds@index');
     Route::get('/gradeMigration2','Update\UpdateController@gradeMigration2');
     
     Route::get('/studentinfo/{idno}','Miscellaneous\StudentInfoController@index');
@@ -281,7 +282,7 @@
     Route::get('dmsummary/{trandate}','Accounting\DebitDCSummaryController@index');
     Route::get('printdmjournal/{fromtran}/{totran}','Accounting\DebitDCSummaryController@printsummary');
     
-    
+    Route::get('ledger/{idno}','Admin\StudentLedger@index');
     Route::get('/finalsheetb/{quarter}/{level}/{section}/{strand?}','Registrar\SheetBController@finalSheetB');
     
     Route::get('updatecdb2','Update\UpdateController@updatecdb2');
@@ -304,6 +305,7 @@
     Route::get('/getsearch/{varsearch}','AjaxController@getsearch');
     Route::get('/getsearchcashier/{varsearch}','AjaxController@getsearchcashier');
     Route::get('/getsearchaccounting/{varsearch}','AjaxController@getsearchaccounting');
+    Route::get('/getsearchadmin/{varsearch}','AjaxController@getsearchaccounting');
     Route::get('/compute','AjaxController@compute');
     Route::get('/getpaymenttype/{ptype}','AjaxController@getpaymenttype');
     Route::get('/getparticular/{group}/{particular}','AjaxController@getparticular');

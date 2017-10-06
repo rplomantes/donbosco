@@ -1,4 +1,12 @@
-@extends('appaccounting')
+<?php 
+$template = 'appaccounting';
+if(in_array(Auth::user()->accesslevel,array(env('USER_ACCOUNTING'),env('USER_ACCOUNTING_HEAD')))){
+    $template = 'appaccounting';
+}elseif(in_array(Auth::user()->accesslevel,array(env('USER_ADMIN')))){
+    $template = 'appadmin';
+}
+?>
+@extends($template)
 @section('content')
 <div class="container">
 <table class="table table-striped"><tr><td>Receipt No</td><td>Received From</td><td align="center">Cash Amount</td><td align="center"> Check Amount</td><td align="center">Total</td><td>Status</td><td>View</td><td>Posted By</td></tr>

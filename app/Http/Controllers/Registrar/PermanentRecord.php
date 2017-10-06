@@ -13,6 +13,7 @@ use App\Http\Controllers\Registrar\GradeController;
 use View;
 use App\Http\Controllers\Registrar\GradeComputation;
 use App\Http\Controllers\Registrar\AttendanceController as Attendance;
+use App\Http\Controllers\Registrar\Helper as MainHelper;
 
 class PermanentRecord extends Controller
 {
@@ -335,12 +336,23 @@ class PermanentRecord extends Controller
                 }
                 
                 $average = GradeComputation::computeQuarterAverage($sy, $level, array(0), 0, 5, $oldrecs);
+                $entered = "JUNE ".$sy;
+                $left = "MARCH ".$sy+1;
+                
                 $dayp = array();
                 $daya = array();
                 $dayt = array();
                 for($i=1; $i < 5 ;$i++){
                     if($sy == 2016){
                         $attendance  = AttendanceController::studentQuarterAttendance($idno,$sy,$i,$level); 
+                    }elseif($sy < 2016){
+                        $field = MainHelper::getGradeQuarter($i);
+                        $getattendances  = DB::Select("Select * from grades where schoolyear='$sy' and subjectcode= 'dayp'");
+                        $getdayp = 0;
+                        foreach($getattendances as $getattendance){
+                            $getdayp = $getattendance->$field;
+                        }
+                        $attendance = array($getdayp);
                     }else{
                         $attendance  = AttendanceController::studentQuarterAttendance($idno,$sy,array($i),$level); 
                     }

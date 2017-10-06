@@ -1,9 +1,15 @@
 <?php 
 use App\Http\Controllers\Accounting\Helper as AcctHelper;
-
 $process = \App\ChartOfAccount::where('acctcode',$title)->first();
+
+$template = 'appaccounting';
+if(in_array(Auth::user()->accesslevel,array(env('USER_ACCOUNTING'),env('USER_ACCOUNTING_HEAD')))){
+    $template = 'appaccounting';
+}elseif(in_array(Auth::user()->accesslevel,array(env('USER_ADMIN')))){
+    $template = 'appadmin';
+}
 ?>
-@extends('appaccounting')
+@extends($template)
 @section('content')
 <style>
     @media (min-width: 768px){

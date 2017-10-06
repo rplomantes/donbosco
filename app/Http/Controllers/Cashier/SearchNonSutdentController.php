@@ -20,7 +20,7 @@ class SearchNonSutdentController extends Controller
     
     function viewtransactions($idno){
         $students = DB::Select("SELECT * FROM `non_students` where TRIM(fullname) = (SELECT DISTINCT TRIM(fullname) from non_students where idno = '$idno')");
-        return view('cashier.nonstudenttransactions',compact('students'));
+        return view('cashier.nonstudenttransactions',compact('students','idno'));
     }
     
 

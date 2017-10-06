@@ -88,8 +88,9 @@ class MainController extends Controller
                    break;
                
                case env('USER_ADMIN');
-                   
-                   return view('economic.index');
+                   $students=DB::Select("select a.idno, a.lastname, a.firstname, a.middlename, a.extensionname, a.gender from users as a, statuses as b where "
+                           . "b.idno = a.idno and b.status='2' order by a.lastname, a.firstname");
+                   return view('admin.index',compact('students'));
                    //return "me";
                    break;
             }

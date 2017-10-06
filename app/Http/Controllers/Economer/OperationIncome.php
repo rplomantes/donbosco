@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Economer;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Economer\Charts;
@@ -22,6 +21,9 @@ class OperationIncome extends Controller
         $income = $this->income($fromdate,$todate);
         $totalincome = $this->compute($income,'credit');
         
+        $counterIncome = $this->counterIncome($fromdate,$todate);
+        $totalcounterincome = $this->compute($counterIncome,'debit');
+        
         $height = 400;
         $width = 600;
         $labels = array('Expense','Revenue','Assets');
@@ -29,7 +31,7 @@ class OperationIncome extends Controller
         $data = array($totalexpense,$totalincome,$totalfund);
         $chart = Charts::piechart($width, $height, $labels, $colors, $data);
         
-        return view('example',compact('chart'));
+        return view('example',compact('chart','fund','expense','income','totalincome'));
                 
                 
     }
@@ -39,7 +41,7 @@ class OperationIncome extends Controller
                     . "(select accountingcode,'credit' as type,sum(amount) as amount from credits where (transactiondate between '$fromdate' and '$todate') and isreverse = '0'  group by accountingcode "
                     . "UNION ALL "
                     . "select accountingcode,'debit',sum(amount)+sum(checkamount) as amount from dedits where (transactiondate between '$fromdate' and '$todate') and isreverse = '0'  group by accountingcode) r "
-                    . "on coa.acctcode = r.accountingcode where coa.acctcode LIKE '5%' group by coa.acctcode order by coa.acctcode");        
+                    . "on coa.acctcode = r.accountingcode where coa.acctcode LIKE '5%' OR (coa.acctcode LIKE '4%' and coa.entry = 'debit') group by coa.acctcode order by coa.acctcode");        
             
             return $expense;
     }
@@ -49,7 +51,17 @@ class OperationIncome extends Controller
                     . "(select accountingcode,'credit' as type,sum(amount) as amount from credits where (transactiondate between '$fromdate' and '$todate') and isreverse = '0'  group by accountingcode "
                     . "UNION ALL "
                     . "select accountingcode,'debit',sum(amount)+sum(checkamount) as amount from dedits where (transactiondate between '$fromdate' and '$todate') and isreverse = '0'  group by accountingcode) r "
-                    . "on coa.acctcode = r.accountingcode where coa.acctcode LIKE '4%' group by coa.acctcode order by coa.acctcode");        
+                    . "on coa.acctcode = r.accountingcode where coa.acctcode LIKE '4%' and coa.entry = 'credit' group by coa.acctcode order by coa.acctcode");        
+            
+            return $expense;
+    }
+    
+    function counterIncome($fromdate,$todate){
+            $expense = DB::Select("select coa.entry,coa.acctcode as accountingcode,accountname,sum(if( type='credit', amount, 0 ))  as credits,sum(if( type='debit', amount, 0 )) as debit from chart_of_accounts coa left join "
+                    . "(select accountingcode,'credit' as type,sum(amount) as amount from credits where (transactiondate between '$fromdate' and '$todate') and isreverse = '0'  group by accountingcode "
+                    . "UNION ALL "
+                    . "select accountingcode,'debit',sum(amount)+sum(checkamount) as amount from dedits where (transactiondate between '$fromdate' and '$todate') and isreverse = '0'  group by accountingcode) r "
+                    . "on coa.acctcode = r.accountingcode where coa.acctcode LIKE '4%' and coa.entry = 'debit' group by coa.acctcode order by coa.acctcode");        
             
             return $expense;
     }

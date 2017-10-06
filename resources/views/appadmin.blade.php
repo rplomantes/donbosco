@@ -77,6 +77,8 @@
         <script src="{{asset('/js/fileinput.js')}}"></script>
         <script src="{{asset('/js/bootstrap-datepicker.js')}}"></script>
         <script src="{{asset('/tablesorter/jquery.tablesorter.js')}}"></script>
+        <script src="{{asset('/chart.js/dist/Chart.js')}}"></script>
+        <script src="{{asset('/chart.js/dist/Chart.min.js')}}"></script>
         
         </head>
 <body> 
@@ -111,21 +113,36 @@
                         <li><a href="{{url('/')}}" >Home</a></li>
 
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Management Report<span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{url('deptincome',array(1,date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn fa-sign-out"></i>Consolidated Departmental Assets</a></li>
-                                <li><a href="{{url('deptincome',array(4,date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn fa-sign-out"></i>Consolidated Departmental Income</a></li>
-                                <li><a href="{{url('deptincome',array(5,date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn fa-sign-out"></i>Consolidated Departmental Expense</a></li>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Transaction Reports<span class="caret"></span></a>   
+                            <ul class="dropdown-menu">
+                                <li><a href="{{url('dailydisbursementalllist',array(date('Y-m-d'),date('Y-m-d')))}}">Disbursement Report</a></li>
+                                <li><a href="{{url('overallcollection',date('Y-m-d'))}}">Collection Report</a></li>
                             </ul>
                         </li>
-
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Transaction Reports<span class="caret"></span></a>   
+                        
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Management Report<span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{url('deptincome',array(1,date('Y-m-d'),date('Y-m-d')))}}"> Consolidated Departmental Assets</a></li>
+                                <li><a href="{{url('deptincome',array(4,date('Y-m-d'),date('Y-m-d')))}}"> Consolidated Departmental Income</a></li>
+                                <li><a href="{{url('deptincome',array(5,date('Y-m-d'),date('Y-m-d')))}}"> Consolidated Departmental Expense</a></li>
+                            </ul>
+                        </li>
+                        
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Other Report<span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{url('bankfunds',array(date('Y-m-d'),date('Y-m-d')))}}"> Bank DB/CD</a></li>
+                            </ul>
+                        </li>
+                        
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Tools<span class="caret"></span></a>   
                             <ul class="dropdown-menu">
-                                <li><a href="{{url('enrollmentstat')}}"><i class="fa fa-btn"></i>Disbursement Report</a></li>
-                                <li><a href="{{url('studentlist')}}"><i class="fa fa-btn"></i>Collection Report</a></li>
-                             </ul>
-                            </li>
+                                <li><a href="{{url('dailydisbursementalllist',array(date('Y-m-d'),date('Y-m-d')))}}">Search Voucher</a></li>
+                                <li><a href="{{url('overallcollection',date('Y-m-d'))}}">Search Payee</a></li>
+                            </ul>
+                        </li>
                             @endif
                         @endif
                     </ul>

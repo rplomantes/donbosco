@@ -275,8 +275,8 @@ class AjaxController extends Controller
                  function getsearchcashier($varsearch){
                     if(Request::ajax()){
 			$find = strtolower($varsearch);
-                    $searches = DB::Select("Select * From users where accesslevel = '0' AND (lastname like '$varsearch%' OR lcase(lastname) like '$find%' OR 
-                           firstname like '$varsearch%' OR idno = '$varsearch') Order by lastname, firstname");
+                    $searches = DB::Select("Select * From users where accesslevel = '0' AND (lastname like '%$varsearch%' OR lcase(lastname) like '%$find%' OR 
+                           firstname like '%$varsearch%' OR lcase(firstname) like '%$find%' OR like '%$varsearch%' OR idno = '$varsearch') Order by lastname, firstname");
                     $value = "<table class=\"table table-striped\"><thead>
             <tr><th>Student Number</th><th>Student Name</th><th>Gender</th><th>Info</th><th>View</th></tr>        
             </thead><tbody>";
@@ -293,26 +293,49 @@ class AjaxController extends Controller
                     }
                 }
                 
-                function getsearchaccounting($varsearch){
-                    if(Request::ajax()){
-		    $find = strtolower($varsearch);
-                    $searches = DB::Select("Select * From users where accesslevel = '0' AND (lastname like '$varsearch%' OR lcase(lastname) like '$find%' OR 
-                           firstname like '$varsearch%' OR idno = '$varsearch') Order by lastname, firstname");
-                    $value = "<table class=\"table table-striped\"><thead>
-            <tr><th>Student Number</th><th>Student Name</th><th>Gender</th><th>Info</th><th>View</th></tr>        
-            </thead><tbody>";
-                    foreach($searches as $search){
-                        $value = $value . "<tr><td>" .$search->idno . "</td><td>". $search->lastname . ", " .
-                                $search->firstname . " " . $search->middlename . " " . $search->extensionname .
-                                "</td><td>" . $search->gender . "</td><td><a href = '/studentinfo/".$search->idno."'>view</a><td></td><td><a href = '/accounting/".$search->idno."'>view</a><td>";
-                    }
-                      
-                    $value = $value . "</tbody>
+    function getsearchaccounting($varsearch){
+        if(Request::ajax()){
+
+            $find = strtolower($varsearch);
+            $searches = DB::Select("Select * From users where accesslevel = '0' AND (lastname like '%$varsearch%' OR lcase(lastname) like '%$find%' OR 
+                   firstname like '%$varsearch%' OR lcase(firstname) like '%$find%' OR idno = '$varsearch') Order by lastname, firstname");
+            $value = "<table class=\"table table-striped\"><thead>
+                      <tr><th>Student Number</th><th>Student Name</th><th>Gender</th><th>Info</th><th>View</th></tr>        
+                      </thead><tbody>";
+            foreach($searches as $search){
+                $value = $value . "<tr><td>" .$search->idno . "</td><td>". $search->lastname . ", " .
+                        $search->firstname . " " . $search->middlename . " " . $search->extensionname .
+                        "</td><td>" . $search->gender . "</td><td><a href = '/studentinfo/".$search->idno."'>view</a><td></td><td><a href = '/ledger/".$search->idno."'>view</a><td>";
+            }
+
+            $value = $value . "</tbody>
             </table>"; 
-                        
-                    return $value; 
-                    }
-                }
+
+            return $value; 
+        }
+    }
+    
+    function getsearchadmin($varsearch){
+        if(Request::ajax()){
+
+            $find = strtolower($varsearch);
+            $searches = DB::Select("Select * From users where accesslevel = '0' AND (lastname like '%$varsearch%' OR lcase(lastname) like '%$find%' OR 
+                   firstname like '%$varsearch%' OR lcase(firstname) like '%$find%' OR idno = '$varsearch') Order by lastname, firstname");
+            $value = "<table class=\"table table-striped\"><thead>
+                      <tr><th>Student Number</th><th>Student Name</th><th>Gender</th><th>Info</th><th>View</th></tr>        
+                      </thead><tbody>";
+            foreach($searches as $search){
+                $value = $value . "<tr><td>" .$search->idno . "</td><td>". $search->lastname . ", " .
+                        $search->firstname . " " . $search->middlename . " " . $search->extensionname .
+                        "</td><td>" . $search->gender . "</td><td><a href = '/studentinfo/".$search->idno."'>view</a><td></td><td><a href = '/accounting/".$search->idno."'>view</a><td>";
+            }
+
+            $value = $value . "</tbody>
+            </table>"; 
+
+            return $value; 
+        }
+    }
                 
                 function compute(){
                 $otherdiscountname = "None";
@@ -946,12 +969,12 @@ class AjaxController extends Controller
             }
             $data = $data . "</table>";
             }
-//            if($status->level == "Grade 11" ||$status->level == "Grade 12" ){
-//                $data = $data . "<a class='btn btn-danger' href='/card/".Input::get('idno')."/".Input::get('sy')."/1'>Print 1st Sem</a><span width='50px'>&nbsp;</span>";
-//                $data = $data . "<a class='btn btn-danger' href='/card/".Input::get('idno')."/".Input::get('sy')."/2'>Print 2nd Sem</a>";
-//            }else{
-//                $data = $data . "<a class='btn btn-danger' href='/card/".Input::get('idno')."/".Input::get('sy')."'>Print</a>";
-//            }
+            if($status->level == "Grade 11" ||$status->level == "Grade 12" ){
+                $data = $data . "<a class='btn btn-danger' href='/card/".Input::get('idno')."/".Input::get('sy')."/1'>Print 1st Sem</a><span width='50px'>&nbsp;</span>";
+                $data = $data . "<a class='btn btn-danger' href='/card/".Input::get('idno')."/".Input::get('sy')."/2'>Print 2nd Sem</a>";
+            }else{
+                $data = $data . "<a class='btn btn-danger' href='/card/".Input::get('idno')."/".Input::get('sy')."'>Print</a>";
+            }
             
             return $data;
         }

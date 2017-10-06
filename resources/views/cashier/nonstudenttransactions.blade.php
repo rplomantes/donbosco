@@ -13,8 +13,10 @@
                 <td>Status</td>
             </tr>
             @foreach($students as $student)
-	    <tr>
+	    
             <?php $trans = \App\Dedit::where('idno',$student->idno)->first();?>
+            @if($trans)
+            <tr>    
                 <td>{{$trans->receiptno}}</td>
                 <td>{{$trans->transactiondate}}</td>
                 <td>{{number_format($trans->amount+$trans->checkamount,2,'.',',')}}</td>
@@ -27,6 +29,7 @@
                     @endif
                 </td>
 	    </tr>
+            @endif
             @endforeach
         </table>
     </div>
