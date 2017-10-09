@@ -34,7 +34,7 @@ class BankFunds extends Controller
         $position = 'right';
         $chart = Charts::piechart($width, $height,$position, $labels, $colors, $data);
         
-        return view('admin.bankFund',compact('chart','banks'));
+        return view('admin.bankFund',compact('chart','banks','fromdate','todate'));
     }
     
     function bankFund($fromdate,$todate){

@@ -62,24 +62,6 @@ if(count($gradeSetting)> 0){
     @endif
 @endforeach
 </table>
-<table style="font-size: 7pt;" width="100%" cellspacing="0">
-    <tr class="border_left border_right" style='font-weight: bolder'>
-        <td colspan="3">Eligible for admission to Grade II</td>
-        <td colspan="4" style="font-size: 7pt;text-align: center;">General Average<span class="underscore">  {{GradeComputation::computeQuarterAverage($gradeinfo['sy'],$level,array(0),0,5,$grades)}}</span></td>
-    </tr>
-
-    <tr class="border_left border_right border_top border_bottom">
-        <td colspan="6">
-            @foreach($grades as $grade)
-                @if($grade->schoolyear == ($gradeinfo['sy']+1)." SUMMER")<br>
-                {{$grade->schoolyear}} {{$grade->school}}: {{$grade->subjectname}} = {{round($grade->finalgrade,0)}}
-                @else
-                <div style="height: 1.5px"></div>
-                @endif
-            @endforeach
-        </td>
-    </tr>
-</table>
 <table style="font-size: 7pt;border: 3px solid" width="100%" border="1" cellspacing="0">
     <?php 
     $dayp = array();
@@ -130,4 +112,23 @@ if(count($gradeSetting)> 0){
         <td style="font-size: 7pt;text-align: center;">{{$dayp[0]+$dayp[1]+$dayp[2]+$dayp[3]}}</td>
     </tr>
 </table>
+<table style="font-size: 7pt;" width="100%" cellspacing="0">
+    <tr class="border_left border_right" style='font-weight: bolder'>
+        <td colspan="3">Eligible for admission to Grade II</td>
+        <td colspan="4" style="font-size: 7pt;text-align: center;">General Average<span class="underscore">  {{GradeComputation::computeQuarterAverage($gradeinfo['sy'],$level,array(0),0,5,$grades)}}</span></td>
+    </tr>
+
+    <tr class="border_left border_right border_top border_bottom">
+        <td colspan="6">
+            @foreach($grades as $grade)
+                @if($grade->schoolyear == ($gradeinfo['sy']+1)." SUMMER")<br>
+                {{$grade->schoolyear}} {{$grade->school}}: {{$grade->subjectname}} = {{round($grade->finalgrade,0)}}
+                @else
+                <div style="height: 1.5px"></div>
+                @endif
+            @endforeach
+        </td>
+    </tr>
+</table>
+
 @endif

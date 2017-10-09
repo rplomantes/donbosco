@@ -3,7 +3,7 @@
     Route::auth();
     
     Route::get('/chart/{fromdate}/{todate}','Economer\OperationIncome@index');
-    Route::get('/bankfund/{fromdate}/{todate}','Admin\BankFunds@index');
+    Route::get('/bankfunds/{fromdate}/{todate}','Admin\BankFunds@index');
     Route::get('/gradeMigration2','Update\UpdateController@gradeMigration2');
     
     Route::get('/studentinfo/{idno}','Miscellaneous\StudentInfoController@index');

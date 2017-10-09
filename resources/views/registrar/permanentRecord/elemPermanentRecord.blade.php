@@ -15,8 +15,8 @@ $student = \App\User::where('idno',$idno)->first();
     
     <style>
         body{
-            margin-left: 30px;
-            margin-right: -5px;
+            margin-left: -30px;
+            margin-right: -30px;
             margin-top: -40px;
             font-family: dejavu sans;
             page-break-after: avoid;
