@@ -276,7 +276,7 @@ class AjaxController extends Controller
                     if(Request::ajax()){
 			$find = strtolower($varsearch);
                     $searches = DB::Select("Select * From users where accesslevel = '0' AND (lastname like '%$varsearch%' OR lcase(lastname) like '%$find%' OR 
-                           firstname like '%$varsearch%' OR lcase(firstname) like '%$find%' OR like '%$varsearch%' OR idno = '$varsearch') Order by lastname, firstname");
+                           firstname like '%$varsearch%' OR lcase(firstname) like '%$find%' OR idno = '$varsearch') Order by lastname, firstname");
                     $value = "<table class=\"table table-striped\"><thead>
             <tr><th>Student Number</th><th>Student Name</th><th>Gender</th><th>Info</th><th>View</th></tr>        
             </thead><tbody>";

@@ -104,7 +104,7 @@ class PenaltyController extends Controller
                 $soasummary = DB::Select("select "
                     . " sum(amount) - sum(payment) - sum(debitmemo) - sum(plandiscount) - sum(otherdiscount) as amount from"
                     . " ledgers where idno = '$idnumber' and "
-                    . " ledgers.accountingcode IN (420400,420000,420100,420200,120100) "
+                    . " ledgers.accountingcode IN (420400,420000,420100,420200,120100) AND"
                     . " duedate <= '$currentdate'  and categoryswitch = '6'");
                 } else {
                     $soasummary = DB::Select("select "

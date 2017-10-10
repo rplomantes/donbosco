@@ -139,8 +139,8 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Tools<span class="caret"></span></a>   
                             <ul class="dropdown-menu">
-                                <li><a href="{{url('dailydisbursementalllist',array(date('Y-m-d'),date('Y-m-d')))}}">Search Voucher</a></li>
-                                <li><a href="{{url('overallcollection',date('Y-m-d'))}}">Search Payee</a></li>
+                                <li><a href="{{url('searchvoucher')}}">Search Voucher</a></li>
+                                <li><a href="{{url('searchpayee')}}">Search Payee</a></li>
                             </ul>
                         </li>
                             @endif

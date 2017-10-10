@@ -8,8 +8,14 @@ if($disbursement->isreverse=='1'){
 $cancel = "Restore";    
 }
 
+$template = 'appaccounting';
+if(in_array(Auth::user()->accesslevel,array(env('USER_ACCOUNTING'),env('USER_ACCOUNTING_HEAD')))){
+    $template = 'appaccounting';
+}elseif(in_array(Auth::user()->accesslevel,array(env('USER_ADMIN')))){
+    $template = 'appadmin';
+}
 ?>
-@extends('appaccounting')
+@extends($template)
 @section('content')
 <div class="container">
     <div class="col-md-8">
