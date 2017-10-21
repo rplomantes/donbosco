@@ -5,13 +5,15 @@
 
 <div class="container">
   <h2>ENROLLMENT STATISTICS</h2>
-  <p>Enrollment Period: </p>
+  <div class='col-md-6'><p>Grade Level: </p></div>
+  <div class='col-md-6'><p>TVET</p></div>
+</div>
+<div class="container">  
+  <div class='col-md-6'>
    <table class="table">
     <thead>
       <tr>
-        <th>Department</th>  
         <th>Level</th>
-        <th>Course</th>
         <th>Strand</th>
         <th>No. of Enrollees</th>
       </tr>
@@ -46,18 +48,46 @@
                 break;
         }
      ?>
-     <tr><td>{{$stat->department}}</td><td>{{$stat->level}} </td><td>{{$stat->course}}</td><td>{{$stat->strand}}</td><td align="right">{{$stat->count}}</td></tr>
+     <tr><td>{{$stat->level}} </td><td>{{$stat->strand}}</td><td align="right">{{$stat->count}}</td></tr>
      @endforeach
-     @foreach($tvets as $stat)
-     <?php 
-        $mycount=$mycount + $stat->count;
-        $tvet = $tvet + $stat->count;
-        ?>
-     <tr><td>{{$stat->department}}</td><td>{{$stat->level}} </td><td>{{$stat->course}}</td><td>{{$stat->strand}}</td><td align="right">{{$stat->count}}</td></tr>
-     @endforeach
-     <tr><td colspan="4">Total</td><td align="right">{{number_format($mycount,2)}}</td></tr>
+
+     <tr><td colspan="2">Total</td><td align="right">{{number_format($mycount,2)}}</td></tr>
     </tbody>
   </table>
+  </div>
+  <div class='col-md-6'>
+      @foreach($tvets as $batch)
+      <button type="button" class="btn col-md-12" data-toggle="collapse" data-target="#{{$batch->period}}">Batch {{$batch->period}}</button>
+      <?php
+      $tvetstudents = DB::Select("select count(id) as count, period, department, level, strand, course from statuses where period = '$batch->period' and status = '2' and department='TVET'"
+            . " group by course");
+      $count = 0;
+      ?>
+        <table class="table collapse" id='{{$batch->period}}'>
+         <thead>
+           <tr>
+             <th>Course</th>
+             <th>No. of Enrollees</th>
+           </tr>
+         </thead>
+         <tbody>
+          @foreach($tvetstudents as $stat)
+          <?php
+          $count = $count + $stat->count;
+          ?>
+          <tr><td>{{$stat->course}}</td><td align="right">{{$stat->count}}</td></tr>
+          @endforeach
+          <?php $tvet = $tvet + $count;?>
+          <tr><td>Total</td><td align="right">{{$count}}</td></tr>
+         </tbody>
+        </table>
+      <br><br>
+      @endforeach
+  </div>
+</div>
+
+
+<div class="container">
   <div class="col-md-4">
     <table class="table table-condensed">
             <thead>
@@ -79,5 +109,4 @@
    </div>
 
 </div>
-
 @endsection

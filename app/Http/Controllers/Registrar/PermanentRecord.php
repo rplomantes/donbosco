@@ -91,14 +91,14 @@ class PermanentRecord extends Controller
         }
         
         $oldrec = self::prevSchoolRec('Kindergarten',$idno);
-        $new = \App\Grade::where('idno',$idno)->where('level','Grade 1')->where('schoolyear','2016')->exists();
+        $new = \App\Grade::where('idno',$idno)->where('schoolyear','2016')->exists();
         $pdf = \App::make('dompdf.wrapper');
         $pdf->setPaper([0,0,602.00,1008.00], 'portrait');
         
-        if($new){
+        if($new || substr($idno,0,2) == '16'){
             $pdf->loadView("registrar.permanentRecord.elemPermanentRecord",compact('idno','header','grade1','grade2','grade3','grade4','grade5','grade6','oldrec'));
         }else{
-            $pdf->loadView("registrar.permanentRecordOld.elemPermanentRecord",compact('idno','header','grade1','grade2','grade3','grade4','grade5','grade6','oldrec'));
+            $pdf->loadView("registrar.permanentRecord.elemPermanentRecordOld",compact('idno','header','grade1','grade2','grade3','grade4','grade5','grade6','oldrec'));
         }
         
         

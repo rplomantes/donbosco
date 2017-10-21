@@ -8,5 +8,7 @@ use App\Http\Requests;
 
 class CreateLog extends Controller
 {
-    //
+    function testing(){
+        return "ewewew";
+    }
 }

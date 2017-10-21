@@ -22,7 +22,7 @@ if(count($gradeSetting)> 0){
         <td colspan="2">{{$level}} - Section: <span class="underscore">{{$gradeinfo['section']}}</span></td>
     </tr>
     <tr>
-        <td  width='65%'>School:<span class="underscore">{{$gradeinfo['school']}}</span></td>
+        <td>School:<span class="underscore">{{$gradeinfo['school']}}</span></td>
         <td>SY:<span class="underscore">{{$gradeinfo['sy']}} - {{$gradeinfo['sy']+1}}</span></td>
     </tr>
 </table>
@@ -35,10 +35,10 @@ if(count($gradeSetting)> 0){
     <td rowspan="2" style="font-size: 7pt">Action Taken</td>
 </tr>
 <tr style="text-align: center" class="border_bottom border_left border_right border_top">
-    <td style="font-size: 7pt" width='7%'>1</td>
-    <td style="font-size: 7pt" width='7%'>2</td>
-    <td style="font-size: 7pt" width='7%'>3</td>
-    <td style="font-size: 7pt" width='7%'>4</td>
+    <td style="font-size: 7pt">1</td>
+    <td style="font-size: 7pt">2</td>
+    <td style="font-size: 7pt">3</td>
+    <td style="font-size: 7pt">4</td>
 </tr>
 <tr class="border_left border_right">
     <td ><b>CONDUCT/GMRC</b></td>
@@ -137,7 +137,7 @@ if(count($gradeSetting)> 0){
         <td clospan="2">{{$level}} - Section: <span class="underscore"></span></td>
     </tr>
     <tr>
-        <td width='65%'>School:<span class="underscore"></span></td>
+        <td>School:<span class="underscore"></span></td>
         <td>SY:<span class="underscore"></span></td>
     </tr>
 </table>
@@ -150,10 +150,10 @@ if(count($gradeSetting)> 0){
     <td rowspan="2" style="font-size: 7pt">Action Taken</td>
 </tr>
 <tr style="text-align: center" class="border_bottom border_left border_right border_top">
-    <td style="font-size: 7pt" width='7%'>1</td>
-    <td style="font-size: 7pt" width='7%'>2</td>
-    <td style="font-size: 7pt" width='7%'>3</td>
-    <td style="font-size: 7pt" width='7%'>4</td>
+    <td style="font-size: 7pt">1</td>
+    <td style="font-size: 7pt">2</td>
+    <td style="font-size: 7pt">3</td>
+    <td style="font-size: 7pt">4</td>
 </tr>
 <tr class="border_left border_right">
     <td ><b>CONDUCT/GMRC</b></td>
@@ -225,3 +225,4 @@ if(count($gradeSetting)> 0){
     </tr>
 </table>
 @endif
+

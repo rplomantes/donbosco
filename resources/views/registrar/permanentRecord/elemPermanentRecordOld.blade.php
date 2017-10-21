@@ -1,6 +1,7 @@
 <?php 
 use App\Http\Controllers\Registrar\PermanentRecord;
 use App\Http\Controllers\Registrar\Helper as Registrarhelper;
+use App\Http\Controllers\Registrar\AttendanceController;
 
 $info = Registrarhelper::info($idno);
 $student = \App\User::where('idno',$idno)->first();
@@ -14,9 +15,13 @@ $student = \App\User::where('idno',$idno)->first();
     <meta poweredby = "Nephila Web Technology, Inc">
     
     <style>
+        html{
+            margin-left: 0px;
+            margin-right: 0px;
+        }
         body{
-            margin-left: -30px;
-            margin-right: -30px;
+            margin-left: 15px;
+            margin-right: 15px;
             margin-top: -40px;
             font-family: dejavu sans;
             page-break-after: avoid;
@@ -28,6 +33,7 @@ $student = \App\User::where('idno',$idno)->first();
     </style>
 </head>
 <body>
+    <div style="page-break-after:always;">
     <div width="100%" @if($header != 1)style="visibility:hidden;@endif">
     <table width="100%">
         <tr><td style="padding-left: 0px;text-align: center;"><span style="font-size:11pt;font-weight: bold">DON BOSCO TECHNICAL INSTITUTE</span></td></tr>
@@ -135,9 +141,9 @@ $student = \App\User::where('idno',$idno)->first();
     <div width="100%">
         <table width="100%" cellspacing="1">
             <tr>
-                <td width="49.5%">@if($grade1 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 1")!!}@endif</td>
-                <td width="1%"></td>
-                <td width="49.5%">@if($grade2 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 2")!!}@endif</td>
+                <td width="47%">@if($grade1 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 1")!!}@endif</td>
+                <td width="4%"></td>
+                <td width="49%">@if($grade2 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 2")!!}@endif</td>
             </tr>
         </table>
     </div>
@@ -146,21 +152,68 @@ $student = \App\User::where('idno',$idno)->first();
     <div width="100%">
         <table width="100%" cellspacing="1">
             <tr>
-                <td width="49.5%">@if($grade3 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 3")!!}@endif</td>
-                <td width="1%"></td>
-                <td width="49.5%">@if($grade4 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 4")!!}@endif</td>
+                <td width="47%">@if($grade3 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 3")!!}@endif</td>
+                <td width="4%"></td>
+                <td width="49%">@if($grade4 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 4")!!}@endif</td>
             </tr>
         </table>
     </div>
     
-    <div width="100%">
+    <div width="100%" style='position: fixed;top:920px;'>
         <table width="100%" cellspacing="1">
             <tr>
-                <td width="49.5%">@if($grade5 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 5")!!}@endif</td>
-                <td width="1%"></td>
-                <td width="49.5%">@if($grade6 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 6")!!}@endif</td>
+                <td width="47%">@if($grade5 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 5")!!}@endif</td>
+                <td width="4%"></td>
+                <td width="49%">@if($grade6 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 6")!!}@endif</td>
             </tr>
         </table>
+    </div>
+    </div>
+    <div style="margin-right:30px;margin-left: 5px;">
+        <div style="position: relative;top: 721.6px">
+            <div style="visibility: hidden;font-size: 9pt;margin-bottom:10px">ATTENDANCE RECORD</div>
+            <table style="font-size: 8pt;text-align: center" cellspacing="0">
+                <tr style="color: white">
+                    <td width="33.5px">GRADE</td>
+                    <td width="68px">NO. OF SCHOOL DAYS</td>
+                    <td width="73px">NO. OF SCHOOL DAYS ABSENT</td>
+                    <td width="106px">CAUSE</td>
+                    <td width="69px">NO. OF TIMES TARDY</td>
+                    <td width="94px">CAUSE</td>
+                    <td width="71px">NO. OF SCHOOL DAYS PRESENT</td>
+                </tr>
+                <?php 
+                $grade = 1;
+                $grades = array($grade1,$grade2,$grade3,$grade4,$grade5,$grade6);
+                $height = array(10.8,19.8,19,19.2,18.8,22.6);
+                ?>
+                @while($grade <= 6)
+                <?php 
+                $dayp = array();
+                $daya = array();
+                $dayt = array();
+                for($i=1; $i < 5 ;$i++){
+                    
+                    $attendance  = AttendanceController::studentQuarterAttendance($idno,2016,$i,$grades[$grade-1]); 
+                    $dayp [] = $attendance[0];
+                    $daya [] = $attendance[1];
+                    $dayt [] = $attendance[2];
+                }
+                ?>
+                <tr  @if($grades[$grade-1] == 1) style="color: black" @else style="color: white" @endif>
+                    <td height="{{$height[$grade-1]}}px"></td>
+                    <td  height="{{$height[$grade-1]}}px">{{$dayp[0]+$daya[0]+$dayp[1]+$daya[1]+$dayp[2]+$daya[2]+$dayp[3]+$daya[3]}}</td>
+                    <td>{{$daya[0]+$daya[1]+$daya[2]+$daya[3]}}</td>
+                    <td></td>
+                    <td>{{$dayt[0]+$dayt[1]+$dayt[2]+$dayt[3]}}</td>
+                    <td></td>
+                    <td>{{$dayp[0]+$dayp[1]+$dayp[2]+$dayp[3]}}</td>
+                </tr>
+                <?php $grade++; ?>
+                @endwhile
+
+            </table>
+        </div>    
     </div>
 </body>
 </html>

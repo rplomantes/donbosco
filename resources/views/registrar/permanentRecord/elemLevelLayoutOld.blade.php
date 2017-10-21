@@ -4,11 +4,14 @@ use App\Http\Controllers\Registrar\GradeController;
 use App\Http\Controllers\Registrar\AttendanceController;
 use App\Http\Controllers\Registrar\GradeComputation;
 use App\Http\Controllers\Registrar\PermanentRec\Helper as RecordHelper;
+use App\Http\Controllers\Registrar\Helper as MainHelper;
 
 $gradeinfo = RecordHelper::getLevelInfo($level,$idno);
 $grades  = \App\Grade::whereIn('schoolyear',array($gradeinfo['sy'],($gradeinfo['sy']+1)." SUMMER"))->where('idno',$idno)->where('isdisplaycard',1)->orderBy('sortto','ASC')->get();
 $subjects = \App\CtrSubjects::where('level',$level)->where('isdisplaycard',1)->get();
 $gradeSetting = App\GradesSetting::where('level',$level)->where('schoolyear',$gradeinfo['sy'])->first();
+
+list($grade,$lvl) = explode(' ',$level);
 
 $decimal = 0;
 if(count($gradeSetting)> 0){
@@ -19,10 +22,10 @@ if(count($gradeSetting)> 0){
 
 <table width="100%" style="font-size: 8pt;font-weight: bold" cellspacing='0'>
     <tr>
-        <td colspan="2">{{$level}} - Section: <span class="underscore">{{$gradeinfo['section']}}</span></td>
+        <td colspan="2">GRADE {{mainHelper::integerToRoman($lvl)}}  Section: <span class="underscore">{{$gradeinfo['section']}}</span></td>
     </tr>
     <tr>
-        <td  width='65%'>School:<span class="underscore">{{$gradeinfo['school']}}</span></td>
+        <td  width='70%'>School:<span class="underscore">{{$gradeinfo['school']}}</span></td>
         <td>SY:<span class="underscore">{{$gradeinfo['sy']}} - {{$gradeinfo['sy']+1}}</span></td>
     </tr>
 </table>
@@ -63,59 +66,9 @@ if(count($gradeSetting)> 0){
     @endif
 @endforeach
 </table>
-<table style="font-size: 7pt;border: 3px solid" width="100%" border="1" cellspacing="0">
-    <?php 
-    $dayp = array();
-    $daya = array();
-    $dayt = array();
-    for($i=1; $i < 5 ;$i++){
-        if($gradeinfo['sy'] == 2016){
-            $attendance  = AttendanceController::studentQuarterAttendance($idno,$gradeinfo['sy'],$i,$level); 
-        }else{
-            $attendance  = AttendanceController::studentQuarterAttendance($idno,$gradeinfo['sy'],array($i),$level); 
-        }
-        
-        $dayp [] = $attendance[0];
-        $daya [] = $attendance[1];
-        $dayt [] = $attendance[2];
-    }
-    ?>
-    <tr class="border_left border_right">
-        <td width="55%">DAYS OF SCHOOL</td>
-        <td style="font-size: 7pt;text-align: center;">{{$dayp[0]+$daya[0]}}</td>
-        <td style="font-size: 7pt;text-align: center;">{{$dayp[1]+$daya[1]}}</td>
-        <td style="font-size: 7pt;text-align: center;">{{$dayp[2]+$daya[2]}}</td>
-        <td style="font-size: 7pt;text-align: center;">{{$dayp[3]+$daya[3]}}</td>
-        <td style="font-size: 7pt;text-align: center;">{{$dayp[0]+$daya[0]+$dayp[1]+$daya[1]+$dayp[2]+$daya[2]+$dayp[3]+$daya[3]}}</td>
-    </tr>
-    <tr class="border_left border_right">
-        <td>DAYS ABSENT</td>
-        <td style="font-size: 7pt;text-align: center;">{{$daya[0]}}</td>
-        <td style="font-size: 7pt;text-align: center;">{{$daya[1]}}</td>
-        <td style="font-size: 7pt;text-align: center;">{{$daya[2]}}</td>
-        <td style="font-size: 7pt;text-align: center;">{{$daya[3]}}</td>
-        <td style="font-size: 7pt;text-align: center;">{{$daya[0]+$daya[1]+$daya[2]+$daya[3]}}</td>
-    </tr>
-    <tr class="border_left border_right">
-        <td>DAYS TARDY</td>
-        <td style="font-size: 7pt;text-align: center;">{{$dayt[0]}}</td>
-        <td style="font-size: 7pt;text-align: center;">{{$dayt[1]}}</td>
-        <td style="font-size: 7pt;text-align: center;">{{$dayt[2]}}</td>
-        <td style="font-size: 7pt;text-align: center;">{{$dayt[3]}}</td>
-        <td style="font-size: 7pt;text-align: center;">{{$dayt[0]+$dayt[1]+$dayt[2]+$dayt[3]}}</td>
-    </tr>
-    <tr class="border_left border_right border_bottom">
-        <td>DAYS PRESENT</td>
-        <td style="font-size: 7pt;text-align: center;">{{$dayp[0]}}</td>
-        <td style="font-size: 7pt;text-align: center;">{{$dayp[1]}}</td>
-        <td style="font-size: 7pt;text-align: center;">{{$dayp[2]}}</td>
-        <td style="font-size: 7pt;text-align: center;">{{$dayp[3]}}</td>
-        <td style="font-size: 7pt;text-align: center;">{{$dayp[0]+$dayp[1]+$dayp[2]+$dayp[3]}}</td>
-    </tr>
-</table>
 <table style="font-size: 7pt;" width="100%" cellspacing="0">
     <tr class="border_left border_right" style='font-weight: bolder'>
-        <td colspan="3">Eligible for admission to Grade II</td>
+        <td colspan="3">Eligible for admission to Grade {{mainHelper::integerToRoman($lvl+1)}}</td>
         <td colspan="4" style="font-size: 7pt;text-align: center;">General Average<span class="underscore">  {{GradeComputation::computeQuarterAverage($gradeinfo['sy'],$level,array(0),0,5,$grades)}}</span></td>
     </tr>
 
@@ -134,15 +87,15 @@ if(count($gradeSetting)> 0){
 @else
 <table width="100%" style="font-size: 8pt;font-weight: bold">
     <tr>
-        <td clospan="2">{{$level}} - Section: <span class="underscore"></span></td>
+        <td clospan="2">GRADE {{mainHelper::integerToRoman($lvl)}}  Section: <span class="underscore"></span></td>
     </tr>
     <tr>
-        <td width='65%'>School:<span class="underscore"></span></td>
+        <td width='70%'>School:<span class="underscore"></span></td>
         <td>SY:<span class="underscore"></span></td>
     </tr>
 </table>
 
-<table style="font-size: 7pt;border: 3px solid" width="100%" border="1" cellspacing="0">
+<table style="font-size: 7pt;border: 1px solid" width="100%" border="1" cellspacing="0">
 <tr style="text-align: center" class="border_bottom border_left border_right border_top">
     <td rowspan="2" width="55%" style="height: 21.6px"><b>LEARNING AREA</b></td>
     <td style="font-size: 7pt" colspan="4">Periodic Rating</td>
@@ -215,7 +168,7 @@ if(count($gradeSetting)> 0){
 </table>
 <table style="font-size: 7pt;" width="100%" cellspacing="0">
     <tr class="border_left border_right" style='font-weight: bolder'>
-        <td colspan="3">Eligible for admission to Grade II</td>
+        <td colspan="3">Eligible for admission to Grade {{mainHelper::integerToRoman($lvl+1)}}</td>
         <td colspan="4" style="font-size: 7pt;text-align: center;">General Average<span class="underscore"> </span></td>
     </tr>
 
@@ -232,4 +185,5 @@ if(count($gradeSetting)> 0){
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 

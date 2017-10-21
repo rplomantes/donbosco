@@ -11,6 +11,7 @@ use DB;
 class AcademicDeptincomeController extends Controller
 {
     function index($schoolyear){
+        \App\ctrSchoolYear::
         $incomeacct = $this->accounts(4, $schoolyear);
         $expenseacct = $this->accounts(5, $schoolyear);
         

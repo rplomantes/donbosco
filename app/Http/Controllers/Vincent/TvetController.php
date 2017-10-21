@@ -55,6 +55,7 @@ class TvetController extends Controller
                 . "join ledgers on ledgers.idno = statuses.idno and ledgers.period = statuses.period "
                 . "join tvet_subsidies on tvet_subsidies.idno = ledgers.idno and tvet_subsidies.batch = ledgers.period "
                 . "where statuses.period = '$batch' and statuses.course = '$course' and statuses.section = '$section' "
+                . "AND accountingcode = 440000 "
                 . "order by class_no,lastname, firstname");
         
         return $students;

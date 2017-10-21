@@ -81,8 +81,8 @@
         <td>Name</td>
         <td>Total Payment</td>
         <td>Total Training Fee</td>
+        
         <td>Sponsor's Contribution</td>
-
         <td>TVET Subsidy</td>
         <td>Trainees Contribution</td>
         <td>Remarks</td>
@@ -98,8 +98,8 @@
             <td class="total" style="display:none;">{{$student->sponsor+$student->subsidy+$student->amount}}</td>
             <td>{{number_format($student->sponsor+$student->subsidy+$student->amount, 2, '.', ', ')}}</td>
             
-            <td><input  type="text" style="width: 100px" class="sponsors" name="sponsor{{$count}}" id="sponsor{{$count}}" value="{{$student->sponsor}}"></td>
-            <td><input type="text" readonly="readonly" style="width: 100px" class="no-edit subsidy" name="subsidy{{$count}}" id="subsidy{{$count}}" value="{{number_format($student->subsidy, 2, '.', ', ')}}" ></td>
+            <td><input type="text" readonly="readonly" style="width: 100px" class="sponsors no-edit" name="sponsor{{$count}}" id="sponsor{{$count}}" value="{{$student->sponsor}}"></td>
+            <td><input type="text" style="width: 100px" class="subsidy" name="subsidy{{$count}}" id="subsidy{{$count}}" value="{{number_format($student->subsidy, 2, '.', ', ')}}" ></td>
             <td><input type="text" style="width: 100px" class="amount" name="trainees{{$count}}" id="trainees{{$count}}" value="{{$student->amount}}"></td>
             <td><input type="text" style="width: 100px" class="desc" name="desc{{$count}}" id="desc{{$count}}" value="{{$student->remarks}}" ></td>
         </tr>
@@ -112,42 +112,53 @@
     @endif    
 </div>
 <script type="text/javascript">
-$('.sponsors').keyup(function(){
+$('.subsidy').keyup(function(e){
     var trainees = $(this).closest("td").siblings().find('.amount').attr('id');
-    var subsidy = $(this).closest("td").siblings().find('.subsidy').attr('id');
+    var sponsor = $(this).closest('tr').children('td:nth-child(6)').find('.sponsors').attr('id');
     var total = $(this).closest("td").siblings('.total').html();
     
+    var thisvalue = parseFloat($(this).val());
+    var traineesvalue = parseFloat($("#"+trainees).val());
     if(trainees == ""){
-        trainees = 0;
+        traineesvalue = 0;
     }
-    if(subsidy == ""){
-        subsidy = 0;
+    if($(this).val() == ""){
+        thisvalue = 0;
     }
 
     
-    var newcontribution = parseInt(total)-(parseFloat($(this).val()) + parseFloat($('#'+subsidy).val()));
+    var newsponsor = parseInt(total)-(thisvalue+traineesvalue);
     
-    $('#'+trainees).val(newcontribution.toFixed(2))
-    $(this).val().toFixed(2);
+    if(parseFloat(newsponsor) <= 0){
+        e.preventDefault();
+    }else{
+        $('#'+sponsor).val(newsponsor.toFixed(2))
+    }
 });
 
-$('.amount').keyup(function(){
-    var sponsor = $(this).closest("td").siblings().find('.sponsors').attr('id');
+$('.amount').keyup(function(e){
+    var sponsor = $(this).closest('tr').children('td:nth-child(6)').find('.sponsors').attr('id');
     var subsidy = $(this).closest("td").siblings().find('.subsidy').attr('id');
     var total = $(this).closest("td").siblings('.total').html();
-
-    if(sponsor == ""){
-        sponsor = 0;
-    }
+    
+    var thisvalue = parseFloat($(this).val());
+    var subsidyvalue = parseFloat($("#"+subsidy).val());
+    
     if(subsidy == ""){
-        subsidy = 0;
+        subsidyvalue = 0;
+    }
+    if($(this).val() == ""){
+        thisvalue = 0;
     }
     
     
-    var newcontribution = parseInt(total)-(parseFloat($(this).val()) + parseFloat($("#"+sponsor).val()));
+    var newcontribution = parseInt(total)-(thisvalue + subsidyvalue);
     
-    $('#'+subsidy).val(newcontribution.toFixed(2))
-    $(this).val().toFixed(2);
+    if(parseFloat(newcontribution) <= 0){
+        e.preventDefault();
+    }else{
+        $('#'+sponsor).val(newcontribution.toFixed(2))
+    }
 });
     
 $('#course').change(function(){

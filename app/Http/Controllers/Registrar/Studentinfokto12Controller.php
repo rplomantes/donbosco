@@ -101,8 +101,10 @@ class Studentinfokto12Controller extends Controller
         $this->saveStudentInfo($request->all(), $studentInfo->id);
 
         $this->createSibling($request->all());
-
-        return redirect('studentinfokto12/'.$request->idno);
+        
+        $request->session()->flash('idno', $request->idno);
+        return redirect('/applicantSched');
+        //return redirect('studentinfokto12/'.$request->idno);
 
         //return $request;
     }

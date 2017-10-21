@@ -1,5 +1,13 @@
 <?php
     Route::group(['middleware' => 'web'], function () {
+        
+        Route::get('/createSched','EntranceExam\ExamSchedule@create');
+        Route::get('/applicantSched','EntranceExam\AssignExaminee@index');
+        Route::post('/assignStudent','EntranceExam\AssignExaminee@save');
+        
+        Route::get('/applicantlist','EntranceExam\ApplicantList@index');
+        Route::get('/updateapplicantlist','EntranceExam\ApplicantList@updateview');
+        
     Route::auth();
     
     Route::get('/chart/{fromdate}/{todate}','Economer\OperationIncome@index');
@@ -474,4 +482,9 @@ Route::group(['middleware' => ['web','registrar']], function () {
    Route::get('/gradeSheetBList','Registrar\SheetBController@gradeSheetBList');
    Route::get('/overallRankList', 'Registrar\Ranking\OverallRanking@getOARanking');
    Route::get('/getGradeForm/{subjecttype}', 'Registrar\Grade\ChangeGrade@getForm');
+   
+   Route::get('/addschedule/{level}', 'EntranceExam\Helper@createSched');
+   Route::get('/removeschedule/{id}', 'EntranceExam\Helper@deleteSched');
+   Route::get('/updatesched', 'EntranceExam\Helper@updateSched');
+   Route::get('/getschedule/{level}', 'EntranceExam\Helper@getLevelSchedule');
    
