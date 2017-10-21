@@ -22,7 +22,7 @@ use App\Http\Controllers\EntranceExam\Helper as EntranceHelper;
             <div class='levels' id='{{$divid}}'>
                 <?php $schedules = EntranceHelper::schedPerLevel($level->level); ?>
                 @foreach($schedules as $schedule)
-                <?php  $applicants = \App\EntranceApplicant::where('schedule_id',$schedule->id)->get(); ?>
+                <?php  $applicants = EntranceHelper::schedApplicant($schedule->id)?>
                 <h4>{{$schedule->batch}}</h4>
                 <table class='table table-bordered scheds' id='{{$schedule->id}}'>
                     <tr>
@@ -61,9 +61,8 @@ use App\Http\Controllers\EntranceExam\Helper as EntranceHelper;
                 url:"/updateapplicantlist",
                 data:arrays,
                 success:function(data){
-                    //$("#"+sched).append(data);
-                    $("#"+sched).load(document.URL +  ' #' + sched);
-                    rows = 0;
+                    $("#"+sched).append(data);
+                    //$("#"+sched).load(document.URL +  ' #' + sched);
                 } 
             });
             

@@ -18,7 +18,11 @@ class Helper extends Controller
     }
     
     static function schedApplicant($schedId){
-        $applicants = \App\EntranceApplicant::where('schedule_id',$schedId)->get();
+        $applicants = \App\EntranceApplicant::where('schedule_id',$schedId)->get()
+                ->sortBy(function($applicants) { 
+                return $applicants->user->lastname;})
+                ->sortBy(function($applicants) { 
+                return $applicants->user->firstname;});
         
         return $applicants;
     }

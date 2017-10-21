@@ -8,6 +8,8 @@
         Route::get('/applicantlist','EntranceExam\ApplicantList@index');
         Route::get('/updateapplicantlist','EntranceExam\ApplicantList@updateview');
         
+        Route::get('/updateapplicantstatus','EntranceExam\ApplicantStatusController@updateStatus');
+        
     Route::auth();
     
     Route::get('/chart/{fromdate}/{todate}','Economer\OperationIncome@index');
@@ -487,4 +489,5 @@ Route::group(['middleware' => ['web','registrar']], function () {
    Route::get('/removeschedule/{id}', 'EntranceExam\Helper@deleteSched');
    Route::get('/updatesched', 'EntranceExam\Helper@updateSched');
    Route::get('/getschedule/{level}', 'EntranceExam\Helper@getLevelSchedule');
+   Route::get('/changestudentstat', 'EntranceExam\ApplicantStatusController@changeStatus');
    
