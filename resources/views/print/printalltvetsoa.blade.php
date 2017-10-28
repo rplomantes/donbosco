@@ -129,18 +129,16 @@ th {
        $totamount = 0; $totdiscount=0; $totalsponsor=0; $totsubsidy=0;
        $totpayment = 0;
        $total_receipt = 0;
-       ?>
-       @foreach($balances as $balance)
-       <?php
+
+       foreach($balances as $balance){
        $totamount = $totamount + $balance->amount;
        $totdiscount = $totdiscount + $balance->discount;
        $totalsponsor = $totalsponsor + $balance->sponsor;
        $totsubsidy = $totsubsidy+$balance->subsidy;
        $totpayment = $totpayment+$balance->payment;
-       
+       }
        ?>
-       @endforeach
-    
+    <br><br>
    <table style="font-size: 9pt;"><tr style="text-align: right"><td width="100px">Total Training Fee</td><td>TraineesContribution</td><td>Sponsor</td><td>Payment</td><td>Subsidy</td><td>Balance</td></tr>
        <?php
        $totamount = 0; $totdiscount=0; $totalsponsor=0; $totsubsidy=0;

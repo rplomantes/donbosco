@@ -16,7 +16,7 @@ class TvetController extends Controller
 {
     //View
     function tvetledger(){
-        $schoolyear = \App\CtrRefSchoolyear::first();
+
 /*        $ledgers = DB::Select("select amount,sponsor,subsidy,lastname,firstname,middlename,extensionname,tvet_subsidies.batch,course "
                 . "from ledgers "
                 . "join users on users.idno = ledgers.idno "

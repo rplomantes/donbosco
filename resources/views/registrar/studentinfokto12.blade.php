@@ -181,11 +181,18 @@
              <td style="width:40px"></td>
              <td width="103px"><label>Gender:</label></td>
              <td>
-                 <input type="text" class="form-control" name="gender" id="gender" placeholder="Enter Gender"
-                 @if($student != NULL)
-                 value="{{$student->gender}}"
+                 <select type="text" class="form-control" name="gender" id="gender" placeholder="Enter Gender">
+                    <option value="MALE"
+                 @if(count($student) > 0 &&(strtolower($student->gender) == "male"))
+                 selected="selected"
                  @endif           
-                 >
+                 >MALE</option>
+                    <option value="FEMALE"
+                 @if(count($student) > 0 &&(strtolower($student->gender) == "female"))
+                 selected="selected"
+                 @endif           
+                 >FEMALE</option>
+                </select>
              </td>
              <td width="90px"><label>Civil Status </label> </td>
              <td>

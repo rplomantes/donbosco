@@ -1,6 +1,8 @@
 <?php
     Route::group(['middleware' => 'web'], function () {
         
+        Route::get('/test123/{date}','Accounting\IncomeStatement@index');
+        
         Route::get('/createSched','EntranceExam\ExamSchedule@create');
         Route::get('/applicantSched','EntranceExam\AssignExaminee@index');
         Route::post('/assignStudent','EntranceExam\AssignExaminee@save');

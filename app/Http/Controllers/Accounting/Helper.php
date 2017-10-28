@@ -41,15 +41,19 @@ class Helper extends Controller
     }
     
     static function getfiscalyear($date){
-        $month = date_create(date("M",strtotime($date)));
-        $year = date_create(date("Y",strtotime($date)));
+        $date = date_create(date("Y-M-d",strtotime($date)));
         
-        if(((int)$month->format("m")) <= 4){
-            $fiscalyear = $year->format("Y")-1;
+        if(((int)$date->format("m")) <= 4){
+            $fiscalyear = $date->format("Y")-1;
+            
         }else{
-            $fiscalyear = $year->format("Y");
+            $fiscalyear = $date->format("Y");
         }
         
         return $fiscalyear;
+    }
+    
+    static function fiscalBeginning($fiscalyear){
+        return $fiscalyear."-05-01";
     }
 }

@@ -104,7 +104,10 @@ th {
        ?>
        @endforeach
     
-   <table style="font-size: 9pt;"><tr style="text-align: right"><td width="100px">Total Training Fee</td><td>TraineesContribution</td><td>Sponsor</td><td>Payment</td><td>Subsidy</td><td>Balance</td></tr>
+   <table style="font-size: 9pt;">
+       <tr style="text-align: right">
+           <td width="100px">Total Training Fee</td><td>TraineesContribution</td><td>Sponsor</td><td>Payment</td><td>Subsidy</td><td>Balance</td>
+       </tr>
        <?php
        $totamount = 0; $totdiscount=0; $totalsponsor=0; $totsubsidy=0;
        $totpayment = 0;
@@ -120,14 +123,17 @@ th {
        
        ?>
        
-       <tr><td align="right">{{number_format($balance->amount,2)}}</td><td  align="right">{{number_format($balance->trainees,2)}}</td>
+        <tr>
+           <td align="right">{{number_format($balance->amount,2)}}</td><td  align="right">{{number_format($balance->trainees,2)}}</td>
            </td><td align="right">{{number_format($balance->sponsor,2)}}</td>
-           <td align="right">{{number_format($balance->payment,2)}}</td><td align="right">{{number_format($balance->subsidy+$balance->discount,2)}}</td><td align="right">{{number_format($balance->amount-$balance->discount-$balance->payment-$balance->subsidy-$balance->sponsor,2)}}</td></tr>
+           <td align="right">{{number_format($balance->payment,2)}}</td><td align="right">{{number_format($balance->subsidy+$balance->discount,2)}}</td><td align="right">{{number_format($balance->amount-$balance->discount-$balance->payment-$balance->subsidy-$balance->sponsor,2)}}</td>
+        </tr>
        
        @endforeach
        
-
+       @if(count($others)>0)
         <tr  style="text-align: right"><td>Account Description</td><td>Amount</td><td width="100px">Less: Discount</td><td>Payment</td><td>DM</td><td>Balance</td></tr>
+       @endif
        @foreach($others as $other)
             @if($other->categoryswitch > 6 && $other->categoryswitch < 10)
 

@@ -47,15 +47,15 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-//        if(\Auth::guest()){
-//            return view('errors.503');
-//        }else{
-//            if(Auth::user()->idno == 'rplomantes' || Auth::user()->idno == '12345'|| Auth::user()->idno == 'larabelle'){
+        if(\Auth::guest()){
+            return parent::render($request, $e);
+        }else{
+            //if(Auth::user()->idno == 'rplomantes' || Auth::user()->idno == '12345'|| Auth::user()->idno == 'larabelle'){
                 return parent::render($request, $e);
-//            }else{
-//                return view('errors.503');
-//            }
-//        }
+            //}else{
+              //  return view('errors.503');
+            //}
+        }
         
     }
 }

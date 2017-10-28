@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCtrAccountsGroupsTable extends Migration
+class CreateAccountsGroupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,11 +12,10 @@ class CreateCtrAccountsGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('ctr_accounts_groups', function (Blueprint $table) {
+        Schema::create('accounts_groups', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('type');
-            $table->string('group');
             $table->string('accountingcode');
+            $table->integer('group');
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ class CreateCtrAccountsGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('ctr_accounts_groups');
+        Schema::drop('accounts_groups');
     }
 }
