@@ -65,8 +65,6 @@
     
     
     function printsheetA(){
-
-        
         window.open("/printsheetb/{{$selectedSY}}/"+lvl+"/"+strand+"/"+sec+"/"+sem+"/"+qtr);
     }
    

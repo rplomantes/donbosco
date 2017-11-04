@@ -2,6 +2,7 @@
     Route::group(['middleware' => 'web'], function () {
         
         Route::get('/test123/{date}','Accounting\IncomeStatement@index');
+        Route::get('/printincomestatement/{date}','Accounting\IncomeStatement@printview');
         
         Route::get('/createSched','EntranceExam\ExamSchedule@create');
         Route::get('/applicantSched','EntranceExam\AssignExaminee@index');

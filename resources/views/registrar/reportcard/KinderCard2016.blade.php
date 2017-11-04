@@ -51,7 +51,7 @@
         <div class="back">
             <table style="margin-top: 60px;margin-bottom:30px;margin-left: .5cm;margin-right:.5cm">
                 <tr>
-                    <td style="width:8.33cm" id="com0">
+                    <td style="width:8.33cm" id="com0_{{$idno}}">
                         <table class="padded grades" border = '1' cellspacing="0" cellpadding = "0" width="100%" class="reports" style="margin-top: auto;margin-bottom: auto;">
                             <tr><td colspan="6" align="center"><b>QUARTERLY GRADES</b></td></tr>
                             <tr style="font-weight: bold;text-align:center;">
@@ -272,8 +272,9 @@
 
                     </td>
                     <td style="width:1cm"></td>
-                    <td style="width:8.33cm" id="com1">
-                        <div id="con">
+
+                    <td style="width:8.33cm" id="com1_{{$idno}}">
+                        <div id="con_{{$idno}}">
                         <table class="padded conduct" border = '1' cellspacing="0" cellpadding = "0" width="100%" style="text-align: center;font-size: 11pt;margin-top: auto;margin-bottom: auto;">
                             <tr>
                                 <td width="30%"><b>CONDUCT CRITERIA</b></td>
@@ -358,7 +359,7 @@
                                 </tr>
                             </table>
                         <br>
-                        <div  id="CL">
+                        <div id="MATH_{{$idno}}">
                             <table border="1" width="100%" cellpadding="0" cellspacing="0">
                                 <tr style="text-align: center"><td colspan="2"><b>MATHEMATICS</b></td></tr>
                                 @foreach($competencies as $comp)
@@ -374,8 +375,9 @@
                         </div>
                     </td>
                     <td style="width:1cm"></td>
-                    <td style="width:8.33cm" id="com2">
-                        <div  id="FIL">
+
+                    <td style="width:8.33cm" id="com2_{{$idno}}">
+                        <div  id="FIL_{{$idno}}">
                             <table border="1" width="100%" cellpadding="0" cellspacing="0">
                                 <tr style="text-align: center"><td colspan="2"><b>FILIPINO</b></td></tr>
                                 @foreach($competencies as $comp)
@@ -389,7 +391,7 @@
                             </table>  
                             <br>
                         </div>
-                        <div  id="ENGL">
+                        <div  id="ENGL_{{$idno}}">
                             <table border="1" width="100%" cellpadding="0" cellspacing="0">
                                 <tr style="text-align: center"><td colspan="2"><b>ENGLISH</b></td></tr>
                                 @foreach($competencies as $comp)
@@ -413,8 +415,8 @@
         <div class="front">
         <table style="margin-top: 80px;margin-bottom:30px;margin-left: .5cm;margin-right:.5cm" align="center">
                     <tr>
-                        <td style="width:8.33cm" id="com3">
-                        <div  id="MATH">
+                        <td style="width:8.33cm" id="com3_{{$idno}}">
+                        <div  id="CL_{{$idno}}">
                             <table border="1" width="100%" cellpadding="0" cellspacing="0">
                                 <tr style="text-align: center"><td colspan="2"><b>CHRISTIAN LIVING EXPERIENCE</b></td></tr>
                                 @foreach($competencies as $comp)
@@ -430,8 +432,8 @@
                         </div>
                         </td>
                         <td style="width:1cm"></td>
-                        <td style="width:8.33cm" id="com4">
-                            <div id="cert">
+                        <td style="width:8.33cm" id="com4_{{$idno}}">
+                            <div id="cert_{{$idno}}">
                                 <table width="100%">
                             <tr>
                                 <td class="print-size"  width="49%" style="font-size: 11pt">
@@ -546,6 +548,11 @@
                     var x = $('.acad').height();
                     $('.cond').css('height', x);
                 });
+
+            @if($quarter == 2)
+            $("#CL_{{$idno}}").appendTo("#com1_{{$idno}}");
+            $("#MATH_{{$idno}}").prependTo("#com3_{{$idno}}");
+            @endif 
         </script>
     </body>
 </html>
