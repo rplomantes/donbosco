@@ -135,9 +135,9 @@ $student = \App\User::where('idno',$idno)->first();
     <div width="100%">
         <table width="100%" cellspacing="3">
             <tr>
-                <td width="49%"><span @if($grade1 == 0)style="visibility:hidden;"@endif>{!!PermanentRecord::elemGradeTemp($idno,"Grade 1")!!}</span></td>
-                <td width="2%" ></td>
-                <td width="49%"><span @if($grade2 == 0)style="visibility:hidden;"@endif>{!!PermanentRecord::elemGradeTemp($idno,"Grade 2")!!}</span></td>
+                <td width="49%" style='vertical-align: top;'><span @if($grade1 == 0)style="visibility:hidden;"@endif>{!!PermanentRecord::elemGradeTemp($idno,"Grade 1")!!}</span></td>
+                <td width="2%"  style='vertical-align: top;'></td>
+                <td width="49%" style='vertical-align: top;'><span @if($grade2 == 0)style="visibility:hidden;"@endif>{!!PermanentRecord::elemGradeTemp($idno,"Grade 2")!!}</span></td>
             </tr>
         </table>
     </div>
@@ -146,9 +146,9 @@ $student = \App\User::where('idno',$idno)->first();
     <div width="100%">
         <table width="100%" cellspacing="3">
             <tr style="min-height: 800px">
-                <td width="49%"><span @if($grade3 == 0)style="visibility:hidden;"@endif>{!!PermanentRecord::elemGradeTemp($idno,"Grade 3")!!}</span></td>
-                <td width="2%" style="min-height: 800px">&nbsp;</td>
-                <td width="49%"><span @if($grade4 == 0)style="visibility:hidden;"@endif>{!!PermanentRecord::elemGradeTemp($idno,"Grade 4")!!}</span></td>
+                <td width="49%" style='vertical-align: top;'><span @if($grade3 == 0)style="visibility:hidden;"@endif>{!!PermanentRecord::elemGradeTemp($idno,"Grade 3")!!}</span></td>
+                <td width="2%" style="min-height: 800px;vertical-align: top;">&nbsp;</td>
+                <td width="49%" style='vertical-align: top;'><span @if($grade4 == 0)style="visibility:hidden;"@endif>{!!PermanentRecord::elemGradeTemp($idno,"Grade 4")!!}</span></td>
             </tr>
         </table>
     </div>
@@ -156,17 +156,17 @@ $student = \App\User::where('idno',$idno)->first();
     <div width="100%">
         <table width="100%" cellspacing="3">
             <tr style="min-height: 800px">
-                <td width="49%"><span @if($grade5 == 0)style="visibility:hidden;"@endif>{!!PermanentRecord::elemGradeTemp($idno,"Grade 5")!!}</span></td>
-                <td width="2%"></td>
-                <td width="49%"><span @if($grade6 == 0)style="visibility:hidden;"@endif>{!!PermanentRecord::elemGradeTemp($idno,"Grade 6")!!}</span></td>
+                <td width="49%" style='vertical-align: top;'><span @if($grade5 == 0)style="visibility:hidden;"@endif>{!!PermanentRecord::elemGradeTemp($idno,"Grade 5")!!}</span></td>
+                <td width="2%" style='vertical-align: top;'></td>
+                <td width="49%" style='vertical-align: top;'><span @if($grade6 == 0)style="visibility:hidden;"@endif>{!!PermanentRecord::elemGradeTemp($idno,"Grade 6")!!}</span></td>
             </tr>
         </table>
     </div>
     
     <div width="100%" >
-        <h3 style="text-align: center">CERTIFICATE OF TRANSFER</h3>
+        <h4 style="text-align: center">CERTIFICATE OF TRANSFER</h4>
         <i>TO WHOM IT MAY CONCERN:</i>
-        <p style="text-indent: 50px">
+        <p style="text-indent: 50px;font-size:8pt;">
             This is to certify that this is a True Recird of the Elementary School Permanent Record of <u>{{strtoupper($student->lastname)}}, {{strtoupper($student->firstname)}} {{substr(strtoupper($student->middlename),0,1)}}</u>
         </p>
         

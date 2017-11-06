@@ -141,9 +141,9 @@ $student = \App\User::where('idno',$idno)->first();
     <div width="100%">
         <table width="100%" cellspacing="1">
             <tr>
-                <td width="47%">@if($grade1 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 1")!!}@endif</td>
-                <td width="4%"></td>
-                <td width="49%">@if($grade2 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 2")!!}@endif</td>
+                <td width="47%" style='vertical-align: top;'>@if($grade1 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 1")!!}@endif</td>
+                <td width="4%" style='vertical-align: top;'></td>
+                <td width="49%"style='vertical-align: top;'>@if($grade2 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 2")!!}@endif</td>
             </tr>
         </table>
     </div>
@@ -152,9 +152,9 @@ $student = \App\User::where('idno',$idno)->first();
     <div width="100%">
         <table width="100%" cellspacing="1">
             <tr>
-                <td width="47%">@if($grade3 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 3")!!}@endif</td>
-                <td width="4%"></td>
-                <td width="49%">@if($grade4 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 4")!!}@endif</td>
+                <td width="47%" style='vertical-align: top;'>@if($grade3 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 3")!!}@endif</td>
+                <td width="4%" style='vertical-align: top;'></td>
+                <td width="49%"style='vertical-align: top;'>@if($grade4 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 4")!!}@endif</td>
             </tr>
         </table>
     </div>
@@ -162,9 +162,9 @@ $student = \App\User::where('idno',$idno)->first();
     <div width="100%" style='position: fixed;top:920px;'>
         <table width="100%" cellspacing="1">
             <tr>
-                <td width="47%">@if($grade5 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 5")!!}@endif</td>
-                <td width="4%"></td>
-                <td width="49%">@if($grade6 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 6")!!}@endif</td>
+                <td width="47%" style='vertical-align: top;'>@if($grade5 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 5")!!}@endif</td>
+                <td width="4%" style='vertical-align: top;'></td>
+                <td width="49%" style='vertical-align: top;'>@if($grade6 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 6")!!}@endif</td>
             </tr>
         </table>
     </div>
