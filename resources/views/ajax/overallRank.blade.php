@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\Registrar\GradeComputation;
 use App\Http\Controllers\Registrar\Ranking\SectionRanking;
+use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
 
 $acad = 0;
 $tech = 0;
@@ -35,8 +36,10 @@ $tech = 0;
             <td>TECH RANK</td>
             @endif
             
-            
+        @if(in_array($level,array('Grade 11','Grade 12')))
+        <td>REMARKS</td>
         @endif
+	@endif            
     </tr>
     @foreach($students as $student)
     <?php 
@@ -87,6 +90,10 @@ $tech = 0;
             @if($tech > 0)
             <td>{{GradeComputation::computeQuarterAverage($sy,$level,array(1),$semester,$quarter,$grades)}}</td>
             <td>{{SectionRanking::getStudentRank($student->idno,$sy,$tech_field)}}</td>
+            @endif
+
+            @if(in_array($level,array('Grade 11','Grade 12')))
+            <td>{{RegistrarHelper::rankQualifier($student->idno,$level,$semester,$sy,$grades)}}</td>
             @endif
     </tr>
     @endforeach

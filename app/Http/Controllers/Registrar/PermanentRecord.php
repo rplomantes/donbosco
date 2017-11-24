@@ -99,7 +99,7 @@ class PermanentRecord extends Controller
             $pdf->loadView("registrar.permanentRecord.elemPermanentRecord",compact('idno','header','grade1','grade2','grade3','grade4','grade5','grade6','oldrec'));
         }else{
             $pdf->loadView("registrar.permanentRecord.elemPermanentRecordOld",compact('idno','header','grade1','grade2','grade3','grade4','grade5','grade6','oldrec'));
-        }
+        }        
         
         
         return $pdf->stream();
@@ -108,11 +108,11 @@ class PermanentRecord extends Controller
     static function hsGradeTemp($idno,$level){
         return view("registrar.permanentRecord.jhsLevelLayout",compact('idno','level'))->render();
     }
-    
+
     static function elemGradeTemp($idno,$level){
         return view("registrar.permanentRecord.elemLevelLayout",compact('idno','level'))->render();
     }
-    
+
     static function elemGradeTempOld($idno,$level){
         return view("registrar.permanentRecord.elemLevelLayoutOld",compact('idno','level'))->render();
     }
@@ -347,8 +347,7 @@ class PermanentRecord extends Controller
                 
                 $average = GradeComputation::computeQuarterAverage($sy, $level, array(0), 0, 5, $oldrecs);
                 $entered = "JUNE ".$sy;
-                $left = "MARCH ".$sy+1;
-                
+                $left = "MARCH ".($sy+1);
                 $dayp = array();
                 $daya = array();
                 $dayt = array();
@@ -377,7 +376,6 @@ class PermanentRecord extends Controller
         }
         
         return array($school,$sy,$average,$att,$entered,$left,$level,$action);
-    }
-    
+    }    
 
 }

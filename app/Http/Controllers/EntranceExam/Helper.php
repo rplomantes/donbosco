@@ -40,8 +40,15 @@ class Helper extends Controller
     }
     
     function deleteSched($id){        
+        $hasApplicant = \App\EntranceApplicant::where('schedule_id',$id)->exists();
+        if(!$hasApplicant){
         $newSched = \App\EntranceSchedule::find($id);
         $newSched->delete();
+        return 0;
+        }else{
+            return "There are applicants currently applied in this schedule. Please do not try to delete.";
+        }
+
     }
     
     function updateSched(){

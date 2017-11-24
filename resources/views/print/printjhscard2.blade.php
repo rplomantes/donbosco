@@ -217,7 +217,7 @@ use App\Http\Controllers\Registrar\GradeComputation;
                                 </td>
                                 <td align="center">
                                     @if($grade->final_grade > 0)
-                                    {{number_format(round($grade->final_grade,2),2)}}
+                                    {{number_format(round($grade->final_grade,0),0)}}
                                     @endif
                                 </td>
                                 <td align="center">
@@ -292,7 +292,7 @@ use App\Http\Controllers\Registrar\GradeComputation;
                             </td>
                             <td align="center">
                                 @if($grade->final_grade > 0)
-                                {{number_format(round($grade->final_grade,2),2)}}
+                                {{number_format(round($grade->final_grade,0),0)}}
                                 @endif
                             </td>
                             <td class="print-size">

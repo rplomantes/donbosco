@@ -9,7 +9,7 @@
         #header { position: fixed; top:80px;width:746px;margin-left:201px;}
         </style>
     </head>
-    <body style="margin-top:280px;margin-left:201px;width:749px;margin-bottom:120px;">
+    <body style="margin-top:300px;margin-left:201px;width:749px;margin-bottom:120px;">
 	<div id="footer">Page <span class="pagenum"></span></div>    
         <div id="header">
         <table width ="100%">
@@ -47,4 +47,5 @@
         </table>
         </body>
 </html>
+
 

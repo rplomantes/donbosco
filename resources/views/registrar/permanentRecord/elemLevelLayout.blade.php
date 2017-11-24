@@ -17,18 +17,16 @@ if(count($gradeSetting)> 0){
 ?>
 @if(count($grades)>0)
 
-<table width="100%" style="font-size: 7pt;font-weight:bold">
+<table width="100%" style="font-size: 8pt;font-weight: bold" cellspacing='0'>
     <tr>
-        <td colspan="2">
-            {{$level}} - Section: 
-            <span class="underscore">{{$gradeinfo['section']}}</span>
-        </td>
+        <td colspan="2">{{$level}} - Section: <span class="underscore">{{$gradeinfo['section']}}</span></td>
     </tr>
     <tr>
         <td>School:<span class="underscore">{{$gradeinfo['school']}}</span></td>
-        <td width='100px'>SY:<span class="underscore">{{$gradeinfo['sy']}} - {{$gradeinfo['sy']+1}}</span></td>
+        <td>SY:<span class="underscore">{{$gradeinfo['sy']}} - {{$gradeinfo['sy']+1}}</span></td>
     </tr>
 </table>
+
 <table style="font-size: 7pt;border: 3px solid" width="100%" border="1" cellspacing="0">
 <tr style="text-align: center" class="border_bottom border_left border_right border_top">
     <td rowspan="2" width="55%" style="height: 21.6px"><b>LEARNING AREA</b></td>
@@ -133,28 +131,26 @@ if(count($gradeSetting)> 0){
         </td>
     </tr>
 </table>
-
 @else
-
-<table width="100%" style="font-size: 7pt;font-weight:bold">
+<table width="100%" style="font-size: 8pt;font-weight: bold">
     <tr>
         <td clospan="2">{{$level}} - Section: <span class="underscore"></span></td>
     </tr>
     <tr>
         <td>School:<span class="underscore"></span></td>
-        <td width='100px'>SY:<span class="underscore"></span></td>
+        <td>SY:<span class="underscore"></span></td>
     </tr>
 </table>
 
 <table style="font-size: 7pt;border: 3px solid" width="100%" border="1" cellspacing="0">
 <tr style="text-align: center" class="border_bottom border_left border_right border_top">
     <td rowspan="2" width="55%" style="height: 21.6px"><b>LEARNING AREA</b></td>
-    <td width="25%" style="font-size: 7pt" colspan="4">Periodic Rating</td>
+    <td style="font-size: 7pt" colspan="4">Periodic Rating</td>
     <td rowspan="2" style="font-size: 7pt">Final Rating</td>
     <td rowspan="2" style="font-size: 7pt">Action Taken</td>
 </tr>
 <tr style="text-align: center" class="border_bottom border_left border_right border_top">
-    <td  style="font-size: 7pt">1</td>
+    <td style="font-size: 7pt">1</td>
     <td style="font-size: 7pt">2</td>
     <td style="font-size: 7pt">3</td>
     <td style="font-size: 7pt">4</td>
@@ -220,7 +216,7 @@ if(count($gradeSetting)> 0){
 <table style="font-size: 7pt;" width="100%" cellspacing="0">
     <tr class="border_left border_right" style='font-weight: bolder'>
         <td colspan="3">Eligible for admission to Grade II</td>
-        <td colspan="4" style="font-size: 7pt;text-align: center;">General Average<span class="underscore"> </span></td>
+        <td colspan="4" style="font-size: 7pt;text-align: center;">General Average<span width='20px'>__________</span></td>
     </tr>
 
     <tr class="border_left border_right border_top border_bottom">

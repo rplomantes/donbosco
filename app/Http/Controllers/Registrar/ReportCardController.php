@@ -88,19 +88,6 @@ class ReportCardController extends Controller
         return view("print.printjhscard",compact('idno','sy','name','lrn','adviser','section','level','grades','totalage','class_no','ctr_attendances','attendances'));
     }
     
-    static function printjhs2($idno,$sy,$name,$lrn,$adviser,$section,$level,$class_no,$totalage,$status){
-        $grades = \App\Grade::where('idno',$idno)->where('isdisplaycard',1)->where('schoolyear',$sy)->orderBy('sortto','ASC')->get();
-        $attendances = DB::Select("Select attendanceName,sum(Jun) as jun,sum(Jul) as jul,sum(Aug) as aug,sum(Sept) as sept,sum(Oct) as oct,sum(Nov) as nov,sum(Dece) as dece,sum(Jan) as jan,sum(Feb) as feb,sum(Mar) as mar,"
-                . "sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct)+sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as total"
-                . " from attendances where idno = '$idno' and schoolyear = '$sy' group by quarter,schoolyear,attendancetype order by sortto ASC");
-        
-        $ctr_attendances = DB::Select("Select sum(Jun) as jun,sum(Jul) as jul,sum(Aug) as aug,sum(Sept) as sept,sum(Oct) as oct,sum(Nov) as nov,sum(Dece) as dece,sum(Jan) as jan,sum(Feb) as feb,sum(Mar) as mar,"
-                . "sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct)+sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as total"
-                . " from ctr_attendances where level = '$level' and schoolyear = '$sy' group by schoolyear");
-
-        return view("print.printjhscard2",compact('idno','sy','name','lrn','adviser','section','level','grades','totalage','class_no','ctr_attendances','attendances','status'))->render();
-    }
-    
     static function printshs($idno,$sy,$name,$lrn,$gender,$adviser,$section,$level,$class_no,$totalage,$sem,$infos,$status){
         $grades = \App\Grade::where('idno',$idno)->where('isdisplaycard',1)->where('schoolyear',$sy)->whereIn('semester',[$sem,0])->orderBy('sortto','ASC')->get();
         $attendances = DB::Select("Select attendanceName,sum(Jun) as jun,sum(Jul) as jul,sum(Aug) as aug,sum(Sept) as sept,sum(Oct) as oct,sum(Nov) as nov,sum(Dece) as dece,sum(Jan) as jan,sum(Feb) as feb,sum(Mar) as mar,"
@@ -125,5 +112,18 @@ class ReportCardController extends Controller
                 . " from ctr_attendances where level = '$level' and schoolyear = '$sy' group by schoolyear");
 
         return view("print.printelem",compact('idno','sy','name','lrn','adviser','section','level','grades','totalage','class_no','ctr_attendances','attendances'));
+    }
+
+    static function printjhs2($idno,$sy,$name,$lrn,$adviser,$section,$level,$class_no,$totalage,$status){
+        $grades = \App\Grade::where('idno',$idno)->where('isdisplaycard',1)->where('schoolyear',$sy)->orderBy('sortto','ASC')->get();
+        $attendances = DB::Select("Select attendanceName,sum(Jun) as jun,sum(Jul) as jul,sum(Aug) as aug,sum(Sept) as sept,sum(Oct) as oct,sum(Nov) as nov,sum(Dece) as dece,sum(Jan) as jan,sum(Feb) as feb,sum(Mar) as mar,"
+                . "sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct)+sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as total"
+                . " from attendances where idno = '$idno' and schoolyear = '$sy' group by quarter,schoolyear,attendancetype order by sortto ASC");
+        
+        $ctr_attendances = DB::Select("Select sum(Jun) as jun,sum(Jul) as jul,sum(Aug) as aug,sum(Sept) as sept,sum(Oct) as oct,sum(Nov) as nov,sum(Dece) as dece,sum(Jan) as jan,sum(Feb) as feb,sum(Mar) as mar,"
+                . "sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct)+sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as total"
+                . " from ctr_attendances where level = '$level' and schoolyear = '$sy' group by schoolyear");
+
+        return view("print.printjhscard2",compact('idno','sy','name','lrn','adviser','section','level','grades','totalage','class_no','ctr_attendances','attendances','status'))->render();
     }
 }

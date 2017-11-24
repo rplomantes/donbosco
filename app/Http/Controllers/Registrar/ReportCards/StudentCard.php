@@ -25,7 +25,7 @@ class StudentCard extends Controller
         
         
         foreach($infos as $info){
-            $name = $info->lastname.", ".$info->firstname." ".substr($info->middlename,0,1);
+            $name = $info->lastname.", ".$info->firstname." ".substr($info->middlename,0,1).".";
             $lrn = $info->lrn;
             
             $birthdate = $info->birthDate;
@@ -81,7 +81,7 @@ class StudentCard extends Controller
         $grades = \App\Grade::where('idno',$idno)->where('isdisplaycard',1)->where('schoolyear',$sy)->orderBy('sortto','ASC')->get();
         $attendances = DB::Select("Select attendanceName,sum(Jun) as jun,sum(Jul) as jul,sum(Aug) as aug,sum(Sept) as sept,sum(Oct) as oct,sum(Nov) as nov,sum(Dece) as dece,sum(Jan) as jan,sum(Feb) as feb,sum(Mar) as mar,"
                 . "sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct)+sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as total"
-                . " from attendances where idno = '$idno' and schoolyear = '$sy' group by quarter,schoolyear,attendancetype order by sortto ASC");
+                . " from attendances where idno = '$idno' and schoolyear = '$sy' group by attendancetype order by sortto ASC");
         
         $ctr_attendances = DB::Select("Select sum(Jun) as jun,sum(Jul) as jul,sum(Aug) as aug,sum(Sept) as sept,sum(Oct) as oct,sum(Nov) as nov,sum(Dece) as dece,sum(Jan) as jan,sum(Feb) as feb,sum(Mar) as mar,"
                 . "sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct)+sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as total"
@@ -94,7 +94,7 @@ class StudentCard extends Controller
         $grades = \App\Grade::where('idno',$idno)->where('isdisplaycard',1)->where('schoolyear',$sy)->orderBy('sortto','ASC')->get();
         $attendances = DB::Select("Select attendanceName,sum(Jun) as jun,sum(Jul) as jul,sum(Aug) as aug,sum(Sept) as sept,sum(Oct) as oct,sum(Nov) as nov,sum(Dece) as dece,sum(Jan) as jan,sum(Feb) as feb,sum(Mar) as mar,"
                 . "sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct)+sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as total"
-                . " from attendances where idno = '$idno' and schoolyear = '$sy' group by quarter,schoolyear,attendancetype order by sortto ASC");
+                . " from attendances where idno = '$idno' and schoolyear = '$sy' group by attendancetype order by sortto ASC");
         
         $ctr_attendances = DB::Select("Select sum(Jun) as jun,sum(Jul) as jul,sum(Aug) as aug,sum(Sept) as sept,sum(Oct) as oct,sum(Nov) as nov,sum(Dece) as dece,sum(Jan) as jan,sum(Feb) as feb,sum(Mar) as mar,"
                 . "sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct)+sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as total"
@@ -108,7 +108,7 @@ class StudentCard extends Controller
         $grades = \App\Grade::where('idno',$idno)->where('isdisplaycard',1)->where('schoolyear',$sy)->whereIn('semester',[$sem,0])->orderBy('sortto','ASC')->get();
         $attendances = DB::Select("Select attendanceName,sum(Jun) as jun,sum(Jul) as jul,sum(Aug) as aug,sum(Sept) as sept,sum(Oct) as oct,sum(Nov) as nov,sum(Dece) as dece,sum(Jan) as jan,sum(Feb) as feb,sum(Mar) as mar,"
                 . "sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct)+sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as total,sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct) as sem1,sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as sem2"
-                . " from attendances where idno = '$idno' and schoolyear = '$sy' group by quarter,schoolyear,attendancetype order by sortto ASC");
+                . " from attendances where idno = '$idno' and schoolyear = '$sy' group by attendancetype order by sortto ASC");
         
         $ctr_attendances = DB::Select("Select sum(Jun) as jun,sum(Jul) as jul,sum(Aug) as aug,sum(Sept) as sept,sum(Oct) as oct,sum(Nov) as nov,sum(Dece) as dece,sum(Jan) as jan,sum(Feb) as feb,sum(Mar) as mar,"
                 . "sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct)+sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as total,sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct) as sem1,sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as sem2"
@@ -121,7 +121,7 @@ class StudentCard extends Controller
         $grades = \App\Grade::where('idno',$idno)->where('isdisplaycard',1)->where('schoolyear',$sy)->orderBy('sortto','ASC')->get();
         $attendances = DB::Select("Select attendanceName,sum(Jun) as jun,sum(Jul) as jul,sum(Aug) as aug,sum(Sept) as sept,sum(Oct) as oct,sum(Nov) as nov,sum(Dece) as dece,sum(Jan) as jan,sum(Feb) as feb,sum(Mar) as mar,"
                 . "sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct)+sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as total"
-                . " from attendances where idno = '$idno' and schoolyear = '$sy' group by quarter,schoolyear,attendancetype order by sortto ASC");
+                . " from attendances where idno = '$idno' and schoolyear = '$sy' group by attendancetype order by sortto ASC");
         
         $ctr_attendances = DB::Select("Select sum(Jun) as jun,sum(Jul) as jul,sum(Aug) as aug,sum(Sept) as sept,sum(Oct) as oct,sum(Nov) as nov,sum(Dece) as dece,sum(Jan) as jan,sum(Feb) as feb,sum(Mar) as mar,"
                 . "sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct)+sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as total"
@@ -138,7 +138,7 @@ class StudentCard extends Controller
         
         $attendances = DB::Select("Select attendanceName,sum(Jun) as jun,sum(Jul) as jul,sum(Aug) as aug,sum(Sept) as sept,sum(Oct) as oct,sum(Nov) as nov,sum(Dece) as dece,sum(Jan) as jan,sum(Feb) as feb,sum(Mar) as mar,"
                 . "sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct)+sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as total"
-                . " from attendances where idno = '$idno' and schoolyear = '$sy' group by quarter,schoolyear,attendancetype order by sortto ASC");
+                . " from attendances where idno = '$idno' and schoolyear = '$sy' group by attendancetype order by sortto ASC");
         
         $ctr_attendances = DB::Select("Select sum(Jun) as jun,sum(Jul) as jul,sum(Aug) as aug,sum(Sept) as sept,sum(Oct) as oct,sum(Nov) as nov,sum(Dece) as dece,sum(Jan) as jan,sum(Feb) as feb,sum(Mar) as mar,"
                 . "sum(Jun)+sum(Jul)+sum(Aug)+sum(Sept)+sum(Oct)+sum(Nov)+sum(Dece)+sum(Jan)+sum(Feb)+sum(Mar) as total"

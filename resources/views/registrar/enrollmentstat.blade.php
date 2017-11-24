@@ -77,7 +77,7 @@
           ?>
           <tr><td>{{$stat->course}}</td><td align="right">{{$stat->count}}</td></tr>
           @endforeach
-          <?php $tvet = $tvet + $count;?>
+	  <?php $tvet = $tvet + $count;?>
           <tr><td>Total</td><td align="right">{{$count}}</td></tr>
          </tbody>
         </table>
@@ -110,3 +110,4 @@
 
 </div>
 @endsection
+

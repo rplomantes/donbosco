@@ -254,8 +254,8 @@ class AjaxController extends Controller
                 function getsearch($varsearch){
                     if(Request::ajax()){
                     $find = strtolower($varsearch);
-                    $searches = DB::Select("Select * From users where accesslevel = '0' AND (lastname like '$varsearch%' OR lcase(lastname) like '$find%' OR "
-                            . "firstname like '$varsearch%' OR idno = '$varsearch') Order by lastname, firstname");
+                    $searches = DB::Select("Select * From users where accesslevel = '0' AND (lastname like '%$varsearch%' OR lcase(lastname) like '%$find%' OR "
+                            . "firstname like '%$varsearch%' OR idno = '$varsearch') Order by lastname, firstname");
                     $value = "<table class=\"table table-striped\"><thead>
             <tr><th>Student Number</th><th>Student Name</th><th>Gender</th><th>Assessment</th><th>Student Info</th><th>Student Grade</th></tr>        
             </thead><tbody>";
@@ -293,18 +293,17 @@ class AjaxController extends Controller
                     }
                 }
                 
-    function getsearchaccounting($varsearch){
-        if(Request::ajax()){
-
-            $find = strtolower($varsearch);
-            $searches = DB::Select("Select * From users where accesslevel = '0' AND (lastname like '%$varsearch%' OR lcase(lastname) like '%$find%' OR 
+                function getsearchaccounting($varsearch){
+                    if(Request::ajax()){
+		    $find = strtolower($varsearch);
+                    $searches = DB::Select("Select * From users where accesslevel = '0' AND (lastname like '%$varsearch%' OR lcase(lastname) like '%$find%' OR 
                    firstname like '%$varsearch%' OR lcase(firstname) like '%$find%' OR idno = '$varsearch') Order by lastname, firstname");
-            $value = "<table class=\"table table-striped\"><thead>
-                      <tr><th>Student Number</th><th>Student Name</th><th>Gender</th><th>Info</th><th>View</th></tr>        
-                      </thead><tbody>";
-            foreach($searches as $search){
-                $value = $value . "<tr><td>" .$search->idno . "</td><td>". $search->lastname . ", " .
-                        $search->firstname . " " . $search->middlename . " " . $search->extensionname .
+                    $value = "<table class=\"table table-striped\"><thead>
+            <tr><th>Student Number</th><th>Student Name</th><th>Gender</th><th>Info</th><th>View</th></tr>        
+            </thead><tbody>";
+                    foreach($searches as $search){
+                        $value = $value . "<tr><td>" .$search->idno . "</td><td>". $search->lastname . ", " .
+                                $search->firstname . " " . $search->middlename . " " . $search->extensionname .
                         "</td><td>" . $search->gender . "</td><td><a href = '/studentinfo/".$search->idno."'>view</a><td></td><td><a href = '/ledger/".$search->idno."'>view</a><td>";
             }
 
@@ -327,15 +326,15 @@ class AjaxController extends Controller
             foreach($searches as $search){
                 $value = $value . "<tr><td>" .$search->idno . "</td><td>". $search->lastname . ", " .
                         $search->firstname . " " . $search->middlename . " " . $search->extensionname .
-                        "</td><td>" . $search->gender . "</td><td><a href = '/studentinfo/".$search->idno."'>view</a><td></td><td><a href = '/accounting/".$search->idno."'>view</a><td>";
-            }
-
-            $value = $value . "</tbody>
+                                "</td><td>" . $search->gender . "</td><td><a href = '/studentinfo/".$search->idno."'>view</a><td></td><td><a href = '/accounting/".$search->idno."'>view</a><td>";
+                    }
+                      
+                    $value = $value . "</tbody>
             </table>"; 
-
-            return $value; 
-        }
-    }
+                        
+                    return $value; 
+                    }
+                }
                 
                 function compute(){
                 $otherdiscountname = "None";

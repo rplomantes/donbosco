@@ -16,7 +16,7 @@ class TvetController extends Controller
 {
     //View
     function tvetledger(){
-
+        $schoolyear = \App\CtrRefSchoolyear::first();
 /*        $ledgers = DB::Select("select amount,sponsor,subsidy,lastname,firstname,middlename,extensionname,tvet_subsidies.batch,course "
                 . "from ledgers "
                 . "join users on users.idno = ledgers.idno "
@@ -165,7 +165,7 @@ class TvetController extends Controller
  
     function savechanges($student,$batch,$new_subsidy,$new_sponsor,$new_trainee,$desc){
         
-        $ledger = \App\Ledger::where('idno',$student)->where('period',$batch)->first();
+        $ledger = \App\Ledger::where('idno',$student)->where('period',$batch)->where('accountingcode','440000')->first();
         $ledger->amount = $new_trainee;
         $ledger->save();
         

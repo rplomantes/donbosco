@@ -21,6 +21,7 @@
     $fourth_grading = 0;
     $running_ave = 0;
     $count = 0;
+    $id = 0;
     
     if($subject == 3){
         $grades = App\Grade::where('subjecttype',$subject)->where('schoolyear',$sy)->where('idno',$student->idno)->get();
@@ -34,6 +35,7 @@
         $second_grading = $second_grading+$grade->second_grading;
         $third_grading = $third_grading+$grade->third_grading;
         $fourth_grading = $fourth_grading+$grade->fourth_grading;
+	$id = $grade->id;
     }
     ?>
     <tr>
@@ -46,6 +48,7 @@
             <?php 
                 $running_ave = $running_ave+$first_grading;
                 $count++;
+
             ?>
             {{$first_grading}}
             @endif
@@ -82,9 +85,20 @@
         @endif
         
         <td style="text-align: center">
-            @if($count != 0)
+            @if($count != 0)	
             {{number_format(round($running_ave/$count,$grade_setting->decimal),$grade_setting->decimal)}}
             @endif
+
+	@if(in_array($grade_setting->level,array('Grade 11','Grade 12')))
+		<?php
+	            $final_grade = \App\Grade::find($id);
+        	    $final_grade->final_grade = round($running_ave/$count,$grade_setting->decimal);
+	            $final_grade->save();
+		?>
+	@else
+		@if($fourth_grading != 0)
+		@endif
+	@endif
         </td>
     </tr>
     <?php $cn++; ?>

@@ -1419,7 +1419,7 @@ class CashierController extends Controller
     }
     
     function checklist($trandate){
-        $checklists = DB::Select("select bank_branch, check_number, sum(checkamount) as checkamount, receiptno, receivefrom  from dedits "
+        $checklists = DB::Select("select depositto,bank_branch, check_number, sum(checkamount) as checkamount, receiptno, receivefrom  from dedits "
                 . "where paymenttype = '1' and isreverse = '0' and postedby = '" . \Auth::user()->idno . "'"
                 . " and transactiondate = '" .$trandate . "' group by bank_branch, check_number, receiptno, receivefrom order by transactiondate, refno");
       //$checklist = DB::Select("select * from dedits");

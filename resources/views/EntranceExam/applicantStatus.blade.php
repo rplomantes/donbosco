@@ -1,5 +1,6 @@
 <?php 
 use App\Http\Controllers\EntranceExam\Helper as EntranceHelper;
+$examSy = \App\CtrRegistrationSchoolyear::first()->schoolyear;
 ?>
 @extends('app')
 @section('content')
@@ -9,6 +10,7 @@ use App\Http\Controllers\EntranceExam\Helper as EntranceHelper;
     }
 </style>
 <div class='container'>
+    <h3>Update Applicant Status for {{$examSy}} Enrollment</h3>
     <div class='col-md-12'>
         <div class='col-md-3'>
             @foreach($levels as $level)

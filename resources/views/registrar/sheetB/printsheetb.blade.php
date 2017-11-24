@@ -159,5 +159,6 @@ $tech = 0;
     </tr>
     @endforeach
 </table>  
+<div style='position:absolute;bottom:0px'>Date Printed:{{Carbon\Carbon::now()}}</div>
     </body>
 </html>

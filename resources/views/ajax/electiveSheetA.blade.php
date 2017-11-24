@@ -24,7 +24,7 @@
             @endif
         </td>
         <td style="text-align: center">
-            @if($grade->section_grading != 0)
+            @if($grade->second_grading != 0)
             {{round($grade->second_grading,0)}}
             @endif
         </td>
@@ -44,10 +44,14 @@
             <?php 
             $running_ave = 0;
             if($sem ==1){
-                $running_ave = round(($grade->first_grading+$grade->second_grading)/1,0);
+                $running_ave = round(($grade->first_grading+$grade->second_grading)/2,0);
             }elseif($sem == 2){
                 $running_ave = round(($grade->third_grading+$grade->fourth_grading)/2,0);
             }
+
+                    $final_grade = \App\Grade::find($grade->id);
+                    $final_grade->final_grade = $running_ave;
+                    $final_grade->save();
             ?>
             @if($running_ave != 0)
             {{$running_ave}}

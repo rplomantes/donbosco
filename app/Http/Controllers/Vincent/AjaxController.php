@@ -1306,15 +1306,15 @@ class AjaxController extends Controller
                 $students = DB::Select("Select distinct statuses.idno,lastname,firstname,middlename,extensionname,statuses.section from statuses join users on users.idno = statuses.idno join ctr_sections on ctr_sections.section = statuses.section where statuses.status = 2 and statuses.schoolyear = $sy->schoolyear and statuses.level = '$level' order by lastname,firstname,middlename,extensionname");
             }else{
                 //$students = DB::Select("Select statuses.idno,lastname,firstname,middlename,extensionname from statuses join users on users.idno = statuses.idno join ctr_sections on ctr_sections.section = statuses.section where statuses.status = 2 and schoolyear = $sy->schoolyear and level = '$level' and section = '$section' order by ctr_sections.id ASC");
-                $students = DB::Select("Select distinct statuses.idno,lastname,firstname,middlename,extensionname,statuses.section from statuses join users on users.idno = statuses.idno join ctr_sections on ctr_sections.section = statuses.section where statuses.status = 2 and statuses.schoolyear = $sy->schoolyear and statuses.level = '$level' and statuses.section = '$section' order by lastname,firstname,middlename,extensionname");
+                $students = DB::Select("Select distinct statuses.idno,lastname,firstname,middlename,extensionname,statuses.section from statuses join users on users.idno = statuses.idno join ctr_sections on ctr_sections.section = statuses.section where statuses.status = 2 and statuses.schoolyear = $sy->schoolyear and statuses.level = '$level' and statuses.section = '$section' order by statuses.class_no,lastname,firstname,middlename,extensionname");
             }
             
-            $data = '<table class = "table table-responsive"><thead><td>Student No</td><td>Name</td><td></td></thead>';
+            $data = '<table class = "table table-responsive"><thead><td>Student No</td><td>Name</td><td><span id="select_con"><p style="cursor:pointer" onclick="select_all()">Select All</p></span></td></thead>';
             foreach($students as $student){
                 $data = $data.'<tr>';
                 $data = $data.'<td>'.$student->idno.'</td>';
                 $data = $data.'<td>'.$student->lastname.', '.$student->firstname.' '.$student->middlename.' '.$student->extensionname.'</td>';
-                $data = $data.'<td><input type="checkbox" name="idnumber[]" value="'.$student->idno.'" checked="checked"></td>';
+                $data = $data.'<td><input type="checkbox" class="students" name="idnumber[]" value="'.$student->idno.'"></td>';
                 $data = $data.'</tr>';
             }
             $data = $data.'</table>';
@@ -1335,8 +1335,7 @@ class AjaxController extends Controller
             //$strand = '';
             $department = Input::get('department');
             //$department = "Junior High School";
-            //$sy = \App\CtrRefSchoolyear::first();
-            $sy = 2016;
+            $sy = \App\CtrRefSchoolyear::first();
             
             if($strand == ''){
                 $students = DB::Select("Select * from users left join status_histories stat on users.idno = stat.idno left join rankings on rankings.idno = stat.idno and rankings.schoolyear = stat.schoolyear where stat.status IN (2,3) and stat.level = '$level' and stat.section = '$section' and stat.schoolyear=$sy->schoolyear order by class_no ASC");

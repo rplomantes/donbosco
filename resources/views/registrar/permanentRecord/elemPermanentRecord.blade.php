@@ -173,3 +173,4 @@ $student = \App\User::where('idno',$idno)->first();
     </div>
 </body>
 </html>
+

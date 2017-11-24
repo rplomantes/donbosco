@@ -176,6 +176,17 @@
             });
     }
 
+    function select_all(){
+        $('.students').prop('checked', 'checked');
+        $('#select_con').html("<p style=\"cursor:pointer\" onclick=\"unselect_all()\">Uncheck All</p>")
+    }
+
+    function unselect_all(){
+        //alert("hello")
+        $('.students').attr('checked',false);
+        $('#select_con').html("<p style=\"cursor:pointer\" onclick=\"select_all()\">Select All</p>");
+    }
+
 </script>
 @stop
  

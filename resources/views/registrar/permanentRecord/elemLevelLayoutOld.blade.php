@@ -91,11 +91,11 @@ if(count($gradeSetting)> 0){
     </tr>
     <tr>
         <td width='70%'>School:<span class="underscore"></span></td>
-        <td>SY:<span class="underscore"></span></td>
+        <td>SY:<span class="underscore" style='color: white;border-bottom:1px solid black'>2016 - 2017 </span></td>
     </tr>
 </table>
 
-<table style="font-size: 7pt;border: 1px solid" width="100%" border="1" cellspacing="0">
+<table style="font-size: 7pt;border: 3px solid" width="100%" border="1" cellspacing="0">
 <tr style="text-align: center" class="border_bottom border_left border_right border_top">
     <td rowspan="2" width="55%" style="height: 21.6px"><b>LEARNING AREA</b></td>
     <td style="font-size: 7pt" colspan="4">Periodic Rating</td>
@@ -131,45 +131,10 @@ if(count($gradeSetting)> 0){
     @endif
 @endforeach
 </table>
-<table style="font-size: 7pt;border: 3px solid" width="100%" border="1" cellspacing="0">
-
-    <tr class="border_left border_right">
-        <td width="55%">DAYS OF SCHOOL</td>
-        <td style="font-size: 7pt;text-align: center;"> </td>
-        <td style="font-size: 7pt;text-align: center;"> </td>
-        <td style="font-size: 7pt;text-align: center;"> </td>
-        <td style="font-size: 7pt;text-align: center;"> </td>
-        <td style="font-size: 7pt;text-align: center;"> </td>
-    </tr>
-    <tr class="border_left border_right">
-        <td>DAYS ABSENT</td>
-        <td style="font-size: 7pt;text-align: center;"> </td>
-        <td style="font-size: 7pt;text-align: center;"> </td>
-        <td style="font-size: 7pt;text-align: center;"> </td>
-        <td style="font-size: 7pt;text-align: center;"> </td>
-        <td style="font-size: 7pt;text-align: center;"> </td>
-    </tr>
-    <tr class="border_left border_right">
-        <td>DAYS TARDY</td>
-        <td style="font-size: 7pt;text-align: center;"> </td>
-        <td style="font-size: 7pt;text-align: center;"> </td>
-        <td style="font-size: 7pt;text-align: center;"> </td>
-        <td style="font-size: 7pt;text-align: center;"> </td>
-        <td style="font-size: 7pt;text-align: center;"> </td>
-    </tr>
-    <tr class="border_left border_right border_bottom">
-        <td>DAYS PRESENT</td>
-        <td style="font-size: 7pt;text-align: center;"> </td>
-        <td style="font-size: 7pt;text-align: center;"> </td>
-        <td style="font-size: 7pt;text-align: center;"> </td>
-        <td style="font-size: 7pt;text-align: center;"> </td>
-        <td style="font-size: 7pt;text-align: center;"> </td>
-    </tr>
-</table>
 <table style="font-size: 7pt;" width="100%" cellspacing="0">
     <tr class="border_left border_right" style='font-weight: bolder'>
         <td colspan="3">Eligible for admission to Grade {{mainHelper::integerToRoman($lvl+1)}}</td>
-        <td colspan="4" style="font-size: 7pt;text-align: center;">General Average<span class="underscore"> </span></td>
+        <td colspan="4" style="font-size: 7pt;text-align: center;">General Average<span class="underscore">     </span></td>
     </tr>
 
     <tr class="border_left border_right border_top border_bottom">
@@ -185,5 +150,6 @@ if(count($gradeSetting)> 0){
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 
 

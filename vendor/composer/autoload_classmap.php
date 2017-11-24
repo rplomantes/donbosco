@@ -77,6 +77,7 @@ return array(
     'CreateRoutesTable' => $baseDir . '/database/migratin_backup/2017_10_13_102837_create_routes_table.php',
     'CreateRptCashreceiptBooksTable' => $baseDir . '/database/migratin_backup/2017_04_12_132806_create_rpt_cashreceipt_books_table.php',
     'CreateRptDisbursementBooksTable' => $baseDir . '/database/migratin_backup/2017_04_02_193544_create_rpt_disbursement_books_table.php',
+    'CreateSettingsAccountingsTable' => $baseDir . '/database/migrations/2017_11_08_160816_create_settings_accountings_table.php',
     'CreateStatusesTable' => $baseDir . '/database/migratin_backup/2016_02_05_064523_create_statuses_table.php',
     'CreateStudentDepositsTable' => $baseDir . '/database/migratin_backup/2017_03_06_142832_create_student_deposits_table_1.php',
     'CreateStudentInfosTable' => $baseDir . '/database/migratin_backup/2016_07_04_121924_create_student_infos_table.php',

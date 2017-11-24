@@ -1,10 +1,12 @@
 <?php 
 use App\Http\Controllers\EntranceExam\Helper as EntranceHelper;
+$examSy = \App\CtrRegistrationSchoolyear::first()->schoolyear;
 ?>
 @extends('app')
 @section('content')
 
 <div class="container">
+    <h3>Entrance Exam Schedule for {{$examSy}}</h3>
         @foreach($levels as $level)
             <?php
             $shedules = EntranceHelper::schedPerLevel($level->level);
@@ -61,8 +63,12 @@ $(function() {
         $.ajax({
           type:"GET",
           url:"/removeschedule/"+entry,
-          success:function(){
-              $("#"+id).load(document.URL +  ' #' + id);
+          success:function(data){
+              if(data == "0"){
+                  $("#"+id).load(document.URL +  ' #' + id);
+                }else{
+                    alert(data);
+                }
           }
         });
     }

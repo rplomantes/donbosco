@@ -95,7 +95,7 @@ if(in_array(Auth::user()->accesslevel,array(env('USER_ACCOUNTING'),env('USER_ACC
             <h5><dl class="dl-horizontal"><dt>ACCOUNT TITLE:</dt><dd>{{$account->accounttype}}</dd></dl></h5>
             <h5><dl class="dl-horizontal"><dt>ACCOUNT CODE:</dt><dd>{{$account->acctcode}}</dd></dl></h5>
             <br>
-            <?php
+            <?php 
             $beginningdebit = 0;
             $beginningcredit = 0;
                 $debitentry = DB::Select("SELECT entry_type,sum(if( type='debit', amount, 0 )) as debit,sum(if( type='credit', amount, 0 )) as credit FROM "
@@ -229,7 +229,7 @@ if(in_array(Auth::user()->accesslevel,array(env('USER_ACCOUNTING'),env('USER_ACC
                         ?>
                     @endforeach
                         <?php
-                            
+
                             $monthlytotal = AcctHelper::getaccttotal($monthlycredit,$monthlydebit,$process->entry);
 
                             $monthlygrandcredit = $monthlygrandcredit +$monthlycredit;

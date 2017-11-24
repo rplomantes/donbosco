@@ -90,7 +90,7 @@
                                     </td>
                                     <td>
                                         @if(round($grade->final_grade,2) != 0)
-                                            {{number_format(round($final_grade,2),2)}}
+                                            {{number_format(round($grade->final_grade,2),2)}}
                                         @endif
                                     </td>
                                 </tr>
@@ -556,3 +556,4 @@
         </script>
     </body>
 </html>
+

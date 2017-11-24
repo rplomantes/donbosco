@@ -149,12 +149,12 @@ $student = \App\User::where('idno',$idno)->first();
     </div>
     
 
-    <div width="100%">
+    <div width="100%" style='position: fixed;top:570px;'>
         <table width="100%" cellspacing="1">
             <tr>
                 <td width="47%" style='vertical-align: top;'>@if($grade3 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 3")!!}@endif</td>
-                <td width="4%" style='vertical-align: top;'></td>
-                <td width="49%"style='vertical-align: top;'>@if($grade4 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 4")!!}@endif</td>
+                <td width="6%" style='vertical-align: top;'></td>
+                <td width="47%"style='vertical-align: top;'>@if($grade4 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 4")!!}@endif</td>
             </tr>
         </table>
     </div>
@@ -170,7 +170,7 @@ $student = \App\User::where('idno',$idno)->first();
     </div>
     </div>
     <div style="margin-right:30px;margin-left: 5px;">
-        <div style="position: relative;top: 721.6px">
+        <div style="position: relative;top: 696.6px">
             <div style="visibility: hidden;font-size: 9pt;margin-bottom:10px">ATTENDANCE RECORD</div>
             <table style="font-size: 8pt;text-align: center" cellspacing="0">
                 <tr style="color: white">
@@ -217,3 +217,4 @@ $student = \App\User::where('idno',$idno)->first();
     </div>
 </body>
 </html>
+

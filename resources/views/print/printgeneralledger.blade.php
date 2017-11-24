@@ -1,9 +1,4 @@
 <!DOCTYPE html>
-<?php 
-use App\Http\Controllers\Accounting\Helper as AcctHelper;
-
-$process = \App\ChartOfAccount::where('acctcode',$title)->first();
-?>
 <html lang="en">
     <head>
             <meta charset="utf-8">
@@ -14,38 +9,25 @@ $process = \App\ChartOfAccount::where('acctcode',$title)->first();
 
 
     <style>
-        @font-face {
-            font-family: calibri;
-            src: url("<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/fonts/Calibri.ttf");
-            font-weight: normal;
-        }
-            
-            #header { position: fixed; left: 0px; top: -80px; right: 0px; height: 100px; text-align: center;font-size: 15px; }
+            .header{font-size:16pt;font-weigh:bold}
+            body{margin-top: 90px}
+            #header { position: fixed; left: 0px; top: -10px; right: 0px; height: 100px; text-align: center;font-size: 15px; }
             #footer { position: fixed; bottom:0px;border-top:1px solid gray;} .pagenum:before {content: counter(page); }
+            .title{font-size:16pt; font-style: italic; text-decoration: underline}
+            .content td {font-size:10pt}
             .subtitle{font-size: 10pt;font-weight: bold}
             #maintable td,#maintable th { border:1px solid}
-        html,body{
-        margin-top:80px;
-        margin-left:10px;
-        margin-right:10px;
-        font-family: calibri;
-        }
-    </style>
+            </style>
     </head>
     <body>
         <div id="footer">Page <span class="pagenum"></span></div>    
-        <div id="header">
-            <table border = '0'celpacing="0" cellpadding = "0" width="100%" align="center">
-                <tr>
-                    <td>
-                        <p align="center"><span style="font-size:12pt;">Don Bosco Technical Institute of Makati, Inc. </span>
-                            <br>
-                            Chino Roces Ave., Makati City <br>
-                            Tel No : 892-01-01
-                        </p>
-                    </td>
-                </tr>
-                <tr><td style="font-size:12pt;text-align:center;"><b>
+        <div  id="header">
+            <table  width ="100%">
+               <tr><td><span class="header">Don Bosco Technical Institute of Makati</span></td><td align="right"></i></td></tr>
+               <tr><td colspan="2">Chino Roces Avenue, Makati, Metro Manila</td></tr>
+               <tr>
+                   <td colspan="4" align="center">
+                       <span class="title">
                             @if($basic == 1)
                             General Ledger Asset Report
                             @elseif($basic == 2)
@@ -57,12 +39,12 @@ $process = \App\ChartOfAccount::where('acctcode',$title)->first();
                             @elseif($basic == 5)
                             General Ledger Expense Report
                             @endif
-                        </b></td></tr>
-                <tr><td style="text-align:center;"><b>For the period</b> {{date('M d, Y', strtotime($fromdate))}} to {{date('M d, Y', strtotime($todate))}}</td></tr>
+                       </span>
+                    </td>
+               </tr>
+               <tr><td colspan="2" align="center">{{date('M d, Y', strtotime($from))}} to {{date('M d, Y', strtotime($to))}} </td></tr>
             </table>
-                <hr/>
-                <img src="<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/images/DBTI.png"  style="position:absolute;width:108px;height:auto;top:10px;left:120px;">
-         </div>
+        </div>
     @if($basic > 0)
         <?php
             if($title == "All"){
@@ -74,31 +56,15 @@ $process = \App\ChartOfAccount::where('acctcode',$title)->first();
         ?>
         @foreach($accounts as $account)
             
-            <div>ACCOUNT TITLE:<b>{{$account->accounttype}}</b></div>
-            <div>ACCOUNT CODE:<b>{{$account->acctcode}}</b></div>
-            <br>
-            <?php
+            <div>ACCOUNT TITLE:</div>
+            <b>{{$account->accounttype}} - {{$account->acctcode}}</b>
+
+            <?php 
             $beginningdebit = 0;
             $beginningcredit = 0;
-                $debitentry = DB::Select("SELECT entry_type,sum(if( type='debit', amount, 0 )) as debit,sum(if( type='credit', amount, 0 )) as credit FROM "
-                        . "(SELECT SUM( amount ) + SUM( checkamount ) AS amount, entry_type,  'debit' AS type "
-                        . "FROM dedits "
-                        . "WHERE isreverse =0 AND accountingcode = '$account->acctcode' "
-                        . "AND (transactiondate BETWEEN '$from' AND '$to') GROUP BY entry_type "
-                        . "UNION ALL  "
-                        . "SELECT SUM( amount ) amount, entry_type,  'credit' "
-                        . "FROM credits WHERE isreverse =0 AND accountingcode = '$account->acctcode' "
-                        . "AND (transactiondate BETWEEN '$from' AND '$to') "
-                        . "GROUP BY entry_type) s where entry_type = 7 group by entry_type");
-                
-                foreach($debitentry as $forward){
-                    $beginningdebit = $beginningdebit + $forward->debit;
-                    $beginningcredit = $beginningcredit + $forward->credit;
-                }
-
-            $beginningtotal = AcctHelper::getaccttotal($beginningcredit,$beginningdebit,$process->entry);
-            $monthlygrandcredit = $beginningcredit;
-            $monthlygranddebit = $beginningdebit;
+            $beginningtotal = $beginningdebit-$beginningcredit;
+            $monthlygrandcredit = 0;
+            $monthlygranddebit = 0;
             ?>
             <table width="100%">
                 <thead>
@@ -146,7 +112,7 @@ $process = \App\ChartOfAccount::where('acctcode',$title)->first();
                         . "SELECT SUM( amount ) amount, entry_type,  'credit' "
                         . "FROM credits WHERE isreverse =0 AND accountingcode = '$account->acctcode' "
                         . "AND transactiondate LIKE  '".$getmonth."-%' and (transactiondate BETWEEN '$from' AND '$to') "
-                        . "GROUP BY entry_type) s where entry_type != 7 group by entry_type");
+                        . "GROUP BY entry_type) s group by entry_type");
                 
             $monthlydebit = 0;
             $monthlycredit = 0;
@@ -154,12 +120,12 @@ $process = \App\ChartOfAccount::where('acctcode',$title)->first();
             ?>
 
                 @if(count($debitentry)>0)
-                <div><h5><u><i><b>{{date("F Y",strtotime($currmonth))}}</b></i></u></h5></div>                
-                <table width="100%" class="table table-bordered" style="font-size:12pt;page-break-inside: avoid">
+                <p><u><i><b>{{date("F Y",strtotime($currmonth))}}</b></i></u></p>
+                <table width="100%" cellpadding='0' cellspacing='0' border='1'>
                     @foreach($debitentry as $entry)
                         @if($entry->entry_type == 1)
                         <tr  style="text-align: right">
-                            <td  style="text-align: left;font-weight:bold;" width="16.6%">Receipts</td>
+                            <td  style="text-align: left;font-weight:bold;font-size:14px;" width="16.6%">Receipts</td>
                             <td width="16.6%">{{number_format($entry->debit,2,'.',',')}}</td>
                             <td width="16.6%"></td>
                             <td width="16.6%">{{number_format($entry->credit,2,'.',',')}}</td>
@@ -168,7 +134,7 @@ $process = \App\ChartOfAccount::where('acctcode',$title)->first();
                         </tr>
                         @elseif($entry->entry_type == 2)
                         <tr style="text-align: right">
-                            <td  style="text-align: left;font-weight:bold;" width="16.6%">Debit Memo</td>
+                            <td  style="text-align: left;font-weight:bold;font-size:14px;" width="16.6%">Debit Memo</td>
                             <td width="16.6%">{{number_format($entry->debit,2,'.',',')}}</td>
                             <td width="16.6%"></td>
                             <td width="16.6%">{{number_format($entry->credit,2,'.',',')}}</td>
@@ -177,7 +143,7 @@ $process = \App\ChartOfAccount::where('acctcode',$title)->first();
                         </tr>
                         @elseif($entry->entry_type == 3)
                         <tr style="text-align: right">
-                            <td  style="text-align: left;font-weight:bold;" width="16.6%">Journal Entry</td>
+                            <td  style="text-align: left;font-weight:bold;font-size:14px;" width="16.6%">Journal Entry</td>
                             <td width="16.6%">{{number_format($entry->debit,2,'.',',')}}</td>
                             <td width="16.6%"></td>
                             <td width="16.6%">{{number_format($entry->credit,2,'.',',')}}</td>
@@ -195,7 +161,7 @@ $process = \App\ChartOfAccount::where('acctcode',$title)->first();
                         </tr>
                         @elseif($entry->entry_type == 5)
                         <tr style="text-align: right">
-                            <td  style="text-align: left;font-weight:bold;" width="16.6%">System Generated</td>
+                            <td  style="text-align: left;font-weight:bold;font-size:14px;" width="16.6%">System Generated</td>
                             <td width="16.6%">{{number_format($entry->debit,2,'.',',')}}</td>
                             <td width="16.6%"></td>
                             <td width="16.6%">{{number_format($entry->credit,2,'.',',')}}</td>
@@ -211,15 +177,28 @@ $process = \App\ChartOfAccount::where('acctcode',$title)->first();
                         ?>
                     @endforeach
                         <?php
-                            
-                            $monthlytotal = AcctHelper::getaccttotal($monthlycredit,$monthlydebit,$process->entry);
+                            if($basic == 1){
+                            $monthlytotal = $monthlytotal + ($monthlydebit-$monthlycredit);
+                            }
+                            elseif($basic == 2){
+                            $monthlytotal = $monthlytotal + ($monthlycredit-$monthlydebit);
+                            }
+                            elseif($basic == 3){
+                            $monthlytotal = $monthlytotal + ($monthlydebit-$monthlycredit);
+                            }
+                            elseif($basic == 4){
+                            $monthlytotal = $monthlytotal + ($monthlycredit-$monthlydebit);
+                            }
+                            elseif($basic == 5){
+                            $monthlytotal = $monthlytotal + ($monthlydebit-$monthlycredit);
+                            }
 
                             $monthlygrandcredit = $monthlygrandcredit +$monthlycredit;
                             $monthlygranddebit = $monthlygranddebit +$monthlydebit;
                             
                         ?>
                     <tr style="text-align: right;background-color: #dae9f7;">
-                        <td  style="text-align: left">Monthly Sub Total</td>
+                        <td style="text-align: left;font-size:14px;">Monthly Sub Total</td>
                         <td></td>
                         <td><b>{{number_format($monthlydebit,2,'.',',')}}</b></td>
                         <td></td>
@@ -240,20 +219,29 @@ $process = \App\ChartOfAccount::where('acctcode',$title)->first();
 
                 $count++;
              }while($count< $diff); ?>
-                <table width="100%">
+                <table width="100%" class="table" cellspacing='0'>
                     
                         <?php
-                                $totalbalance = AcctHelper::getaccttotal($monthlygrandcredit,$monthlygranddebit,$process->entry);?>
+                            if($basic == 1){
+                                $totalbalance = $monthlygranddebit-$monthlygrandcredit;
+                            }
+                            elseif($basic == 2){
+                                $totalbalance = $monthlygrandcredit-$monthlygranddebit;
+                            }
+                            elseif($basic == 3){
+                                $totalbalance = $monthlygranddebit-$monthlygrandcredit;
+                            }
+                            elseif($basic == 4){
+                                $totalbalance = $monthlygrandcredit-$monthlygranddebit;
+                            }
+                            elseif($basic == 5){
+                                $totalbalance = $monthlygranddebit-$monthlygrandcredit;
+                            }  
+                        ?>
                     @if($basic == 1 || $basic == 2 || $basic == 3)
-                    <tr  style="text-align: right">
-                        <td width="33.6%"  style="text-align: left">Monthly Grand Total</td>
-                        <td width="16.6%"><u>{{number_format($monthlygranddebit,2)}}</u></td>
-                        <td width="16.6%"></td>
-                        <td width="16.6%"><u>{{number_format($monthlygrandcredit,2)}}</u></td>
-                        <td width="16.6%"></td>
-                    </tr>
+                        <tr  style="text-align: right"><td width="24.9%"  style="text-align: left">Monthly Grand Total</td><td width="24.9%"><u>{{number_format($monthlygranddebit,2)}}</u></td><td width="33.2%"><u>{{number_format($monthlygrandcredit,2)}}</u></td><td width="16.6%"></td></tr>
                     @endif
-                    <tr  style="text-align: right"><td width="33.6%"  style="text-align: left"><b>Balance as of</b> {{date("M d Y",strtotime($to))}}</td><td width="16.6%"><u>{{number_format($monthlygranddebit,2)}}</u></td><td width="16.6%"></td><td width="16.6%"><u>{{number_format($monthlygrandcredit,2)}}</u></td><td style="border-bottom: 1px solid;" width="16.6%">{{number_format($totalbalance,2)}}</td></tr>
+                    <tr  style="text-align: right"><td width="24.9%"  style="text-align: left"><b>Balance as of</b> {{date("M d Y",strtotime($to))}}</td><td width="24.9%"><u>{{number_format($monthlygranddebit,2)}}</u></td><td width="33.2%"><u>{{number_format($monthlygrandcredit,2)}}</u></td><td width="16.6%"><u>{{number_format($totalbalance,2)}}</u></td></tr>
                 </table>
         @endforeach
         @endif

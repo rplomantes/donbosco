@@ -218,7 +218,7 @@ use App\Http\Controllers\Registrar\GradeComputation;
                                     @endif
                                 </td >
                                 <td>
-                                    @if($grade->final_grading > 0)
+                                    @if($grade->final_grade > 0)
                                         {{round($grade->final_grade,0)}}
                                     @endif
                                 </td>                
@@ -273,7 +273,7 @@ use App\Http\Controllers\Registrar\GradeComputation;
                             <b>GENERAL AVERAGE for the Semester</b>
                         </td>
                         <td>
-                            {{GradeComputation::computeQuarterAverage($sy,$level,array(5,6),0,1,$grades)}}
+                            {{GradeComputation::computeQuarterAverage($sy,$level,array(5,6),1,5,$grades)}}
                         </td>
                     </tr>
                 </table>
@@ -397,7 +397,7 @@ use App\Http\Controllers\Registrar\GradeComputation;
                             <td align="center" style="border: 1px solid"><b>{{$qtr1}}</b></td>
                             <td align="center" style="border: 1px solid"><b>{{$qtr2}}</b></td>
                             <td style="border:1px solid"><b>
-                                    {{GradeComputation::computeQuarterAverage($sy,$level,array(3),0,5,$grades)}}
+                                    {{GradeComputation::computeQuarterAverage($sy,$level,array(3),$sem,5,$grades)}}
                                 </b></td>
                             
                         </tr>

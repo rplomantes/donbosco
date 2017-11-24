@@ -121,23 +121,23 @@
                                 @if($info->sem==1)
                                 <td style="text-align: center">
                                     @if($grade->first_grading != 0)
-                                    {{$grade->first_grading}}
+                                    {{round($grade->first_grading,0)}}
                                     @endif
                                 </td>
                                 <td style="text-align: center">
-                                    @if($grade->section_grading != 0)
-                                    {{$grade->second_grading}}
+                                    @if($grade->second_grading != 0)
+                                    {{round($grade->second_grading,0)}}
                                     @endif
                                 </td>
                                 @elseif($info->sem==2)
                                 <td style="text-align: center">
                                     @if($grade->third_grading != 0)
-                                    {{$grade->third_grading}}
+                                    {{round($grade->third_grading,0)}}
                                     @endif
                                 </td>
                                 <td style="text-align: center">
                                     @if($grade->fourth_grading != 0)
-                                    {{$grade->fourth_grading}}
+                                    {{round($grade->fourth_grading,0)}}
                                     @endif
                                 </td>
                                 @endif
@@ -145,7 +145,7 @@
                                     <?php 
                                     $running_ave = 0;
                                     if($info->sem ==1){
-                                        $running_ave = round(($grade->first_grading+$grade->second_grading)/1,0);
+                                        $running_ave = round(($grade->first_grading+$grade->second_grading)/2,0);
                                     }elseif($info->sem == 2){
                                         $running_ave = round(($grade->third_grading+$grade->fourth_grading)/2,0);
                                     }

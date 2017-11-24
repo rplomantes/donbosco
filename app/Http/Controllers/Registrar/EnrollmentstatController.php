@@ -17,9 +17,9 @@ public function enrollmentstat()
 
     $stats = DB::Select("select count(statuses.id) as count, statuses.department, statuses.level, strand, course from statuses join ctr_levels on statuses.level=ctr_levels.level "
             . "where status = '2' and schoolyear = '$sy' group by ctr_levels.id ASC, strand, department, course");    
-    
+
     $tvets = DB::Select("select count(id) as count, period, department, level, strand, course from statuses where status = '2' and department='TVET'"
-            . " group by period");
+            . " group by period");    
     return view('registrar/enrollmentstat', compact('stats','tvets'));
 }
 

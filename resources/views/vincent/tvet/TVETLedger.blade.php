@@ -99,7 +99,7 @@
             <td>{{number_format($student->sponsor+$student->subsidy+$student->amount, 2, '.', ', ')}}</td>
             
             <td><input type="text" readonly="readonly" style="width: 100px" class="sponsors no-edit" name="sponsor{{$count}}" id="sponsor{{$count}}" value="{{$student->sponsor}}"></td>
-            <td><input type="text" style="width: 100px" class="subsidy" name="subsidy{{$count}}" id="subsidy{{$count}}" value="{{number_format($student->subsidy, 2, '.', ', ')}}" ></td>
+            <td><input type="text" style="width: 100px" class="subsidy" name="subsidy{{$count}}" id="subsidy{{$count}}" value="{{$student->subsidy}}" ></td>
             <td><input type="text" style="width: 100px" class="amount" name="trainees{{$count}}" id="trainees{{$count}}" value="{{$student->amount}}"></td>
             <td><input type="text" style="width: 100px" class="desc" name="desc{{$count}}" id="desc{{$count}}" value="{{$student->remarks}}" ></td>
         </tr>
@@ -129,7 +129,7 @@ $('.subsidy').keyup(function(e){
     
     var newsponsor = parseInt(total)-(thisvalue+traineesvalue);
     
-    if(parseFloat(newsponsor) <= 0){
+    if(parseFloat(newsponsor) < 0){
         e.preventDefault();
     }else{
         $('#'+sponsor).val(newsponsor.toFixed(2))
@@ -154,7 +154,7 @@ $('.amount').keyup(function(e){
     
     var newcontribution = parseInt(total)-(thisvalue + subsidyvalue);
     
-    if(parseFloat(newcontribution) <= 0){
+    if(parseFloat(newcontribution) < 0){
         e.preventDefault();
     }else{
         $('#'+sponsor).val(newcontribution.toFixed(2))

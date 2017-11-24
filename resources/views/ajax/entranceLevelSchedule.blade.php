@@ -1,3 +1,4 @@
+<?php use App\Http\Controllers\EntranceExam\Helper as EntranceHelper;?>
 <table class="table table-borderless">
     <tr>
         <td></td>
@@ -7,8 +8,17 @@
         <td>Time</td>
     </tr>
     @foreach($scheds as $sched)
+    
     <tr>
-        <td><input type="radio" name='sched' value="{{$sched->id}}"></td>
+        <td>
+            <?php
+            $applicants = EntranceHelper::schedApplicant($sched->id);
+            $remainigSlot = $sched->max_examinee - count($applicants);
+            ?>
+            @if($remainigSlot > 0)
+            <input type="radio" name='sched' value="{{$sched->id}}">
+            @endif
+        </td>
         <td>{{$sched->batch}}</td>
         <td>{{$sched->date}}</td>
         <td>{{date('l',strtotime($sched->batch))}}</td>

@@ -88,25 +88,25 @@ class UpdateController extends Controller
     function updatehsconduct(){
         $quarters = \App\CtrQuarter::first();
 
-        $hsgrades = DB::Select("select * from conduct where SY_EFFECTIVE = '2017' and QTR = $quarters->qtrperiod");
+        $hsgrades = DB::Select("select * from JHSconduct2017_2nd where SY_EFFECTIVE = '2017' and QTR = $quarters->qtrperiod");
         foreach($hsgrades as $hsgrade){
             $newconduct = new \App\ConductRepo;
-            $newconduct->OSR = $hsgrade->COM1;
-            $newconduct->DPT = $hsgrade->COM2;
-            $newconduct->PTY =$hsgrade->COM3;
-            $newconduct->DI = $hsgrade->COM4;
-            $newconduct->PG = $hsgrade->COM5;
-            $newconduct->SIS = $hsgrade->COM6;
+            $newconduct->OSR = $hsgrade->obedience;
+            $newconduct->DPT = $hsgrade->deportment;
+            $newconduct->PTY =$hsgrade->piety;
+            $newconduct->DI = $hsgrade->diligence;
+            $newconduct->PG = $hsgrade->positive;
+            $newconduct->SIS = $hsgrade->sociability;
             $newconduct->qtrperiod = $quarters->qtrperiod;
             $newconduct->schoolyear = $hsgrade->SY_EFFECTIVE;
             $newconduct->idno=$hsgrade->SCODE;
             $newconduct->save();
-            $this->updateconduct($hsgrade->SCODE, 'OSR', $hsgrade->COM1, $hsgrade->QTR, '2017');
-            $this->updateconduct($hsgrade->SCODE, 'DPT', $hsgrade->COM2, $hsgrade->QTR, '2017');
-            $this->updateconduct($hsgrade->SCODE, 'PTY', $hsgrade->COM3, $hsgrade->QTR, '2017');
-            $this->updateconduct($hsgrade->SCODE, 'DI' , $hsgrade->COM4, $hsgrade->QTR, '2017');
-            $this->updateconduct($hsgrade->SCODE, 'PG' , $hsgrade->COM5, $hsgrade->QTR, '2017');
-            $this->updateconduct($hsgrade->SCODE, 'SIS', $hsgrade->COM6, $hsgrade->QTR, '2017');
+            $this->updateconduct($hsgrade->SCODE, 'OSR', $hsgrade->obedience, $hsgrade->QTR, '2017');
+            $this->updateconduct($hsgrade->SCODE, 'DPT', $hsgrade->deportment, $hsgrade->QTR, '2017');
+            $this->updateconduct($hsgrade->SCODE, 'PTY', $hsgrade->piety, $hsgrade->QTR, '2017');
+            $this->updateconduct($hsgrade->SCODE, 'DI' , $hsgrade->diligence, $hsgrade->QTR, '2017');
+            $this->updateconduct($hsgrade->SCODE, 'PG' , $hsgrade->positive, $hsgrade->QTR, '2017');
+            $this->updateconduct($hsgrade->SCODE, 'SIS', $hsgrade->sociability, $hsgrade->QTR, '2017');
         }
 
     }
@@ -941,29 +941,28 @@ class UpdateController extends Controller
             }
             
             function fixDepartment(){
-                //$fixes = DB::Select("Select * from ledgers where schoolyear = 2016 and acct_department='' and payment = 0");
-                $fixes = DB::Select("Select * from ledgers where schoolyear = 2016 and acct_department='' and updated_at >= '2017-05-01 00:00:00'");
-                
-                foreach($fixes as $fix){
-                    $acct_dept = "";
-                    $sub_dept = "";
-                    $ctr = \App\CtrPaymentSchedule::where('level',$fix->level)->where('accountingcode',$fix->accountingcode)->where('accountingcode',$fix->accountingcode)->first();
-                    
-                    if($ctr){
-                        $acct_dept = $ctr->acct_department;
-                        $sub_dept = $ctr->sub_department;
-                    }
-                    echo $acct_dept." - ".$fix->id." - ".$ctr."<br>";
-                    $account = \App\Ledger::find($fix->id);
-                    $account->acct_department = $acct_dept;
-                    $account->sub_department = $sub_dept;
-                    $account->save();
-                }
+                $fixes = DB::Select("Select * from ledgers where schoolyear = ' 2016' and acct_department=''");
+//                
+//                foreach($fixes as $fix){
+//                    $acct_dept = "";
+//                    $sub_dept = "";
+//                    $ctr = \App\CtrPaymentSchedule::where('level',$fix->level)->where('accountingcode',$fix->accountingcode)->where('accountingcode',$fix->accountingcode)->first();
+//                    
+//                    if($ctr){
+//                        $acct_dept = $ctr->acct_department;
+//                        $sub_dept = $ctr->sub_department;
+//                    }
+//                    echo $acct_dept." - ".$fix->id." - ".$ctr."<br>";
+//                    $account = \App\Ledger::find($fix->id);
+//                    $account->acct_department = $acct_dept;
+//                    $account->sub_department = $sub_dept;
+//                    $account->save();
+//                }
                 return $fixes;
             }
             
             function fixDepartmentCredit(){
-                $credits = DB::Select("Select * from credits where acct_department='' and fiscalyear = 2017 and accountingcode !=210400");
+                $credits = DB::Select("Select * from credits where acct_department='' and entry_type = 1 and schoolyear = 2017");
                 //$credits = \App\Credit::where('acct_department','')->where('entry_type',1)->get();
                 foreach($credits as $credit){
                     $acct_dept = "";
@@ -974,7 +973,7 @@ class UpdateController extends Controller
                         $acct_dept = $ledger->acct_department;
                         $sub_dept = $ledger->sub_department;
                     }
-                    echo $acct_dept." - ".$credit->referenceid." - ".$ledger."<br>";
+                    echo $acct_dept." - ".$ledger->id." - ".$ledger."<br>";
                     $account = \App\Credit::find($credit->id);
                     $account->acct_department = $acct_dept;
                     $account->sub_department = $sub_dept;

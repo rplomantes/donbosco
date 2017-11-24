@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use DB;
+use App\Http\Controllers\Registrar\GradeComputation;
 
 class Helper extends Controller
 {
@@ -238,7 +239,7 @@ class Helper extends Controller
             return array();
         }
     }
-    
+
     static function integerToRoman($integer){
      $integer = intval($integer);
      $result = '';
@@ -270,5 +271,31 @@ class Helper extends Controller
 
      // The Roman numeral should be built, return it
      return $result;
+    }
+
+    static function rankQualifier($idno,$level,$semester,$schoolyear,$grades){
+        $remark = "";
+        if(in_array($level, array('Grade 11','Grade 12'))){
+            if($semester == 1){
+                $cl = $grades->where('subjectcode','CL1')->last();
+                $conduct = GradeComputation::computeQuarterAverage($schoolyear,$level,array(3),0,1,$grades);
+                if($cl->final_grade <= 89 || $conduct <= 89){
+                    $remark = "DQ - Due to Conduct";
+                }
+
+                foreach($grades as $grade){
+                    if($grade->semester == 1){
+                        if($grade->first_grading < 80 || $grade->second_grading < 80 || $grade->final_grade < 90){
+                            $remark = "DQ";
+                        }
+                    }
+                }
+
+            }
+
+
+        }
+
+        return $remark;
     }
 }

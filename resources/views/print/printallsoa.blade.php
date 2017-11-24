@@ -92,10 +92,13 @@ th {
           foreach($showothers as $showother){
               $displayOthers = $showother->balance;
           }
+	
        $schedulebal = 0;
+       $boosted = new DateTime($trandate);
+       $boosted->add(new DateInterval('P6D'));
        if(count($schedules)>0){
            foreach($schedules as $sched){
-               if($sched->duedate <= $trandate){
+               if($sched->duedate <= $boosted->format("Y-m-d")){
                     $schedulebal = $schedulebal + $sched->amount - $sched->discount -$sched->debitmemo - $sched->payment;
                }
            }
@@ -270,7 +273,13 @@ th {
                 <tr><td style="border: 1px solid black;">&nbsp;&nbsp;&nbsp;&nbsp;Debit Memo</td><td style="border: 1px solid black;" align="right">({{number_format($totdm,2)}})</tr>
                 <tr><td style="border: 1px solid black;">&nbsp;&nbsp;&nbsp;&nbsp;Payment</td><td style="border: 1px solid black;" align="right">({{number_format($totpayment,2)}})</tr>
                 <tr><td style="border: 1px solid black;">Total Balance</td><td align="right" style="border: 1px solid black;">{{number_format($totamount-$totdiscount-$totdm-$totpayment,2)}}</tr>
-                <tr style="font-size:11pt;font-weight:bold;border: 1px solid black;"><td>Due Date</td><td style="border: 1px solid black;" align="right">{{date('M d, Y',strtotime($trandate))}}</tr>
+                <tr style="font-size:11pt;font-weight:bold;border: 1px solid black;"><td>Due Date</td><td style="border: 1px solid black;" align="right">
+                        @if(in_array($statuses->plan,array('Monthly 1','Monthly 2')))
+                        {{date('M d, Y',strtotime("-7 days",strtotime($trandate)))}}
+                        @else
+                        {{date('M d, Y',strtotime($trandate))}}
+                        @endif
+</tr>
                 <tr style="font-size:11pt;font-weight:bold;border: 1px solid black;"><td>Total Due</td><td style="border: 1px solid black;" align="right">{{number_format($totaldue,2)}}</tr>
             </table>
             <br>
@@ -297,12 +306,19 @@ th {
     </tr>    
 </table>
     
-    <table style="position:absolute;bottom:40px;">
+    <table style="position:absolute;bottom:40px">
         <tr>
             <td width="70%">
                 <p style="font-size: 8pt;"><b>Reminder:</b><br>
+				
                     @if(strlen($reminder) == 0)
-                    Please disregard this statement if payment has been made. Last day of payment is <b>{{date('M d, Y',strtotime($trandate))}}</b>. Payments made after due date is subject 
+                    Please disregard this statement if payment has been made. Last day of payment is <b>
+                        @if(in_array($statuses->plan,array('Monthly 1','Monthly 2')))
+                        {{date('M d, Y',strtotime("-7 days",strtotime($trandate)))}}
+                        @else
+                        {{date('M d, Y',strtotime($trandate))}}
+                        @endif
+			</b>. Payments made after due date is subject 
                     to penalty of 5% or P250.00 whichever is higher. ADMINISTRATION
                     @else
                     {{$reminder}}

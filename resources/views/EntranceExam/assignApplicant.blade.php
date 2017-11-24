@@ -1,6 +1,7 @@
 @extends('app')
 @section('content')
 <div class='conatainer'>
+    <h4>Set schedule for entrance exam</h4>
     <div class='col-md-6 col-md-offset-3'>
         @foreach ($errors->all() as $error)
         <div class='alert alert-danger'>

@@ -8,7 +8,6 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
 
-
 class GradeComputation extends Controller
 {
     static function computeSubjectAverage($sy,$level,$grades){
@@ -37,18 +36,18 @@ class GradeComputation extends Controller
         $gradeCondition = \App\GradesSetting::where('schoolyear',$sy)->where('level',$level)->whereIn('subjecttype',$subjecttype)->first();
         $field = RegistrarHelper::getGradeQuarter($quarter);
         if($gradeCondition){
-            if($gradeCondition->calculation == "A"){
-                return self::averageGrade($subjecttype,$sem,$grades,$field,$gradeCondition);
-            }elseif($gradeCondition->calculation == "W"){
-                return self::weightedGrade($subjecttype,$sem,$grades,$field,$gradeCondition);
-            }elseif($gradeCondition->calculation == "P"){
-                return self::pointedGrade($subjecttype,$quarter,$sem,$grades,$field,$gradeCondition);
-            }else{
-                return "";
-            }   
+        if($gradeCondition->calculation == "A"){
+            return self::averageGrade($subjecttype,$sem,$grades,$field,$gradeCondition);
+        }elseif($gradeCondition->calculation == "W"){
+            return self::weightedGrade($subjecttype,$sem,$grades,$field,$gradeCondition);
+        }elseif($gradeCondition->calculation == "P"){
+            return self::pointedGrade($subjecttype,$quarter,$sem,$grades,$field,$gradeCondition);
         }else{
             return "";
         }
+        }else{
+            return "";
+    }
     }
     
     static function averageGrade($subjecttype,$sem,$grades,$field,$gradeCondition){

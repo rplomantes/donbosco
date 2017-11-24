@@ -1,6 +1,6 @@
 <?php
 $banks = \App\Dedit::distinct('bank_branch')->pluck('bank_branch')->toArray();
-$checkno = \App\Dedit::distinct('check_number')->pluck('check_number')->toArray();
+$checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')->toArray();
 $payees = \App\NonStudent::distinct('fullname')->pluck('fullname')->toArray();
 
 foreach($payees as $key=>$value){
@@ -19,14 +19,14 @@ foreach($payees as $key=>$value){
       source: bank
     });
     });
-
-//   $( function() {
-//    var checkno = [];
-//    $( "#check_number" ).autocomplete({
-//      source: checkno
-//    });
-//    });
-
+/*
+   $( function() {
+    var checkno = [];
+    $( "#check_number" ).autocomplete({
+      source: checkno
+    });
+    });
+*/
    $( function() {
     var payee = [<?php echo '"'.implode('","', $payees).'"' ?>];
     $( "#name" ).autocomplete({
@@ -568,11 +568,12 @@ foreach($payees as $key=>$value){
             $('#cash').keypress(function(e){
             
             if(e.keyCode == 13){
-                if(parseFloat($('#cash').val()) >= parseFloat($('#totalcredit').val())){
+		if(parseFloat($('#cash').val()) >= parseFloat($('#totalcredit').val())){
                     $('#remarks').focus();
                 }
             }
         });
 </script>
+
 @stop
 

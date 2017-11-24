@@ -1,6 +1,6 @@
 <?php
 $banks = \App\Dedit::distinct('bank_branch')->pluck('bank_branch')->toArray();
-$checkno = \App\Dedit::distinct('check_number')->pluck('check_number')->toArray();
+$checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')->toArray();
 ?>
 
 @extends("appcashier")
@@ -15,13 +15,14 @@ $checkno = \App\Dedit::distinct('check_number')->pluck('check_number')->toArray(
       source: bank
     });
     });
-
-//   $( function() {
-//    var checkno = [];
-//    $( "#check_number" ).autocomplete({
-//      source: checkno
-//    });
-//    });
+/*
+   $( function() {
+    var checkno = [<?php echo '"'.implode('","', $checkno).'"' ?>];
+    $( "#check_number" ).autocomplete({
+      source: checkno
+    });
+    });
+*/
 </script>
 
 <style>

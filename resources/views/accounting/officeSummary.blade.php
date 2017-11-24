@@ -6,7 +6,7 @@ $total = 0;
 ?>
 @extends('appaccounting')
 @section('content')
-<div class='container'>
+<div class='container-fluid'>
 <h4 style="text-align: left;">DEPARTMENTAL
     @if($acctcode == 4)
     INCOME

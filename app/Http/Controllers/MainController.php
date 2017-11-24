@@ -71,7 +71,7 @@ class MainController extends Controller
                     $students = DB::Select("select lastname,firstname,middlename,extensionname,gender,users.idno,statuses.status as stat from users join statuses on statuses.idno = users.idno where statuses.department IN('Junior High School')");
                     return view('misc.index',compact('students'));
                   break;
-              
+               case env('USER_SHS_APSA');
                case env('USER_SHS');
                     $students = DB::Select("select lastname,firstname,middlename,extensionname,gender,users.idno,statuses.status as stat from users join statuses on statuses.idno = users.idno where statuses.department IN('Senior High School')");
                     return view('misc.index',compact('students'));
