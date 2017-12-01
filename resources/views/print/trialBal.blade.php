@@ -63,29 +63,13 @@ margin-right:10px;
 font-family: calibri;
 }
 #header { position: fixed; left: 0px; top: -80px; right: 0px; height: 100px; text-align: center;font-size: 15px; }
-        </style>
-	<!-- Fonts -->
-	
-        </head>
+    </style>
+</head>
     <body> 
-    <div id="header">
-        <table border = '0'celpacing="0" cellpadding = "0" width="100%" align="center">
-            <tr>
-                <td>
-                    <p align="center"><span style="font-size:12pt;">Don Bosco Technical Institute of Makati, Inc. </span>
-                        <br>
-                        Chino Roces Ave., Makati City <br>
-                        Tel No : 892-01-01
-                    </p>
-                </td>
-            </tr>
-	    <tr><td style="font-size:12pt;text-align:center;"><b>Trial Balance</b></td></tr>
-        </table>
-        <table>
-            <tr><td>For the period {{$fromtran}} to {{$totran}}</td></tr>
-        </table>    
-            <hr/>
-     </div>
+        <?php $title = "Trial Balance";?>
+        @include('inludes.footer')
+        @include('inludes.header')
+
         <table class="table table-striped " style="font-size:12pt;">
             <?php 
             $totaldebit = 0;
@@ -94,7 +78,7 @@ font-family: calibri;
             $entry = count($trials);
             $curr_row = 1;
             ?>
-            <thead style="font-weight: bolder"><tr><td width="10%">Acct No.</td><td width="50%">Account Title</td><td width="20%" style="text-align:center">Debit</td><td width="20%" style="text-align:center">Credit</td></tr></thead>
+            <thead style="font-weight: bolder"><tr><td width="12%">Acct No.</td><td width="50%">Account Title</td><td width="19%" style="text-align:right">Debit</td><td width="19%" style="text-align:right">Credit</td></tr></thead>
             @foreach($trials as $trial)
 
             <tr><td @if($entry <= $curr_row)style="border-bottom: 1px solid;"@endif

@@ -115,7 +115,7 @@ class CashierController extends Controller
            
            //history of payments
            $debits = DB::SELECT("select * from dedits d  where d.idno = '" . $idno . "' and "
-                   . "d.paymenttype <= '2' order by d.transactiondate ASC,d.receiptno ASC");
+                   . "d.paymenttype <= '2' order by d.id ASC");
         
            $debitdms = DB::SELECT("select * from dedits d where d.idno = '" . $idno . "' and "
                    . "d.paymenttype = '3' order by d.transactiondate ASC,d.receiptno ASC");
@@ -1190,7 +1190,8 @@ class CashierController extends Controller
         \App\Dedit::where('refno',$refno)->update(['isreverse'=>'1']);
         $user = \App\User::where('idno',$idno)->exists();
         if($user){
-            return $this->view($idno);
+            //return $this->view($idno);
+            return redirect(url('cashier',$idno));
         }
         else{
             return redirect()->back();
@@ -1251,7 +1252,8 @@ class CashierController extends Controller
        // \App\AdvancePayment::where('refno',$refno)->where('idno',$idno)->update(['status' => '0']);
         $user = \App\User::where('idno',$idno)->exists();
         if($user){
-            return $this->view($idno);
+            //return $this->view($idno);
+            return redirect(url('cashier',$idno));
         }
         else{
             return redirect()->back();

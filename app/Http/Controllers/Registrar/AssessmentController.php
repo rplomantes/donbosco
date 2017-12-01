@@ -30,35 +30,29 @@ class AssessmentController extends Controller
         $ledgers="";
         $deposit = 0;
         
-        
         $student = \App\User::where('idno',$id)->first();
         $status = \App\Status::where('idno',$id)->first();
        
         if(count($status) > 0){
             
-                if($status->department=="TVET"){
-                    $currentschoolyear = \App\ctrSchoolYear::where('department',$status->department)->where('period',$status->period)->first();
-                }else{
-                    $currentschoolyear = \App\ctrSchoolYear::where('department', $status->department)->first();
-                }
-                $matchfields=["idno"=>$id, "schoolyear" =>$currentschoolyear->schoolyear, "period" => $currentschoolyear->period ];
-                $mydiscount=  \App\Discount::where($matchfields)->first();
-                $ledgers =  DB::Select("select sum(amount) as amount, sum(plandiscount) as plandiscount,  sum(otherdiscount) as otherdiscount,receipt_details  from ledgers
-                                 where idno = '$id' and schoolyear = '".$currentschoolyear->schoolyear."'  and period = '". $currentschoolyear->period."' Group by receipt_details ");
+            if($status->department=="TVET"){
+                $currentschoolyear = \App\ctrSchoolYear::where('department',$status->department)->where('period',$status->period)->first();
+            }else{
+                $currentschoolyear = \App\ctrSchoolYear::where('department', $status->department)->first();
+            }
+            $matchfields=["idno"=>$id, "schoolyear" =>$currentschoolyear->schoolyear, "period" => $currentschoolyear->period ];
+            $mydiscount=  \App\Discount::where($matchfields)->first();
+            $ledgers =  DB::Select("select sum(amount) as amount, sum(plandiscount) as plandiscount,  sum(otherdiscount) as otherdiscount,receipt_details  from ledgers
+                             where idno = '$id' and schoolyear = '".$currentschoolyear->schoolyear."'  and period = '". $currentschoolyear->period."' Group by receipt_details ");
             
         }
+        
         $programs = DB::Select("select distinct department from ctr_levels");
-        //$k_levels = \App\CtrLevel::where('department','Kindergarten')->get();
-        //$elem_levels = \App\CtrLevel::where('department','Elementary')->get();
-        //$jhs_levels = \App\CtrLevel::where('department','Junior High School')->get();
-        //$shs_levels = \App\CtrLevel::where('department','Senior High School')->get();
-        //$k11_tracks = \App\CtrTrack::where('level', 'Grade 11')->get();
-        //$k12_tracks = \App\CtrTrack::where('level', 'Grade 12')->get();
         $courses = DB::Select("select distinct coursecode from ctr_tvet_subjects");
         $balances = DB::Select("select sum(amount) as amount, sum(plandiscount) as plandiscount, sum(otherdiscount) as otherdiscount, sum(debitmemo) as debitmemo, sum(payment) as payment from ledgers where idno = ?",array($id));
         if(count($balances) > 0 ){
             foreach($balances as $ledger){    
-            $balance = $balance + $ledger->amount - $ledger->payment-$ledger->plandiscount-$ledger->debitmemo-$ledger->otherdiscount;
+                $balance = $balance + $ledger->amount - $ledger->payment-$ledger->plandiscount-$ledger->debitmemo-$ledger->otherdiscount;
             }
         }
         $fields=['idno'=>$id, 'status'=>'0']; 
@@ -422,10 +416,11 @@ function assess(Request $request){
 }
       
     
-
+//Add a student Ledger and Subjects
     function addLedger($id, $level, $plan, $discount,$department,$strand, $course,$contribution,$batch){
+        
         if($department=="TVET"){
-            $schoolperiod = \App\ctrSchoolYear::where('department','TVET')->where('period',$batch)->first();    
+            $schoolperiod = \App\ctrSchoolYear::where('department',$department)->where('period',$batch)->first();
         }
         else{
             $schoolperiod = \App\ctrSchoolYear::where("department",$department)->first();
@@ -433,17 +428,7 @@ function assess(Request $request){
         
         $discounts = \App\CtrDiscount::where('discountcode',$discount)->first();
         
-        //Set Match Field
-/*        if($department == "TVET"){
-            $matchfields = ["department"=>"TVET", 'plan'=>$plan,"course"=> $course,"period"=>$batch];  
-        }else{ 
-            if($level == "Grade 9" || $level == "Grade 10" || $level == "Grade 11" || $level == "Grade 12"){
-                $matchfields=['level'=>$level, 'plan' =>$plan, 'strand'=>$strand];
-            }else {
-                $matchfields=['level'=>$level, 'plan' =>$plan];
-            }    
-        }
- */
+        //Setup param set
         if($department != 'TVET'){ 
             if($level == "Grade 9" || $level == "Grade 10" || $level == "Grade 11" || $level == "Grade 12"){
                 $matchfields=['level'=>$level, 'plan' =>$plan, 'strand'=>$strand];
@@ -451,22 +436,23 @@ function assess(Request $request){
                 $matchfields=['level'=>$level, 'plan' =>$plan];
             }    
         }
+        
+        //Turn to Previous Balance all the main accounts from previous scoolyear
         DB::table('ledgers')
             ->where('idno',$id)
             ->where('categoryswitch','<',10)
+            ->where('schoolyear','<',$schoolperiod->schoolyear)
             ->update([
             'categoryswitch' => DB::raw('categoryswitch + 10')
         ]);
 
+        //Create A Ledger Record
         if($department=="TVET"){
             $newledger = new \App\Ledger;
             $newledger->idno = $id;
             $newledger->transactiondate = Carbon::now();
             $newledger->department = $department;
-           // $newledger->level = $ledger->level;
             $newledger->course = $course;
-           // $newledger->track = $ledger->track;
-           // $newledger->strand= $ledger->strand;
             $newledger->categoryswitch = "7";
             $newledger->accountingcode = "440000";
             $newledger->acctcode = "Trainees Contribution";
@@ -475,14 +461,14 @@ function assess(Request $request){
             $newledger->amount = $contribution;
             $newledger->acct_department = "TVET";
             $newledger->sub_department = "TVET";
-            //$newledger->plandiscount = $ledger->discount;
             $newledger->schoolyear = $schoolperiod->schoolyear;
             $newledger->duetype = "1";
             $newledger->period = $batch;
             $newledger->duedate = Carbon::now();
             $newledger->postedby = \Auth::user()->id;
             $newledger->save();
-        }else{
+        }
+        else{
             $ledgers = \App\CtrPaymentSchedule::where($matchfields)->get();
             
             foreach($ledgers as $ledger){
@@ -502,6 +488,7 @@ function assess(Request $request){
                 $newledger->sub_department = $ledger->sub_department;
                 $newledger->receipt_details = $ledger->receipt_details;
                 $newledger->amount = $ledger->amount;
+                
                     if($ledger->categoryswitch == env('TUITION_FEE')){
                         if(isset($discounts->discountcode)){    
         //if(count($discounts)> 0){
@@ -564,76 +551,81 @@ function assess(Request $request){
                 }
             }
         }  
-                if($department == "Kindergarten" || $department == "Elementary" || $department == "Junior High School"){ 
-                $newsubjects = \App\CtrSubjects::where('level',$level)->get();
-                foreach($newsubjects as $newsubject){
-                    $newgrade = new \App\Grade;
-                    $newgrade->idno = $id;
-                    $newgrade->level = $level;
-                    $newgrade->subjectcode=$newsubject->subjectcode;
-                    $newgrade->subjectname=$newsubject->subjectname;
-                    $newgrade->schoolyear=$schoolperiod->schoolyear;
-                    $newgrade->period=$schoolperiod->period;
-                    $newgrade->subjecttype=$newsubject->subjecttype;
-                    $newgrade->points=$newsubject->points;
-                    $newgrade->weighted=$newsubject->weighted;
-                    $newgrade->sortto=$newsubject->sortto;
-                    $newgrade->save();
-                }
-                    
-                } elseif($department == "Senior High School"){
-                    $matsubject = ["level"=>$level, "strand"=>$strand];
-                    $newsubjects = \App\CtrSubjects::where($matsubject)->get();
-                    foreach($newsubjects as $newsubject){
-                    $newgrade = new \App\Grade;
-                    $newgrade->idno = $id;
-                    $newgrade->level = $level;
-                    $newgrade->strand=$newsubject->strand;
-                    $newgrade->subjectcode=$newsubject->subjectcode;
-                    $newgrade->subjectname=$newsubject->subjectname;
-                    $newgrade->schoolyear=$schoolperiod->schoolyear;
-                    $newgrade->period=$schoolperiod->period;
-                    $newgrade->subjecttype=$newsubject->subjecttype;
-                    $newgrade->points=$newsubject->points;
-                    $newgrade->weighted=$newsubject->weighted;
-                    $newgrade->sortto=$newsubject->sortto;
-                    $newgrade->save();
-                }
+         //Create A Ledger Record
+        
+        //Create subject Records
+        if($department == "Kindergarten" || $department == "Elementary" || $department == "Junior High School"){ 
+            $newsubjects = \App\CtrSubjects::where('level',$level)->get();
+            foreach($newsubjects as $newsubject){
+                $newgrade = new \App\Grade;
+                $newgrade->idno = $id;
+                $newgrade->level = $level;
+                $newgrade->subjectcode=$newsubject->subjectcode;
+                $newgrade->subjectname=$newsubject->subjectname;
+                $newgrade->schoolyear=$schoolperiod->schoolyear;
+                $newgrade->period=$schoolperiod->period;
+                $newgrade->subjecttype=$newsubject->subjecttype;
+                $newgrade->points=$newsubject->points;
+                $newgrade->weighted=$newsubject->weighted;
+                $newgrade->sortto=$newsubject->sortto;
+                $newgrade->save();
+            }     
+        }
+        elseif($department == "Senior High School"){
+            $matsubject = ["level"=>$level, "strand"=>$strand];
+            $newsubjects = \App\CtrSubjects::where($matsubject)->get();
+            foreach($newsubjects as $newsubject){
+                $newgrade = new \App\Grade;
+                $newgrade->idno = $id;
+                $newgrade->level = $level;
+                $newgrade->strand=$newsubject->strand;
+                $newgrade->subjectcode=$newsubject->subjectcode;
+                $newgrade->subjectname=$newsubject->subjectname;
+                $newgrade->schoolyear=$schoolperiod->schoolyear;
+                $newgrade->period=$schoolperiod->period;
+                $newgrade->subjecttype=$newsubject->subjecttype;
+                $newgrade->points=$newsubject->points;
+                $newgrade->weighted=$newsubject->weighted;
+                $newgrade->sortto=$newsubject->sortto;
+                $newgrade->save();
+            }
+        } 
+        elseif($department == "TVET"){              
+            $newsubjects = \App\CtrSubjects::where('course',$course)->get();
+            foreach($newsubjects as $newsubject){
+                $newgrade = new \App\Grade;
+                $newgrade->idno = $id;
+                $newgrade->course = $course;
+                $newgrade->strand=$newsubject->strand;
+                $newgrade->subjectcode=$newsubject->subjectcode;
+                $newgrade->subjectname=$newsubject->subjectname;
+                $newgrade->schoolyear=$schoolperiod->schoolyear;
+                $newgrade->period=$schoolperiod->period;
+                $newgrade->subjecttype=$newsubject->subjecttype;
+                $newgrade->points=$newsubject->points;
+                $newgrade->weighted=$newsubject->weighted;
+                $newgrade->sortto=$newsubject->sortto;
+                $newgrade->save();
+            }
+        }
+        //Create subject Records
+
+        //
+        $ress = \App\AdvancePayment::where('idno',$id)->where('status','2')->get();
+        if(count($ress)>0){
+            foreach($ress as $res){
+               \App\AdvancePayment::where('id',$res->id)->update(['status'=>'0']);
+            }
+        }
                 
-                    } elseif($department == "TVET"){
-                      
-                    $newsubjects = \App\CtrSubjects::where('course',$course)->get();
-                    foreach($newsubjects as $newsubject){
-                    $newgrade = new \App\Grade;
-                    $newgrade->idno = $id;
-                    $newgrade->course = $course;
-                    $newgrade->strand=$newsubject->strand;
-                    $newgrade->subjectcode=$newsubject->subjectcode;
-                    $newgrade->subjectname=$newsubject->subjectname;
-                    $newgrade->schoolyear=$schoolperiod->schoolyear;
-                    $newgrade->period=$schoolperiod->period;
-                    $newgrade->subjecttype=$newsubject->subjecttype;
-                    $newgrade->points=$newsubject->points;
-                    $newgrade->weighted=$newsubject->weighted;
-                    $newgrade->sortto=$newsubject->sortto;
-                    $newgrade->save();
-                }
-                }   
-                $ress = \App\AdvancePayment::where('idno',$id)->where('status','2')->get();
-                if(count($ress)>0){
-                    foreach($ress as $res){
-                       \App\AdvancePayment::where('id',$res->id)->update(['status'=>'0']);
-                    }
-                }
+        $deposits = \App\StudentDeposit::where('idno',$id)->where('status','0')->get();
+        if(count($deposits)>0){
+            foreach($deposits as $deposit){
+                \App\StudentDeposit::where('id',$deposit->id)->update(['status'=>'1']);
+            }
+        }
                 
-                $deposits = \App\StudentDeposit::where('idno',$id)->where('status','0')->get();
-                if(count($deposits)>0){
-                    foreach($deposits as $deposit){
-                        \App\StudentDeposit::where('id',$deposit->id)->update(['status'=>'1']);
-                    }
-                }
-                
-                 return true;
+        return true;
     }
 
     function printregistration($idno){
@@ -698,7 +690,6 @@ function assess(Request $request){
    
     function updategrades(){
         
-    
         $students = \App\Status::where('status','2')->where('level','!=','Grade 11')->where('department','!=','TVET')->get();
         foreach($students as $student ){
             $subjects = \App\CtrSubjects::where('level',$student->level)->get();

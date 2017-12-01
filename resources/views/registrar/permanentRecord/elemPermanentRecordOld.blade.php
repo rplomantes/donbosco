@@ -50,6 +50,7 @@ $student = \App\User::where('idno',$idno)->first();
         </tr>
     
     </table>
+
     <img src="<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/images/DBTI.png"  style="position:absolute;width:108px;height:auto;top:0px;left:80px;">
     <img src="<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/images/boscorale.png"  style="position:absolute;width:100px;height:auto;top:0px;right:80px;">
     
@@ -137,8 +138,8 @@ $student = \App\User::where('idno',$idno)->first();
         </tr>
     </table>
     </div>
-    
-    <div width="100%">
+    sas
+    <div width="100%" style='position: fixed;top:570px;'>
         <table width="100%" cellspacing="1">
             <tr>
                 <td width="47%" style='vertical-align: top;'>@if($grade1 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 1")!!}@endif</td>
@@ -212,6 +213,38 @@ $student = \App\User::where('idno',$idno)->first();
                 <?php $grade++; ?>
                 @endwhile
 
+            </table>
+            <table width="100%" style="font-size:11pt;margin-top:50px">
+                <tr>
+                    <td>
+
+                    </td>
+                    <td width='50%'></td>
+                    <td style='text-align: center;'>
+                        <b>Ms. Violeta F. Roxas</b><br>
+                        <span style="font-size:9pt">REGISTRAR</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="margin-top: 30px"></td>
+                </tr>
+                <tr>
+                    <td style="padding-bottom:30px">Verified by:</td>
+                    <td></td>
+                    <td style="padding-bottom:30px">Prepared by:</td>
+                </tr>
+                <tr style="text-align: center;">
+                    <td>
+                        <b>Ms. Danica Shane W.Villa</b><br>
+                        <span style="font-size:9pt">Office Assistant</span>
+                    </td>
+                    <td></td>
+                    <td>
+                        <b>Ms. Bernadette B. Quejada</b><br>
+                        <span style="font-size:9pt">GS-Records Assistant
+                        </span>
+                    </td>
+                </tr>
             </table>
         </div>    
     </div>

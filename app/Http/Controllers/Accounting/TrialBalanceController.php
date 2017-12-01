@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use DB;
+use Excel;
 
 class TrialBalanceController extends Controller
 {
@@ -43,5 +44,29 @@ class TrialBalanceController extends Controller
        $pdf->setPaper('letter','portrait');
        $pdf->loadView('print.trialBal',compact('trials','fromtran','totran'));
        return $pdf->stream();      
+    }
+    
+    function download($fromtran,$totran){
+        $trials = $this->gettrialBalance($fromtran,$totran);
+        $name = "Trial balance - ".date("M_d_Y",strtotime($fromtran))." to ".date("M_d_Y",strtotime($totran));
+        
+        Excel::create($name,function($excel) use($trials,$fromtran,$totran){
+            $excel->sheet('trial bal',function($sheet) use($trials,$fromtran,$totran){
+                $sheet->loadView('accounting.trialBalDownload')
+                        ->with('trials',$trials)
+                        ->with('fromtran',$fromtran)
+                        ->with('totran',$totran);                
+                
+                $sheet->setStyle(array(
+                    'font' => array(
+                    'name'      =>  'Calibri',
+                    'size'      =>  12)
+                    ));
+                $sheet->setColumnFormat(array(
+                    'C' => '0.00',
+                    'D' => '0.00'
+                ));
+            });
+        })->export('xlsx');
     }
 }

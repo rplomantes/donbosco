@@ -117,7 +117,29 @@ class Helper extends Controller
 
         }
     }
+
+    static function isNewSystemStudent($idno,$sy){
+        $newuser = \App\User::where('idno',$idno)->whereNotNull('created_at')->exists();
+        
+        if($newuser){
+            $history = \App\StatusHistory::where('idno',$idno)->where('schoolyear','<',$sy)->whereIn('status',array(2,3))->exists();
+            
+            if($history){
+                return false;
+            }else{
+                return true;
+            }
+        }else{
+            if($sy == 2016 && substr($idno, 0, 2) == '16'){
+                return true;
+            }else{
+                return false;                
+            }
+
+        }
+    }
     
+
     static function getNumericSection($sy,$level,$section){
         $currSy = \App\RegistrarSchoolyear::first()->schoolyear;
         $condition = ['schoolyear'=>$sy,'level'=>$level,'section'=>$section];

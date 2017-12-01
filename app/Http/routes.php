@@ -287,6 +287,7 @@
     
     Route::get('trialbalance/{fromtran}/{totran}','Accounting\TrialBalanceController@viewtrilaBalance');
     Route::get('printtrialbalance/{fromtran}/{totran}','Accounting\TrialBalanceController@printtrilaBalance');
+    Route::get('downloadtrialbal/{fromtran}/{totran}','Accounting\TrialBalanceController@download');
     Route::get('generalledger/{basic}/{title}/{fromdate}/{todate}','Accounting\GenLedgerController@index');
     Route::get('generalledger/print/{basic}/{title}/{fromdate}/{todate}','Accounting\GenLedgerController@printledger');
     Route::get('balancesheet','Vincent\BalanceSheetController@index');

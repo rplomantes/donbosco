@@ -210,7 +210,7 @@ function dosubmit(){
 
     
     if(confirm("Continue to process payment now?")){
-        if(eval(totaldebit) !== 0){
+        if(eval(totaldebit) >= totalcredit){
             if(allowsubmit == 0){
                 return false;
             }
@@ -331,11 +331,13 @@ function submitcash(event,amount){
 }
 
 function submitcheck(event, amount){
-    document.getElementById('cashdiff').innerHTML =""
+    document.getElementById('cashdiff').innerHTML ="";
+    
     if(document.getElementById('submit').style.visibility == "visible"){
-       document.getElementById('submit').style.visibility = "hidden" 
-       document.getElementById('change').value=""
+       document.getElementById('submit').style.visibility = "hidden" ;
+       document.getElementById('change').value="";
     }
+    
     if(event.keyCode == 13) {
         checkreceive = 0
        
@@ -369,9 +371,21 @@ function submitcheck(event, amount){
             document.getElementById('submit').style.visibility="hidden";
             document.getElementById('cashdiff').innerHTML = "DIFFERENCE : " + diff.toFixed(2);
             document.getElementById('receivecash').focus();
+            
         }
-     event.preventDefault();
-     return false;
+        
+        if($('#receivecheck').val() != ""){
+            $('#check_number').prop('required', true);
+            $('#bank_branch').prop('required', true);
+
+        }else{
+            
+            $('#check_number').removeAttr('required');
+            $('#bank_branch').removeAttr('required');            
+        }
+        
+        event.preventDefault();
+        return false;
         
     }
     

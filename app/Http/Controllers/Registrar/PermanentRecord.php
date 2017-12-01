@@ -49,6 +49,7 @@ class PermanentRecord extends Controller
         $new = \App\Grade::where('idno',$idno)->where('level','Grade 7')->where('schoolyear','2016')->exists();
         $pdf = \App::make('dompdf.wrapper');
         $pdf->setPaper([0,0,602.00,1008.00], 'portrait');
+
         if($new){
             $pdf->loadView("registrar.permanentRecord.jhsPermanentRecord",compact('idno','header','grade7','grade8','grade9','grade10','oldrec'));
         }else{
@@ -317,7 +318,7 @@ class PermanentRecord extends Controller
     
     static function prevSchoolRec($level,$idno){
         $school = "";
-        $sy = "";
+        $sy = 0;
         $average = "";
         $entered = "";
         $left = "";

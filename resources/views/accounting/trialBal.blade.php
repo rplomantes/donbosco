@@ -61,10 +61,11 @@ use App\Http\Controllers\Accounting\Helper as AcctHelper;
             <tr><td colspan="2" style="text-align: right"><b>Total</b></td><td style="text-align: right">{{number_format($totaldebit, 2, '.', ', ')}}</td><td style="text-align: right">{{number_format($totalcredit, 2, '.', ', ')}}</td></tr>
         </table>
     </div>
-</div>
-    
 
-<div class="col-md-offset-10 col-md-2"><a class="btn btn-danger" href="{{url('printtrialbalance',array($fromtran,$totran))}}">Print</a></div>
+    
+<div class="col-md-offset-8 col-md-2"><a class="col-md-12 btn btn-success" href="{{url('downloadtrialbal',array($fromtran,$totran))}}">Download</a></div>
+<div class="col-md-2"><a class="col-md-12 btn btn-danger" href="{{url('printtrialbalance',array($fromtran,$totran))}}">Print</a></div>
+</div>
 <script>
 function showtran(){
     var fromtran = document.getElementById('fromtran').value

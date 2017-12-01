@@ -11,15 +11,9 @@ $total=0;
 <div class="container-fluid">
     <div class="col-md-8 form-inline">
         <div class="form-group">
-            <label class='control-label col-md-2' for="from">From:</label>
+            <label class='control-label col-md-4' for="from">Fiscal Year:</label>
             <div class=' col-md-8'>
                 <input type='text' class="form-control" id='from' value='{{$fromdate}}' placeholder="YYYY-MM-DD">
-            </div>
-        </div>
-        <div class="form-group">
-            <label class='control-label col-md-2' for="to">To:</label>
-            <div class=' col-md-8'>
-                <input type='text's class="form-control" id='to' value='{{$todate}}' placeholder="YYYY-MM-DD">
             </div>
         </div>
         <button onclick="viewreport()" class="btn btn-danger">Submit</button>
@@ -39,16 +33,23 @@ $total=0;
             @foreach($banks as $bank)
             <?php 
             $accttotal = round(AcctHelper::getaccttotal($bank->credits,$bank->debit,$bank->entry),2); 
+            $total = $total + $accttotal;
             $credittotal = $credittotal + $bank->credits;
             $debittotal = $debittotal + $bank->debit;
             ?>
             <tr>
                 <td>{{$bank->accountname}}</td>
-                <td style="text-align: right">{{$bank->debit}}</td>
-                <td style="text-align: right">{{$bank->credits}}</td>
-                <td style="text-align: right">{{$accttotal}}</td>
+                <td style="text-align: right">{{number_format($bank->debit,2)}}</td>
+                <td style="text-align: right">{{number_format($bank->credits,2)}}</td>
+                <td style="text-align: right">{{number_format($accttotal,2)}}</td>
             </tr>
             @endforeach
+            <tr>
+                <td>Total</td>
+                <td style="text-align: right">{{number_format($debittotal,2)}}</td>
+                <td style="text-align: right">{{number_format($debittotal,2)}}</td>
+                <td style="text-align: right">{{number_format($total,2)}}</td>
+            </tr>
         </table>
     </div>
     <div class="col-md-4">
