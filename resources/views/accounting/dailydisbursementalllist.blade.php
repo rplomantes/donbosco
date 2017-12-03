@@ -8,7 +8,7 @@ $template = 'appaccounting';
 if(in_array(Auth::user()->accesslevel,array(env('USER_ACCOUNTING'),env('USER_ACCOUNTING_HEAD')))){
     $template = 'appaccounting';
 }elseif(in_array(Auth::user()->accesslevel,array(env('USER_ADMIN')))){
-    $template = 'appadmin';
+    $template = 'layouts.administrator';
 }
 ?>
 
