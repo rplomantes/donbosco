@@ -23,7 +23,7 @@
                 <td rowspan="3" valign="top" width="45%">
                 <table border ="0" celspacing="0" cellpadding="0">
                 <tr style="font-size: 10pt"><td width="45">Subject:</td><td style="border-bottom:1px solid;"></td></tr>
-                <tr style="font-size: 10pt"><td>Teacher:</td><td style="border-bottom:1px solid;"></td></tr>
+                <tr style="font-size: 10pt"><td>Teacher:</td><td style="border-bottom:1px solid;">{{rtrim($advisername,',')}}</td></tr>
                 <tr style="font-size: 10pt"><td>Grade:</td> <td>{{$sectioninfo->level}}</td></tr>
                 <tr style="font-size: 10pt"><td>Etech:</td><td> {{$sectioninfo->elective}} ({{$sectioninfo->section}})</td></tr>
                 </table>

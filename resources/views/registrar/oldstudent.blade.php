@@ -42,7 +42,8 @@
                         @else
                             <i>Registered</i> 
                             <input type="hidden" name="action" value="update">
-                        @endif                        
+                        @endif
+                        
                     @endif
                         </td><td><strong style="color:red">{{ number_format($balance-$reservation,2)}}</strong></td></tr>
                 </tbody>

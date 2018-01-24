@@ -98,37 +98,34 @@ $student = \App\User::where('idno',$idno)->first();
         <tr style="text-align: center;vertical-align: top">
             <td width="9%">
                 <div style="font-weight: bold">School Year</div>
-                <div>{{$oldrec[1]}} - {{$oldrec[1]+1}}</div>
             </td>
             <td width="10%">
                 <div style="font-weight: bold">Date Entered</div>
-                <div>{{$oldrec[4]}}</div>
             </td>
             <td width="10%">
                 <div style="font-weight: bold">Date Left</div>
-                <div>{{$oldrec[5]}}</div>
             </td>
             <td >
                 <div style="font-weight: bold">School Attended</div>
-                <div>{{$oldrec[0]}}</div>
             </td>
             <td width="10%">
                 <div style="font-weight: bold">Grade</div>
-                <div>{{$oldrec[6]}}</div>
             </td>
             <td width="10%">
                 <div style="font-weight: bold">Days Present</div>
-                <div>{{$oldrec[3]}}</div>
             </td>
             <td width="9%">
                 <div style="font-weight: bold">Final Rating</div>
-                <div>{{$oldrec[2]}}</div>
             </td>
             <td width="9%">
                 <div style="font-weight: bold">Prom./Ret.</div>
-                <div> {{$oldrec[7]}}</div>
             </td>
         </tr>
+        @foreach($oldrec as $rec)
+        <tr>
+            <td>{{$rec->sy}}</td>
+        </tr>
+        @endforeach
     </table>
     </div>
     
@@ -163,13 +160,52 @@ $student = \App\User::where('idno',$idno)->first();
         </table>
     </div>
     
-    <div width="100%" >
+    <div width="100%" style="position:fixed;bottom:450px">
         <h4 style="text-align: center">CERTIFICATE OF TRANSFER</h4>
-        <i>TO WHOM IT MAY CONCERN:</i>
-        <p style="text-indent: 50px;font-size:8pt;">
-            This is to certify that this is a True Recird of the Elementary School Permanent Record of <u>{{strtoupper($student->lastname)}}, {{strtoupper($student->firstname)}} {{substr(strtoupper($student->middlename),0,1)}}</u>
+        <p style='font-size:11pt;font-weight: 500;font-family:initial'><b><i>TO WHOM IT MAY CONCERN:</i></b></p>
+        <p style="text-indent: 100px;font-size:11pt;font-weight: 500;font-family:initial"><b><i>
+            This is to certify that this is a True Record of the Elementary School Permanent Record of <br>
+	    <div style="position:absolute;left:-80px;text-align:left;">{{strtoupper($student->lastname)}}, {{strtoupper($student->firstname)}} {{substr(strtoupper($student->middlename),0,1)}}</div>_______________________________________. He is eligible for transfer and admission to ___________________.
+	    He has no financial or Property Responsibility in this school as of this date of issuance.
+	</i></b>
         </p>
-        
+
+            <table width="100%" style="font-size:11pt;margin-top:50px">
+                <tr>
+                    <td></td>
+                    <td width='30%'></td>
+                    <td style='text-align: center;'>
+                        <b>Ms. Violeta F. Roxas</b><br>
+                        <span style="font-size:9pt">REGISTRAR</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="padding-top: 30px"></td>
+                </tr>
+                <tr>
+                    <td style="padding-bottom:10px">Verified by:</td>
+                    <td></td>
+                    <td style="padding-bottom:10px">Prepared by:</td>
+                </tr>
+                <tr style="text-align: center;vertical-align: top;">
+                    <td>
+                        <b>Ms. Danica Shane W.Vila</b><br>
+                        <span style="font-size:9pt">Office Assistant</span>
+                    </td>
+                    <td></td>
+                    <td>
+                        <b>Ms. Bernadette B. Quejada</b><br>
+                        <span style="font-size:9pt">GS-Records Assistant<br>
+			Date: {{date('d-M-y')}}
+                        </span>
+                    </td>
+                </tr>
+            </table>
+	<p style="font-size:9pt">
+		COPY OF THIS RECORD IS SENT TO THE PRINCIPAL OF ________________________________ON _____________________<br>
+		<span style="padding-left:390px">(School)</span><span style="padding-left:150px">(Date)</span> 
+	</p>
+
     </div>
 </body>
 </html>

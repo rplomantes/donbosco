@@ -36,7 +36,8 @@ class SectionController extends Controller
                         . "users.idno and statuses.level = '$level' AND schoolyear = '$schoolyear' AND statuses.section = '$section' order by statuses.class_no=0,users.gender,users.lastname, users.firstname, users.middlename");
    
         $pdf = \App::make('dompdf.wrapper');
-        $pdf->setPaper("Folio", "portrait");
+        $pdf->setPaper([0,0,612,920], "portrait");
+//        $pdf->setPaper("folio", "portrait");
         $pdf->loadView('print.printsection',compact('studentnames','adviser','level','section','schoolyear'));
         return $pdf->stream();
 
@@ -61,7 +62,7 @@ class SectionController extends Controller
            }
    
         $pdf = \App::make('dompdf.wrapper');
-        $pdf->setPaper("Legal", "portrait");
+        $pdf->setPaper([0,0,612,920], "portrait");
          $pdf->loadView('print.printsection',compact('studentnames','level','section','strand','adviser','schoolyear'));
         return $pdf->stream();
 

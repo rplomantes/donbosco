@@ -88,7 +88,7 @@ body { margin: 0px; }
  </table>
  <table width = "100%" border="0">           
    <tr><td colspan="2"><span style="margin-left: 70px">{{$debit_cash->bank_branch}}</span></td></tr>
-   <tr><td><span style="margin-left: 80px">{{$debit_cash->check_number}} - {{$debit_cash->checkamount}}</span></td><td align="right">{{$posted->firstname}} {{$posted->lastname}}</td></tr>
+   <tr><td><span style="margin-left: 80px">{{$debit_cash->check_number}} - {{$debit_cash->checkamount}}</span></td><td align="right" style="padding-right:20px">{{$posted->firstname}} {{$posted->lastname}}</td></tr>
    <tr><td colspan = "2"></td></tr>
  </table>
  <table width="100%" border = "0">

@@ -101,9 +101,14 @@
                 @if(count($encashments)=='0')
                     <tr><td colspan="2">No Encashment Yet!!..</td></tr>
                 @else
+                    <?php $totalencashment = 0; ?>
                     @foreach($encashments as $encashment)
+                        @php
+                        $totalencashment = $totalencashment + round($encashment->amount,2);
+                        @endphp
                         <tr><td>{{$encashment->whattype}}</td><td align="right">{{number_format($encashment->amount,2)}}</td></tr>
                     @endforeach
+                    <tr style='font-weight: 600'><td style="border-top: 1px solid">Total</td><td  style="border-top: 1px solid" align="right">{{number_format($totalencashment,2)}}</td></tr>
                 @endif
         </table>
 

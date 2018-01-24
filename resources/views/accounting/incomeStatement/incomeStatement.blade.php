@@ -23,7 +23,7 @@ $otherSize = count($otherGroups);
 <div class="container">
     <h3>Income Statement</h3>
 </div>
-<div class="container">
+<div class="container hideOnPrint">
     <div class="col-md-6">
         <div class="form form-group col-md-6">
             <label class="col-md-4">From :</label>
@@ -42,7 +42,7 @@ $otherSize = count($otherGroups);
 </div>
 <div class="container">
     
-    <table width="50%">
+    <table width="80%" style="margin:auto">
         <tr><td colspan="4"><b><h4>Income</h4></b></td></tr>
         @foreach($incomeGroups as $incomeGroup)
         <?php 
@@ -83,18 +83,17 @@ $otherSize = count($otherGroups);
         <?php $incomeIndex++; ?>
         @endforeach
         
-        <tr><td colspan="3"><b>TOTAL INCOME</b></td><td style="border-bottom:3px solid;text-align: right">{{number_format($totalIncome,2)}}</td></tr>
+        <tr style="page-break-after: always"><td colspan="3"><b>TOTAL INCOME</b></td><td style="border-bottom:3px solid;text-align: right">{{number_format($totalIncome,2)}}</td></tr>
            
         
         <tr><td colspan="4"><b><h4>Expenses</h4></b></td></tr>
         @foreach($expenseGroups as $expenseGroup)
             <?php 
-            $totalExpense = 0;
             $accounts = App\accounts_group::where('group',$expenseGroup->id)->get();
             $debits = $accounts->where('chartofaccount.entry','debit');
             
             $groupTotal = IncomeStatement::otherGroupTotal($debits,$date);
-            $totalExpense = $totalExpense + $groupTotal;
+            $totalExpense = $totalExpense+$groupTotal;
             ?>
         <tr><td colspan="3">{{$expenseGroup->groupname}}</td><td style="text-align: right;@if($expenseIndex >= $expenseSize)border-bottom:1px solid;@endif">{{number_format($groupTotal,2)}}</td></tr>
                 @if(count($debits)>1)
@@ -108,7 +107,7 @@ $otherSize = count($otherGroups);
         <?php $expenseIndex++; ?>
         @endforeach
         <tr><td colspan="3"><b>TOTAL EXPENSE</b></td><td style="border-bottom:3px solid;text-align: right">{{number_format($totalExpense,2)}}</td></tr>
-        <tr><td colspan="3"><b>NET INCOME FROM OPERATION</b></td><td>{{number_format($totalIncome - $totalExpense,2)}}</td></tr>
+        <!--tr><td colspan="3"><b>NET INCOME FROM OPERATION</b></td><td style="text-align:right">{{number_format($totalIncome - $totalExpense,2)}}</td></tr-->
         
         @foreach($otherGroups as $otherGroup)
             <?php 
@@ -135,15 +134,15 @@ $otherSize = count($otherGroups);
         <tr><td colspan="3"><b>NET INCOME FOR THE YEAR</b></td><td style="text-align: right;border-bottom: 5px solid;border-bottom-style: double"><b>{{number_format($totalIncome - $totalExpense,2)}}</b></td></tr>
     </table>
     <br><br><br>
-    <button class="col-md-12 btn btn-info" onclick="printReport()">PRINT</button>
+    <!--button class="col-md-12 btn btn-info" onclick="printReport()">PRINT</button-->
 </div>
 <script>
     var date = $("#fromtran").val();
     function updateView(){s
-        window.location.href = "/test123/"+date;
+        window.location.href = "/incomestatement/"+date;
     }
     
-    function printReport(){
+    function printRepor(){
         window.open("/printincomestatement/"+date);
     }
 </script>

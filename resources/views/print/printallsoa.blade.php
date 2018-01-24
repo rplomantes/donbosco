@@ -121,7 +121,7 @@ th {
         <tr><td style="font-size:10pt;">Tel No : 892-01-01 to 08</td><td align="right">Plan : {{$statuses->plan}}</td></tr>
     </table>
 
-<table>
+	<table>
     <tr>
         <td width="70%" valign="top" style="padding-right:0px;">
             <table style="font-size:10pt">
@@ -167,7 +167,8 @@ th {
        <!--Main Account Total-->
        <tr style="font-weight:bold"><td>Sub total</td><td align="right">{{number_format($maintotamount,2)}}</td>
            <td align="right">{{number_format($maintotdiscount,2)}}</td><td align="right">{{number_format($maintotpayment,2)}}</td>
-           <td align="right">{{number_format($maintotdm,2)}}</td><td align="right">{{number_format($maintotamount-$maintotdiscount-$maintotpayment-$maintotdm,2)}}</td></tr>
+           <td align="right">{{number_format($maintotdm,2)}}</td>
+<td align="right">{{number_format($maintotamount-$maintotdiscount-$maintotpayment-$maintotdm,2)}}</td></tr>
        
        @if(count($others)>0)
        <tr><td><b><u>Additional Charges</u></b></td></tr>
@@ -256,8 +257,11 @@ th {
        @endforeach
        @if(count($others)>0)
        <tr style="font-weight:bold"><td>Sub total</td><td align="right">{{number_format($othertotamount,2)}}</td>
-           <td align="right">{{number_format($othertotdiscount,2)}}</td><td align="right">{{number_format($othertotpayment,2)}}</td>
-           <td align="right">{{number_format($othertotdm,2)}}</td><td align="right">{{number_format($othertotamount-$othertotdiscount-$othertotpayment-$othertotdm,2)}}</td></tr>
+           <td align="right">{{number_format($othertotdiscount,2)}}</td>
+	   <td align="right">{{number_format($othertotpayment,2)}}</td>
+           <td align="right">{{number_format($othertotdm,2)}}</td>
+	   <td align="right">{{number_format($othertotamount-$othertotdiscount-$othertotpayment-$othertotdm,2)}}</td>
+	</tr>
        @endif
        <tr><td colspan="5"><br></td></tr>
        <tr style="font-weight:bold"><td>Total</td><td align="right">{{number_format($totamount,2)}}</td>
@@ -275,7 +279,7 @@ th {
                 <tr><td style="border: 1px solid black;">Total Balance</td><td align="right" style="border: 1px solid black;">{{number_format($totamount-$totdiscount-$totdm-$totpayment,2)}}</tr>
                 <tr style="font-size:11pt;font-weight:bold;border: 1px solid black;"><td>Due Date</td><td style="border: 1px solid black;" align="right">
                         @if(in_array($statuses->plan,array('Monthly 1','Monthly 2')))
-                        {{date('M d, Y',strtotime("-7 days",strtotime($trandate)))}}
+                        {{date('M d, Y',strtotime($trandate))}}
                         @else
                         {{date('M d, Y',strtotime($trandate))}}
                         @endif
@@ -309,21 +313,22 @@ th {
     <table style="position:absolute;bottom:40px">
         <tr>
             <td width="70%">
+		@if($schedulebal > 0)
                 <p style="font-size: 8pt;"><b>Reminder:</b><br>
-				
                     @if(strlen($reminder) == 0)
                     Please disregard this statement if payment has been made. Last day of payment is <b>
                         @if(in_array($statuses->plan,array('Monthly 1','Monthly 2')))
-                        {{date('M d, Y',strtotime("-7 days",strtotime($trandate)))}}
+                        {{date('M d, Y',strtotime($trandate))}}
                         @else
                         {{date('M d, Y',strtotime($trandate))}}
                         @endif
 			</b>. Payments made after due date is subject 
                     to penalty of 5% or P250.00 whichever is higher. ADMINISTRATION
                     @else
-                    {{$reminder}}
+                	    {{$reminder}}
                     @endif
                 </p>
+            @endif
             </td>
             <td>
                 <div style="height:50px"><img src="{{url('images','frsonny.png')}}" height="80" style=";margin-left:20"></div>

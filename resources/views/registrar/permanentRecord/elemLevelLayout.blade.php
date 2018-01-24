@@ -17,7 +17,7 @@ if(count($gradeSetting)> 0){
 ?>
 @if(count($grades)>0)
 
-<table width="100%" style="font-size: 8pt;font-weight: bold" cellspacing='0'>
+<table width="100%" style="font-size: 7.5pt;font-weight: bold" cellspacing='0'>
     <tr>
         <td colspan="2">{{$level}} - Section: <span class="underscore">{{$gradeinfo['section']}}</span></td>
     </tr>
@@ -115,7 +115,7 @@ if(count($gradeSetting)> 0){
 </table>
 <table style="font-size: 7pt;" width="100%" cellspacing="0">
     <tr class="border_left border_right" style='font-weight: bolder'>
-        <td colspan="3">Eligible for admission to Grade II</td>
+        <td colspan="3">Eligible for admission to Grade ______</td>
         <td colspan="4" style="font-size: 7pt;text-align: center;">General Average<span class="underscore">  {{GradeComputation::computeQuarterAverage($gradeinfo['sy'],$level,array(0),0,5,$grades)}}</span></td>
     </tr>
 

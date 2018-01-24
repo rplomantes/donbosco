@@ -42,13 +42,24 @@ class CashierController extends Controller
        }
        
        //get previous balance
-       $previousbalances = DB::Select("select schoolyear, sum(amount)- sum(plandiscount)- sum(otherdiscount)
-               - sum(debitmemo) - sum(payment) as amount from ledgers where idno = '$idno' 
-               and categoryswitch >= 10 group by schoolyear");
-       if(count($previousbalances)>0){ 
-       foreach($previousbalances as $prev){
-            $totalprevious = $totalprevious + $prev->amount;
-       }}
+       $previousbalances = $this->get_prevBalance($idno);
+       
+       
+       if(!(count($previousbalances)>0)){
+            $previousbalances = DB::Select("select schoolyear, sum(amount)- sum(plandiscount)- sum(otherdiscount)
+                    - sum(debitmemo) - sum(payment) as amount from ledgers where idno = '$idno' 
+                    and categoryswitch >= 10 group by schoolyear");   
+            
+            if(count($previousbalances)>0){ 
+                $previousbalances = collect($previousbalances);
+                 $totalprevious = $totalprevious + $previousbalances->sum('amount');
+            }
+       }else{
+           $totalprevious =$previousbalances->sum('amount') - $previousbalances->sum('payment');
+           //return $previousbalances->groupBy('schoolyear');
+       }
+       
+
        
        //get reservation
        if(isset($status->status)){
@@ -115,7 +126,7 @@ class CashierController extends Controller
            
            //history of payments
            $debits = DB::SELECT("select * from dedits d  where d.idno = '" . $idno . "' and "
-                   . "d.paymenttype <= '2' order by d.id ASC");
+                   . "d.paymenttype <= '2' order by d.transactiondate ASC,d.receiptno ASC");
         
            $debitdms = DB::SELECT("select * from dedits d where d.idno = '" . $idno . "' and "
                    . "d.paymenttype = '3' order by d.transactiondate ASC,d.receiptno ASC");
@@ -162,6 +173,9 @@ class CashierController extends Controller
     
     function payment(Request $request){
         
+    //    if($request->totalamount > ($request->receivecheck+$request->fape+$request->receivecash+$request->deposit+$request->reservation)){
+    //        return back()->with('mistransact', 'Profile updated!');
+    //    }
         
         $account=null;
         $orno = $this->getOR();
@@ -528,9 +542,30 @@ class CashierController extends Controller
     
     static function reset_or(){
         $resetor = \App\User::where('idno', \Auth::user()->idno)->first();
-        $resetor->receiptno = $resetor->receiptno + 1;
+        $leading_zero = strlen($resetor->receiptno) - strlen(ltrim($resetor->receiptno, '0'));
+        
+        $orginal_len = strlen($resetor->receiptno);
+        
+        $new_receipt = $resetor->receiptno + 1;
+        $new_len = strlen($new_receipt);
+        
+        if($orginal_len <= $new_len){
+            $new_receipt = $new_receipt;
+        }else{
+            $addedZero = 0;
+            do{
+                $new_receipt = "0".$new_receipt;
+                $addedZero++;
+            }while($addedZero < $leading_zero);
+        }
+        $resetor->receiptno = $new_receipt;
         $resetor->reference_number = $resetor->reference_number + 1;
         $resetor->save();
+
+//        $resetor = \App\User::where('idno', \Auth::user()->idno)->first();
+//        $resetor->receiptno = $resetor->receiptno + 1;
+//        $resetor->reference_number = $resetor->reference_number + 1;
+//        $resetor->save();
     }
     
     function consumereservation($idno){
@@ -760,6 +795,13 @@ class CashierController extends Controller
         $acct_departments = DB::Select('Select * from ctr_acct_dept order by sub_department');
         $advances = \App\AdvancePayment::where("idno",$idno)->where("status",'2')->get();
         $advance=0;
+        $deposit = 0;
+        
+               $studentdeposit = \App\StudentDeposit::where('idno',$idno)->where('status',1)->get();
+               if(count($studentdeposit)>0 ){
+                       $deposit = $studentdeposit->sum('amount');
+               }
+               
         if(count($advances)>0){    
             foreach($advances as $adv){
                $advance=$advance+$adv->amount;
@@ -767,7 +809,7 @@ class CashierController extends Controller
         }
         $accounttypes = DB::Select("select distinct accounttype from ctr_other_payments order by accounttype");
         $paymentothers = DB::Select("select sum(amount) as amount, receipt_details from credits where idno ='" . $idno . "' and (categoryswitch = '7' OR categoryswitch = '9') and isreverse = '0' group by receipt_details");
-        return view('cashier.otherpayment',compact('acct_departments','student','status','accounttypes','advance','paymentothers'));
+        return view('cashier.otherpayment',compact('acct_departments','student','status','accounttypes','advance','paymentothers','deposit'));
     }
     
    static function mainDepartment($department){
@@ -1190,8 +1232,9 @@ class CashierController extends Controller
         \App\Dedit::where('refno',$refno)->update(['isreverse'=>'1']);
         $user = \App\User::where('idno',$idno)->exists();
         if($user){
-            //return $this->view($idno);
-            return redirect(url('cashier',$idno));
+        //    return $this->view($idno);
+        return redirect(url('cashier',$idno));
+
         }
         else{
             return redirect()->back();
@@ -1252,8 +1295,7 @@ class CashierController extends Controller
        // \App\AdvancePayment::where('refno',$refno)->where('idno',$idno)->update(['status' => '0']);
         $user = \App\User::where('idno',$idno)->exists();
         if($user){
-            //return $this->view($idno);
-            return redirect(url('cashier',$idno));
+            return $this->view($idno);
         }
         else{
             return redirect()->back();
@@ -1704,6 +1746,14 @@ class CashierController extends Controller
         
         
         return null;
+        }
+        
+        function get_prevBalance($idno){
+            $prevBalance = \App\PrevBalance::with('ledger')->whereHas('ledger',function($query)use($idno){
+                $query->where('idno',$idno);
+            })->get();
+            
+            return $prevBalance;
         }
     
    }

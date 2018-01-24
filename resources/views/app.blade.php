@@ -45,6 +45,54 @@
                display:none;
            }
            
+           
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu>.dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    -webkit-border-radius: 0 6px 6px 6px;
+    -moz-border-radius: 0 6px 6px;
+    border-radius: 0 6px 6px 6px;
+}
+
+.dropdown-submenu:hover>.dropdown-menu {
+    display: block;
+}
+
+.dropdown-submenu>a:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #ccc;
+    margin-top: 5px;
+    margin-right: -10px;
+}
+
+.dropdown-submenu:hover>a:after {
+    border-left-color: #fff;
+}
+
+.dropdown-submenu.pull-left {
+    float: none;
+}
+
+.dropdown-submenu.pull-left>.dropdown-menu {
+    left: -100%;
+    margin-left: 10px;
+    -webkit-border-radius: 6px 0 6px 6px;
+    -moz-border-radius: 6px 0 6px 6px;
+    border-radius: 6px 0 6px 6px;
+}
         </style>
         <style type="text/css" media="print">
            .headers{
@@ -147,7 +195,13 @@
                                             <li><a href="{{url('enrollmentstat')}}"><i class="fa fa-btn"></i>Enrollment Statistics</a></li>
                                             <li><a href="{{url('studentlist')}}"><i class="fa fa-btn"></i>Student Contact</a></li>
                                             <li><a href="{{url('importGrade')}}"><i class="fa fa-btn"></i>Import Grades</a></li>
-                                            <li><a href="{{url('reportcards')}}"><i class="fa fa-btn"></i>Report Card</a></li>
+                                            <li class="dropdown-submenu">
+                                                <a href="#"><i class="fa fa-btn"></i>Report Card</a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a  href="{{url('reportcards')}}">Grade Level</a></li>
+                                                    <li><a  href="{{route('tvetcards')}}">TVET</a></li>
+                                                </ul>
+                                            </li>
                                             <li><hr></li>
                                             <li><a href="{{url('sheetB',$sy)}}"><i class="fa fa-btn"></i>Sheet B</a></li>
                                             <li><a href="{{url('gradesheeta',$sy)}}"><i class="fa fa-btn"></i>Sheet A Subjects/Conduct</a></li>
@@ -180,7 +234,6 @@
                                     <a href="#"  class="dropdown-toggle" data-toggle="dropdown" role="button">Others<span class="caret"></span></a>
                                     <ul class="dropdown-menu">
                                         <li><a href="{{url('promotion',$sy)}}"><i class="fa fa-btn"></i>Promotion</a></li>
-                                        <li><a href="{{url('applicantlist')}}"><i class="fa fa-btn"></i>Applicant List</a></li>
                                      </ul>   
                                 
                                 </li>

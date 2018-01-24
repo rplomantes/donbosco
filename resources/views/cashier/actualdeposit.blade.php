@@ -31,7 +31,7 @@
                 </select> 
             </div>
             <div class="col-md-3"><label for="amount">Deposit <br> Amount</label>
-                <input type="text" name="amount" id="amount" class="form form-control" style="text-align:right" onkeypress="validate(event)">
+                <input type="text" name="amount" id="amount" class="form form-control divide" style="text-align:right" onkeypress="validate(event)">
             </div>
              <div class="col-md-3"> <br>
             <a href="#" onclick="myDeposit()" class="btn btn-primary">Add</a>
@@ -126,9 +126,14 @@
                 @if(count($encashments)=='0')
                     <tr><td colspan="2">No Encashment Yet!!..</td></tr>
                 @else
+                    <?php $totalencashment = 0; ?>
                     @foreach($encashments as $encashment)
+                        @php
+                        $totalencashment = $totalencashment + round($encashment->amount,2);
+                        @endphp
                         <tr><td>{{$encashment->whattype}}</td><td align="right">{{number_format($encashment->amount,2)}}</td></tr>
                     @endforeach
+                        <tr style='font-weight: 600'><td>Total</td><td align="right">{{number_format($totalencashment,2)}}</td></tr>
                 @endif
         </table>
 </div>

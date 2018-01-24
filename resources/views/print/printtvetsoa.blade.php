@@ -164,7 +164,7 @@ th {
 
     <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sponsor</td><td align="right">({{number_format($totalsponsor,2)}})</tr>
     <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Subsidy</td><td align="right">({{number_format($totsubsidy+$totdiscount,2)}})</tr>
-    <tr><td><b>Trainees Contribution</b></td><td align="right">({{number_format($balance->trainees,2)}})</tr>
+    <tr><td><b>Trainees Contribution</b></td><td align="right">{{number_format($balance->trainees,2)}}</tr>
     <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Payment</td><td align="right">({{number_format($totpayment,2)}})</tr>
 
     <tr><td style="border: 1px solid black;">Total Balance</td><td align="right" style="border: 1px solid black;">{{number_format($totamount-$totdiscount-$totpayment-$totsubsidy-$totalsponsor,2)}}</tr>

@@ -43,6 +43,11 @@
             <select id='level' name='level' class='form-control'>
                 <option value="Prep" selected="">Preparatory</option>
                 <option value="Kindergarten">Kindergarten</option>
+                <option value="Kinder 1">Kinder 1</option>
+                <option value="Kinder 2">Kinder 2</option>
+                <option value="Jr. Kinder">Jr. Kinder</option>
+                <option value="Sr. Kinder">Sr. Kinder</option>
+                <option value="Adv. CASA">Adv. CASA</option>
                 <option value="Grade 1">Grade 1</option>
                 <option value="Grade 2">Grade 2</option>
                 <option value="Grade 3">Grade 3</option>

@@ -52,13 +52,18 @@ class Helper extends Controller
         $subject = Input::get('subject');
         $quarter = Input::get('quarter');
         $section = Input::get('section');
+        $adviser = \App\CtrSubjectTeacher::where('schoolyear',$sy)->where('level',$level)->where('section',$section)->where('subjcode',$subject)->first();
+        
+        if(!$adviser){
+            $adviser = self::create_subject_teacher($sy, $level, $section, $subject);
+        }
 
         $students = RegistrarHelper::getSectionList($sy,$level,$course,$section);
         if($subject == 2){
             $quarter = RegistrarHelper::setAttendanceQuarter($semester,$quarter);
             return view('ajax.sheetAAttendance',compact('students','semester','quarter','sy','level','quarter'));
         }else{
-            return view('ajax.sheetAGrade',compact('students','semester','subject','sy'));
+            return view('ajax.sheetAGrade',compact('students','semester','subject','sy','adviser'));
         }
     }
     
@@ -67,6 +72,7 @@ class Helper extends Controller
         $name = array();
         $adviser = \App\CtrSubjectTeacher::where('schoolyear',$sy)->where('level',$level)->where('section',$section)->where('subjcode',$subjectcode)->first();
         $currSy = \App\CtrSchoolYear::first()->schoolyear;
+        
         if(count($adviser)> 0){
             $name = \App\User::where('idno',$adviser->instructorid)->first();
         }
@@ -77,12 +83,23 @@ class Helper extends Controller
                 $adviser = DB::Select("select * from `ctr_sections_temp` where `schoolyear` = '$sy' and `section` = '$section' and `level` = '$level' limit 1");
             }
             
-            $name = \App\User::where('idno',$adviser->adviserid)->first();
+            $name = \App\User::where('idno',$adviser->instructorid)->first();
         }
         
         if(count($name)> 0){
             $teacher = ucwords(strtolower($name->title.". ".$name->firstname." ".substr($name->middlename,0,1).". ".$name->lastname));
         }
+        
+        return $teacher;
+    }
+    
+    static function create_subject_teacher($sy,$level,$section,$subjcode){
+        $teacher = new \App\CtrSubjectTeacher();
+        $teacher->subjcode = $subjcode;
+        $teacher->schoolyear = $sy;
+        $teacher->level = $level;
+        $teacher->section = $section;
+        $teacher->save();
         
         return $teacher;
     }
@@ -100,6 +117,13 @@ class Helper extends Controller
         }
         
         return $subjectname;
+    }
+    
+    function updatesubjectteacher(){
+        $adviser = Input::get('adviser');
+        $id = Input::get('id');
+        
+        \App\CtrSubjectTeacher::find($id)->update(['adviser'=>$adviser]);
     }
     
 }

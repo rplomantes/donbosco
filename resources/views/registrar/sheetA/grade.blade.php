@@ -177,6 +177,17 @@
             }
         });
     }
+    
+    function changeAdviser(adviser,id){
+        arrays ={} ;
+        arrays['adviser']= adviser;
+        arrays['id']= id;
+        $.ajax({
+               type: "GET", 
+               url: "/updatesubjectteacher",
+               data : arrays
+               });
+    }
 
 </script>
 @stop

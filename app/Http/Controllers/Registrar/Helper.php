@@ -117,7 +117,7 @@ class Helper extends Controller
 
         }
     }
-
+    
     static function isNewSystemStudent($idno,$sy){
         $newuser = \App\User::where('idno',$idno)->whereNotNull('created_at')->exists();
         
@@ -319,5 +319,15 @@ class Helper extends Controller
         }
 
         return $remark;
+    }
+    
+    public static function getName($idno){
+        $name = "";
+        $user = \App\User::where('idno',$idno)->first();
+        if($user){
+            $name = $user->lastname.", ".$user->firstname." ".substr($user->middlename,0,1).".";
+        }
+        
+        return $name;
     }
 }

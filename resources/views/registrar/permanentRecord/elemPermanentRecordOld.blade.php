@@ -50,7 +50,6 @@ $student = \App\User::where('idno',$idno)->first();
         </tr>
     
     </table>
-
     <img src="<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/images/DBTI.png"  style="position:absolute;width:108px;height:auto;top:0px;left:80px;">
     <img src="<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/images/boscorale.png"  style="position:absolute;width:100px;height:auto;top:0px;right:80px;">
     
@@ -105,41 +104,45 @@ $student = \App\User::where('idno',$idno)->first();
         <tr style="text-align: center;vertical-align: top">
             <td width="9%">
                 <div style="font-weight: bold">School Year</div>
-                <div>{{$oldrec[1]}} - {{$oldrec[1]+1}}</div>
             </td>
             <td width="10%">
                 <div style="font-weight: bold">Date Entered</div>
-                <div>{{$oldrec[4]}}</div>
             </td>
             <td width="10%">
                 <div style="font-weight: bold">Date Left</div>
-                <div>{{$oldrec[5]}}</div>
             </td>
             <td >
                 <div style="font-weight: bold">School Attended</div>
-                <div>{{$oldrec[0]}}</div>
             </td>
             <td width="10%">
                 <div style="font-weight: bold">Grade</div>
-                <div>{{$oldrec[6]}}</div>
             </td>
             <td width="10%">
                 <div style="font-weight: bold">Days Present</div>
-                <div>{{$oldrec[3]}}</div>
             </td>
             <td width="9%">
                 <div style="font-weight: bold">Final Rating</div>
-                <div>{{$oldrec[2]}}</div>
             </td>
             <td width="9%">
                 <div style="font-weight: bold">Prom./Ret.</div>
-                <div> {{$oldrec[7]}}</div>
             </td>
         </tr>
+        @foreach($oldrec as $rec)
+        <tr style="text-align: center;vertical-align: top">
+            <td>{{$rec['sy']}} - {{$rec['sy']+1}}</td>
+            <td>{{$rec['entered']}}</td>
+            <td>{{$rec['left']}}</td>
+            <td>{{$rec['school']}}</td>
+            <td>{{$rec['level']}}</td>
+            <td>{{$rec['att']}}</td>
+            <td>{{$rec['average']}}</td>
+            <td>{{$rec['action']}}</td>
+        </tr>
+        @endforeach
     </table>
     </div>
-    sas
-    <div width="100%" style='position: fixed;top:570px;'>
+    
+    <div width="100%" style="position:relative;top:-60px;">
         <table width="100%" cellspacing="1">
             <tr>
                 <td width="47%" style='vertical-align: top;'>@if($grade1 == 1){!!PermanentRecord::elemGradeTempOld($idno,"Grade 1")!!}@endif</td>
@@ -171,7 +174,7 @@ $student = \App\User::where('idno',$idno)->first();
     </div>
     </div>
     <div style="margin-right:30px;margin-left: 5px;">
-        <div style="position: relative;top: 696.6px">
+        <div style="position: relative;top: 736.6px">
             <div style="visibility: hidden;font-size: 9pt;margin-bottom:10px">ATTENDANCE RECORD</div>
             <table style="font-size: 8pt;text-align: center" cellspacing="0">
                 <tr style="color: white">
@@ -213,38 +216,6 @@ $student = \App\User::where('idno',$idno)->first();
                 <?php $grade++; ?>
                 @endwhile
 
-            </table>
-            <table width="100%" style="font-size:11pt;margin-top:50px">
-                <tr>
-                    <td>
-
-                    </td>
-                    <td width='50%'></td>
-                    <td style='text-align: center;'>
-                        <b>Ms. Violeta F. Roxas</b><br>
-                        <span style="font-size:9pt">REGISTRAR</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="3" style="margin-top: 30px"></td>
-                </tr>
-                <tr>
-                    <td style="padding-bottom:30px">Verified by:</td>
-                    <td></td>
-                    <td style="padding-bottom:30px">Prepared by:</td>
-                </tr>
-                <tr style="text-align: center;">
-                    <td>
-                        <b>Ms. Danica Shane W.Villa</b><br>
-                        <span style="font-size:9pt">Office Assistant</span>
-                    </td>
-                    <td></td>
-                    <td>
-                        <b>Ms. Bernadette B. Quejada</b><br>
-                        <span style="font-size:9pt">GS-Records Assistant
-                        </span>
-                    </td>
-                </tr>
             </table>
         </div>    
     </div>

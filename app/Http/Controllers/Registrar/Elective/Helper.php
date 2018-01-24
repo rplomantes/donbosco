@@ -14,10 +14,12 @@ class Helper extends Controller
         $students = DB::Select("Select distinct s.idno from grades g "
                 . "join statuses s on g.idno = s.idno "
                 . "join ctr_sections cs on s.level = cs.level "
+                . "join users u on s.idno = u.idno "
                 . "and s.section = cs.section "
                 . "and s.schoolyear = cs.schoolyear "
                 . "where g.section = $sectionid "
-                . "order by cs.sortto ASC,class_no ASC");
+                . "order by cs.sortto ASC,u.lastname ASC, u.firstname ASC");
+        
         
         return $students;
     }

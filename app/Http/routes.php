@@ -1,6 +1,7 @@
 <?php
     Route::group(['middleware' => 'web'], function () {
-        
+    // Commit 2018-01_24 1
+   
         Route::get('/test123/{date}','Accounting\IncomeStatement@index');
         Route::get('/printincomestatement/{date}','Accounting\IncomeStatement@printview');
         
@@ -12,11 +13,14 @@
         Route::get('/updateapplicantlist','EntranceExam\ApplicantList@updateview');
         
         Route::get('/updateapplicantstatus','EntranceExam\ApplicantStatusController@updateStatus');
-        
+          
+    //END Commit 2018-01_24 1
     Route::auth();
     
+    // Commit 2018-01_24
     Route::get('/chart/{fromdate}/{todate}','Economer\OperationIncome@index');
     Route::get('/bankfunds/{fromdate}/{todate}','Admin\BankFunds@index');
+    //END 2 Commit 2018-01_24
     Route::get('/gradeMigration2','Update\UpdateController@gradeMigration2');
     
     Route::get('/studentinfo/{idno}','Miscellaneous\StudentInfoController@index');
@@ -295,8 +299,10 @@
     
     Route::get('dmsummary/{trandate}','Accounting\DebitDCSummaryController@index');
     Route::get('printdmjournal/{fromtran}/{totran}','Accounting\DebitDCSummaryController@printsummary');
+    // Commit 2018-01_24 3
     
     Route::get('ledger/{idno}','Admin\StudentLedger@index');
+    //END Commit 2018-01_24 3
     Route::get('/finalsheetb/{quarter}/{level}/{section}/{strand?}','Registrar\SheetBController@finalSheetB');
     
     Route::get('updatecdb2','Update\UpdateController@updatecdb2');
@@ -402,6 +408,8 @@
     Route::get('/electiveadviser', 'Registrar\AjaxController@electiveadviser');
     Route::get('/sectionelectivelist', 'Registrar\AjaxController@electiveStudent');
     
+    
+    
     Route::get('/addtoelesection', 'Registrar\AjaxController@addtoelesection');
     Route::get('/removetoelesection', 'Registrar\AjaxController@removetoelesection');
     
@@ -437,6 +445,7 @@ Route::group(['middleware' => ['web','registrar']], function () {
     
     Route::get('/electivesection','Registrar\Elective\SectionController@electiveSection');
     Route::get('/printelectivesection/{section}','Registrar\Elective\SectionController@printSection');
+    Route::get('/downloadelectiveection/{sectionid}', 'Registrar\Elective\SectionController@downloadSection');
     
     Route::get('/gradesheeta/{selectedSY}','Registrar\SheetA\Grade@index');
     Route::get('/attendancesheeta/{selectedSY}','Registrar\SheetA\Attendance@index');
@@ -485,13 +494,36 @@ Route::group(['middleware' => ['web','registrar']], function () {
    Route::get('/viewpromotion/{sy}/{level}','Registrar\PromotionController@viewreport');
     
    Route::get('/gradeSheetAList','Registrar\SheetA\Helper@gradeSheetAList');
+   Route::get('/updatesubjectteacher','Registrar\SheetA\Helper@updatesubjectteacher');
    Route::get('/gradeSheetBList','Registrar\SheetBController@gradeSheetBList');
    Route::get('/overallRankList', 'Registrar\Ranking\OverallRanking@getOARanking');
    Route::get('/getGradeForm/{subjecttype}', 'Registrar\Grade\ChangeGrade@getForm');
+   Route::get('/updateElemGrade', 'Registrar\Grade\ChangeGrade@updateGrade');
    
+   //Entrance Exam
    Route::get('/addschedule/{level}', 'EntranceExam\Helper@createSched');
    Route::get('/removeschedule/{id}', 'EntranceExam\Helper@deleteSched');
    Route::get('/updatesched', 'EntranceExam\Helper@updateSched');
    Route::get('/getschedule/{level}', 'EntranceExam\Helper@getLevelSchedule');
    Route::get('/changestudentstat', 'EntranceExam\ApplicantStatusController@changeStatus');
+//Entrance Exam
    
+   //TVET Cards//
+   Route::group(['middleware' => 'web'], function () {
+       Route::get('/reportcards/tvet','Registrar\ReportCards\TVETCards@view')->name('tvetcards');
+       Route::get('/tvet/{batch}/{idno}/{sem}','Registrar\ReportCards\TVETCards@TVETStudentCard')->name('individual_TvetCard');
+   });
+       Route::get('/option_tvetsection','Registrar\ReportCards\TVETCards@get_section')->name('option_tvetsection');
+       Route::get('/classList_tvetsection','Registrar\ReportCards\TVETCards@get_classList')->name('classList_tvetsection');
+   
+   //END TVET Cards//
+       
+   //Import Conduct//
+   Route::group(['middleware' => 'web'], function () {
+       Route::get('/importconduct','Registrar\Upload\Conducts@index');
+       Route::post('/uploadconductecr','Registrar\Upload\Conducts@postconducts');
+       Route::post('/saveconductupload','Registrar\Upload\Conducts@saveConduct');
+       
+   });
+   
+   //END Import Conduct//

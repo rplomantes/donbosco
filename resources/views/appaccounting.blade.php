@@ -235,7 +235,19 @@
  <a href="http://www.nephilaweb.com.ph">Powered by: Nephila Web Technology, Inc.</a></p>
 </div>
 </div>
-    
+<script src="{{url('/Inputmask-4.x/dist/jquery.inputmask.bundle.js')}}"></script>
+<script>
+    $('.divide').inputmask("numeric", {
+    radixPoint: ".",
+    groupSeparator: ",",
+    digits: 2,
+    autoGroup: true,
+    rightAlign: false,
+    oncleared: function () { self.Value(''); },
+    autoUnmask : true,
+    removeMaskOnSubmit  :   true
+});
+</script>     
 </body>
 </html>
 

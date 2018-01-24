@@ -5,7 +5,12 @@
         @endif
         >
     <option value="" hidden="hidden">-- Select Elective --</option>
-    @foreach($electives as $elective)
-    <option value="{{$elective->elecode}}">{{$elective->elective}}</option>
+    
+    @foreach($electives as $key=>$elective)
+    <optgroup label="Semester {{$key}}">
+        @foreach($elective as $ele)
+        <option value="{{$ele->elecode}}">{{$ele->elective}}</option>
+        @endforeach
+    </optgroup>
     @endforeach
 </select>

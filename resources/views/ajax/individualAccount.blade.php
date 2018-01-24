@@ -8,6 +8,8 @@ $tcredit = 0;
             <td>Tran. Date</td>
             <td>Reference No</td>
             <td>Name</td>
+	    <td>Level</td>
+	    <td>Section</td>
             <td>Debit</td>
             <td>Credit</td>
             <td>Entry</td>
@@ -21,6 +23,15 @@ $tcredit = 0;
         <?php 
         $remark = "";
         $payee = "";
+	$level = "";
+	$section = "";
+
+	$status = \App\Status::where('idno',$account->idno)->whereIn('status',array(2,3))->first();
+
+	if($status){
+		$level = $status->level;
+		$section = $status->section;
+	}
         if($account->entry_type == 4){   
             $disremark  = \App\Disbursement::where('refno',$account->refno)->first();
             if(count($disremark)>0){
@@ -34,14 +45,19 @@ $tcredit = 0;
                 $payee = $elseremark->receivefrom;   
             }
         }
+
+
         ?>
 
         <tr>
             <td>{{$account->transactiondate}}</td>
             <td>{{$account->receiptno}}</td>
             <td>{{$payee}}</td>
+            <td>{{$level}}</td>
+            <td>{{$section}}</td>
             <td>{{number_format($account->debit,2)}}</td>
             <td>{{number_format($account->credit,2)}}</td>
+
             <?php
                 $tdebit = $tdebit+ $account->debit;
                 $tcredit = $tcredit+ $account->credit;

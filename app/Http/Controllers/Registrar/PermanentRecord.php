@@ -12,7 +12,6 @@ use App\Http\Controllers\Registrar\AttendanceController;
 use App\Http\Controllers\Registrar\GradeController;
 use View;
 use App\Http\Controllers\Registrar\GradeComputation;
-use App\Http\Controllers\Registrar\AttendanceController as Attendance;
 use App\Http\Controllers\Registrar\Helper as MainHelper;
 
 class PermanentRecord extends Controller
@@ -49,7 +48,6 @@ class PermanentRecord extends Controller
         $new = \App\Grade::where('idno',$idno)->where('level','Grade 7')->where('schoolyear','2016')->exists();
         $pdf = \App::make('dompdf.wrapper');
         $pdf->setPaper([0,0,602.00,1008.00], 'portrait');
-
         if($new){
             $pdf->loadView("registrar.permanentRecord.jhsPermanentRecord",compact('idno','header','grade7','grade8','grade9','grade10','oldrec'));
         }else{
@@ -91,18 +89,16 @@ class PermanentRecord extends Controller
             $grade6 = 1;
         }
         
-        $oldrec = self::prevSchoolRec('Kindergarten',$idno);
-        $new = \App\Grade::where('idno',$idno)->where('schoolyear','2016')->exists();
+        $oldrec = self::elemPrevSchoolRec('Kindergarten',$idno);
+        $new = \App\Grade::where('idno',$idno)->where('level','Grade 1')->where('schoolyear','<=','2016')->exists();
         $pdf = \App::make('dompdf.wrapper');
         $pdf->setPaper([0,0,602.00,1008.00], 'portrait');
         
-        if($new || substr($idno,0,2) == '16'){
+        if($new){
             $pdf->loadView("registrar.permanentRecord.elemPermanentRecord",compact('idno','header','grade1','grade2','grade3','grade4','grade5','grade6','oldrec'));
         }else{
             $pdf->loadView("registrar.permanentRecord.elemPermanentRecordOld",compact('idno','header','grade1','grade2','grade3','grade4','grade5','grade6','oldrec'));
         }        
-        
-        
         return $pdf->stream();
     }
     
@@ -308,7 +304,7 @@ class PermanentRecord extends Controller
             $infos->age = $currage;
             $infos->gender = $student->gender;
             $infos->name = $name;
-            
+            	
             
             return $infos;
         }else{
@@ -318,7 +314,7 @@ class PermanentRecord extends Controller
     
     static function prevSchoolRec($level,$idno){
         $school = "";
-        $sy = 0;
+        $sy = "";
         $average = "";
         $entered = "";
         $left = "";
@@ -332,7 +328,7 @@ class PermanentRecord extends Controller
             $average = $prevschoolrec->finalrate;
             $entered = $prevschoolrec->dateEntered;
             $left = $prevschoolrec->dateLeft;
-            $att = $prevschoolrec->dayp;
+            $att = round($prevschoolrec->dayp,1);
             $action = $prevschoolrec->status;
             
         }else{
@@ -379,4 +375,73 @@ class PermanentRecord extends Controller
         return array($school,$sy,$average,$att,$entered,$left,$level,$action);
     }    
 
+    static function elemPrevSchoolRec($level,$idno){
+        $school = "";
+        $sy = "";
+        $average = "";
+        $entered = "";
+        $left = "";
+        $att = "";
+        $action = "";
+        
+        
+        $prevschoolrecs = \App\PrevSchoolRec::where('idno',$idno)->get();
+        if(count($prevschoolrecs)>0){
+            $infos = [];
+            
+            foreach($prevschoolrecs as $prevschoolrec){
+                if(strpos($prevschoolrec->level,'Grade') !== true){
+                    $infos[] = ['school'=>$prevschoolrec->school,'sy'=>$prevschoolrec->schoolyear,'average'=>$prevschoolrec->finalrate,
+                        'entered'=>$prevschoolrec->dateEntered,'left'=>$prevschoolrec->dateLeft,'att'=>round($prevschoolrec->dayp,1),'action'=>$prevschoolrec->status,'level'=>$prevschoolrec->level];
+                }
+            }
+            
+            return collect($infos);
+            
+        }else{
+            $oldrecs = \App\Grade::where('level',$level)->where('idno',$idno)->where('subjecttype',0)->get();
+            
+            if(count($oldrecs)>0){
+                $school = "DON BOSCO TECHNICAL INSTITUTE";
+                //$average = GradeController::gradeQuarterAve(array(0),array(0),5,$oldrec,$level);
+                
+                foreach($oldrecs as $oldrec){
+                    $sy = $oldrec->schoolyear;
+                }
+                
+                $average = GradeComputation::computeQuarterAverage($sy, $level, array(0), 0, 5, $oldrecs);
+                $entered = "JUNE ".$sy;
+                $left = "MARCH ".($sy+1);
+                $dayp = array();
+                $daya = array();
+                $dayt = array();
+                for($i=1; $i < 5 ;$i++){
+                    if($sy == 2016){
+                        $attendance  = AttendanceController::studentQuarterAttendance($idno,$sy,$i,$level); 
+                    }elseif($sy < 2016){
+                        $field = MainHelper::getGradeQuarter($i);
+                        $getattendances  = DB::Select("Select * from grades where schoolyear='$sy' and subjectcode= 'dayp'");
+                        $getdayp = 0;
+                        foreach($getattendances as $getattendance){
+                            $getdayp = $getattendance->$field;
+                        }
+                        $attendance = array($getdayp);
+                    }else{
+                        $attendance  = AttendanceController::studentQuarterAttendance($idno,$sy,array($i),$level); 
+                    }
+
+                    $dayp [] = $attendance[0];
+                }
+                
+                $att = $dayp[0]+$dayp[1]+$dayp[2]+$dayp[3];
+                
+
+            }
+            $infos[] = ['school'=>$school,'sy'=>$sy,'average'=>$average,
+                'entered'=>$entered,'left'=>$left,'att'=>round($att,1),'action'=>'PROM','level'=>$level];
+            
+        }
+        
+        return (object) $infos;
+    }    
 }

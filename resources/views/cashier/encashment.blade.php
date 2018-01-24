@@ -41,7 +41,7 @@
               <label for="payee">Check No</label><input type="text" name="check_number" id="check_number" onkeypress="nosubmit(event,'amount')" class="form-control">
           </div>
            <div class="form form-group">
-               <label for="payee">Amount</label><input type="text" name="amount" id="amount" onkeypress = "encashvalidate(event)" style="text-align: right" class="form-control">
+               <label for="payee">Amount</label><input type="text" name="amount" id="amount" onkeypress = "encashvalidate(event)" style="text-align: right" class="form-control divide">
            </div>  
            <div class="form form-group">
                <h5>From</h5>

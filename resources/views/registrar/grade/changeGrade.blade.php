@@ -44,5 +44,23 @@
                    }
                });
     }
+    
+    function updateValue(student,quarter,grade){
+        arrays ={} ;
+        arrays['student']= student;
+        arrays['quarter']= quarter;
+        arrays['grade']= grade;
+        
+        $.ajax({
+               type: "GET", 
+               url: "/updateElemGrade",
+               data : arrays,
+                error:function(){
+                       $('#view').html("<div class='alert alert-danger' style='text-align: center'><h3>Whoa!!</h3>Something went wrong while retrieving the data. Please report to administrator to fix the problem immediately.</div>");
+                   }
+               });
+        
+        
+    }
 </script>
 @stop 

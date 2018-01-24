@@ -17,8 +17,9 @@ class CreateCtrEntranceCriterionsTable extends Migration
             $table->string('level');
             $table->string('criterion');
             $table->string('sub_criterion');
-            $table->integer('percentile');
-            $table->integer('no_of_items');
+            $table->integer('category');
+            $table->integer('grade');
+            
             $table->timestamps();
         });
     }

@@ -206,28 +206,6 @@
 </div>
  
 <script>
-function duenosubmit(event){
-     if(event.keyCode == 13) {
-         totaldue=document.getElementById('totaldue').value;
-         totalmain=document.getElementById('totalmain').value;
-         if(parseFloat(totaldue) > parseFloat(totalmain)){
-            alert("The amount should not be greater than " + totalmain);
-            document.getElementById('totaldue').value="";
-           
-        }else{
-            
-             //document.getElementById('receivecash').focus(); 
-             computetotal();
-             //document.getElementById('other').focus();
-             document.getElementById('submit').style.visibility="visible";
-             document.getElementById('submit').focus();
-        
-        }
-      event.preventDefault();
-      return false;
-    }
-    
-}
 
 function computetotal(){
     if(document.getElementById('totaldue').value==""){

@@ -34,5 +34,6 @@ class MakeRecord extends Controller
         return redirect('/seegrade/'.$request->idno);    
         
     }
+   
 }
 

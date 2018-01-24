@@ -119,7 +119,7 @@ $bankaccounts = \App\ChartOfAccount::where('acctcode','>','110010')->where('acct
             </div> 
             <div class="col-md-2">
                 <label for ="amount">Amount</label>
-                <input type="text" class="form-control" name="amount" id="amount" style="text-align: right"> 
+                <input type="text" class="form-control divide" name="amount" id="amount" style="text-align: right"> 
             </div>
         </div>
     </div>
@@ -156,7 +156,7 @@ $bankaccounts = \App\ChartOfAccount::where('acctcode','>','110010')->where('acct
           </div>
           <div class="form-group col-md-2">
               <label>Amount</label>
-              <input type="text" class="form-control" name="creditamount" id="creditamount" style="text-align:right" readonly>
+              <input type="text" class="form-control divide" name="creditamount" id="creditamount" style="text-align:right" readonly>
           </div>
           <div class="form-group col-md-2">
               <label>Check Number</label>

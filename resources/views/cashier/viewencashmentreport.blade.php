@@ -57,7 +57,7 @@ $totalothers=0;
     <td>{{$encashmentreport->whattype}}</td>
     <td>{{$encashmentreport->bank_branch}}</td>
     <td>{{$encashmentreport->check_number}}</td>
-    <td>{{$encashmentreport->amount}}</td>
+    <td>{{number_format($encashmentreport->amount,2)}}</td>
     <td>
     @if($encashmentreport->isreverse =="0")
     Ok

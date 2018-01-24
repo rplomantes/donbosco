@@ -140,7 +140,7 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
                            
                         
                      <div class="col-md-2">
-                         <input type="text" style="text-align:right" placeholder = "0.00" onkeypress = "validateother(event,'cash')" class="form-control" id = "amount1" name="amount1" onblur="ctotal()">
+                         <input type="text" style="text-align:right" placeholder = "0.00" onkeypress = "validateother(event,'cash')" class="form-control divide" id = "amount1" name="amount1" onblur="ctotal()">
                     </div>
                     </div>
                     
@@ -176,7 +176,7 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
                     </div>
                         
                      <div class="col-md-2">
-                      <input type="text" style="text-align:right" placeholder = "0.00" onkeypress = "validateother(event,'cash')" class="form-control" id = "amount2" name="amount2" onblur="ctotal()">
+                      <input type="text" style="text-align:right" placeholder = "0.00" onkeypress = "validateother(event,'cash')" class="form-control divide" id = "amount2" name="amount2" onblur="ctotal()">
                     </div>
                     </div>
                     
@@ -212,7 +212,7 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
                     </div>
                         
                      <div class="col-md-2">
-                      <input type="text" style="text-align:right" placeholder = "0.00" onkeypress = "validateother(event,'cash')" class="form-control" id = "amount3" name="amount3" onblur="ctotal()">
+                      <input type="text" style="text-align:right" placeholder = "0.00" onkeypress = "validateother(event,'cash')" class="form-control divide" id = "amount3" name="amount3" onblur="ctotal()">
                     </div>
                     </div>
                     
@@ -247,7 +247,7 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
                     </div>
                         
                      <div class="col-md-2">
-                      <input type="text" style="text-align:right" placeholder = "0.00" onkeypress = "validateother(event,'cash')" class="form-control" id = "amount4" name="amount4" onblur="ctotal()">
+                      <input type="text" style="text-align:right" placeholder = "0.00" onkeypress = "validateother(event,'cash')" class="form-control divide" id = "amount4" name="amount4" onblur="ctotal()">
                     </div>
                     </div>
                     
@@ -285,7 +285,7 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
                            
                         
                      <div class="col-md-2">
-                         <input type="text" style="text-align:right" placeholder = "0.00" onkeypress = "validateother(event,'cash')" class="form-control" id = "amount5" name="amount5" onblur="ctotal()">
+                         <input type="text" style="text-align:right" placeholder = "0.00" onkeypress = "validateother(event,'cash')" class="form-control divide" id = "amount5" name="amount5" onblur="ctotal()">
                     </div>
                     </div>
                     
@@ -322,7 +322,7 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
                         </div>
                            
                         <div class="col-md-2">
-                            <input type="text" style="text-align:right" placeholder = "0.00" onkeypress = "validateother(event,'cash')" class="form-control" id = "amount6" name="amount6" onblur="ctotal()">
+                            <input type="text" style="text-align:right" placeholder = "0.00" onkeypress = "validateother(event,'cash')" class="form-control divide" id = "amount6" name="amount6" onblur="ctotal()">
                        </div>
                     </div>
                     
@@ -359,7 +359,7 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
                            
                         
                         <div class="col-md-2">
-                            <input type="text" style="text-align:right" placeholder = "0.00" onkeypress = "validateother(event,'cash')" class="form-control" id = "amount7" name="amount7" onblur="ctotal()">
+                            <input type="text" style="text-align:right" placeholder = "0.00" onkeypress = "validateother(event,'cash')" class="form-control divide" id = "amount7" name="amount7" onblur="ctotal()">
                        </div>
                     </div>
                     
@@ -370,7 +370,7 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
                          <h5> Total </h5>
                          </div>
                         <div class="col-md-4">
-                            <input type="text" style="text-align:right" value="0.00" readonly="readonly" id="totalcredit" name="totalcredit" class="form-control">
+                            <input type="text" style="text-align:right" value="0.00" readonly="readonly" id="totalcredit" name="totalcredit" class="form-control divide">
                         </div>
                     </div>
                     
@@ -408,10 +408,11 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
         <div class="form-group" style="background-color: #C6C6FF;">
              <div style="padding: 10px;">
                         
-                       
                      <div class="form-group">
-                      <label>Cash Rendered : </label> <input type="text" style="text-align:right" placeholder = "0.00" onkeypress = "validateother(event,'cashrendered')" class="form-control" id = "cash" name="cash">
-                    
+                      <label>FAPE : </label> <input type="text" style="text-align:right" placeholder = "0.00" onkeypress = "validateother(event,'cashrendered')" class="form-control divide" id = "fape" name="fape">
+                     </div>
+                     <div class="form-group">
+                      <label>Cash Rendered : </label> <input type="text" style="text-align:right" placeholder = "0.00" onkeypress = "validateother(event,'cashrendered')" class="form-control divide" id = "cash" name="cash">
                      </div>
                     <div class="form-group">
                       <div>Change : <span style="color:red;font-size: 10pt; font-weight: bold" id="change">0.00</span></div>
@@ -425,11 +426,11 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
                         <td><input type="checkbox" name="iscbc" id="iscbc" value="cbc" onkeydown="submitiscbc(event,this.checked)"> China Bank Check<label>Check Number</label>
                         <input  type="text" name="check_number" id="check_number" onkeydown = "nosubmit(event,'check')" class="form form-control">
                         </td></tr>
-                        <tr><td colspan="2"><label>Check Amount : </label><input style ="text-align: right" type="text" name="check" id="check" onkeypress="validateother(event,'check')"   placeholder="0.00" class="form form-control">
+                        <tr><td colspan="2"><label>Check Amount : </label><input style ="text-align: right" type="text" name="check" id="check" onkeypress="validateother(event,'check')"   placeholder="0.00" class="form form-control divide">
                         </td></tr>
                                        
                         </table>
-                        
+		                        
                     </div>    
                     <div class="form-group">
                         <input type="radio" name="depositto" value="China Bank" checked= "checked"> China Bank

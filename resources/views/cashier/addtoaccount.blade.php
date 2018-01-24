@@ -110,7 +110,7 @@
             </div>
          </div>      
 </div>
-@stop
+
 
 <script>
     function getAccount(group){
@@ -188,3 +188,4 @@
     }
 
 </script>  
+@stop

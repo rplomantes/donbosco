@@ -11,7 +11,12 @@
         <h5> {{$studentname->idno}} - {{$studentname->lastname}}, {{$studentname->firstname}} {{$studentname->middlename}}</h5>
         <ul>
             @foreach($syissued as $sy)
-            <li class="btn btn-default form-control"><a href="#" onclick="displaygrade('{{$idno}}','{{$sy->schoolyear}}')">{{$sy->schoolyear}} - {{$sy->schoolyear +1 }}</a></li>
+            <li class="btn btn-default form-control">
+                <a href="#" onclick="displaygrade('{{$idno}}','{{$sy->schoolyear}}')">{{$sy->schoolyear}} - {{$sy->schoolyear +1 }}</a>
+                <a class="pull-right" href="{{url('changegrade',array($studentname->idno,$sy->schoolyear))}}">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                </a>
+            </li>
             @endforeach
         </ul>
         <ul>

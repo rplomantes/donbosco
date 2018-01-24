@@ -1,3 +1,14 @@
+<div class="col-md-12">
+    <div class="form-group">
+        <label style="vertical-align: middle" class="control-label col-sm-offset-6 col-sm-1">Adviser</label>
+        <div class="col-sm-5">
+            <input class="form-control" type="text" value="{{$adviser->adviser}}" onkeyup="changeAdviser(this.value,'{{$adviser->id}}')">
+        </div>
+    </div>  
+</div>
+<br>
+<hr>
+<br>
 <table class="table table-bordered">
     <tr style="text-align: center">
         <td>CLASS NO</td>

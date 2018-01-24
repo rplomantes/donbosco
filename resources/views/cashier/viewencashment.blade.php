@@ -13,7 +13,7 @@
              
              <tr><td>Bank</td><td>{{$encashment->bank_branch}}</td></tr> 
              <tr><td>Check Number</td><td>{{$encashment->check_number}}</td></tr>  
-             <tr><td>Amount</td><td>{{$encashment->amount}}</td></tr>  
+             <tr><td>Amount</td><td>{{number_format($encashment->amount,2)}}</td></tr>  
                      
          </table>
          @if($encashment->isreverse == '0')

@@ -48,13 +48,12 @@ class ReportCardController extends Controller
             $class_no = $status->class_no;
         }
         if($currSy == $sy){
-            $getadviser = \App\CtrSection::where('schoolyear',$sy)->where('section',$section)->where('level',$level)->first();
+            $getadviser = \App\CtrSection::where('schoolyear',$sy)->where('section',$section)->where('level',$level)->get();
         }else{
             $getadviser = DB::Select("select * from `ctr_sections_temp` where `schoolyear` = '$sy' and `section` = '$section' and `level` = '$level' limit 1");
         }
         
-        
-        if($getadviser){
+if(count($getadviser)>0){        
             foreach($getadviser as $getadviser){
             $adviser = $getadviser->adviser;
             }
