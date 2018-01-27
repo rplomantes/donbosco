@@ -16,7 +16,7 @@ $cancel = "Restore";
     <h3>DISBURSEMENT DETAILS</h3>
     </div>
     <div class="col-md-4">
-        @if($disbursement->transactiondate == date('Y-m-d',strtotime(\Carbon\Carbon::now())) && \Auth::user()->accesslevel == "4" || \Auth::user()->accesslevel=="5"))
+        @if($disbursement->transactiondate == date('Y-m-d',strtotime(\Carbon\Carbon::now())) && \Auth::user()->accesslevel == "4" || \Auth::user()->accesslevel=="5")
         <a href="{{url('restorecanceldisbursement',array($cancel,$refno))}}" class="btn btn-danger navbar-right" id="cancelRestore">{{$cancel}}</a>
         @endif
     </div>    
@@ -28,7 +28,7 @@ $cancel = "Restore";
     <tr><td><b>Bank Account<b></td><td colspan="5">{{$disbursement->bank}}</td></tr>    
     <tr><td><b>Check Number</b></td><td colspan="5">{{$disbursement->checkno}}</td></tr>    
     <tr><td><b>Amount</b></td><td colspan="5"><span style="font-size: 14pt;font-weight: bold;color: red">{{number_format($disbursement->amount,2)}}</span></td></tr>    
-    <tr><td><b>Particular</b></td><td colspan="5" ><span style="font-size: 12pt; font-style: italic">{{$disbursement->remarks}}</span></td></tr>
+    <tr><td><b>Particular</b></td><td colspan="5" id="remarks"><span style="font-size: 12pt; font-style: italic">{{$disbursement->remarks}}</span>&nbsp;&nbsp;&nbsp;<a href='#' onclick="showInput('remarks','{{$disbursement->remarks}}')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td></tr>
     <tr><td colspan="6" align="center">A C C O U N T I N G &nbsp;&nbsp;&nbsp; E N T R I E S</td></tr>
     <tr><td><b>Account Code</b></td><td><b>Account Title</b></td><td><b>Subsidiary</b></td><td><b>Office</b></td><td><b>Debit</b></td><td><b>Credit</b></td></tr>
     @foreach($accountings as $accounting)
@@ -47,4 +47,34 @@ $cancel = "Restore";
         <a href="{{url('printcheckvoucher',$refno)}}" class="btn btn-primary form-control" target="_blank">Print Voucher</a>
     </div>    
 </div>
+
+<script>
+    function showInput(field,current){
+        var input= "<input type='text' class='col-md-12 editfield' value='"+current+"' onkeyup='updateDM('"+field+"',this.value)'>";
+        $("#"+field).html(input);
+    }
+    
+    function updateDM(field,vals){
+        var arrays = {};
+        arrays ["editfields"]= field;
+        arrays ["values"]= vals;
+        arrays ["voucher"]= '{{$refno}}';
+
+        $.ajax({
+            type:"GET",
+            url:"/editdisbursement",
+            data:arrays,
+            errors:function(){
+                alert("Somethig went wrong while updating disbursement. Please call administrator");
+            };
+        });
+    }
+    
+    $('.editfield').keyup(function(e){
+        var key = e.which || e.keyCode;
+        if(key == 13){
+            location.reload();           
+        }
+    })
+</script>
 @stop

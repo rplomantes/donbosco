@@ -17,8 +17,10 @@ class Conducts extends Controller
     }
     function index(){
         $levels = \App\CtrLevel::all();
+        $schoolyear = \App\CtrSchoolYear::first()->schoolyear;
+        $sections = \App\CtrSection::whereIn('level',$levels->pluck('level')->toArray())->where('schoolyear',$schoolyear)->get();
         
-        return view('sys_admin.upload.conducts',compact('levels'));
+        return view('sys_admin.upload.conducts',compact('levels','schoolyear','sections'));
     }
     
     function postconducts(Request $request){

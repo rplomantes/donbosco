@@ -53,19 +53,21 @@ $tech = 0;
                 <span style='float: right;color: red;font-weight: bold'>DROPPED</span>
             @endif
         </td>
- 
+        
         @foreach($subjects as $subject)
+        <td>
             @if(in_array($subject->subjecttype,array(0,5,6)))
                 @foreach($grades as $grade)
                     @if($grade->subjectcode == $subject->subjectcode)
-                    <td>
+                    
                         @if($grade->$gradeField > 0)
                         {{round($grade->$gradeField,0)}}
                         @endif
-                    </td>
+                    
                     @endif
                 @endforeach
             @endif
+            </td>
         @endforeach
         
             @if($acad > 0)

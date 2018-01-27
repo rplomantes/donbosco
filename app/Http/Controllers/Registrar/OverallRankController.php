@@ -54,6 +54,12 @@ class OverallRankController extends Controller
         
         
         if($level == "Grade 7" || $level == "Grade 8" || $level == "Grade 9" || $level == "Grade 10" || $level == "Grade 11" || $level == "Grade 12"){
+            if($course == "All"){
+                $whatcourse = "AND grades.strand IN('ABM',STEM)";
+            }else{
+                $whatcourse = "AND grades.strand = '$course' ";
+            }
+            
             
             if($quarter == 5){
                 $averages = DB::Select("SELECT grades.idno,ROUND( SUM(ROUND(final_grade,0)) / count( grades.idno ) ,0) AS average "
@@ -62,7 +68,7 @@ class OverallRankController extends Controller
                         . "WHERE subjecttype IN (0,5,6) "
                         . "AND grades.level = '$level' "
                         . "AND grades.schoolyear = '$sy' "
-                        . "AND grades.strand = '$course' "
+                        .$whatcourse
                         . "AND isdisplaycard = 1 "
                         . "GROUP BY idno ORDER BY `average` DESC");
             }
@@ -75,7 +81,7 @@ class OverallRankController extends Controller
                         . "WHERE subjecttype IN (0,5,6) "
                         . "AND grades.level = '$level' "
                         . "AND grades.schoolyear = '$sy' "
-                        . " "
+                        .$whatcourse
                         . "AND isdisplaycard = 1 "
                         . "GROUP BY idno ORDER BY `average` DESC");
             }

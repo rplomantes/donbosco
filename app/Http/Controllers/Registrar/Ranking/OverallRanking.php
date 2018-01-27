@@ -53,7 +53,11 @@ class OverallRanking extends Controller
             $table = 'status_histories';
         }
         if($course != "null"){
+            if($course == "All"){
+                $course = "and strand IN('ABM','STEM')";
+            }else{
             $course = "and strand='".$course."'";
+            }
         }else{
             $course = "";
         }

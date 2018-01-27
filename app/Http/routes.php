@@ -171,7 +171,7 @@
     Route::get('disbursement/{trandate}','Accounting\DisbursementController@disbursement');
     Route::get('generaljournal/{trandate}','Accounting\JournalController@generaljournal');
     Route::get('restorecanceldm/{iscancel}/{refno}','Accounting\DebitMemoController@restorecanceldm');
-    Route::get('disbursementbook/{trandate}','Accounting\DisbursementController@disbursementbook');
+    Route::get('disbursementbook/{from}/{trandate}','Accounting\DisbursementController@disbursementbook');
     Route::get('printdisbursementpdf/{trandate}','Accounting\DisbursementController@printdisbursementpdf');
     //update module
     //Elective submitted by registrar on STEM
@@ -399,7 +399,7 @@
     Route::get('/pullrecords','Update\UpdateController@prevgrade');
     Route::get('/studentslist/{level}/{sy}', 'Registrar\AjaxController@levelStudent');
     
-    //Route::get('/setoverallrank', 'Registrar\OverallRankController@setOARank');  
+    Route::get('/setoverallrank', 'Registrar\OverallRankController@setOARank');  
     
     //Elective
     Route::get('/strandStudent/{level}', 'Registrar\AjaxController@strandStudent');
@@ -527,3 +527,19 @@ Route::group(['middleware' => ['web','registrar']], function () {
    });
    
    //END Import Conduct//
+   
+   //Pre-registration
+   Route::group(['middleware' => 'web'], function () {
+       Route::get('/preregister','Registrar\PreRegistration\PreregistrationController@preregForm');
+
+       
+   });
+   //END Pre-registration
+   
+   //Disbursement
+   Route::group(['middleware' => 'web'], function () {
+       Route::get('/editdisbursement','Accounting\DisbursementController@editDisbursement');
+
+       
+   });
+   //END Disbursement

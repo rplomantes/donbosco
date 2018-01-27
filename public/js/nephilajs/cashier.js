@@ -150,6 +150,7 @@
             if(confirm("Continue to process payment now?")){
                 $('#assess').submit();
             }
+
         }else{
             alert('Payment is smaller than the amount to be payed. Please check!');
         }

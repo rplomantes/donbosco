@@ -14,34 +14,53 @@ class CashReceiptController extends Controller
     }
     
     function cashreceiptbook($transactiondate){
-        session()->put('cashdate', $transactiondate);
         $rangedate = date("Y-m",strtotime($transactiondate));
-        $prevdate = date ( 'Y-m-j' ,strtotime ( '-1 day' , strtotime ( $transactiondate ) ));
         
-        DB::table('rpt_cashreceipt_books')->where('idno', \Auth::user()->idno)->delete();
+        $debits = \App\Dedit::whereBetween('transactiondate', array($rangedate."-01",$transactiondate))->where('entry_type',1)->orderBy('receiptno')->get();
+        $credits = \App\Credit::whereBetween('transactiondate', array($rangedate."-01",$transactiondate))->where('entry_type',1)->get();
         
-        $receipts = \App\Dedit::where('transactiondate',$transactiondate)->where('entry_type',1)->get();
-        $this->debitcashreceipts($receipts,0);
+        $receipts = $receipts = $debits->where('transactiondate',$transactiondate)->unique('refno');
+        $this->processbook($receipts,$debits,$credits);
         
-        $forwarded = \App\Dedit::whereBetween('transactiondate', array($rangedate."-01",date ( 'Y-m-j' ,strtotime ( '-1 day' , strtotime ( $transactiondate ) ))))->where('entry_type',1)->get();
-        $this->debitcashreceipts($forwarded,1);
+        $records = \App\RptCashreceiptBook::where('idno',\Auth::user()->idno)->get();
         
-        $creceipts = DB::Select("select d.refno, sum( if( accountingcode =420200, amount, 0 ) ) AS `elearning`, "
-                . "sum( if( accountingcode =420400, amount, 0 ) ) AS `misc` , "
-                . "sum( if( accountingcode =440400, amount, 0 ) ) AS `books` , "
-                . "sum( if( accountingcode =420100, amount, 0 ) ) AS `dept` , "
-                . "sum( if( accountingcode =420000, amount, 0 ) ) AS `registration` ,"
-                . "sum( if( accountingcode IN(120100,410000), amount, 0 ) )  AS `tuition`,"
-                . "sum( if( accountingcode =210400, amount, 0 ) )  AS `creservation`,"
-                . "sum( if( accountingcode NOT IN (120100,410000,420000,420100,440400,420400,420200,210400), "
-                . "amount, 0 ) )  AS others from credits join rpt_cashreceipt_books d "
-                . "on credits.refno = d.refno where d.idno = '".\Auth::user()->idno."'"
-                . "group by credits.refno");
-        $this->creditcashreceipts($creceipts);
-        $breakdown = DB::Select("Select accountingcode, acctcode, sum(amount) as amount from credits where accountingcode NOT IN (120100,410000,420000,420100,440400,420400,420200,210400) and transactiondate = '$transactiondate' and entry_type = 1 and isreverse = 0 group by accountingcode order by accountingcode");
-        $currTrans = \App\RptCashreceiptBook::where('idno', \Auth::user()->idno)->where('totalindic',0)->get();
-        $forwarder = \App\RptCashreceiptBook::where('idno', \Auth::user()->idno)->where('totalindic',1)->where('isreverse',0)->get();
-        return view('accounting.cashreceipts',compact('transactiondate','currTrans','forwarder','breakdown'));
+        return view('accounting.CashReceipt.printbook',compact('transactiondate','records'));
+    }
+    
+    function processbook($receipts,$debits,$credits){
+        ini_set('max_execution_time', 0);
+        \App\RptCashreceiptBook::where('idno',\Auth::user()->idno)->delete();
+        
+        foreach($receipts as $receipt){
+            $credit = $credits->where('refno',$receipt->refno);
+            $debit  = $debits->where('refno',$receipt->refno);
+            
+                $reportEntry = new \App\RptCashreceiptBook();
+                $reportEntry->idno = \Auth::user()->idno;
+                $reportEntry->refno = $receipt->refno;
+                $reportEntry->refno = $receipt->refno;
+                $reportEntry->transactiondate = $receipt->transactiondate;
+                $reportEntry->receiptno = $receipt->receiptno;
+                $reportEntry->cash = $debit->where('paymenttype','1')->sum('amount')+$debit->where('paymenttype','1')->sum('checkamount');
+                $reportEntry->discount = $debit->where('paymenttype','4')->sum('amount');
+                $reportEntry->fape = $debit->where('paymenttype','7')->sum('amount');
+                $reportEntry->dreservation = $debit->where('paymenttype','5')->sum('amount');
+                $reportEntry->deposit = $debit->where('paymenttype','8')->sum('amount');
+                
+                $reportEntry->elearning = $credit->where('accountingcode',420200)->sum('amount');
+                $reportEntry->misc = $credit->where('accountingcode',420400)->sum('amount');
+                $reportEntry->book = $credit->where('accountingcode',440400)->sum('amount');
+                $reportEntry->dept = $credit->where('accountingcode',420100)->sum('amount');
+                $reportEntry->registration = $credit->where('accountingcode',420000)->sum('amount');
+                $reportEntry->tuition = $credit->whereIn('accountingcode',array(120100,410000))->sum('amount');
+                $reportEntry->creservation = $credit->where('accountingcode',210400)->sum('amount');
+                $reportEntry->csundry = $credit->filter(function($item){
+                                                return !in_array(data_get($item, 'accountingcode'), array(420200,420400,440400,420100,420000,120100,410000,210400));
+                                                    })->sum('amount');
+                $reportEntry->isreverse = $receipt->isreverse;
+                $reportEntry->save();
+                                                    
+        }
     }
     
     function cashreceiptpdf(){

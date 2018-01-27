@@ -22,6 +22,24 @@
             </div>
         </form>
     </div>
+    <div class="col-md-9">
+        @foreach($sections->groupBy('level') as $reportlevels)
+        <div class="col-md-4">
+            <div class='panel panel-default'>
+                <div class='panel-heading'>{{$reportlevels->pluck('level')->last()}}</div>
+                <div class='panel-body'>
+                    <table class='table'>
+                        @foreach($reportlevels as $sections)
+                        <tr>
+                            <td class='label-success'><big class='label'>{{$sections->section}}</big></td>
+                        </tr>
+                        @endforeach   
+                    </table>           
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </div>
 </div>
 
 @stop

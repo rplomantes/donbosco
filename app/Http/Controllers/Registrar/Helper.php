@@ -186,7 +186,11 @@ class Helper extends Controller
     static function getLevelSubjects($level,$strand,$sy,$semester){
         $currSy = \App\RegistrarSchoolyear::first()->schoolyear;
         if($strand != "null"){
-            $strand = "and s.strand='".$strand."'";
+            if($strand == "All"){
+                $strand = "and s.strand IN('ABM','STEM')";
+            }else{
+                $strand = "and s.strand='".$strand."'";
+            }
         }else{
             $strand = "";
         }

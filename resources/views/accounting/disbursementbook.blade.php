@@ -2,8 +2,8 @@
 
 $disbursements = DB::Select(" Select transactiondate, voucherno, payee,  sum(voucheramount) as voucheramount, isreverse, sum(advances_employee) as advances, sum(cost_of_goods) as cost, sum(instructional_materials) as instructional, "
         . "sum(salaries_allowances) as salaries,sum(personnel_dev) as dev,sum(other_emp_benefit) as benefit, sum(office_supplies) as supplies,"
-        . "sum(travel_expenses) as travel, sum(sundry_debit) as sundrydebit,sum(sundry_credit) as sundrycredit from rpt_disbursement_books where totalindic = '0' "
-        . "group by transactiondate, voucherno, payee, isreverse");
+        . "sum(travel_expenses) as travel, sum(sundry_debit) as sundrydebit,sum(sundry_credit) as sundrycredit from rpt_disbursement_books "
+        . "group by refno");
 
 $totalmonths = DB::Select("Select sum(voucheramount)as voucheramount,sum(advances_employee)advances, sum(cost_of_goods)as cost, sum(instructional_materials) as instructional, "
         . "sum(salaries_allowances) as salaries,sum(personnel_dev) as dev,sum(other_emp_benefit) as benefit, sum(office_supplies) as supplies,"
@@ -45,7 +45,7 @@ $countline=0;
 <h3>CASH DISBURSEMENT BOOK</h3>
     <div class="col-md-2">
         <label>From</label>
-        <input type="text" class="form-control" value="{{substr_replace($trandate, "01", 8)}}" readonly>
+        <input type="text" class="form-control" id="from" value="{{substr_replace($trandate, "01", 8)}}">
     </div>
     <div class="col-md-2">
         <label>To</label>
@@ -91,7 +91,7 @@ $countline=0;
         $stsalaries=0;$stdev=0;$stbenefit=0;$stsupplies=0;
         $sttravel=0;$stdebit=0;$stcredit=0;
         ?>
-    @else
+    @endif
         <tr><td>{{$disbursement->voucherno}}</td><td>{{$disbursement->payee}}</td><td align="right">{{number_format($disbursement->voucheramount,2)}}</td>
             <td align="right"> {{number_format($disbursement->advances,2)}}</td><td align="right">{{number_format($disbursement->cost,2)}}</td>
         <td align="right">{{number_format($disbursement->instructional,2)}}</td><td align="right">{{number_format($disbursement->salaries,2)}}</td><td align="right">{{number_format($disbursement->dev,2)}}</td>
@@ -120,7 +120,6 @@ $stcredit=$stcredit+$disbursement->sundrycredit;
 $countline=$countline+1;
 }
 ?>
-@endif
 @endforeach 
 <td colspan="2"> Sub Total</td><td align="right">{{number_format($stvoucher,2)}}</td>
             <td align="right"> {{number_format($stadvances,2)}}</td><td align="right">{{number_format($stcost,2)}}</td>
@@ -150,11 +149,72 @@ $countline=$countline+1;
     <div class="col-md-12">
         <a href="{{url('printdisbursementpdf',$trandate)}}" class="btn btn-primary" target="_blank">Print Disbursement Book</a>
     </div>    
+    
+        <hr>
+    <?php 
+    $sundryCredit = $sundries->where('cr_db_indic',1)->filter(function($item){
+        return !in_array(data_get($item, 'accountcode'), array(110012,110013,110014,110015,110016,110017,110018,110019,110020,110021));
+    });
+    $sundryDebit = $sundries->where('cr_db_indic',0)->filter(function($item){
+        return !in_array(data_get($item, 'accountcode'), array(120103,440601,440701,580000,500000,500500,500300,120201,590200));
+    });
+    ?>
+
+    <div class='col-md-6'>
+        <div class='panel'>
+            <div class='panel-heading'>Debit Sundry</div>
+            <div class='panel-body'>
+                <table class='table table-striped'>
+                    <tr>
+                        <td>Account</td>
+                        <td>Amount</td>
+                    </tr>
+                    @foreach($sundryDebit->groupBy('accountcode') as $debitsundry)
+                    <tr>
+                        <td>{{$debitsundry->pluck('accountname')->last()}}</td>
+                        <td>{{number_format($debitsundry->sum('debit'),2)}}</td>
+                    </tr>
+                    @endforeach
+                    <tr>
+                        <td>Total</td>
+                        <td>{{number_format($sundryDebit->sum('debit'),2)}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <div class='col-md-6'>
+        <div class='panel'>
+            <div class='panel-heading'>Credit Sundry</div>
+            <div class='panel-body'>
+                <table class='table table-striped'>
+                    <tr>
+                        <td>Account</td>
+                        <td>Amount</td>
+                    </tr>
+                    @foreach($sundryCredit->groupBy('accountcode') as $creditsundry)
+                    <tr>
+                        <td>{{$creditsundry->pluck('accountname')->last()}}</td>
+                        <td>{{number_format($creditsundry->sum('credit'),2)}}</td>
+                    </tr>
+                    @endforeach
+                    <tr>
+                        <td>Total</td>
+                        <td>{{number_format($sundryCredit->sum('credit'),2)}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>    
+
+    
 <script>
      $("#processbtn").click(function(){
         //alert("hello")
-        document.location = "{{url('disbursementbook')}}" + "/" + $("#trandate").val();
+        document.location = "{{url('disbursementbook')}}" + "/" + $("#from").val()+ "/" + $("#trandate").val();
     })
     
 </script>    
