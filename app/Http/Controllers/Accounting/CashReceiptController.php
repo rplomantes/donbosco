@@ -19,12 +19,14 @@ class CashReceiptController extends Controller
         $debits = \App\Dedit::whereBetween('transactiondate', array($rangedate."-01",$transactiondate))->where('entry_type',1)->orderBy('receiptno')->get();
         $credits = \App\Credit::whereBetween('transactiondate', array($rangedate."-01",$transactiondate))->where('entry_type',1)->get();
         
-        $receipts = $receipts = $debits->where('transactiondate',$transactiondate)->unique('refno');
+        $receipts = $debits->where('transactiondate',$transactiondate)->unique('refno');
+        
         $this->processbook($receipts,$debits,$credits);
+        $this->forwarded($transactiondate,$debits,$credits);
         
         $records = \App\RptCashreceiptBook::where('idno',\Auth::user()->idno)->get();
         
-        return view('accounting.CashReceipt.printbook',compact('transactiondate','records'));
+        return view('accounting.CashReceipt.Book.book',compact('transactiondate','records','credits'));
     }
     
     function processbook($receipts,$debits,$credits){
@@ -34,14 +36,13 @@ class CashReceiptController extends Controller
         foreach($receipts as $receipt){
             $credit = $credits->where('refno',$receipt->refno);
             $debit  = $debits->where('refno',$receipt->refno);
-            
                 $reportEntry = new \App\RptCashreceiptBook();
                 $reportEntry->idno = \Auth::user()->idno;
-                $reportEntry->refno = $receipt->refno;
+                $reportEntry->from = $receipt->receivefrom;
                 $reportEntry->refno = $receipt->refno;
                 $reportEntry->transactiondate = $receipt->transactiondate;
                 $reportEntry->receiptno = $receipt->receiptno;
-                $reportEntry->cash = $debit->where('paymenttype','1')->sum('amount')+$debit->where('paymenttype','1')->sum('checkamount');
+                $reportEntry->cash = $debit->where('paymenttype','1')->sum('amount')+$debit->where('paymenttype',1)->sum('checkamount');
                 $reportEntry->discount = $debit->where('paymenttype','4')->sum('amount');
                 $reportEntry->fape = $debit->where('paymenttype','7')->sum('amount');
                 $reportEntry->dreservation = $debit->where('paymenttype','5')->sum('amount');
@@ -57,26 +58,56 @@ class CashReceiptController extends Controller
                 $reportEntry->csundry = $credit->filter(function($item){
                                                 return !in_array(data_get($item, 'accountingcode'), array(420200,420400,440400,420100,420000,120100,410000,210400));
                                                     })->sum('amount');
+                                                    
+                $reportEntry->csundry_account = $credit->filter(function($item){
+                                                return !in_array(data_get($item, 'accountingcode'), array(420200,420400,440400,420100,420000,120100,410000,210400));
+                                                    })->unique('accountingcode')->implode('acctcode','<br>');
                 $reportEntry->isreverse = $receipt->isreverse;
                 $reportEntry->save();
                                                     
         }
     }
     
-    function cashreceiptpdf(){
-        $currTrans = \App\RptCashreceiptBook::where('idno', \Auth::user()->idno)->where('totalindic',0)->get();
-        $forwarder = \App\RptCashreceiptBook::where('idno', \Auth::user()->idno)->where('totalindic',1)->where('isreverse',0)->get();
-        //$forwarder = DB::Select("select sum(`cash`) as cash,sum(`discount`) as discount,sum(`fape`) as fape,sum(`dreservation`) as dreservation,sum(`deposit`) as deposit,sum(`elearning`) as elearning,sum(`book`) as book,sum(`dept`) as department,sum(`registration`) as registration,sum(`tuition`) as tuition,sum(`creservation`) as creservation,sum(`csundry`) as csundry,sum(`misc`) as misc from `rpt_cashreceipt_books` where `idno` = '".\Auth::user()->idno."' and `totalindic` = 1 and `isreverse` = 0");
-        if(count($currTrans)> 0){
-            $date = \App\RptCashreceiptBook::where('idno', \Auth::user()->idno)->where('totalindic',0)->first()->transactiondate;
-        }else{
-            $date = session('cashdate');
-        }
+    function forwarded($transactiondate,$debits,$credits){
+            $credit = $credits->where('isreverse',0)->filter(function($item) use($transactiondate){
+                return data_get($item, 'transactiondate') !== $transactiondate;
+                });
+            $debit  = $debits->where('isreverse',0)->filter(function($item) use($transactiondate){
+                return data_get($item, 'transactiondate') !== $transactiondate;
+                });
+                
+                $reportEntry = new \App\RptCashreceiptBook();
+                $reportEntry->idno = \Auth::user()->idno;
+                $reportEntry->refno = "forwarded";
+                $reportEntry->cash = $debit->where('paymenttype','1')->sum('amount')+$debit->where('paymenttype',1)->sum('checkamount');
+                $reportEntry->discount = $debit->where('paymenttype','4')->sum('amount');
+                $reportEntry->fape = $debit->where('paymenttype','7')->sum('amount');
+                $reportEntry->dreservation = $debit->where('paymenttype','5')->sum('amount');
+                $reportEntry->deposit = $debit->where('paymenttype','8')->sum('amount');
+                
+                $reportEntry->elearning = $credit->where('accountingcode',420200)->sum('amount');
+                $reportEntry->misc = $credit->where('accountingcode',420400)->sum('amount');
+                $reportEntry->book = $credit->where('accountingcode',440400)->sum('amount');
+                $reportEntry->dept = $credit->where('accountingcode',420100)->sum('amount');
+                $reportEntry->registration = $credit->where('accountingcode',420000)->sum('amount');
+                $reportEntry->tuition = $credit->whereIn('accountingcode',array(120100,410000))->sum('amount');
+                $reportEntry->creservation = $credit->where('accountingcode',210400)->sum('amount');
+                $reportEntry->csundry = $credit->filter(function($item){
+                                                return !in_array(data_get($item, 'accountingcode'), array(420200,420400,440400,420100,420000,120100,410000,210400));
+                                                    })->sum('amount');
+                $reportEntry->save();
+    }
+    
+    function cashreceiptpdf($transactiondate){
+        $rangedate = date("Y-m",strtotime($transactiondate));
         
+        $records = \App\RptCashreceiptBook::where('idno',\Auth::user()->idno)->get();
+        $credits = \App\Credit::whereBetween('transactiondate', array($rangedate."-01",$transactiondate))->where('entry_type',1)->get();
+        $title = 'CASH RECEIPT BOOK';
         
         $pdf = \App::make('dompdf.wrapper');
         $pdf->setPaper('legal','landscape');
-        $pdf->loadView('print.cashreceiptspdf',compact('currTrans','forwarder','date'));
+        $pdf->loadView('accounting.CashReceipt.Book.printbook',compact('transactiondate','records','credits','title'));
         return $pdf->stream();
     }
 

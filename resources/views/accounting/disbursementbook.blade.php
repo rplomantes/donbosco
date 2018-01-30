@@ -61,7 +61,7 @@ $countline=0;
         <hr>
     </div>    
         <table class="table table-bordered table-striped">
-        <tr><th>Voucher No</th><th>Payee</th><th>Voucher Amount</th><th>Advance To Employee</th><th>Cost of Sales</th>
+        <tr><th>Voucher No</th><th width='15%'>Payee</th><th>Voucher Amount</th><th>Advance To Employee</th><th>Cost of Sales</th>
         <th>Instructional  Materials</th><th>Salaries / Allowances</th><th>Personnel <br>Development</th>
         <th>Other Employee Benefit</th><th>Office Supplies</th><th>Travel Expenses</th>
         <th>Sundries Debit</th><th>Sundies Credit</th><th>Status</th></tr>
@@ -81,7 +81,7 @@ $countline=0;
         <td align="right">{{number_format($stdebit,2)}}</td><td align="right">{{number_format($stcredit,2)}}</td><td></td></tr>
      </table>
         <table class="table table-bordered table-striped">
-        <tr><th>Voucher No</th><th>Payee</th><th>Voucher Amount</th><th>Advance To Employee</th><th>Cost of Sales</th>
+        <tr><th>Voucher No</th><th width='15%'>Payee</th><th>Voucher Amount</th><th>Advance To Employee</th><th>Cost of Sales</th>
         <th>Instructional  Materials</th><th>Salaries / Allowances</th><th>Personnel <br>Development</th>
         <th>Other Employee Benefit</th><th>Office Supplies</th><th>Travel Expenses</th>
         <th>Sundries Debit</th><th>Sundies Credit</th><th>Status</th></tr>

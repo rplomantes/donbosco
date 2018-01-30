@@ -100,7 +100,7 @@
                                         <span class="caret"></span></a>
                                         <ul class="dropdown-menu" role="menu">
                                             <li>
-                                                <a href ="{{url('disbursementbook',date('Y-m-d'))}}"><i class="fa fa-btn"></i>Cash Disbursement</a>
+                                                <a href ="{{url('disbursementbook',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Cash Disbursement</a>
                                                 <a href="{{url('maincollection/4',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Cash Disbursement Debit/Credit Summary </a>
                                                 <a href ="{{url('cashreceipt', date('Y-m-d'))}}"><i class="fa fa-btn"></i>Cash Receipts</a>
                                                 <a href="{{url('maincollection/1',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Cash Receipt Debit/Credit Summary</a>

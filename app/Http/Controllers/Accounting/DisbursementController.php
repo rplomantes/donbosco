@@ -81,78 +81,64 @@ class DisbursementController extends Controller
        
        function processdisbursementbook($disbursements,$totalindic){
            foreach($disbursements as $disbursement){
-               $acctentries = \App\Accounting::where('referenceid',$disbursement->voucherno)->where('type','4')->get();
-                foreach($acctentries as $acctentry){
-                    $addrpt = new \App\RptDisbursementBook;
-                    $addrpt->idno = \Auth::user()->idno;
-                    $addrpt->payee = $disbursement->payee;
-                    $addrpt->transactiondate = $disbursement->transactiondate;
-                    $addrpt->voucherno = $disbursement->voucherno;
-                    $addrpt->refno = $disbursement->refno;
-                    $addrpt->isreverse = $disbursement->isreverse;
-                    $addrpt->totalindic = $totalindic;
-
-                        if($acctentry->cr_db_indic=="0"){
-                            switch ($acctentry->accountcode){
-                                case "120103":
-                                    $addrpt->advances_employee = $acctentry->debit;
-                                    break;
-                                case "440601":
-                                    $addrpt->cost_of_goods = $acctentry->debit + $addrpt->cost_of_goods;
-                                    break;
-                                case "440701":
-                                    $addrpt->cost_of_goods = $acctentry->debit + $addrpt->cost_of_goods;
-                                    break;
-                                case "580000":
-                                    $addrpt->instructional_materials = $acctentry->debit;
-                                    break;
-                                case "500000":
-                                    $addrpt->salaries_allowances = $acctentry->debit;
-                                    break;
-                                case "500500":
-                                    $addrpt->personnel_dev = $acctentry->debit;
-                                    break;
-                                case "500300":
-                                    $addrpt->other_emp_benefit =$acctentry->debit;
-                                    break;
-                                case "120201":
-                                    $addrpt->office_supplies = $acctentry->debit;
-                                    break;
-                                case "590200":
-                                    $addrpt->travel_expenses = $acctentry->debit;
-                                    break;
-                                default:
-                                    $addrpt->sundry_debit = $acctentry->debit;                                   
-                            }                       
-                        } 
-                        else{
-                            if($acctentry->accountcode > 110011 && $acctentry->accountcode < 110022){
-                                $addrpt->voucheramount = $acctentry->credit;
-                            }else{
-                                    $addrpt->sundry_credit =$acctentry->credit;
-                            }
-                        }
-                            $addrpt->save();
-                }
+               $acctentry = \App\Accounting::where('refno',$disbursement->refno)->where('type','4')->get();
+               $debits = $acctentry->where('cr_db_indic',0);
+               $credits = $acctentry->where('cr_db_indic',1);
+               
+               $addrpt = new \App\RptDisbursementBook;
+               $addrpt->idno = \Auth::user()->idno;
+               $addrpt->payee = $disbursement->payee;
+               $addrpt->transactiondate = $disbursement->transactiondate;
+               $addrpt->voucherno = $disbursement->voucherno;
+               $addrpt->refno = $disbursement->refno;
+               $addrpt->isreverse = $disbursement->isreverse;
+               $addrpt->totalindic = $totalindic;
+               $addrpt->advances_employee = $debits->where('accountcode','120103')->sum('debit');
+               $addrpt->cost_of_goods = $debits->whereIn('accountcode',array('440601','440701'))->sum('debit');
+               $addrpt->instructional_materials = $debits->where('accountcode','580000')->sum('debit');
+               $addrpt->salaries_allowances = $debits->where('accountcode','500000')->sum('debit');
+               $addrpt->personnel_dev = $debits->where('accountcode','500500')->sum('debit');
+               $addrpt->other_emp_benefit = $debits->where('accountcode','500300')->sum('debit');
+               $addrpt->office_supplies = $debits->where('accountcode','120120')->sum('debit');
+               $addrpt->travel_expenses = $debits->where('accountcode','590200')->sum('debit');
+               $addrpt->sundry_debit = $debits->filter(function($item){
+                   return !in_array(data_get($item, 'accountcode'), array('120103','440601','440701','580000','500000','500500','500300','120201','590200'));                   
+                    })->sum('debit');
+                    
+               $addrpt->voucheramount = $credits->whereIn('accountcode',array('110012','110013','110014','110015','110016','110017','110018','110019','110020','110021'))->sum('credit');
+               $addrpt->sundry_credit = $credits->filter(function($item){
+                   return !in_array(data_get($item, 'accountcode'), array('110012','110013','110014','110015','110016','110017','110018','110019','110020','110021'));
+                   })->sum('credit');
+               
+               $addrpt->save();
            }
            
        }
        
        function disbursementbook($from,$trandate){
-           DB::table('rpt_disbursement_books')->where('idno', \Auth::user()->idno)->delete();
-           $disbursements = \App\Disbursement::whereBetween('transactiondate', array(substr_replace($trandate, "01", 8),$trandate))->get();
+           
+           \App\RptDisbursementBook::where('idno', \Auth::user()->idno)->delete();
+           $disbursements = \App\Disbursement::whereBetween('transactiondate', array($from,$trandate))->get();
            $this->processdisbursementbook($disbursements,"0");
 
            $sundries = \App\Accounting::where('type',4)->where('isfinal',1)->where('isreversed',0)->whereBetween('transactiondate',array($from,$trandate))->get();
-           return view('accounting.disbursementbook',compact('trandate','sundries'));
+           $entries = \App\RptDisbursementBook::where('idno',\Auth::user()->idno)->get();
+           
+           return view('accounting.Disbursement.Book.book',compact('from','trandate','sundries','entries'));
+           //return view('accounting.disbursementbook',compact('trandate','sundries'));
        }
        
-       function printdisbursementpdf($trandate){
-          $pdf= \App::make('dompdf.wrapper');
+       function printdisbursementpdf($from,$to){
+            $sundries = \App\Accounting::where('type',4)->where('isfinal',1)->where('isreversed',0)->whereBetween('transactiondate',array($from,$to))->get();
+            $entries = \App\RptDisbursementBook::where('idno',\Auth::user()->idno)->get();
+            $trandate = $to;
+            $title = 'CASH DISBURSEMENT BOOK';
+            
+            $pdf= \App::make('dompdf.wrapper');
             $pdf->setPaper('folio','landscape');
-            $pdf->loadView('accounting.printdisbursementpdf',compact('trandate'));
+            $pdf->loadView('accounting.Disbursement.Book.printbook',compact('title','from','to','entries','sundries'));
+            //$pdf->loadView('accounting.printdisbursementpdf',compact('trandate'));
             return $pdf->stream();
-           //return view('accounting.printdisbursementpdf',compact('trandate'));
            
        }
        
