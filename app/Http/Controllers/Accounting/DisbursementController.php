@@ -8,35 +8,37 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Excel;
 
 class DisbursementController extends Controller
 {
     
-    public function __construct()
-	{
-		$this->middleware('auth');
-	}
+    public function __construct(){
+        $this->middleware('auth');
+    }
     //
         
-        function adddisbursement(){
-            return view('accounting.adddisbursement');
-        }
+    function adddisbursement(){
+        return view('accounting.adddisbursement');
+    }
         
-       function printdisbursement($refno){
-           return view('accounting.printdisbursement',compact('refno'));
-       }
-       function restorecanceldisbursement($kind,$refno){
-           if($kind=="Cancel"){
-               $cr = 1;
-            } else {
-                $cr = 0;
-            }
-             \App\Credit::where('refno',$refno)->update(array('isreverse' => $cr));
-             \App\Dedit::where('refno',$refno)->update(['isreverse'=> $cr]);
-             \App\Accounting::where('refno',$refno)->update(['isreversed'=>$cr]);
-             \App\Disbursement::where('refno',$refno)->update(['isreverse'=>$cr]);
-             return redirect(url("printdisbursement",$refno));    
-       }
+    function printdisbursement($refno){
+        return view('accounting.printdisbursement',compact('refno'));
+    }
+    
+    function restorecanceldisbursement($kind,$refno){
+        if($kind=="Cancel"){
+            $cr = 1;
+        } else {
+            $cr = 0;
+        }
+        \App\Credit::where('refno',$refno)->update(array('isreverse' => $cr));
+        \App\Dedit::where('refno',$refno)->update(['isreverse'=> $cr]);
+        \App\Accounting::where('refno',$refno)->update(['isreversed'=>$cr]);
+        \App\Disbursement::where('refno',$refno)->update(['isreverse'=>$cr]);
+        
+        return redirect(url("printdisbursement",$refno));    
+    }
        
        function printcheckdetails($refno){
            $disbursement = \App\Disbursement::where('refno',$refno)->first();
@@ -70,7 +72,8 @@ class DisbursementController extends Controller
        }
        function printdisbursementlistpdf($trandate){
            $pdf = \App::make('dompdf.wrapper');
-           $pdf->setPaper("Letter","portrait");
+           //$pdf->setPaper([0,0,612.00,936.00],'landscape');
+           $pdf->setPaper("letter","portrait");
            $pdf->loadView('print.printdisbursementlistpdf',compact('trandate'));
            return $pdf->stream();
        }
@@ -101,19 +104,66 @@ class DisbursementController extends Controller
                $addrpt->other_emp_benefit = $debits->where('accountcode','500300')->sum('debit');
                $addrpt->office_supplies = $debits->where('accountcode','120120')->sum('debit');
                $addrpt->travel_expenses = $debits->where('accountcode','590200')->sum('debit');
-               $addrpt->sundry_debit = $debits->filter(function($item){
-                   return !in_array(data_get($item, 'accountcode'), array('120103','440601','440701','580000','500000','500500','500300','120201','590200'));                   
-                    })->sum('debit');
-                    
-               $addrpt->voucheramount = $credits->whereIn('accountcode',array('110012','110013','110014','110015','110016','110017','110018','110019','110020','110021'))->sum('credit');
-               $addrpt->sundry_credit = $credits->filter(function($item){
-                   return !in_array(data_get($item, 'accountcode'), array('110012','110013','110014','110015','110016','110017','110018','110019','110020','110021'));
-                   })->sum('credit');
                
+               $sundry_debit = $debits->filter(function($item){
+                   return !in_array(data_get($item, 'accountcode'), array('120103','440601','440701','580000','500000','500500','500300','120201','590200'));                   
+                    });
+               $debit_accts = $this->debitSundries($sundry_debit);
+               $addrpt->sundry_debit = $sundry_debit->sum('debit');
+               $addrpt->sundry_debit_account = $debit_accts['accounts'];
+               $debit_row = $debit_accts['rows'];
+               
+               //Credits
+               $addrpt->voucheramount = $credits->whereIn('accountcode',array('110012','110013','110014','110015','110016','110017','110018','110019','110020','110021'))->sum('credit');
+
+               $sundry_credit = $credits->filter(function($item){
+                   return !in_array(data_get($item, 'accountcode'), array('110012','110013','110014','110015','110016','110017','110018','110019','110020','110021'));
+                   });
+               $credit_accts = $this->creditSundries($sundry_credit);
+               $addrpt->sundry_credit = $sundry_credit->sum('credit');
+               $addrpt->sundry_credit_account = $credit_accts['accounts'];
+               $credit_row = $credit_accts['rows'];
+               
+                if($credit_row > $debit_row){
+                    $addrpt->row_count = $credit_row;
+                }else{
+                    $addrpt->row_count = $debit_row;
+                }
+                
                $addrpt->save();
            }
            
        }
+       
+    function debitSundries($debit){
+        $debit_group = $debit->groupBy('accountcode');
+        $bd_debits = "";
+        $rowcount = 1;
+        
+        foreach($debit_group as $debits){
+                $bd_debits = $bd_debits.$debits->pluck('accountname')->last()." - ".number_format($debits->sum('debit'),2)."<br>";
+        }
+        
+        if(count($debit_group)>0){
+            $rowcount = count($debit_group);
+        }
+        
+        return array('accounts'=>$bd_debits,'rows'=>$rowcount);
+    }
+    
+    function creditSundries($credit){
+        $credit_group = $credit->groupBy('accountcode');
+        $bd_credits = "";
+        $rowcount = 1;
+        foreach($credit_group as $credits){
+            $bd_credits = $bd_credits.$credits->pluck('accountname')->last()." - ".number_format($credits->sum('credit'),2)."<br>";   
+        }
+        
+        if(count($credit_group)>0){
+            $rowcount = count($credit_group);
+        }
+        return array('accounts'=>$bd_credits,'rows'=>$rowcount);
+    }
        
        function disbursementbook($from,$trandate){
            
@@ -132,15 +182,72 @@ class DisbursementController extends Controller
             $sundries = \App\Accounting::where('type',4)->where('isfinal',1)->where('isreversed',0)->whereBetween('transactiondate',array($from,$to))->get();
             $entries = \App\RptDisbursementBook::where('idno',\Auth::user()->idno)->get();
             $trandate = $to;
+            $group_count = 21;
             $title = 'CASH DISBURSEMENT BOOK';
             
+            
+            
             $pdf= \App::make('dompdf.wrapper');
-            $pdf->setPaper('folio','landscape');
-            $pdf->loadView('accounting.Disbursement.Book.printbook',compact('title','from','to','entries','sundries'));
+            $pdf->setPaper([0,0,612.00,936.00],'landscape');
+            $pdf->loadView('accounting.Disbursement.Book.printbook',compact('title','from','to','entries','sundries','group_count'));
             //$pdf->loadView('accounting.printdisbursementpdf',compact('trandate'));
             return $pdf->stream();
            
        }
+       
+    function disbursementbookexcel($from,$trandate){
+
+           $sundries = \App\Accounting::where('type',4)->where('isfinal',1)->where('isreversed',0)->whereBetween('transactiondate',array($from,$trandate))->get();
+           $entries = \App\RptDisbursementBook::where('idno',\Auth::user()->idno)->get();
+           
+           $name = "Disbursement Book from ".$from." to ".$trandate;
+           
+        Excel::create($name, function($excel) use($sundries,$entries,$from,$trandate) {
+            $excel->sheet('Book', function($sheet) use($entries,$from,$trandate){
+                    $sheet->loadView('accounting.Disbursement.Book.downloadbook')
+                            ->with('entries',$entries)
+                            ->with('from',$from)
+                            ->with('trandate',$trandate)
+                            ->setFontSize(10)
+                            ->setAutoSize(true)
+                            ->setColumnFormat(array(
+                                'C'=> '#,##0.00',
+                                'D'=> '#,##0.00',
+                                'E'=> '#,##0.00',
+                                'F'=> '#,##0.00',
+                                'G'=> '#,##0.00',
+                                'H'=> '#,##0.00',
+                                'I'=> '#,##0.00',
+                                'J'=> '#,##0.00',
+                                'K'=> '#,##0.00',
+                                'L'=> '#,##0.00',
+                                'M'=> '#,##0.00',
+                            ));
+            });
+            
+        })->export('xlsx');
+           
+    }
+       
+    static function customChunk($records,$size){
+        $chunks = array();
+        $currntrows = 0;
+        $group = array();
+        
+        foreach($records  as $items){
+            if($size < $currntrows+$items->row_count || ($items ==$records->last())){
+               $chunks[] = collect($group);
+               unset($group);
+               $currntrows = 0;
+            }
+            
+            $currntrows = $currntrows+$items->row_count;
+            $group[] = $items;
+        }
+        
+        return collect($chunks);
+    }
+       
        
     function convert_number_to_words($number) {
     $hyphen      = ' ';

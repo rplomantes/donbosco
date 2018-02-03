@@ -39,9 +39,6 @@
     
     Route::get('/discounting', 'Update\UpdateController@updateDiscount');
     Route::get('/', 'MainController@index');
-    Route::get('cashreceipt/{transactiondate}','Accounting\CashReceiptController@cashreceiptbook');
-    Route::get('printcashreceipt/{transactiondate}','Accounting\CashReceiptController@cashreceiptpdf');
-    Route::get('printcashbreakdown/{fromtran}/{totran}','Accounting\CashReceiptController@breakdownpdf');
     //Book Store Module
     Route::get('books/{idno}', 'Miscellaneous\BookController@index');
     Route::get('unclaim/{idno}', 'Miscellaneous\AjaxController@unclaim');
@@ -171,8 +168,7 @@
     Route::get('disbursement/{trandate}','Accounting\DisbursementController@disbursement');
     Route::get('generaljournal/{trandate}','Accounting\JournalController@generaljournal');
     Route::get('restorecanceldm/{iscancel}/{refno}','Accounting\DebitMemoController@restorecanceldm');
-    Route::get('disbursementbook/{from}/{trandate}','Accounting\DisbursementController@disbursementbook');
-    Route::get('printdisbursementpdf/{from}/{trandate}','Accounting\DisbursementController@printdisbursementpdf');
+
     //update module
     //Elective submitted by registrar on STEM
     //Route::get('updateelective','Registrar\AssessmentController@updateelective');
@@ -528,6 +524,7 @@ Route::group(['middleware' => ['web','registrar']], function () {
    
    //END Import Conduct//
    
+   
    //Pre-registration
    Route::group(['middleware' => 'web'], function () {
        Route::get('/preregister','Registrar\PreRegistration\PreregistrationController@preregForm');
@@ -536,11 +533,39 @@ Route::group(['middleware' => ['web','registrar']], function () {
    });
    //END Pre-registration
    
+   
    //Disbursement
    Route::group(['middleware' => 'web'], function () {
        Route::get('/editdisbursement','Accounting\DisbursementController@editDisbursement');
-
        
    });
    //END Disbursement
    
+   //Disbursement Books
+    Route::group(['middleware' => 'web'], function () {
+        Route::get('disbursementbook/{from}/{trandate}','Accounting\DisbursementController@disbursementbook');
+        Route::get('printdisbursementpdf/{from}/{trandate}','Accounting\DisbursementController@printdisbursementpdf');
+        
+        Route::get('dldisbursementbook/{from}/{trandate}','Accounting\DisbursementController@disbursementbookexcel');
+    });
+   //END Disbursement Books
+   
+   //Cash Receipt Books
+    Route::group(['middleware' => 'web'], function () {
+        Route::get('cashreceipt/{transactiondate}','Accounting\CashReceiptController@cashreceiptbook');
+        Route::get('printcashreceipt/{transactiondate}','Accounting\CashReceiptController@cashreceiptpdf');
+    //    Route::get('printcashbreakdown/{fromtran}/{totran}','Accounting\CashReceiptController@breakdownpdf');
+        
+        Route::get('dlcashreceipt/{transactiondate}','Accounting\CashReceiptController@cashreceiptexcel');
+    });
+   //END Cash Receipt Books
+
+    
+   //Elem Attedance Fixer
+   Route::group(['middleware' => 'web'], function () {
+       Route::get('/attendanceFix','Vincent\AttendanceFixer@index')->name('attFixer');
+       Route::post('/submitAttFix','Vincent\AttendanceFixer@fetchFromExcel');
+
+       
+   });
+   //END Elem Attedance Fixer

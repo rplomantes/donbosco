@@ -35,7 +35,7 @@
             </div>
             <br>
             <div class='row'>
-                <button class='btn btn-success  col-md-12'>Download</button>
+                <a  href="{{url('dldisbursementbook',array($from,$trandate))}}" class='btn btn-success  col-md-12'>Download</a>
             </div>
 
         </div>
@@ -45,10 +45,20 @@
         
         <table class='table table-bordered table-striped'>
             <tr>
-                <th>Voucher No</th><th width='15%'>Payee</th><th>Voucher Amount</th><th>Advance To Employee</th><th>Cost of Sales</th>
-                <th>Instructional  Materials</th><th>Salaries / Allowances</th><th>Personnel <br>Development</th>
-                <th>Other Employee Benefit</th><th>Office Supplies</th><th>Travel Expenses</th>
-                <th>Sundries Debit</th><th>Sundies Credit</th><th>Status</th>
+                <th>Voucher No</th>
+                <th width='15%'>Payee</th>
+                <th>Voucher Amount</th>
+                <th>Advances To Employees</th>
+                <th>Cost of Sales</th>
+                <th>Instructional  Materials</th>
+                <th>Salaries / Allowances</th>
+                <th>Personnel <br>Development</th>
+                <th>Other Employee Benefit</th>
+                <th>Office Supplies</th>
+                <th>Travel Expenses</th>
+                <th>Sundries Debit</th>
+                <th>Sundies Credit</th>
+                <th>Status</th>
             </tr>
             @foreach($entries as $entry)
             <tr align='right'>
@@ -63,8 +73,8 @@
                 <td>{{number_format($entry->other_emp_benefit,2)}}</td>
                 <td>{{number_format($entry->office_supplies,2)}}</td>
                 <td>{{number_format($entry->travel_expenses,2)}}</td>
-                <td>{{number_format($entry->sundry_debit,2)}}</td>
-                <td>{{number_format($entry->sundry_credit,2)}}</td>
+                <td style="white-space:nowrap">{!!$entry->sundry_debit_account!!}</td>
+                <td style="white-space:nowrap">{!!$entry->sundry_credit_account!!}</td>
                 <td>
                     @if($entry->sundry_credit == 0)
                     OK
@@ -162,5 +172,10 @@ $sundryDebit = $sundries->where('cr_db_indic',0)->filter(function($item){
         }
         
     });
+    
+     $("#processbtn").click(function(){
+        //alert("hello")
+        document.location = "{{url('disbursementbook')}}" + "/" + $("#from").val()+ "/" + $("#trandate").val();
+    })
 </script>
 @stop

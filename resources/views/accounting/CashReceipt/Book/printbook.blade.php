@@ -1,8 +1,6 @@
 <?php
 ini_set('memory_limit', '256M');
 $forwarded = $records->where('refno','forwarded');
-        
-$receipts = $records->where('transactiondate',$transactiondate);
 
 $grand_total = $records->where('isreverse',0);
 
@@ -11,9 +9,7 @@ $sundries = $credits->where('isreverse',0)->where('transactiondate',$transaction
                     });
 $b_cash = 0;
 $b_discount = 0;
-$b_fape = 0;
-$b_dreservation = 0;
-$b_deposit = 0;
+$b_dsundry = 0;
 $b_elearning = 0;
 $b_misc = 0;
 $b_book = 0;
@@ -22,9 +18,6 @@ $b_reg = 0;
 $b_tuition = 0;
 $b_creservation = 0;
 $b_csundry = 0;
-
-                    
-$chunk = $receipts->chunk(18);
 
 ?>
 <html>
@@ -36,7 +29,7 @@ $chunk = $receipts->chunk(18);
                 text-align: left
             }
             td,th{
-                font-size: 9.5pt;
+                font-size: 9pt;
             }
             .report{
                 page-break-after: always
@@ -46,15 +39,19 @@ $chunk = $receipts->chunk(18);
     <body>
 @include('inludes.header')
         @foreach($chunk as $group)
-        <table class="report" border="1" cellspacing="0" cellpadding="2" width="100%">
+        
+        <table 
+            @if($group != $chunk->last())
+            class="report"
+            @endif
+            border="1" cellspacing="0" cellpadding="2" width="100%">
             <tr>
                 <th>Receipt No.</th>
                 <th>Name</th>
                 <th>Debit<br>Cash / Check</th>
                 <th>Debit<br>Discount</th>
-                <th>Debit<br>FAPE</th>
-                <th>Debit<br>Reservation</th>
-                <th>Debit<br>Deposit</th>
+                <th>Debit<br>Sundry</th>
+                
                 <th>E - Learning</th>
                 <th>Misc</th>
                 <th>Book</th>
@@ -63,7 +60,6 @@ $chunk = $receipts->chunk(18);
                 <th>Tuition Fee</th>
                 <th>Credit<br>Reservation</th>
                 <th>Credit<br>Sundry</th>
-                <th>Sundry<br>Accounts</th>
                 <th>Status</th>
             </tr>
             
@@ -72,9 +68,7 @@ $chunk = $receipts->chunk(18);
                 <td colspan="2" style='text-align: left'>Forwarding Balance ({{date("M",strtotime($transactiondate))}})</td>
                 <td>{{number_format($forwarded->sum('cash'),2)}}</td>
                 <td>{{number_format($forwarded->sum('discount'),2)}}</td>
-                <td>{{number_format($forwarded->sum('fape'),2)}}</td>
-                <td>{{number_format($forwarded->sum('dreservation'),2)}}</td>
-                <td>{{number_format($forwarded->sum('deposit'),2)}}</td>
+                <td>{{number_format($forwarded->sum('dsundry'),2)}}</td>
                 
                 <td>{{number_format($forwarded->sum('elearning'),2)}}</td>
                 <td>{{number_format($forwarded->sum('misc'),2)}}</td>
@@ -85,17 +79,14 @@ $chunk = $receipts->chunk(18);
                 <td>{{number_format($forwarded->sum('creservation'),2)}}</td>
                 <td>{{number_format($forwarded->sum('csundry'),2)}}</td>
                 <td></td>
-                <td></td>
             </tr>
-            <tr><td colspan='17'></td></tr>
+            <tr><td colspan='14'></td></tr>
             @else
             <tr align='right'>
                 <td colspan="2" style='text-align: left'>Balance Brought Forward</td>
                 <td>{{number_format($b_cash,2)}}</td>
                 <td>{{number_format($b_discount,2)}}</td>
-                <td>{{number_format($b_fape,2)}}</td>
-                <td>{{number_format($b_dreservation,2)}}</td>
-                <td>{{number_format($b_deposit,2)}}</td>
+                <td>{{number_format($b_dsundry,2)}}</td>
                 <td>{{number_format($b_elearning,2)}}</td>
                 <td>{{number_format($b_misc,2)}}</td>
                 <td>{{number_format($b_book,2)}}</td>
@@ -104,7 +95,6 @@ $chunk = $receipts->chunk(18);
                 <td>{{number_format($b_tuition,2)}}</td>
                 <td>{{number_format($b_creservation,2)}}</td>
                 <td>{{number_format($b_csundry,2)}}</td>
-                <td></td>
                 <td></td>
             </tr>
             @endif
@@ -124,9 +114,7 @@ $chunk = $receipts->chunk(18);
                 
                 <td>{{number_format($receipt->cash,2)}}</td>
                 <td>{{number_format($receipt->discount,2)}}</td>
-                <td>{{number_format($receipt->fape,2)}}</td>
-                <td>{{number_format($receipt->dreservation,2)}}</td>
-                <td>{{number_format($receipt->deposit,2)}}</td>
+                <td style='white-space: nowrap;font-size: 8.5pt;'>{!!$receipt->dsundry_account!!}</td>
                 
                 <td>{{number_format($receipt->elearning,2)}}</td>
                 <td>{{number_format($receipt->misc,2)}}</td>
@@ -135,8 +123,7 @@ $chunk = $receipts->chunk(18);
                 <td>{{number_format($receipt->registration,2)}}</td>
                 <td>{{number_format($receipt->tuition,2)}}</td>
                 <td>{{number_format($receipt->creservation,2)}}</td>
-                <td>{{number_format($receipt->csundry,2)}}</td>
-                <td align="left" style="white-space: nowrap">{!!$receipt->csundry_account!!}</td>
+                <td style='white-space: nowrap;font-size: 8.5pt;'>{!!$receipt->csundry_account!!}</td>
                 <td align='center'>
                     @if($receipt->isreverse == 0)
                     OK
@@ -147,12 +134,11 @@ $chunk = $receipts->chunk(18);
             </tr>
             @endforeach
             <?php
-            $subtotal = $receipts->where('isreverse',0);
+            $subtotal = $group->where('isreverse',0,false);
             $b_cash = $b_cash+$subtotal->sum('cash');
             $b_discount = $b_discount+$subtotal->sum('discount');
-            $b_fape = $b_fape+$subtotal->sum('fape');
-            $b_dreservation = $b_dreservation+$subtotal->sum('dreservation');
-            $b_deposit = $b_deposit+$subtotal->sum('deposit');
+            $b_dsundry = $b_dsundry+$subtotal->sum('dsundry');
+
             $b_elearning = $b_elearning+$subtotal->sum('elearning');
             $b_misc = $b_misc+$subtotal->sum('misc');
             $b_book = $b_book+$subtotal->sum('book');
@@ -166,9 +152,7 @@ $chunk = $receipts->chunk(18);
                 <td align='left' colspan="2">Sub Total</td>
                 <td>{{number_format($b_cash,2)}}</td>
                 <td>{{number_format($b_discount,2)}}</td>
-                <td>{{number_format($b_fape,2)}}</td>
-                <td>{{number_format($b_dreservation,2)}}</td>
-                <td>{{number_format($b_deposit,2)}}</td>
+                <td>{{number_format($b_dsundry,2)}}</td>
                 <td>{{number_format($b_elearning,2)}}</td>
                 <td>{{number_format($b_misc,2)}}</td>
                 <td>{{number_format($b_book,2)}}</td>
@@ -178,17 +162,34 @@ $chunk = $receipts->chunk(18);
                 <td>{{number_format($b_creservation,2)}}</td>
                 <td>{{number_format($b_csundry,2)}}</td>
                 <td></td>
-                <td></td>
             </tr>
-            @if($group == $chunk->last())
-            <tr><td colspan='17'><div width="100%"><br><br><br></div></td></tr>
+        </table>
+        @endforeach
+        
+        <div width="100%"><br><br><br></div>
+        <table border="1" cellspacing="0" cellpadding="2" width="100%">
+            <tr>
+                <th>Receipt No.</th>
+                <th>Name</th>
+                <th>Debit<br>Cash / Check</th>
+                <th>Debit<br>Discount</th>
+                <th>Debit<br>Sundry</th>
+                
+                <th>E - Learning</th>
+                <th>Misc</th>
+                <th>Book</th>
+                <th>Department<br> Facilities</th>
+                <th>Registration Fee</th>
+                <th>Tuition Fee</th>
+                <th>Credit<br>Reservation</th>
+                <th>Credit<br>Sundry</th>
+                <th>Status</th>
+            </tr>
             <tr align='right'>
                 <td colspan="2" style='text-align: left'>Forwarding Balance ({{date("M",strtotime($transactiondate))}})</td>
                 <td>{{number_format($forwarded->sum('cash'),2)}}</td>
                 <td>{{number_format($forwarded->sum('discount'),2)}}</td>
-                <td>{{number_format($forwarded->sum('fape'),2)}}</td>
-                <td>{{number_format($forwarded->sum('dreservation'),2)}}</td>
-                <td>{{number_format($forwarded->sum('deposit'),2)}}</td>
+                <td>{{number_format($forwarded->sum('dsundry'),2)}}</td>
                 
                 <td>{{number_format($forwarded->sum('elearning'),2)}}</td>
                 <td>{{number_format($forwarded->sum('misc'),2)}}</td>
@@ -197,17 +198,14 @@ $chunk = $receipts->chunk(18);
                 <td>{{number_format($forwarded->sum('registration'),2)}}</td>
                 <td>{{number_format($forwarded->sum('tuition'),2)}}</td>
                 <td>{{number_format($forwarded->sum('creservation'),2)}}</td>
-                <td>{{number_format($forwarded->sum('csundry'),2)}}</td>
-                <td></td>
+                <td style='white-space'>{{number_format($forwarded->sum('csundry'),2)}}</td>
                 <td></td>
             </tr>
             <tr align='right'>
                 <td colspan="2" style='text-align: left'>Grand Total</td>
                 <td>{{number_format($grand_total->sum('cash'),2)}}</td>
                 <td>{{number_format($grand_total->sum('discount'),2)}}</td>
-                <td>{{number_format($grand_total->sum('fape'),2)}}</td>
-                <td>{{number_format($grand_total->sum('dreservation'),2)}}</td>
-                <td>{{number_format($grand_total->sum('deposit'),2)}}</td>
+                <td>{{number_format($grand_total->sum('dsundry'),2)}}</td>
                 
                 <td>{{number_format($grand_total->sum('elearning'),2)}}</td>
                 <td>{{number_format($grand_total->sum('misc'),2)}}</td>
@@ -218,11 +216,9 @@ $chunk = $receipts->chunk(18);
                 <td>{{number_format($grand_total->sum('creservation'),2)}}</td>
                 <td>{{number_format($grand_total->sum('csundry'),2)}}</td>
                 <td></td>
-                <td></td>
             </tr>
-            @endif
         </table>
-        @endforeach
+        
     </body>
 </html>
 

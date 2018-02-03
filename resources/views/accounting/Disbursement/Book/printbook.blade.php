@@ -1,5 +1,8 @@
 <?php 
-$chunk = $entries->chunk(19);
+use App\Http\Controllers\Accounting\DisbursementController;
+
+$chunk = DisbursementController::customChunk($entries, $group_count);
+
 $forwarded_voucheramount = 0;
 $forwarded_advToEmp = 0;
 $forwarded_coastOfSales = 0;
@@ -17,12 +20,12 @@ $forwarded_csundry = 0;
     <head>
         <style>
             .payee{
-                width:120px;
+                width:80px;
                 white-space: nowrap;
                 text-align: left
             }
-            td{
-                font-size: 10pt;
+            td,th{
+                font-size: 8pt;
             }
             .report{
                 page-break-after: always
@@ -32,9 +35,13 @@ $forwarded_csundry = 0;
     <body>
 @include('inludes.header')
         @foreach($chunk as $group)
-        <table class="report" border="1" cellspacing="0" cellpadding="2">
+        <table 
+            @if($group != $chunk->last())
+            class="report" 
+            @endif
+            border="1" cellspacing="0" cellpadding="2" width="100%">
             <tr>
-                <th>Voucher No</th><th width='15%'>Payee</th><th>Voucher Amount</th><th>Advance To Employee</th><th>Cost of Sales</th>
+                <th>Voucher No</th><th width='15%'>Payee</th><th>Voucher Amount</th><th>Advances To Employees</th><th>Cost of Sales</th>
                 <th>Instructional  Materials</th><th>Salaries / Allowances</th><th>Personnel <br>Development</th>
                 <th>Other Employee Benefit</th><th>Office Supplies</th><th>Travel Expenses</th>
                 <th>Sundries Debit</th><th>Sundies Credit</th><th>Status</th>
@@ -59,8 +66,8 @@ $forwarded_csundry = 0;
                 <td align='left'>{{$entry->voucherno}}</td>
                 <td align='left'>
                     <div class="payee">
-                        @if(strlen($entry->payee)>20)
-                        {{substr($entry->payee, 0 , 20)}}...
+                        @if(strlen($entry->payee)>15)
+                        {{substr($entry->payee, 0 , 15)}}...
                         @else 
                         {{$entry->payee}}
                         @endif
@@ -76,8 +83,8 @@ $forwarded_csundry = 0;
                 <td>{{number_format($entry->other_emp_benefit,2)}}</td>
                 <td>{{number_format($entry->office_supplies,2)}}</td>
                 <td>{{number_format($entry->travel_expenses,2)}}</td>
-                <td>{{number_format($entry->sundry_debit,2)}}</td>
-                <td>{{number_format($entry->sundry_credit,2)}}</td>
+                <td style="white-space: nowrap;font-size: 8pt;">{!!$entry->sundry_debit_account!!}</td>
+                <td style="white-space: nowrap;font-size: 8pt;">{!!$entry->sundry_credit_account!!}</td>
                 <td align='center'>
                     @if($entry->sundry_credit == 0)
                     OK
@@ -117,94 +124,7 @@ $forwarded_csundry = 0;
             </tr>
         </table>
         @endforeach
-        
-        <?php 
-        $sundryCredit = $sundries->where('cr_db_indic',1)->filter(function($item){
-            return !in_array(data_get($item, 'accountcode'), array(110012,110013,110014,110015,110016,110017,110018,110019,110020,110021));
-        });
-        $sundryDebit = $sundries->where('cr_db_indic',0)->filter(function($item){
-            return !in_array(data_get($item, 'accountcode'), array(120103,440601,440701,580000,500000,500500,500300,120201,590200));
-        });
-        
-        $creditGroup = $sundryCredit->groupBy('accountcode')->chunk(20);
-        $debitGroup = $sundryDebit->groupBy('accountcode')->chunk(20);
-        
-        $creditcol = count($creditGroup);
-        $debitcol = count($debitGroup);
-        ?>
-        
-        <table width="100%" class="report">
-            <tr>
-                <td><h3><b>Debit Sundry Breakdown</b></h3></td>
-            </tr>
-            <tr>
-                @foreach($debitGroup as $debit)
-                <td style="vertical-align: top" width="{{100/3}}%">
-                    <table border="1" cellspacing="0" width="100%">
-                        <tr>
-                            <th>Account</th>
-                            <th>Amount</th>
-                        </tr>
-                        @foreach($debit as $debitsundry)
-                        <tr>
-                            <td>{{$debitsundry->pluck('accountname')->last()}}</td>
-                            <td align='right'>{{number_format($debitsundry->sum('debit'),2)}}</td>
-                        </tr>
-                        @endforeach 
-                        @if($debit == $debitGroup->last())
-                        <tr>
-                            <td>Total</td>
-                            <td  align='right'>{{number_format($sundryDebit->sum('debit'),2)}}</td>
-                        </tr>
-                        @endif
-                    </table>
-                </td>
-                @endforeach
-                @while($debitcol < 3)
-                <td></td>
-                @php
-                $debitcol++;
-                @endphp
-                @endwhile
-            </tr>
-        </table>
-        
-        <table width="100%">
-            <tr>
-                <td><h3><b>Credit Sundry Breakdown</b></h3></td>
-            </tr>
-            <tr>
-                @foreach($creditGroup as $credit)
-                <td style="vertical-align: top" width="{{100/3}}%">
-                    <table border="1" cellspacing="0" width="100%">
-                        <tr>
-                            <th>Account</th>
-                            <th>Amount</th>
-                        </tr>
-                        @foreach($credit as $creditsundry)
-                        <tr>
-                            <td>{{$creditsundry->pluck('accountname')->last()}}</td>
-                            <td align='right'>{{number_format($creditsundry->sum('credit'),2)}}</td>
-                        </tr>
-                        @endforeach 
-                        @if($credit == $creditGroup->last())
-                        <tr>
-                            <td>Total</td>
-                            <td align='right'>{{number_format($sundryCredit->sum('credit'),2)}}</td>
-                        </tr>
-                        @endif
-                    </table>
-                </td>
-                @endforeach
-                @while($creditcol < 3)
-                <td width="{{100/3}}%"></td>
-                @php
-                $creditcol++;
-                @endphp
-                @endwhile
 
-            </tr>
-        </table>
     </body>
 </html>
 
