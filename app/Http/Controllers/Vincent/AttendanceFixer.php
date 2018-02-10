@@ -153,7 +153,7 @@ class AttendanceFixer extends Controller
         
     }
     
-    function getAttendanceInfo($type){
+    static function getAttendanceInfo($type){
         switch($type){
             case 'DAYP':
                 return array('name'=>"Days Present",'order'=>1);

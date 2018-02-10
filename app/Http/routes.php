@@ -288,8 +288,7 @@
     Route::get('trialbalance/{fromtran}/{totran}','Accounting\TrialBalanceController@viewtrilaBalance');
     Route::get('printtrialbalance/{fromtran}/{totran}','Accounting\TrialBalanceController@printtrilaBalance');
     Route::get('downloadtrialbal/{fromtran}/{totran}','Accounting\TrialBalanceController@download');
-    Route::get('generalledger/{basic}/{title}/{fromdate}/{todate}','Accounting\GenLedgerController@index');
-    Route::get('generalledger/print/{basic}/{title}/{fromdate}/{todate}','Accounting\GenLedgerController@printledger');
+
     Route::get('balancesheet','Vincent\BalanceSheetController@index');
     Route::get('dmreport/{trandate}','Accounting\DMReportController@index');
     
@@ -564,8 +563,26 @@ Route::group(['middleware' => ['web','registrar']], function () {
    //Elem Attedance Fixer
    Route::group(['middleware' => 'web'], function () {
        Route::get('/attendanceFix','Vincent\AttendanceFixer@index')->name('attFixer');
-       Route::post('/submitAttFix','Vincent\AttendanceFixer@fetchFromExcel');
-
+       Route::post('/submitAttFix','Vincent\AttendanceFixer@fetchFromExcel');       
        
+       //This is JHS
+       Route::get('/attendanceFixHS','Vincent\AttendanceFixHS@view')->name('attFixer');
+       
+       Route::get('/conductFix/{level}','Update\UpdateController2@view')->name('conFixer');
    });
    //END Elem Attedance Fixer
+   
+   //General Ledger
+   Route::group(['middleware' => 'web'], function () {
+        //Route::get('generalledger/{basic}/{title}/{fromdate}/{todate}','Accounting\GenLedgerController@index');
+       Route::get('generalledger/{account}/{from}/{to}','Accounting\GenLedgerController@view');
+        Route::get('generalledger/print/{basic}/{title}/{fromdate}/{todate}','Accounting\GenLedgerController@printledger');
+   });
+   //END General Ledger
+   
+   //Summary of Main Account
+   Route::group(['middleware' => 'web'], function () {
+       Route::get('accountsummary/{schoolyear}','Accounting\MainAccountSummary@view');
+       Route::get('v','ReportGenerator@randomStudentLedger');
+   });
+   //END Summary of Main Account

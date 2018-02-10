@@ -9,9 +9,11 @@
 
 
 <?php 
+    $students = App\Status::where('schoolyear',$schoolyear)->whereIn('status',array(2,3))->get()->implode(',','idno');
+    
     $totalmains = DB::Select("select acctcode as accountname, sum(amount) as amount, sum(payment) as payment, sum(debitmemo) as debitmemo, "
      . " sum(plandiscount) as plandiscount, "
-     . " sum(otherdiscount) as otherdiscount from ledgers where categoryswitch <= '6' and schoolyear = '$schoolyear' group by acctcode");
+     . " sum(otherdiscount) as otherdiscount from ledgers where categoryswitch <= '6' and idno IN($students) and schoolyear = '$schoolyear' and payment+debitmemo+plandiscount+otherdiscount <= amount group by acctcode");
     
     $allamount = 0;
     $allpayment = 0;

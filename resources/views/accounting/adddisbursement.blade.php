@@ -80,6 +80,10 @@ $bankaccounts = \App\ChartOfAccount::where('acctcode','>','110010')->where('acct
           <label>Payee</label>
           <input type="text" class="form form-control" name="payee" id="payee">
       </div>    
+      <div class="form-group col-md-6">
+          <label>Transaction Date</label>
+          <input type="text" class="form form-control" name="transactiondate" id="transactiondate">
+      </div>
     </div>
     <div style="padding-top: 10px; padding-bottom: auto;background: #fff5cc;height: 100px" class="col-md-12 panel panel-default">
         <div class="col-md-1">
@@ -289,6 +293,7 @@ $(document).ready(function(){
          arrays['idno']="{{\Auth::user()->idno}}";
          arrays['entry_type']=$("#entry_type").val();
          arrays['accountcode'] = $("#account").val();
+         arrays['transactiondate'] = $("#transactiondate").val();
        // alert($("#account"))
 ;         $.ajax({
              type:"GET",

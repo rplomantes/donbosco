@@ -66,7 +66,7 @@ $cancel = "Restore";
             data:arrays,
             errors:function(){
                 alert("Somethig went wrong while updating disbursement. Please call administrator");
-            };
+            }
         });
     }
     

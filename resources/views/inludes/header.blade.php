@@ -50,6 +50,7 @@
     
     <hr>
 </div>
+@if(isset($chunk))
 <div id="footer">Page <span class="pagenum"></span> of 
     @if(count($chunk->last()) <= ($group_count-5))
     {{count($chunk)}}
@@ -57,3 +58,6 @@
     {{count($chunk)+1}}
     @endif
 </div>
+@else
+<div id="footer">Page <span class="pagenum"></span></div>
+@endif

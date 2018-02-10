@@ -2,6 +2,8 @@
 use App\Http\Controllers\Accounting\DisbursementController;
 
 $chunk = DisbursementController::customChunk($entries, $group_count);
+$entrysundies = \App\RptDisbursementBookSundries::where('idno',\Auth::user()->idno)->get();
+
 
 $forwarded_voucheramount = 0;
 $forwarded_advToEmp = 0;
@@ -20,12 +22,10 @@ $forwarded_csundry = 0;
     <head>
         <style>
             .payee{
-                width:80px;
-                white-space: nowrap;
-                text-align: left
+                text-align: left;
             }
             td,th{
-                font-size: 8pt;
+                font-size: 9pt;
             }
             .report{
                 page-break-after: always
@@ -44,7 +44,7 @@ $forwarded_csundry = 0;
                 <th>Voucher No</th><th width='15%'>Payee</th><th>Voucher Amount</th><th>Advances To Employees</th><th>Cost of Sales</th>
                 <th>Instructional  Materials</th><th>Salaries / Allowances</th><th>Personnel <br>Development</th>
                 <th>Other Employee Benefit</th><th>Office Supplies</th><th>Travel Expenses</th>
-                <th>Sundries Debit</th><th>Sundies Credit</th><th>Status</th>
+                <th>Sundries Debit</th><th>Sundies Credit</th><th>Account</th><th>Status</th>
             </tr>
             <tr align='right'>
                 <td align='left' colspan="2">Forwarded Balance</td>
@@ -59,40 +59,56 @@ $forwarded_csundry = 0;
                 <td>{{number_format($forwarded_travel,2)}}</td>
                 <td>{{number_format($forwarded_dsundry,2)}}</td>
                 <td>{{number_format($forwarded_csundry,2)}}</td>
-                <td></td>
+                <td colspan="2"></td>
             </tr>
             @foreach($group as $entry)
+            <?php $sundries = $entrysundies->where('refno',$entry->refno,false);?>
             <tr align='right'>
-                <td align='left'>{{$entry->voucherno}}</td>
-                <td align='left'>
+                <td style='vertical-align: top' rowspan='{{$entry->row_count}}' align='left'>{{$entry->voucherno}}</td>
+                <td style='vertical-align: top' rowspan='{{$entry->row_count}}' align='left'>
                     <div class="payee">
-                        @if(strlen($entry->payee)>15)
-                        {{substr($entry->payee, 0 , 15)}}...
+                        @if(strlen($entry->payee)>25 && $entry->row_count ==1)
+                        {{substr($entry->payee, 0 , 25)}}...
                         @else 
                         {{$entry->payee}}
                         @endif
                     </div>
 
                 </td>
-                <td>{{number_format($entry->voucheramount,2)}}</td>
-                <td>{{number_format($entry->advances_employee,2)}}</td>
-                <td>{{number_format($entry->cost_of_goods,2)}}</td>
-                <td>{{number_format($entry->instructional_materials,2)}}</td>
-                <td>{{number_format($entry->salaries_allowances,2)}}</td>
-                <td>{{number_format($entry->personnel_dev,2)}}</td>
-                <td>{{number_format($entry->other_emp_benefit,2)}}</td>
-                <td>{{number_format($entry->office_supplies,2)}}</td>
-                <td>{{number_format($entry->travel_expenses,2)}}</td>
-                <td style="white-space: nowrap;font-size: 8pt;">{!!$entry->sundry_debit_account!!}</td>
-                <td style="white-space: nowrap;font-size: 8pt;">{!!$entry->sundry_credit_account!!}</td>
-                <td align='center'>
-                    @if($entry->sundry_credit == 0)
+                <td style='vertical-align: top' rowspan='{{$entry->row_count}}'>{{number_format($entry->voucheramount,2)}}</td>
+                <td style='vertical-align: top' rowspan='{{$entry->row_count}}'>{{number_format($entry->advances_employee,2)}}</td>
+                <td style='vertical-align: top' rowspan='{{$entry->row_count}}'>{{number_format($entry->cost_of_goods,2)}}</td>
+                <td style='vertical-align: top' rowspan='{{$entry->row_count}}'>{{number_format($entry->instructional_materials,2)}}</td>
+                <td style='vertical-align: top' rowspan='{{$entry->row_count}}'>{{number_format($entry->salaries_allowances,2)}}</td>
+                <td style='vertical-align: top' rowspan='{{$entry->row_count}}'>{{number_format($entry->personnel_dev,2)}}</td>
+                <td style='vertical-align: top' rowspan='{{$entry->row_count}}'>{{number_format($entry->other_emp_benefit,2)}}</td>
+                <td style='vertical-align: top' rowspan='{{$entry->row_count}}'>{{number_format($entry->office_supplies,2)}}</td>
+                <td style='vertical-align: top' rowspan='{{$entry->row_count}}'>{{number_format($entry->travel_expenses,2)}}</td>
+                <td>@if(count($sundries)>0 && $sundries->first()->debit >0){{number_format($sundries->first()->debit,2)}}@endif</td>
+                <td>@if(count($sundries)>0 && $sundries->first()->credit >0){{number_format($sundries->first()->credit,2)}}@endif</td>
+                <td style="white-space: nowrap;" align='left'>@if(count($sundries)>0){{$sundries->first()->particular}}@endif</td>
+                
+                <td style='vertical-align: top' rowspan='{{$entry->row_count}}' align='center'>
+                    @if($entry->isreverse == 0)
                     OK
                     @else
                     Cancelled
                     @endif
                 </td>
             </tr>
+                @if(count($sundries)>1)
+                    @foreach($sundries as $sundryRec)
+                        @if($sundryRec != $sundries->first())
+                        <tr>
+
+                            <td align='right'>@if($sundryRec->debit > 0) {{number_format($sundryRec->debit,2)}}@endif</td>
+                            <td align='right'>@if($sundryRec->credit > 0){{number_format($sundryRec->credit,2)}}@endif</td>
+                            <td align='left' style="white-space: nowrap;">{{$sundryRec->particular}}</td>
+
+                        </tr>
+                        @endif
+                    @endforeach
+                @endif
             @endforeach
         <?php
             $forwarded_voucheramount = $forwarded_voucheramount+$group->sum('voucheramount');
@@ -120,7 +136,7 @@ $forwarded_csundry = 0;
                 <td>{{number_format($forwarded_travel,2)}}</td>
                 <td>{{number_format($forwarded_dsundry,2)}}</td>
                 <td>{{number_format($forwarded_csundry,2)}}</td>
-                <td></td>
+                <td colspan="2"></td>
             </tr>
         </table>
         @endforeach

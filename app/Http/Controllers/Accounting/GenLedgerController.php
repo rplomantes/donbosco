@@ -6,11 +6,23 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Accounting\Helper;
 
 class GenLedgerController extends Controller
 {
     public function __construct(){
 	$this->middleware(['auth','acct']);
+    }
+    
+    function view($account,$from,$to){
+        //$fiscalyear = Helper::getfiscalyear($to);
+        
+        $acct = \App\ChartOfAccount::get();
+        $accountInfo = $acct->where('acctcode',$account)->first();
+        $credits = \App\Credit::whereBetween('transactiondate',array($from,$to))->where('isreverse',0)->get();
+        $debits = \App\Dedit::whereBetween('transactiondate',array($from,$to))->where('isreverse',0)->get();
+        
+        return view('accounting.GeneralLedger.view',compact('accountInfo','acct','credits','debits','from','to'));
     }
     
     function index($basic,$title,$fromdate,$todate){

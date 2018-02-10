@@ -236,15 +236,14 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
              </table>    
                <h5>Previous Balance</h5>
                <table class="table table-striped"><tr><td>School Year</td><td>Amount</td></tr>
-                   <?php $totalother = 0;
+                   <?php $totalprevious = 0; $totalother = 0;
                    ?>
                @if(count($previousbalances)>0)
+                    @foreach($previousbalances as $prev)
+                    <tr><td>{{$prev->schoolyear}} - {{$prev->schoolyear +1}}</td><td  align="right">{{number_format($prev->amount,2)}}</td></tr>
                     <?php
-                    $annual_prevBalance = $previousbalances->groupBy('schoolyear');
+                    $totalprevious = $totalprevious+$prev->amount;
                     ?>
-                    @foreach($annual_prevBalance as $prev)
-                    <tr><td>{{$prev->pluck('schoolyear')->last()}} - {{$prev->pluck('schoolyear')->last() +1}}</td><td  style='text-align:right'>{{number_format($prev->sum('amount') - $prev->sum('payment'),2)}}</td></tr>
-
                     @endforeach
                @else
                     <tr><td>None</td><td align="right">0.00</td></tr>
@@ -381,6 +380,6 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
    
 
 
-<script src="{{asset('/js/nephilajs/cashier.js')}}"></script>
+<script src="{{asset('/js/nephilajs/cashier2.js')}}"></script>
 
 @stop

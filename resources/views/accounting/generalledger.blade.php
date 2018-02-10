@@ -261,7 +261,7 @@ if(in_array(Auth::user()->accesslevel,array(env('USER_ACCOUNTING'),env('USER_ACC
                 <table width="100%" class="table">
                     
                         <?php
-                                $totalbalance = AcctHelper::getaccttotal($monthlygrandcredit,$monthlygranddebit,$process->entry);                        ?>
+                                $totalbalance = AcctHelper::getaccttotal($monthlygrandcredit,$monthlygranddebit,$process->entry);?>
                     @if($basic == 1 || $basic == 2 || $basic == 3)
                         <tr  style="text-align: right"><td width="25%"  style="text-align: left">Monthly Grand Total</td><td width="25%"><u>{{number_format($monthlygranddebit,2)}}</u></td><td width="25%"><u>{{number_format($monthlygrandcredit,2)}}</u></td><td width="25%"></td></tr>
                     @endif

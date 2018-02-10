@@ -41,24 +41,32 @@ class CashierController extends Controller
            }
        }
        
+//       //get previous balance
+//       $previousbalances = $this->get_prevBalance($idno);
+//       
+//       
+//       if(!(count($previousbalances)>0)){
+//            $previousbalances = DB::Select("select schoolyear, sum(amount)- sum(plandiscount)- sum(otherdiscount)
+//                    - sum(debitmemo) - sum(payment) as amount from ledgers where idno = '$idno' 
+//                    and categoryswitch >= 10 group by schoolyear");   
+//            
+//            if(count($previousbalances)>0){ 
+//                $previousbalances = collect($previousbalances);
+//                 $totalprevious = $totalprevious + $previousbalances->sum('amount');
+//            }
+//       }else{
+//           $totalprevious =$previousbalances->sum('amount') - $previousbalances->sum('payment');
+//           //return $previousbalances->groupBy('schoolyear');
+//       }
+//       
        //get previous balance
-       $previousbalances = $this->get_prevBalance($idno);
-       
-       
-       if(!(count($previousbalances)>0)){
-            $previousbalances = DB::Select("select schoolyear, sum(amount)- sum(plandiscount)- sum(otherdiscount)
-                    - sum(debitmemo) - sum(payment) as amount from ledgers where idno = '$idno' 
-                    and categoryswitch >= 10 group by schoolyear");   
-            
-            if(count($previousbalances)>0){ 
-                $previousbalances = collect($previousbalances);
-                 $totalprevious = $totalprevious + $previousbalances->sum('amount');
-            }
-       }else{
-           $totalprevious =$previousbalances->sum('amount') - $previousbalances->sum('payment');
-           //return $previousbalances->groupBy('schoolyear');
-       }
-       
+       $previousbalances = DB::Select("select schoolyear, sum(amount)- sum(plandiscount)- sum(otherdiscount)
+               - sum(debitmemo) - sum(payment) as amount from ledgers where idno = '$idno' 
+               and categoryswitch >= 10 group by schoolyear");
+       if(count($previousbalances)>0){ 
+       foreach($previousbalances as $prev){
+            $totalprevious = $totalprevious + $prev->amount;
+       }}
 
        
        //get reservation

@@ -51,7 +51,7 @@ class SheetBController extends Controller
         $students = RegistrarHelper::getSectionList($sy,$level,$strand,$section);
         $subjects = RegistrarHelper::getLevelSubjects($level,$strand,$sy,$semester);
         
-        return view('ajax.sheetBTable',compact('students','level','section','semester','subjects','sy','quarter','strand','attendanceQtr','gradeField','acad_field','tech_field'));
+        return view('ajax.sheetBTable',compact('gradeQuarter','students','level','section','semester','subjects','sy','quarter','strand','attendanceQtr','gradeField','acad_field','tech_field'));
     }
     
     function printSheetBList($sy,$level,$strand,$section,$semester,$quarter){

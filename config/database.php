@@ -108,7 +108,18 @@ return [
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
             'strict'    => false,
-        ],        
+        ],
+        'conduct' => [
+            'driver'    => 'mysql',
+            'host'      => env(NULL,'localhost'),
+            'database'  => env(NULL,'conduct_3rd_2017'),
+            'username'  => env(NULL,'root'),
+            'password'  => env(NULL,'rplomantes'),
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+        ],  
 
         'pgsql' => [
             'driver'   => 'pgsql',

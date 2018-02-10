@@ -1,6 +1,15 @@
 @extends('appaccounting')
 @section('content')
-<?php $total = $entries->where('isreverse',0);?>
+<?php 
+$total = $entries->where('isreverse',0);
+$entrysundies = \App\RptDisbursementBookSundries::with('RptDisbursementBook')->where('idno',\Auth::user()->idno)->get();
+
+$totalsundries = $entrysundies->filter(function($item){
+    if($item->RptDisbursementBook->isreverse == 0){
+        return true;
+    }
+});
+?>
 <style>
     .fixed_PD{
         position:fixed;
@@ -58,6 +67,7 @@
                 <th>Travel Expenses</th>
                 <th>Sundries Debit</th>
                 <th>Sundies Credit</th>
+                <th>Particular</th>
                 <th>Status</th>
             </tr>
             @foreach($entries as $entry)
@@ -73,10 +83,29 @@
                 <td>{{number_format($entry->other_emp_benefit,2)}}</td>
                 <td>{{number_format($entry->office_supplies,2)}}</td>
                 <td>{{number_format($entry->travel_expenses,2)}}</td>
-                <td style="white-space:nowrap">{!!$entry->sundry_debit_account!!}</td>
-                <td style="white-space:nowrap">{!!$entry->sundry_credit_account!!}</td>
                 <td>
-                    @if($entry->sundry_credit == 0)
+                    <table border="0" width='100%'>
+                        @foreach($entrysundies->where('refno',$entry->refno,false) as $sundry_entry)
+                        <tr><td align="right">@if($sundry_entry->debit != 0){{number_format($sundry_entry->debit,2)}}@else &nbsp; @endif</td></tr>
+                        @endforeach
+                    </table>
+                </td>
+                <td>
+                    <table border="0" width='100%'>
+                        @foreach($entrysundies->where('refno',$entry->refno,false) as $sundry_entry)
+                        <tr><td align="right">@if($sundry_entry->credit != 0){{number_format($sundry_entry->credit,2)}}@else &nbsp; @endif</td></tr>
+                        @endforeach
+                    </table>
+                </td>
+                <td>
+                    <table border="0" width='100%'>
+                        @foreach($entrysundies->where('refno',$entry->refno,false) as $sundry_entry)
+                        <tr><td align="left" style="white-space:nowrap">{{$sundry_entry->particular}}</td></tr>
+                        @endforeach
+                    </table>
+                </td>
+                <td>
+                    @if($entry->isreversed == 0)
                     OK
                     @else
                     Cancelled
@@ -86,31 +115,22 @@
             @endforeach
             <tr align='right'>
                 <td align='left' colspan="2">Total</td>
-                <td>{{number_format($entries->sum('voucheramount'),2)}}</td>
-                <td>{{number_format($entries->sum('advances_employee'),2)}}</td>
-                <td>{{number_format($entries->sum('cost_of_goods'),2)}}</td>
-                <td>{{number_format($entries->sum('instructional_materials'),2)}}</td>
-                <td>{{number_format($entries->sum('salaries_allowances'),2)}}</td>
-                <td>{{number_format($entries->sum('personnel_dev'),2)}}</td>
-                <td>{{number_format($entries->sum('other_emp_benefit'),2)}}</td>
-                <td>{{number_format($entries->sum('office_supplies'),2)}}</td>
-                <td>{{number_format($entries->sum('travel_expenses'),2)}}</td>
-                <td>{{number_format($entries->sum('sundry_debit'),2)}}</td>
-                <td>{{number_format($entries->sum('sundry_credit'),2)}}</td>
-                <td></td>
+                <td>{{number_format($total->sum('voucheramount'),2)}}</td>
+                <td>{{number_format($total->sum('advances_employee'),2)}}</td>
+                <td>{{number_format($total->sum('cost_of_goods'),2)}}</td>
+                <td>{{number_format($total->sum('instructional_materials'),2)}}</td>
+                <td>{{number_format($total->sum('salaries_allowances'),2)}}</td>
+                <td>{{number_format($total->sum('personnel_dev'),2)}}</td>
+                <td>{{number_format($total->sum('other_emp_benefit'),2)}}</td>
+                <td>{{number_format($total->sum('office_supplies'),2)}}</td>
+                <td>{{number_format($total->sum('travel_expenses'),2)}}</td>
+                <td>{{number_format($total->sum('sundry_debit'),2)}}</td>
+                <td>{{number_format($total->sum('sundry_credit'),2)}}</td>
+                <td colspan="2"></td>
             </tr>
         </table>
     </div>
 </div>
-<?php 
-$sundryCredit = $sundries->where('cr_db_indic',1)->filter(function($item){
-    return !in_array(data_get($item, 'accountcode'), array(110012,110013,110014,110015,110016,110017,110018,110019,110020,110021));
-});
-$sundryDebit = $sundries->where('cr_db_indic',0)->filter(function($item){
-    return !in_array(data_get($item, 'accountcode'), array(120103,440601,440701,580000,500000,500500,500300,120201,590200));
-});
-?>
-
 
 <div class='container-fluid'>
     <div class="col-md-4">
@@ -122,15 +142,17 @@ $sundryDebit = $sundries->where('cr_db_indic',0)->filter(function($item){
                         <th>Account</th>
                         <th>Amount</th>
                     </tr>
-                    @foreach($sundryDebit->groupBy('accountcode') as $debitsundry)
+                    @foreach($totalsundries->groupBy('accountingcode') as $debitsundry)
+                    @if($debitsundry->sum('debit') > 0)
                     <tr>
-                        <td>{{$debitsundry->pluck('accountname')->last()}}</td>
+                        <td>{{$debitsundry->pluck('particular')->last()}}</td>
                         <td align='right'>{{number_format($debitsundry->sum('debit'),2)}}</td>
                     </tr>
+                    @endif
                     @endforeach 
                     <tr>
                         <td>Total</td>
-                        <td  align='right'>{{number_format($sundryDebit->sum('debit'),2)}}</td>
+                        <td  align='right'>{{number_format($totalsundries->sum('debit'),2)}}</td>
                     </tr>
                 </table>
             </div>
@@ -146,15 +168,17 @@ $sundryDebit = $sundries->where('cr_db_indic',0)->filter(function($item){
                         <th>Account</th>
                         <th>Amount</th>
                     </tr>
-                    @foreach($sundryCredit->groupBy('accountcode') as $creditsundry)
+                    @foreach($totalsundries->groupBy('accountingcode') as $creditsundry)
+                    @if($creditsundry->sum('credit') > 0)
                     <tr>
-                        <td>{{$creditsundry->pluck('accountname')->last()}}</td>
+                        <td>{{$creditsundry->pluck('particular')->last()}}</td>
                         <td align='right'>{{number_format($creditsundry->sum('credit'),2)}}</td>
                     </tr>
+                    @endif
                     @endforeach 
                     <tr>
                         <td>Total</td>
-                        <td align='right'>{{number_format($sundryCredit->sum('credit'),2)}}</td>
+                        <td align='right'>{{number_format($totalsundries->sum('credit'),2)}}</td>
                     </tr>
                 </table>
             </div>

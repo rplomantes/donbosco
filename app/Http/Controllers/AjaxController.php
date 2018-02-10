@@ -1171,9 +1171,10 @@ class AjaxController extends Controller
                     $entry_type=Input::get('entry_type');
                     $creditamount = Input::get('creditamount');
                     $accountcode = Input::get('accountcode');
+                    $transactiondate = Input::get('transactiondate');
                     
                     $addaccounting = new \App\Accounting;
-                    $addaccounting->transactiondate = \Carbon\Carbon::now();
+                    $addaccounting->transactiondate = $transactiondate;
                     $addaccounting->refno = $refno;
                     $addaccounting->referenceid = $voucherno;
                     $addaccounting->accountcode = $accountcode;
@@ -1196,7 +1197,7 @@ class AjaxController extends Controller
                             $add = new \App\Dedit;
                             $add->amount=$update->debit;
                         }
-                         $add->transactiondate = \Carbon\Carbon::now();
+                         $add->transactiondate = $transactiondate;
                          $add->refno = $update->refno;
                          $add->receiptno = $update->referenceid;
                          $add->accountingcode = $update->accountcode;
