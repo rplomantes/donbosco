@@ -1,10 +1,11 @@
 <?php
-$forwarded = $records->where('refno','forwarded');
-        
-$receipts = $records->where('transactiondate',$transactiondate);
-$subtotal = $receipts->where('isreverse',0);
+$forwarded = $records->where('refno','forwarded',false);
+$receipts = $records->where('transactiondate',$transactiondate,false);
 
-$grand_total = $records->where('isreverse',0);
+$subtotal = $receipts->where('isreverse',0,false);
+$grand_total = $records->where('isreverse',0,false);
+
+$entrysundies = \App\RptCashReceiptBookSundries::with('RptCashreceiptBook')->where('idno',\Auth::user()->idno)->get();
 ?>
 <style>
     td{
@@ -13,13 +14,12 @@ $grand_total = $records->where('isreverse',0);
 </style>
 <table class='table table-bordered'>
     <thead>
-        <tr><td colspan="14">CASH RECEIPT BOOK - {{$transactiondate}}</td></tr>
         <tr>
             <th>Receipt No.</th>
             <th>Name</th>
             <th>Debit<br>Cash / Check</th>
             <th>Debit<br>Discount</th>
-            <th>Debit<br>Sundry</th>
+            
             <th>E - Learning</th>
             <th>Misc</th>
             <th>Book</th>
@@ -27,8 +27,29 @@ $grand_total = $records->where('isreverse',0);
             <th>Registration Fee</th>
             <th>Tuition Fee</th>
             <th>Credit<br>Reservation</th>
-            <th>Credit<br>Sundry</th>
+            
+            <th style="text-align: center">Sundry</th>
+            <th></th>
+            <th></th>
             <th>Status</th>
+            
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>Debit</th>
+            <th>Credit</th>
+            <th>Account</th>
+            <th></th>
+        </tr>
         </tr>
     </thead>
     <tbody>
@@ -49,24 +70,27 @@ $grand_total = $records->where('isreverse',0);
             <td></td>
         </tr>
         @foreach($receipts as $receipt)
+        
+            <?php $receiptsundry = $entrysundies->where('refno',$receipt->refno,false);?>
+        
         <tr style='text-align: right'>
-            <td style='text-align: left'>{{$receipt->receiptno}}</td>
-            <td style='text-align: left'>{{$receipt->from}}</td>
-
-            <td>{{$receipt->cash}}</td>
-            <td>{{$receipt->discount}}</td>
-            <td style="white-space: nowrap">{!!rtrim($receipt->dsundry_account,"<br>")!!}</td>
-
-
-            <td>{{$receipt->elearning}}</td>
-            <td>{{$receipt->misc}}</td>
-            <td>{{$receipt->book}}</td>
-            <td>{{$receipt->dept}}</td>
-            <td>{{$receipt->registration}}</td>
-            <td>{{$receipt->tuition}}</td>
-            <td>{{$receipt->creservation}}</td>
-            <td style="white-space: nowrap">{!!rtrim($receipt->csundry_account,"<br>")!!}</td>
-            <td>
+            <td rowspan='{{$receipt->row_count}}' style='text-align: left'>{{$receipt->receiptno}}</td>
+            <td rowspan='{{$receipt->row_count}}' style='text-align: left'>{{$receipt->from}}</td>
+                
+            <td rowspan='{{$receipt->row_count}}'>{{$receipt->cash}}</td>
+            <td rowspan='{{$receipt->row_count}}'>{{$receipt->discount}}</td>
+                
+            <td rowspan='{{$receipt->row_count}}'>{{$receipt->elearning}}</td>
+            <td rowspan='{{$receipt->row_count}}'>{{$receipt->misc}}</td>
+            <td rowspan='{{$receipt->row_count}}'>{{$receipt->book}}</td>
+            <td rowspan='{{$receipt->row_count}}'>{{$receipt->dept}}</td>
+            <td rowspan='{{$receipt->row_count}}'>{{$receipt->registration}}</td>
+            <td rowspan='{{$receipt->row_count}}'>{{$receipt->tuition}}</td>
+            <td rowspan='{{$receipt->row_count}}'>{{$receipt->creservation}}</td>
+            <td>@if(count($receiptsundry)>0 && $receiptsundry->first()->debit >0){{$receiptsundry->first()->debit}}@endif</td>
+            <td>@if(count($receiptsundry)>0 && $receiptsundry->first()->credit >0){{$receiptsundry->first()->credit}}@endif</td>
+            <td style="white-space: nowrap;" align='left'>@if(count($receiptsundry)>0){{$receiptsundry->first()->particular}}@endif</td>
+            <td rowspan='{{$receipt->row_count}}' align='center'>
                 @if($receipt->isreverse == 0)
                 OK
                 @else
@@ -74,6 +98,30 @@ $grand_total = $records->where('isreverse',0);
                 @endif
             </td>
         </tr>
+            
+       @if(count($receiptsundry)>1)
+            @foreach($receiptsundry as $sundryRec)
+                @if($sundryRec != $receiptsundry->first())
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td align='right'>@if($sundryRec->debit > 0) {{$sundryRec->debit}}@endif</td>
+                    <td align='right'>@if($sundryRec->credit > 0){{$sundryRec->credit}}@endif</td>
+                    <td align='left' style="white-space: nowrap;">{{$sundryRec->particular}}</td>
+                    <td></td>
+                </tr>
+                @endif
+            @endforeach
+        @endif
         @endforeach
         <tr style='text-align: right'>
             <td colspan="2" style='text-align: left'>Total</td>

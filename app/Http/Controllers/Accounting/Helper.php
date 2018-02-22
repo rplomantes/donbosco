@@ -56,4 +56,26 @@ class Helper extends Controller
     static function fiscalBeginning($fiscalyear){
         return $fiscalyear."-05-01";
     }
+    
+    static function get_Department($office){
+        $department = "None";
+        
+        $departments = \App\CtrAcctDep::where('sub_department',$office)->first();
+        
+        if($departments){
+            $department = $departments->main_department;
+        }
+        
+        return $department;
+    }
+    
+    static function get_nonStudent($idno){
+        $name = "";
+        $student = \App\NonStudent::where('idno',$idno)->first();
+        if($student){
+            $name = $student->fullname;
+        }
+        
+        return $name;
+    }
 }

@@ -1,7 +1,7 @@
 @extends('appaccounting')
 @section('content')
 <?php 
-$total = $entries->where('isreverse',0);
+$total = $entries->where('isreverse',0,false);
 $entrysundies = \App\RptDisbursementBookSundries::with('RptDisbursementBook')->where('idno',\Auth::user()->idno)->get();
 
 $totalsundries = $entrysundies->filter(function($item){
@@ -54,21 +54,24 @@ $totalsundries = $entrysundies->filter(function($item){
         
         <table class='table table-bordered table-striped'>
             <tr>
-                <th>Voucher No</th>
-                <th width='15%'>Payee</th>
-                <th>Voucher Amount</th>
-                <th>Advances To Employees</th>
-                <th>Cost of Sales</th>
-                <th>Instructional  Materials</th>
-                <th>Salaries / Allowances</th>
-                <th>Personnel <br>Development</th>
-                <th>Other Employee Benefit</th>
-                <th>Office Supplies</th>
-                <th>Travel Expenses</th>
+                <th rowspan="2">Voucher No</th>
+                <th rowspan="2" width='15%'>Payee</th>
+                <th rowspan="2">Voucher Amount</th>
+                <th rowspan="2">Advances To Employees</th>
+                <th rowspan="2">Cost of Sales</th>
+                <th rowspan="2">Instructional  Materials</th>
+                <th rowspan="2">Salaries / Allowances</th>
+                <th rowspan="2">Personnel <br>Development</th>
+                <th rowspan="2">Other Employee Benefit</th>
+                <th rowspan="2">Office Supplies</th>
+                <th rowspan="2">Travel Expenses</th>
+                <th colspan="3" style="text-align:center">Sundries</th>
+                <th rowspan="2">Status</th>
+            </tr>
+            <tr>
                 <th>Sundries Debit</th>
                 <th>Sundies Credit</th>
-                <th>Particular</th>
-                <th>Status</th>
+                <th>Account</th>
             </tr>
             @foreach($entries as $entry)
             <tr align='right'>
@@ -163,7 +166,7 @@ $totalsundries = $entrysundies->filter(function($item){
         <div class='panel panel-default'>
             <div class='panel-heading'>Credit Sundry</div>
             <div class='panel-body'>
-                <table class='table table-bordered'>
+                <table class='table table-bordered table-responsive'>
                     <tr>
                         <th>Account</th>
                         <th>Amount</th>
@@ -181,6 +184,16 @@ $totalsundries = $entrysundies->filter(function($item){
                         <td align='right'>{{number_format($totalsundries->sum('credit'),2)}}</td>
                     </tr>
                 </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-2">
+        <div class="panel panel-danger">
+            <div class="panel-body">
+                <div>
+                    <a  href="{{url('printdisbursementsundriespdf',array($from,$trandate))}}"  class='btn btn-danger col-md-12'>Print Sundrires</a>
+                </div>                
             </div>
         </div>
     </div>

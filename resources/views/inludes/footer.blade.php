@@ -1,5 +1,20 @@
-<style type="text/css">
-#footer { position: fixed; bottom:0px;border-top:1px solid gray;} .pagenum:before {content: counter(page); }
+<style>    
+    #footer{
+        position: fixed; 
+        bottom:0px;
+    }
+    .pagenum:before {content: counter(page); }
+    
 </style>
 
-<div id="footer">Page <span class="pagenum"></span></div>    
+@if(isset($chunk))
+<div id="footer">Page <span class="pagenum"></span> of 
+    @if(count($chunk->last()) <= ($group_count- 6))
+    {{count($chunk)}}
+    @else
+    {{count($chunk)+1}}
+    @endif
+</div>
+@else
+<div id="footer">Page <span class="pagenum"></span></div>
+@endif

@@ -20,16 +20,12 @@
         font-size: 15px; 
     }
     
-    #footer{
-        position: fixed; 
-        bottom:0px;
-    }
-    .pagenum:before {content: counter(page); }
 </style>
+<script src="{{asset('/js/jquery.js')}}"></script>
 <div id="header">
 
-    <img src="<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/images/logo.png"  style="position:absolute;width:80px;height:auto;left:30%;top:20px;">
-    <table border = '0'celpacing="0" cellpadding = "0" align="center" width="100%">
+    <div style="position:relative;top:10px;left:-200px;"><img src="<?php echo $_SERVER['DOCUMENT_ROOT']; ?>/images/logo.png"  style="width:80px;height:auto;"></div>
+    <table border = '0' celpacing="0" cellpadding = "0" align="center" style="position: relative;top:-90px">
         <tr>
             <td>
                 <p align="center">
@@ -40,7 +36,9 @@
                 </p>
             </td>
         </tr>
-        <tr><td style="font-size:12pt;text-align:center;"><b><u>{{$title}}</u></b></td></tr>
+        <tr>
+            <td style="font-size:12pt;text-align:center;"><b><u>{{$title}}</u></b></td>
+        </tr>
         @if(isset($transactiondate))
         <tr><td style="text-align:center;">For {{date("M d, Y",strtotime($transactiondate))}}</td></tr>
         @else
@@ -48,16 +46,6 @@
         @endif
     </table>
     
-    <hr>
+    <hr style="position: relative;top:-90px">
+
 </div>
-@if(isset($chunk))
-<div id="footer">Page <span class="pagenum"></span> of 
-    @if(count($chunk->last()) <= ($group_count-5))
-    {{count($chunk)}}
-    @else
-    {{count($chunk)+1}}
-    @endif
-</div>
-@else
-<div id="footer">Page <span class="pagenum"></span></div>
-@endif

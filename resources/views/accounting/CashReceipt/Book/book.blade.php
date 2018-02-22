@@ -1,20 +1,21 @@
 @extends('appaccounting')
 @section('content')
 <?php
-$forwarded = $records->where('refno','forwarded');
-        
-$receipts = $records->where('transactiondate',$transactiondate);
-$subtotal = $receipts->where('isreverse',0);
+$forwarded = $records->where('refno','forwarded',false);
+$receipts = $records->where('transactiondate',$transactiondate,false);
 
-$grand_total = $records->where('isreverse',0);
+$subtotal = $receipts->where('isreverse',0,false);
+$grand_total = $records->where('isreverse',0,false);
 
-$sundries = $credits->where('isreverse',0)->where('transactiondate',$transactiondate)->filter(function($item){
-                    return !in_array(data_get($item, 'accountingcode'), array('420200','420400','440400','420100','420000','120100','410000','210400'));
-                    });
-                    
-$dsundries = $debits->where('isreverse',0)->where('transactiondate',$transactiondate)->filter(function($item){
-                                                return !in_array(data_get($item, 'paymenttype'), array('1','4'));
-                                                    });
+
+$entrysundies = \App\RptCashReceiptBookSundries::with('RptCashreceiptBook')->where('idno',\Auth::user()->idno)->get();
+
+$totalsundries = $entrysundies->filter(function($item){
+    if($item->RptCashreceiptBook->isreverse == 0){
+        return true;
+    }
+});
+
 ?>
 
 <style>
@@ -56,28 +57,33 @@ $dsundries = $debits->where('isreverse',0)->where('transactiondate',$transaction
     <table class='table table-bordered'>
         <thead>
             <tr>
-                <th>Receipt No.</th>
-                <th>Name</th>
-                <th>Debit<br>Cash / Check</th>
-                <th>Debit<br>Discount</th>
-                <th>Debit<br>Sundry</th>
-                <th>E - Learning</th>
-                <th>Misc</th>
-                <th>Book</th>
-                <th>Department<br> Facilities</th>
-                <th>Registration Fee</th>
-                <th>Tuition Fee</th>
-                <th>Credit<br>Reservation</th>
-                <th>Credit<br>Sundry</th>
-                <th>Status</th>
+                <th rowspan="2">Receipt No.</th>
+                <th rowspan="2">Name</th>
+                <th rowspan="2">Debit<br>Cash / Check</th>
+                <th rowspan="2">Debit<br>Discount</th>
+
+                <th rowspan="2">E - Learning</th>
+                <th rowspan="2">Misc</th>
+                <th rowspan="2" rowspan="2">Book</th>
+                <th rowspan="2">Department<br> Facilities</th>
+                <th rowspan="2">Registration Fee</th>
+                <th rowspan="2">Tuition Fee</th>
+                <th rowspan="2">Credit<br>Reservation</th>
+                <th colspan="3" style="text-align:center">SUNDRIES</th>
+                <th rowspan="2">Status</th>
             </tr>
+            <tr>
+                <th>Debit<br>Sundry</th>
+                <th>Credit<br>Sundry</th>
+                <th>Account</th>
+            </tr>
+            
         </thead>
         <tbody>
             <tr style='text-align: right'>
                 <td colspan="2" style='text-align: left'>Forwarding Balance ({{date("M",strtotime($transactiondate))}})</td>
                 <td>{{number_format($forwarded->sum('cash'),2)}}</td>
                 <td>{{number_format($forwarded->sum('discount'),2)}}</td>
-                <td>{{number_format($forwarded->sum('dsundry'),2)}}</td>
                 
                 <td>{{number_format($forwarded->sum('elearning'),2)}}</td>
                 <td>{{number_format($forwarded->sum('misc'),2)}}</td>
@@ -86,8 +92,10 @@ $dsundries = $debits->where('isreverse',0)->where('transactiondate',$transaction
                 <td>{{number_format($forwarded->sum('registration'),2)}}</td>
                 <td>{{number_format($forwarded->sum('tuition'),2)}}</td>
                 <td>{{number_format($forwarded->sum('creservation'),2)}}</td>
+                
+                <td>{{number_format($forwarded->sum('dsundry'),2)}}</td>
                 <td>{{number_format($forwarded->sum('csundry'),2)}}</td>
-                <td></td>
+                <td colspan="2"></td>
             </tr>
             @foreach($receipts as $receipt)
             <tr style='text-align: right'>
@@ -96,7 +104,6 @@ $dsundries = $debits->where('isreverse',0)->where('transactiondate',$transaction
                 
                 <td>{{number_format($receipt->cash,2)}}</td>
                 <td>{{number_format($receipt->discount,2)}}</td>
-                <td style="white-space: nowrap">{!!$receipt->dsundry_account!!}</td>
 
                 
                 <td>{{number_format($receipt->elearning,2)}}</td>
@@ -106,7 +113,28 @@ $dsundries = $debits->where('isreverse',0)->where('transactiondate',$transaction
                 <td>{{number_format($receipt->registration,2)}}</td>
                 <td>{{number_format($receipt->tuition,2)}}</td>
                 <td>{{number_format($receipt->creservation,2)}}</td>
-                <td style="white-space: nowrap">{!!$receipt->csundry_account!!}</td>
+                
+                <td>
+                    <table border="0" width='100%'>
+                        @foreach($entrysundies->where('refno',$receipt->refno,false) as $sundry_entry)
+                        <tr><td align="right">@if($sundry_entry->debit != 0){{number_format($sundry_entry->debit,2)}}@else &nbsp; @endif</td></tr>
+                        @endforeach
+                    </table>
+                </td>
+                <td>
+                    <table border="0" width='100%'>
+                        @foreach($entrysundies->where('refno',$receipt->refno,false) as $sundry_entry)
+                        <tr><td align="right">@if($sundry_entry->credit != 0){{number_format($sundry_entry->credit,2)}}@else &nbsp; @endif</td></tr>
+                        @endforeach
+                    </table>
+                </td>
+                <td>
+                    <table border="0" width='100%'>
+                        @foreach($entrysundies->where('refno',$receipt->refno,false) as $sundry_entry)
+                        <tr><td align="left" style="white-space:nowrap">{{$sundry_entry->particular}}</td></tr>
+                        @endforeach
+                    </table>
+                </td>
                 <td>
                     @if($receipt->isreverse == 0)
                     OK
@@ -120,7 +148,7 @@ $dsundries = $debits->where('isreverse',0)->where('transactiondate',$transaction
                 <td colspan="2" style='text-align: left'>Total</td>
                 <td>{{number_format($subtotal->sum('cash'),2)}}</td>
                 <td>{{number_format($subtotal->sum('discount'),2)}}</td>
-                <td>{{number_format($subtotal->sum('dsundry'),2)}}</td>
+                
                 
                 <td>{{number_format($subtotal->sum('elearning'),2)}}</td>
                 <td>{{number_format($subtotal->sum('misc'),2)}}</td>
@@ -129,8 +157,10 @@ $dsundries = $debits->where('isreverse',0)->where('transactiondate',$transaction
                 <td>{{number_format($subtotal->sum('registration'),2)}}</td>
                 <td>{{number_format($subtotal->sum('tuition'),2)}}</td>
                 <td>{{number_format($subtotal->sum('creservation'),2)}}</td>
+                
+                <td>{{number_format($subtotal->sum('dsundry'),2)}}</td>
                 <td>{{number_format($subtotal->sum('csundry'),2)}}</td>
-                <td></td>
+                <td colspan="2"></td>
             </tr>
             <tr>
                 <td colspan='16'><br></td>
@@ -139,7 +169,7 @@ $dsundries = $debits->where('isreverse',0)->where('transactiondate',$transaction
                 <td colspan="2" style='text-align: left'>Current Balance</td>
                 <td>{{number_format($grand_total->sum('cash'),2)}}</td>
                 <td>{{number_format($grand_total->sum('discount'),2)}}</td>
-                <td>{{number_format($grand_total->sum('dsundry'),2)}}</td>
+
                 
                 <td>{{number_format($grand_total->sum('elearning'),2)}}</td>
                 <td>{{number_format($grand_total->sum('misc'),2)}}</td>
@@ -148,57 +178,66 @@ $dsundries = $debits->where('isreverse',0)->where('transactiondate',$transaction
                 <td>{{number_format($grand_total->sum('registration'),2)}}</td>
                 <td>{{number_format($grand_total->sum('tuition'),2)}}</td>
                 <td>{{number_format($grand_total->sum('creservation'),2)}}</td>
+                
+                <td>{{number_format($grand_total->sum('dsundry'),2)}}</td>
                 <td>{{number_format($grand_total->sum('csundry'),2)}}</td>
-                <td></td>
+                <td colspan="2"></td>
             </tr>
         </tbody>
     </table>
 </div>
 <br>
-<div class="col-md-4">
-    <div class="panel">
-        <div class="panel-heading">Credit Sundries List</div>
-        <div class="panel-body">
-            <table class='table table-bordered'>
-                <tr>
-                    <td>Account</td>
-                    <td>Amount</td>
-                </tr>
-                @foreach($sundries->groupBy('accountingcode') as $sundry)
-                <tr>
-                    <td>{{$sundry->pluck('acctcode')->last()}}</td>
-                    <td style='text-align: right'>{{number_format($sundry->sum('amount'),2)}}</td>
-                </tr>
-                @endforeach
-                <tr>
-                    <td>Total</td>
-                    <td style='text-align: right'>{{number_format($sundries->sum('amount'),2)}}</td>
-                </tr>
-            </table>
+
+<div class='container-fluid'>
+    <div class="col-md-4">
+        <div class='panel panel-default'>
+            <div class='panel-heading'>Debit Sundry</div>
+            <div class='panel-body'>
+                <table class='table table-bordered'>
+                    <tr>
+                        <th>Account</th>
+                        <th>Amount</th>
+                    </tr>
+                    @foreach($totalsundries->groupBy('accountingcode') as $debitsundry)
+                    @if($debitsundry->sum('debit') > 0)
+                    <tr>
+                        <td>{{$debitsundry->pluck('particular')->last()}}</td>
+                        <td align='right'>{{number_format($debitsundry->sum('debit'),2)}}</td>
+                    </tr>
+                    @endif
+                    @endforeach 
+                    <tr>
+                        <td>Total</td>
+                        <td  align='right'>{{number_format($totalsundries->sum('debit'),2)}}</td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
-</div>
-
-<div class="col-md-4">
-    <div class="panel">
-        <div class="panel-heading">Debit Sundries List</div>
-        <div class="panel-body">
-            <table class="table table-bordered">
-                <tr>
-                    <td>Account</td>
-                    <td>Amount</td>
-                </tr>
-                @foreach($dsundries->groupBy('accountingcode') as $dsundry)
-                <tr>
-                    <td>{{$dsundry->pluck('acctcode')->last()}}</td>
-                    <td style='text-align: right'>{{number_format($dsundry->sum('amount'),2)}}</td>
-                </tr>
-                @endforeach
-                <tr>
-                    <td>Total</td>
-                    <td style='text-align: right'>{{number_format($dsundries->sum('amount'),2)}}</td>
-                </tr>
-            </table>
+    
+    <div class="col-md-4">
+        <div class='panel panel-default'>
+            <div class='panel-heading'>Credit Sundry</div>
+            <div class='panel-body'>
+                <table class='table table-bordered'>
+                    <tr>
+                        <th>Account</th>
+                        <th>Amount</th>
+                    </tr>
+                    @foreach($totalsundries->groupBy('accountingcode') as $creditsundry)
+                    @if($creditsundry->sum('credit') > 0)
+                    <tr>
+                        <td>{{$creditsundry->pluck('particular')->last()}}</td>
+                        <td align='right'>{{number_format($creditsundry->sum('credit'),2)}}</td>
+                    </tr>
+                    @endif
+                    @endforeach 
+                    <tr>
+                        <td>Total</td>
+                        <td align='right'>{{number_format($totalsundries->sum('credit'),2)}}</td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 </div>

@@ -193,7 +193,7 @@
     Route::get('makepaymentschedule',function(){
         return view("update.makepaymentschedule");
     });
-    Route::post('makepaymentschedule','Update\UpdateController@makepaymentschedule');
+    Route::post('makepaymentschedule','Accounting\Assesment\MakePaymentSchedule@makeschedule');
     //Registrar VINCENT
     Route::get('/reportcards/{level}/{section}','Vincent\GradeController@viewSectionGrade');    
     Route::get('/reportcard/{level}/{section}/{quarter}','Vincent\GradeController@viewSectionKinder');    
@@ -527,6 +527,7 @@ Route::group(['middleware' => ['web','registrar']], function () {
    //Pre-registration
    Route::group(['middleware' => 'web'], function () {
        Route::get('/preregister','Registrar\PreRegistration\PreregistrationController@preregForm');
+       Route::get('/studentHits','Registrar\PreRegistration\Helper@findHits');
 
        
    });
@@ -542,10 +543,11 @@ Route::group(['middleware' => ['web','registrar']], function () {
    
    //Disbursement Books
     Route::group(['middleware' => 'web'], function () {
-        Route::get('disbursementbook/{from}/{trandate}','Accounting\DisbursementController@disbursementbook');
-        Route::get('printdisbursementpdf/{from}/{trandate}','Accounting\DisbursementController@printdisbursementpdf');
+        Route::get('disbursementbook/{from}/{trandate}','Accounting\Disbursement\Book@disbursementbook');
+        Route::get('printdisbursementpdf/{from}/{trandate}','Accounting\Disbursement\Book@printdisbursementpdf');
+        Route::get('printdisbursementsundriespdf/{from}/{trandate}','Accounting\Disbursement\Book@printdisbursementsundriespdf');
         
-        Route::get('dldisbursementbook/{from}/{trandate}','Accounting\DisbursementController@disbursementbookexcel');
+        Route::get('dldisbursementbook/{from}/{trandate}','Accounting\Disbursement\Book@disbursementbookexcel');
     });
    //END Disbursement Books
    
@@ -586,3 +588,36 @@ Route::group(['middleware' => ['web','registrar']], function () {
        Route::get('v','ReportGenerator@randomStudentLedger');
    });
    //END Summary of Main Account
+   
+   //Student Transaction History
+   Route::group(['middleware' => 'web'], function () {
+       Route::get('transactionhistory/{idno}/{schoolyear}/{report}','Accounting\Student\TransanctionHistory\ViewController@view');
+   });
+   //END Student Transaction History
+   
+   //Assessment Maker
+   Route::group(['middleware' => 'web'], function () {
+       Route::get('assessment/accountbreakdown/index','Accounting\Assesment\AccountBreakdown@index')->name('indexbreakdown');
+       Route::get('assessment/accountbreakdown/{level}/{course?}','Accounting\Assesment\AccountBreakdown@create')->name('accountbreakdown');
+       Route::post('submitassessment','Accounting\Assesment\AccountBreakdown@saveAssessment');
+       
+       Route::get('assessment/books/index','Accounting\Assesment\Book@index')->name('indexbooks');
+       Route::get('assessment/books/{level}/{course?}','Accounting\Assesment\Book@create')->name('assessmentbook');
+       
+       Route::get('generatedsched/{schoolyear}/{department}/{level?}','Accounting\Assesment\GeneratedSchedule@view');
+   });
+   //Ajax
+   Route::get('getstrandtrack/{level}','Accounting\Assesment\Helper@get_strand_course');
+   //END Assessment Maker
+   
+   //Registrar Assessment
+   Route::group(['middleware' => 'web'], function () {
+       Route::get('assess/{idno}','Registrar\Assessment\StudentAssessment@viewAssessment');
+   });
+   //END Registrar Assessment
+   
+   //Student Reservation
+   Route::group(['middleware' => 'web'], function () {
+       Route::get('reservationlist/{idno}','Accounting\Reservation\ReservationPaymentList@view');
+   });
+   //END Student Reservation

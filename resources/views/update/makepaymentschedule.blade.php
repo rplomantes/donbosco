@@ -2,8 +2,8 @@
 @section('content')
 <div class="container">
 <?php
-$plans = DB::Select( "select distinct plan from ctr_ref_schedules");
-$levels = \App\CtrLevel::orderBy('level')->get();
+$plans = DB::Select( "select distinct plan from ctr_ref_schedules order By id desc");
+$levels = \App\CtrLevel::orderBy('id')->get();
 $strands = DB::Select("select distinct strand from ctr_sections");
 ?>    
 <form method="POST" action = "makepaymentschedule">
@@ -26,7 +26,8 @@ $strands = DB::Select("select distinct strand from ctr_sections");
     </div>   
     <div class="form form-group">
         <label>stand</label>
-        <select class="form-control" name="strand" id="strand">
+        <select class="form-control" name="course" id="strand">
+            <option value="">None</option>
             @foreach($strands as $strand)
                 <option value="{{$strand->strand}}">{{$strand->strand}}</option>
             @endforeach

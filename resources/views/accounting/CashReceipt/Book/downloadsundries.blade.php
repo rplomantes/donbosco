@@ -1,49 +1,47 @@
-<?php
-$sundries = $credits->where('isreverse',0)->where('transactiondate',$transactiondate)->filter(function($item){
-                    return !in_array(data_get($item, 'accountingcode'), array('420200','420400','440400','420100','420000','120100','410000','210400'));
-                    });
-                    
-$dsundries = $debits->where('isreverse',0)->where('transactiondate',$transactiondate)->filter(function($item){
-                                                return !in_array(data_get($item, 'paymenttype'), array('1','4'));
-                                                    });
-?>
 <style>
-    td{
+    td,th{
         border:1px solid #000000;
     }
 </style>
-<table border="1">
-    <tr><td colspan="2">Credit Sundries</td></tr>
+<table>
     <tr>
-        <td>Account</td>
-        <td>Amount</td>
+        <th colspan="2">Debit Sundries</th>
     </tr>
-    @foreach($sundries->groupBy('accountingcode') as $sundry)
     <tr>
-        <td>{{$sundry->pluck('acctcode')->last()}}</td>
-        <td style='text-align: right'>{{$sundry->sum('amount')}}</td>
+        <th>Account</th>
+        <th>Amount</th>
     </tr>
-    @endforeach
+    @foreach($totalsundries->groupBy('accountingcode') as $debitsundry)
+    @if($debitsundry->sum('debit') > 0)
+    <tr>
+        <td>{{$debitsundry->pluck('particular')->last()}}</td>
+        <td align='right'>{{number_format($debitsundry->sum('debit'),2)}}</td>
+    </tr>
+    @endif
+    @endforeach 
     <tr>
         <td>Total</td>
-        <td style='text-align: right'>{{$sundries->sum('amount')}}</td>
+        <td  align='right'>{{number_format($totalsundries->sum('debit'),2)}}</td>
     </tr>
 </table>
-
-<table border="1">
-    <tr><td colspan="2">Debit Sundries</td></tr>
+<table >
     <tr>
-        <td>Account</td>
-        <td>Amount</td>
+        <th colspan="2">Debit Sundries</th>
     </tr>
-    @foreach($dsundries->groupBy('accountingcode') as $dsundry)
     <tr>
-        <td>{{$dsundry->pluck('acctcode')->last()}}</td>
-        <td style='text-align: right'>{{$dsundry->sum('amount')}}</td>
+        <th>Account</th>
+        <th>Amount</th>
     </tr>
-    @endforeach
+    @foreach($totalsundries->groupBy('accountingcode') as $creditsundry)
+    @if($creditsundry->sum('credit') > 0)
+    <tr>
+        <td>{{$creditsundry->pluck('particular')->last()}}</td>
+        <td align='right'>{{number_format($creditsundry->sum('credit'),2)}}</td>
+    </tr>
+    @endif
+    @endforeach 
     <tr>
         <td>Total</td>
-        <td style='text-align: right'>{{$dsundries->sum('amount')}}</td>
+        <td align='right'>{{number_format($totalsundries->sum('credit'),2)}}</td>
     </tr>
 </table>

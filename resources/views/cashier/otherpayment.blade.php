@@ -364,6 +364,43 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
                     </div>
                     
                     <div class="form-group">
+                        <div class="col-md-2">
+                            <select name="basicaccount8" class="form-control" onchange = "getAccount(this.value,'groupaccount8')">
+                                <option value="" hidden="hidden">--Select Account--</option>
+                                <option value = "1">Assets</option>
+                                <option value = "2">Liabilities</option>
+                                <option value = "3">Equity</option>
+                                <option value = "4">Income</option>
+                                <option value = "5">Expense</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <select name="groupaccount8" id="groupaccount8" class="form-control" onchange = "getParticular(this.value,'particular8')">
+                            </select>    
+                        </div>    
+                    
+                        <div class="col-md-3" id="accountparticular8">  
+                            <select class="form-control" name="particular8">
+                            </select>  
+                        </div>
+                        
+                        <div class="col-md-2" id="acct_department8">  
+                            <select class="form-control" name="acct_department8">
+                                <option value="None">None</option>
+                                @foreach($acct_departments as $acct_dept)
+                                <option value = "{{$acct_dept->sub_department}}">{{$acct_dept->sub_department}}</option>
+                                @endforeach
+                            </select>  
+                        </div>
+                           
+                        
+                        <div class="col-md-2">
+                            <input type="text" style="text-align:right" placeholder = "0.00" onkeypress = "validateother(event,'cash')" class="form-control divide" id = "amount8" name="amount8" onblur="ctotal()">
+                       </div>
+                    </div>
+                    
+                    <div class="form-group">
                         <div class="col-md-4">
                         </div>
                         <div class="col-md-4" align="right">
@@ -407,10 +444,15 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
         </div>
         <div class="form-group" style="background-color: #C6C6FF;">
              <div style="padding: 10px;">
-                        
+                      @if($deposit>0)
                      <div class="form-group">
-                      <label>FAPE : </label> <input type="text" style="text-align:right" placeholder = "0.00" onkeypress = "validateother(event,'cashrendered')" class="form-control divide" id = "fape" name="fape">
+                         <label>Student Deposit : </label> <input type="text" style="text-align:right" placeholder = "0.00" onkeypress = "validateother(event,'cashrendered')" class="form-control divide" value="{{$deposit}}" id = "use_deposit" name="use_deposit">
+                         <div><medium class=" pull-right alert-danger">Remaining Deposit: <span class="divide">{{number_format($deposit,2)}}</span></medium></div>
+                         
                      </div>
+                      @else
+                      <input type="hidden" value="{{$deposit}}" id = "use_deposit" name="use_deposit">
+                      @endif
                      <div class="form-group">
                       <label>Cash Rendered : </label> <input type="text" style="text-align:right" placeholder = "0.00" onkeypress = "validateother(event,'cashrendered')" class="form-control divide" id = "cash" name="cash">
                      </div>
@@ -486,6 +528,9 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
                 else if(particular == 'groupaccount7'){
                  $('#groupaccount7').html(data);
                 }
+                else if(particular == 'groupaccount8'){
+                 $('#groupaccount8').html(data);
+                }
               } 
             }); 
    
@@ -519,6 +564,9 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
                 }
                 else if(particular == 'particular7'){
                  $('#accountparticular7').html(data);
+                }
+                else if(particular == 'particular8'){
+                 $('#accountparticular8').html(data);
                 }
               } 
             }); 
@@ -631,8 +679,11 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
             var amount5 = document.getElementById('amount5').value != "" ? eval(document.getElementById('amount5').value):0;
             var amount6 = document.getElementById('amount6').value != "" ? eval(document.getElementById('amount6').value):0;
             var amount7 = document.getElementById('amount7').value != "" ? eval(document.getElementById('amount7').value):0;
-            document.getElementById('totalcredit').value = (r + deposit + amount1 + amount2 + amount3 + amount4 + amount5 + amount6 + amount7).toFixed(2);
+            var amount8 = document.getElementById('amount8').value != "" ? eval(document.getElementById('amount8').value):0;
+            document.getElementById('totalcredit').value = (r + deposit + amount1 + amount2 + amount3 + amount4 + amount5 + amount6 + amount7 + amount8).toFixed(2);
             var totalcredit = eval(document.getElementById('totalcredit').value);
+            
+                var totaluse_deposit = document.getElementById('use_deposit').value != "" ? eval(document.getElementById('use_deposit').value):0;
                 var totalcash = document.getElementById('cash').value != "" ? eval(document.getElementById('cash').value):0;
                 var totalcheck = document.getElementById('receivecheck').value  != "" ? eval(document.getElementById('receivecheck').value):0;
                 if(totalcredit == totalcash+totalcheck){
@@ -655,5 +706,24 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
                 }
             }
         });
+        @if($deposit>0)
+        $('#use_deposit').keyup(function(e){
+            var shouldBe = 0;
+            var totalcred = parseFloat($('#totalcredit').val(),2);
+            var totaldep = parseFloat({{$deposit}},2);
+           if($('#use_deposit').val() != ""){
+               if(totalcred > totaldep){
+                   shouldBe = totaldep;
+               }else{
+                   shouldBe = totalcred;
+               }
+               
+               if(parseFloat($('#use_deposit').val(),2) > shouldBe){
+                   $('#use_deposit').val(shouldBe);
+               }
+               
+           } 
+        });
+        @endif
 </script>
 @stop

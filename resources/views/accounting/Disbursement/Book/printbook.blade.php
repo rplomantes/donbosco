@@ -1,7 +1,10 @@
 <?php 
-use App\Http\Controllers\Accounting\DisbursementController;
-
-$chunk = DisbursementController::customChunk($entries, $group_count);
+use App\Http\Controllers\Accounting\Disbursement\Book;
+if(count($entries) > 1){
+$chunk = Book::customChunk($entries, $group_count);
+}else {
+$chunk = $entries->chunk($group_count);
+}
 $entrysundies = \App\RptDisbursementBookSundries::where('idno',\Auth::user()->idno)->get();
 
 
@@ -34,6 +37,7 @@ $forwarded_csundry = 0;
     </head>
     <body>
 @include('inludes.header')
+@include('inludes.footer')
         @foreach($chunk as $group)
         <table 
             @if($group != $chunk->last())
@@ -41,10 +45,24 @@ $forwarded_csundry = 0;
             @endif
             border="1" cellspacing="0" cellpadding="2" width="100%">
             <tr>
-                <th>Voucher No</th><th width='15%'>Payee</th><th>Voucher Amount</th><th>Advances To Employees</th><th>Cost of Sales</th>
-                <th>Instructional  Materials</th><th>Salaries / Allowances</th><th>Personnel <br>Development</th>
-                <th>Other Employee Benefit</th><th>Office Supplies</th><th>Travel Expenses</th>
-                <th>Sundries Debit</th><th>Sundies Credit</th><th>Account</th><th>Status</th>
+                <th rowspan="2">Voucher No</th>
+                <th rowspan="2" width='15%'>Payee</th>
+                <th rowspan="2">Voucher Amount</th>
+                <th rowspan="2">Advances To Employees</th>
+                <th rowspan="2">Cost of Sales</th>
+                <th rowspan="2">Instructional  Materials</th>
+                <th rowspan="2">Salaries / Allowances</th>
+                <th rowspan="2">Personnel <br>Development</th>
+                <th rowspan="2">Other Employee Benefit</th>
+                <th rowspan="2">Office Supplies</th>
+                <th rowspan="2">Travel Expenses</th>
+                <th colspan="3" style="text-align:center">Sundries</th>
+                <th rowspan="2">Status</th>
+            </tr>
+            <tr>
+                <th>Sundries Debit</th>
+                <th>Sundies Credit</th>
+                <th>Account</th>
             </tr>
             <tr align='right'>
                 <td align='left' colspan="2">Forwarded Balance</td>

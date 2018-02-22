@@ -840,6 +840,11 @@ class CashierController extends Controller
         $status = \App\Status::where('idno',$request->idno)->first();
         $fiscal = \App\CtrFiscalyear::first();
         $student=  \App\User::where('idno',$request->idno)->first();
+        $debitdeposit = 0;
+        
+        if($request->use_deposit !=""){
+            $debitdeposit = $request->use_deposit;
+        }
         
         if(count($status)>0){
             $sy = $status->schoolyear;
@@ -1102,6 +1107,33 @@ class CashierController extends Controller
             
         }
         
+         if($request->amount8 > 0){
+            $creditreservation = new \App\Credit;
+            $creditreservation->idno = $request->idno;
+            $creditreservation->transactiondate = Carbon::now();
+            $creditreservation->refno = $refno;
+            $creditreservation->receiptno = $or;
+            $creditreservation->categoryswitch = '9';
+            $creditreservation->entry_type='1';
+            $creditreservation->accountingcode=$this->getaccountingcode($request->groupaccount8);
+            $creditreservation->acctcode=$request->groupaccount8;
+            if(isset($request->particular7) && ($request->particular8 != "" || $request->particular8 != NULL)){
+                $creditreservation->description=$request->particular8;
+                $creditreservation->receipt_details=$request->particular8;
+            }else{
+                $creditreservation->description=$request->groupaccount8;
+                $creditreservation->receipt_details=$request->groupaccount8;
+            }
+            $creditreservation->amount = $request->amount8;
+            $creditreservation->postedby = \Auth::user()->idno;
+            $creditreservation->schoolyear=$sy;
+            $creditreservation->fiscalyear=$fiscal->fiscalyear;
+            $creditreservation->acct_department = $this->mainDepartment($request->acct_department8);
+            $creditreservation->sub_department = $request->acct_department8;
+            $creditreservation->save(); 
+            
+        }
+        
         //debit
         $iscbc = 0;
          if($request->iscbc =="cbc"){
@@ -1139,7 +1171,7 @@ class CashierController extends Controller
             $debit->bank_branch=$request->bank_branch;
             $debit->check_number=$request->check_number;
             $debit->iscbc=$iscbc;
-        $debit->amount = $request->totalcredit - $request->check;
+            $debit->amount = $request->totalcredit - $request->check - $debitdeposit;
             $debit->receiveamount = $request->cash;
             $debit->checkamount=$request->check;
             $debit->receivefrom=$student->lastname . ", " . $student->firstname . " " . $student->extensionname . " " .$student->middlename;
@@ -1151,6 +1183,11 @@ class CashierController extends Controller
             $debit->sub_department = "None";
             $debit->postedby= \Auth::user()->idno;
             $debit->save();
+            
+        if($debitdeposit > 0){
+            $this->debit_reservation_discount($refno, $or,$request->idno,8, $request->use_deposit,'Student Deposit');
+            $this->reduce_deposit($request->use_deposit,$request->idno);
+        }
         
         
         return ReceiptController::viewreceipt($refno, $request->idno);

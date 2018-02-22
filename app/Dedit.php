@@ -11,5 +11,8 @@ class Dedit extends Model
         return $this->belongsTo("\App\User");
         
     }
-//
+    
+    function Credit(){
+        return $this->hasMany("\App\Credit","refno","refno");
+    }
 }

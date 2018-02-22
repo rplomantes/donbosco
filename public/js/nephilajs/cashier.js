@@ -158,6 +158,7 @@ function dosubmit(){
 
     var totaldebit =  0;
     var totalcredit =  0;
+    var fape =  0;
     if(document.getElementById("receivecash") !== null){
         
         if(document.getElementById("receivecash").value !== ""){
@@ -176,6 +177,7 @@ function dosubmit(){
     if(document.getElementById("fape") !== null){
         if(document.getElementById("fape").value !== ""){
             totaldebit = totaldebit+eval(document.getElementById("fape").value);
+            fape =  eval(document.getElementById("fape").value);
         }
         
     }
@@ -190,6 +192,13 @@ function dosubmit(){
     if(document.getElementById("check") !== null){
         if(document.getElementById("check").value !== ""){
             totaldebit = totaldebit+eval(document.getElementById("check").value);
+        }
+        
+    }
+    
+    if(document.getElementById("use_deposit") !== null){
+        if(document.getElementById("use_deposit").value !== ""){
+            totaldebit = totaldebit+eval(document.getElementById("use_deposit").value);
         }
         
     }
@@ -210,12 +219,16 @@ function dosubmit(){
 
     
     if(confirm("Continue to process payment now?")){
-        if(eval(totaldebit) !== 0){
+        if(eval(totaldebit) >= totalcredit){
+
+//        if(eval(totaldebit) > totalcredit && (totalcredit != 0 || fape > 0)){
             if(allowsubmit == 0){
                 return false;
+            }else{
+                allowsubmit = 0;
+                return true;
             }
-            allowsubmit = 0;
-            return true;
+
 
         }else{
             alert("Cannot continue transaction.");

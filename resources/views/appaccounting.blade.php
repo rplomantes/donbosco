@@ -245,7 +245,7 @@
     digits: 2,
     autoGroup: true,
     rightAlign: false,
-    oncleared: function () { self.Value(''); },
+    oncleared: function (){ self.Value(''); },
     autoUnmask : true,
     removeMaskOnSubmit  :   true
 });

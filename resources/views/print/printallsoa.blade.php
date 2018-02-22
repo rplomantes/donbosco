@@ -277,13 +277,15 @@ th {
                 <tr><td style="border: 1px solid black;">&nbsp;&nbsp;&nbsp;&nbsp;Debit Memo</td><td style="border: 1px solid black;" align="right">({{number_format($totdm,2)}})</tr>
                 <tr><td style="border: 1px solid black;">&nbsp;&nbsp;&nbsp;&nbsp;Payment</td><td style="border: 1px solid black;" align="right">({{number_format($totpayment,2)}})</tr>
                 <tr><td style="border: 1px solid black;">Total Balance</td><td align="right" style="border: 1px solid black;">{{number_format($totamount-$totdiscount-$totdm-$totpayment,2)}}</tr>
+               
                 <tr style="font-size:11pt;font-weight:bold;border: 1px solid black;"><td>Due Date</td><td style="border: 1px solid black;" align="right">
                         @if(in_array($statuses->plan,array('Monthly 1','Monthly 2')))
                         {{date('M d, Y',strtotime($trandate))}}
                         @else
                         {{date('M d, Y',strtotime($trandate))}}
                         @endif
-</tr>
+                </tr>
+
                 <tr style="font-size:11pt;font-weight:bold;border: 1px solid black;"><td>Total Due</td><td style="border: 1px solid black;" align="right">{{number_format($totaldue,2)}}</tr>
             </table>
             <br>
@@ -309,7 +311,7 @@ th {
         </td>
     </tr>    
 </table>
-    
+
     <table style="position:absolute;bottom:40px">
         <tr>
             <td width="70%">

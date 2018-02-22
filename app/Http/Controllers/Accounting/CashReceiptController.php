@@ -17,7 +17,7 @@ class CashReceiptController extends Controller
     function cashreceiptbook($transactiondate){
         $rangedate = date("Y-m",strtotime($transactiondate));
         
-        $debits = \App\Dedit::whereBetween('transactiondate', array($rangedate."-01",$transactiondate))->where('entry_type',1)->orderBy('receiptno')->get();
+        $debits  =  \App\Dedit::whereBetween('transactiondate', array($rangedate."-01",$transactiondate))->where('entry_type',1)->orderBy('receiptno')->get();
         $credits = \App\Credit::whereBetween('transactiondate', array($rangedate."-01",$transactiondate))->where('entry_type',1)->get();
         
         $receipts = $debits->where('transactiondate',$transactiondate)->unique('refno');
@@ -52,14 +52,19 @@ class CashReceiptController extends Controller
     function cashreceiptexcel($transactiondate){
         $rangedate = date("Y-m",strtotime($transactiondate));
         
-        $debits = \App\Dedit::whereBetween('transactiondate', array($rangedate."-01",$transactiondate))->where('entry_type',1)->get();
-        $credits = \App\Credit::whereBetween('transactiondate', array($rangedate."-01",$transactiondate))->where('entry_type',1)->get();
+        $entrysundies = \App\RptCashReceiptBookSundries::with('RptCashreceiptBook')->where('idno',\Auth::user()->idno)->get();
+
+        $totalsundries = $entrysundies->filter(function($item){
+            if($item->RptCashreceiptBook->isreverse == 0){
+                return true;
+            }
+        });
         
         $records = \App\RptCashreceiptBook::where('idno',\Auth::user()->idno)->get();
         
         $name = "Cash Receipt Books_".$transactiondate;
         
-        Excel::create($name, function($excel) use($records,$transactiondate,$credits,$debits) {
+        Excel::create($name, function($excel) use($records,$transactiondate,$totalsundries) {
             $excel->sheet('Book', function($sheet) use($records,$transactiondate){
                     $sheet->loadView('accounting.CashReceipt.Book.downloadbook')->with('records',$records)->with('transactiondate',$transactiondate)
                             ->setFontSize(10)
@@ -75,11 +80,44 @@ class CashReceiptController extends Controller
                                 'K'=> '#,##0.00',
                                 'L'=> '#,##0.00',
                                 'M'=> '#,##0.00',
-                            ));
+                            ))->setAutoSize(true);
+
+                            $sheet->mergeCells('A1:A2');
+                            $sheet->mergeCells('B1:B2');
+                            $sheet->mergeCells('C1:C2');
+                            $sheet->mergeCells('D1:D2');
+                            $sheet->mergeCells('E1:E2');
+                            $sheet->mergeCells('F1:F2');
+                            $sheet->mergeCells('G1:G2');
+                            $sheet->mergeCells('H1:H2');
+                            $sheet->mergeCells('I1:I2');
+                            $sheet->mergeCells('J1:J2');
+                            $sheet->mergeCells('K1:K2');
+                            $sheet->mergeCells('L1:N1');
+                            $sheet->mergeCells('O1:O2');
+                    $currentrow = 3;
+                    foreach($records as $entry){
+                        if($entry->row_count > 1){
+                            
+                            $sheet->mergeCells('A'.$currentrow.':A'.($currentrow+($entry->row_count-1)));
+                            $sheet->mergeCells('B'.$currentrow.':B'.($currentrow+($entry->row_count-1)));
+                            $sheet->mergeCells('C'.$currentrow.':C'.($currentrow+($entry->row_count-1)));
+                            $sheet->mergeCells('D'.$currentrow.':D'.($currentrow+($entry->row_count-1)));
+                            $sheet->mergeCells('E'.$currentrow.':E'.($currentrow+($entry->row_count-1)));
+                            $sheet->mergeCells('F'.$currentrow.':F'.($currentrow+($entry->row_count-1)));
+                            $sheet->mergeCells('G'.$currentrow.':G'.($currentrow+($entry->row_count-1)));
+                            $sheet->mergeCells('H'.$currentrow.':H'.($currentrow+($entry->row_count-1)));
+                            $sheet->mergeCells('I'.$currentrow.':I'.($currentrow+($entry->row_count-1)));
+                            $sheet->mergeCells('J'.$currentrow.':J'.($currentrow+($entry->row_count-1)));
+                            $sheet->mergeCells('K'.$currentrow.':K'.($currentrow+($entry->row_count-1)));
+                            
+                        }
+                        $currentrow = $currentrow+$entry->row_count;
+                    }
             });
             
-            $excel->sheet('Sundries', function($sheet) use($credits,$transactiondate,$debits){
-                    $sheet->loadView('accounting.CashReceipt.Book.downloadsundries')->with('credits',$credits)->with('debits',$debits)->with('transactiondate',$transactiondate)
+            $excel->sheet('Sundries', function($sheet) use($transactiondate,$totalsundries){
+                    $sheet->loadView('accounting.CashReceipt.Book.downloadsundries')->with('totalsundries',$totalsundries)->with('transactiondate',$transactiondate)
                             ->setFontSize(10)
                             ->setColumnFormat(array(
                                 'B'=> '#,##0.00',
@@ -93,58 +131,88 @@ class CashReceiptController extends Controller
     function processbook($receipts,$debits,$credits){
         ini_set('max_execution_time', 0);
         \App\RptCashreceiptBook::where('idno',\Auth::user()->idno)->delete();
+        \App\RptCashReceiptBookSundries::where('idno',\Auth::user()->idno)->delete();
         
-        foreach($receipts as $receipt){
-            $credit = $credits->where('refno',$receipt->refno);
-            $debit  = $debits->where('refno',$receipt->refno);
+        foreach($receipts->unique('refno') as $receipt){
+            $credit = $credits->where('refno',$receipt->refno,false);
+            $debit  = $debits->where('refno',$receipt->refno,false);
                 $reportEntry = new \App\RptCashreceiptBook();
                 $reportEntry->idno = \Auth::user()->idno;
                 $reportEntry->from = $receipt->receivefrom;
                 $reportEntry->refno = $receipt->refno;
                 $reportEntry->transactiondate = $receipt->transactiondate;
                 $reportEntry->receiptno = $receipt->receiptno;
-                $reportEntry->cash = $debit->where('paymenttype','1')->sum('amount')+$debit->where('paymenttype',1)->sum('checkamount');
-                $reportEntry->discount = $debit->where('paymenttype','4')->sum('amount');
-                $reportEntry->fape = $debit->where('paymenttype','7')->sum('amount');
-                $reportEntry->dreservation = $debit->where('paymenttype','5')->sum('amount');
-                $reportEntry->deposit = $debit->where('paymenttype','8')->sum('amount');
+                $reportEntry->cash = $debit->where('paymenttype',1,false)->sum('amount')+$debit->where('paymenttype',1,false)->sum('checkamount');
+                $reportEntry->discount = $debit->where('paymenttype',4,false)->sum('amount');
                 
                 $debitSundries = $debit->filter(function($item){
                                                 return !in_array(data_get($item, 'paymenttype'), array('1','4'));
                                                     });
-                $debit_accts = $this->creditSundries($debitSundries);
+//                $debit_accts = $this->creditSundries($debitSundries);
+//                $reportEntry->dsundry_account = $debit_accts['accounts'];
                                                     
                 $reportEntry->dsundry = $debitSundries->sum('amount');
-                $reportEntry->dsundry_account = $debit_accts['accounts'];
-                $debit_row = $debit_accts['rows'];
+                $debit_row = $this->processSundries($debitSundries,'debit');
                                                     
-                $reportEntry->elearning = $credit->where('accountingcode',420200)->sum('amount');
-                $reportEntry->misc = $credit->where('accountingcode',420400)->sum('amount');
-                $reportEntry->book = $credit->where('accountingcode',440400)->sum('amount');
-                $reportEntry->dept = $credit->where('accountingcode',420100)->sum('amount');
-                $reportEntry->registration = $credit->where('accountingcode',420000)->sum('amount');
+                $reportEntry->elearning = $credit->where('accountingcode',420200,false)->sum('amount');
+                $reportEntry->misc = $credit->where('accountingcode',420400,false)->sum('amount');
+                $reportEntry->book = $credit->where('accountingcode',440400,false)->sum('amount');
+                $reportEntry->dept = $credit->where('accountingcode',420100,false)->sum('amount');
+                $reportEntry->registration = $credit->where('accountingcode',420000,false)->sum('amount');
                 $reportEntry->tuition = $credit->whereIn('accountingcode',array(120100,410000))->sum('amount');
-                $reportEntry->creservation = $credit->where('accountingcode',210400)->sum('amount');
+                $reportEntry->creservation = $credit->where('accountingcode',210400,false)->sum('amount');
                 
                 $creditSundries = $credit->filter(function($item){
                                                 return !in_array(data_get($item, 'accountingcode'), array(420200,420400,440400,420100,420000,120100,410000,210400));
                                                     });               
-                $credit_accts = $this->creditSundries($creditSundries);
+//                $credit_accts = $this->creditSundries($creditSundries);
+//                $reportEntry->csundry_account = $credit_accts['accounts'];
                 
                 $reportEntry->csundry = $creditSundries->sum('amount');                                    
-                $reportEntry->csundry_account = $credit_accts['accounts'];
-                $credit_row = $credit_accts['rows'];
+                $credit_row = $this->processSundries($creditSundries,'credit');
                 
-                if($credit_row > $debit_row){
-                    $reportEntry->row_count = $credit_row;
-                }else{
-                    $reportEntry->row_count = $debit_row;
-                }
+                
+                $reportEntry->row_count = ($credit_row+$debit_row)-1;
                 
                 $reportEntry->isreverse = $receipt->isreverse;
                 $reportEntry->save();
                                                     
         }
+    }
+    
+    function processSundries($accounts,$table){
+           
+           $entries = $accounts->groupBy("accountingcode");
+           $rowcount = $entries->count();
+           foreach($entries as $entry){
+               $debit = 0;
+               $credit = 0;
+               $sundries = \App\RptCashReceiptBookSundries::where('idno',\Auth::user()->idno)
+                       ->where('refno',$entry->pluck('refno')->last())
+                       ->where('accountingcode',$entry->pluck('accountingcode')->last())->first();
+               if(!$sundries){
+                    $sundries = new \App\RptCashReceiptBookSundries();
+                    $sundries->idno = \Auth::user()->idno;
+                    $sundries->refno = $entry->pluck('refno')->last();
+                    $sundries->particular = $entry->pluck('acctcode')->last();
+                    $sundries->accountingcode = $entry->pluck('accountingcode')->last();
+               }
+               
+               if($table == 'credit'){
+                   $sundries->credit = $entry->sum('amount');
+               }else{
+                   $sundries->debit = $entry->sum('amount');
+               }
+               
+               $sundries->save();
+
+           }
+           
+           if($rowcount > 0){
+               return $rowcount;
+           }else{
+               return 1;
+           }
     }
     
     function creditSundries($credit){
@@ -177,29 +245,29 @@ class CashReceiptController extends Controller
     }
     
     function forwarded($transactiondate,$debits,$credits){
-            $credit = $credits->where('isreverse',0)->filter(function($item) use($transactiondate){
+            $credit = $credits->where('isreverse',0,false)->filter(function($item) use($transactiondate){
                 return data_get($item, 'transactiondate') !== $transactiondate;
                 });
-            $debit  = $debits->where('isreverse',0)->filter(function($item) use($transactiondate){
+            $debit  = $debits->where('isreverse',0,false)->filter(function($item) use($transactiondate){
                 return data_get($item, 'transactiondate') !== $transactiondate;
                 });
                 
                 $reportEntry = new \App\RptCashreceiptBook();
                 $reportEntry->idno = \Auth::user()->idno;
                 $reportEntry->refno = "forwarded";
-                $reportEntry->cash = $debit->where('paymenttype','1')->sum('amount')+$debit->where('paymenttype',1)->sum('checkamount');
-                $reportEntry->discount = $debit->where('paymenttype','4')->sum('amount');
+                $reportEntry->cash = $debit->where('paymenttype',1,false)->sum('amount')+$debit->where('paymenttype',1,false)->sum('checkamount');
+                $reportEntry->discount = $debit->where('paymenttype',4,false)->sum('amount');
                 $reportEntry->dsundry = $debit->filter(function($item){
                                                 return !in_array(data_get($item, 'paymenttype'), array('1','4'));
                                                     });
                 
-                $reportEntry->elearning = $credit->where('accountingcode',420200)->sum('amount');
-                $reportEntry->misc = $credit->where('accountingcode',420400)->sum('amount');
-                $reportEntry->book = $credit->where('accountingcode',440400)->sum('amount');
-                $reportEntry->dept = $credit->where('accountingcode',420100)->sum('amount');
-                $reportEntry->registration = $credit->where('accountingcode',420000)->sum('amount');
-                $reportEntry->tuition = $credit->whereIn('accountingcode',array(120100,410000))->sum('amount');
-                $reportEntry->creservation = $credit->where('accountingcode',210400)->sum('amount');
+                $reportEntry->elearning = $credit->where('accountingcode',420200,false)->sum('amount');
+                $reportEntry->misc = $credit->where('accountingcode',420400,false)->sum('amount');
+                $reportEntry->book = $credit->where('accountingcode',440400,false)->sum('amount');
+                $reportEntry->dept = $credit->where('accountingcode',420100,false)->sum('amount');
+                $reportEntry->registration = $credit->where('accountingcode',420000,false)->sum('amount');
+                $reportEntry->tuition = $credit->whereIn('accountingcode',array(120100,410000),false)->sum('amount');
+                $reportEntry->creservation = $credit->where('accountingcode',210400,false)->sum('amount');
                 $reportEntry->csundry = $credit->filter(function($item){
                                                 return !in_array(data_get($item, 'accountingcode'), array(420200,420400,440400,420100,420000,120100,410000,210400));
                                                     })->sum('amount');
