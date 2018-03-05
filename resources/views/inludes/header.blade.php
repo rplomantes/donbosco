@@ -17,7 +17,7 @@
         right: 0px; 
         height: 80px; 
         text-align: center;
-        font-size: 15px; 
+        font-size: 12pt; 
     }
     
 </style>
@@ -37,7 +37,7 @@
             </td>
         </tr>
         <tr>
-            <td style="font-size:12pt;text-align:center;"><b><u>{{$title}}</u></b></td>
+            <td style="font-size:12pt;text-align:center;"><b><u>{!!$title!!}</u></b></td>
         </tr>
         @if(isset($transactiondate))
         <tr><td style="text-align:center;">For {{date("M d, Y",strtotime($transactiondate))}}</td></tr>

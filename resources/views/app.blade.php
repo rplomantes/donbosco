@@ -234,6 +234,7 @@
                                     <a href="#"  class="dropdown-toggle" data-toggle="dropdown" role="button">Others<span class="caret"></span></a>
                                     <ul class="dropdown-menu">
                                         <li><a href="{{url('promotion',$sy)}}"><i class="fa fa-btn"></i>Promotion</a></li>
+                                        <li><a href="{{url('transcript/list',$sy)}}"><i class="fa fa-btn"></i>Transcript</a></li>
                                      </ul>   
                                 
                                 </li>

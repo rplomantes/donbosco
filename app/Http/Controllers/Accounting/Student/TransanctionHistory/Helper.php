@@ -40,6 +40,9 @@ class Helper extends \App\Http\Controllers\Accounting\Student\StudentInformation
             $type[] = "CHECK";
         }
         
+        if($transaction->filter(function($item){return $item->paymenttype != 1;})->sum('amount')>0){
+            $type[] = "OTHERS";
+        }
         return implode("/",$type);
     }
     

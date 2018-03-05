@@ -604,6 +604,8 @@ Route::group(['middleware' => ['web','registrar']], function () {
        Route::get('assessment/books/index','Accounting\Assesment\Book@index')->name('indexbooks');
        Route::get('assessment/books/{level}/{course?}','Accounting\Assesment\Book@create')->name('assessmentbook');
        
+       Route::get('assessment/discount/index','Accounting\Assesment\Discount@view')->name('indexdiscount');
+       
        Route::get('generatedsched/{schoolyear}/{department}/{level?}','Accounting\Assesment\GeneratedSchedule@view');
    });
    //Ajax
@@ -621,3 +623,25 @@ Route::group(['middleware' => ['web','registrar']], function () {
        Route::get('reservationlist/{idno}','Accounting\Reservation\ReservationPaymentList@view');
    });
    //END Student Reservation
+   
+   
+   //Student Transcript
+   Route::group(['middleware' => 'web'], function () {
+       Route::get('transcript/shs/{idno}','Registrar\Transcript\SeniorTranscript@index')->name('transcriptshs');
+       Route::get('transcript/list/{schoolyear}/{grade?}','Registrar\Transcript\StudentList@view');
+   });
+   //END Student Transcript
+   
+   //Student Transcript
+   Route::group(['middleware' => 'web'], function () {
+       Route::get('newcashier/{idno}','StudentLedger\ViewController@mainview')->name('cashierledger');
+   });
+   //END Student Transcript
+   
+   //Account Summary
+   Route::group(['middleware' => 'web'], function () {
+       Route::get('/summary/individualaccount','Accounting\IndividualAccountSmmary\ReportController@index');
+       Route::post('/summary/individualaccount','Accounting\IndividualAccountSmmary\ReportController@submitRequest')->name('postsummary');
+       Route::post('/summary/individualaccount/print','Accounting\IndividualAccountSmmary\ReportController@printAccount')->name('printiassummary');
+   });
+   //End Account Summary

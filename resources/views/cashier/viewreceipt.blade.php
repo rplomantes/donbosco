@@ -60,7 +60,11 @@
           
             <tr><td colspan="2">
            <table width="60%" border="0" cellspacing="0" cellpadding="0" style="font-size:9pt"> 
-               <tr><td>Bank</td> <td>: </td><td align="right">{{$debit_cash->bank_branch}}</td><td rowspan="6" width="20">&nbsp;</td><td rowspan="6" valign="top">Particular: <br>{{$debit_cash->remarks}}</tr>
+               <tr><td>Bank</td> 
+                   <td>: </td>
+                   <td align="right">{{$debit_cash->bank_branch}}</td>
+                   <td rowspan="6" width="20">&nbsp;</td>
+                   <td rowspan="6" valign="top">Particular: <br><span id='summonningField'>{{$debit_cash->remarks}}</span></tr>
             <tr><td>Check No</td> <td>: </td><td align="right">{{$debit_cash->check_number}}</td></tr>       
           <tr><td>Check Amount<td> :</td> </td><td align="right">{{number_format($debit_cash->checkamount,2)}}</td></tr>
           <tr><td>Cash Amount <td> :</td> </td><td align="right">{{number_format($debit_cash->amount,2)}}</td></tr> 
@@ -120,5 +124,8 @@
     $(document).ready(function(){
         $('#printreceipt').focus();
     })
+    
+    @if(($tdate->transactiondate == date('Y-m-d') && Auth::user()->idno == $posted->idno)||Auth::user()->accesslevel==env('USER_ACCOUNTING_HEAD'))
+    @endif
 </script>    
 @stop

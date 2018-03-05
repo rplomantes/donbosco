@@ -24,6 +24,9 @@ class AttendanceController extends Controller
     }
     
     static function computeQuarterAttendance($idno,$sy,$quarter){
+        if(!is_array($quarter)){
+            $quarter = array($quarter);
+        }
         $getdayp = \App\Attendance::where('idno',$idno)->where('schoolyear',$sy)->whereIn('quarter',$quarter)->where('attendancetype','DAYP')->get();
         $getdayt = \App\Attendance::where('idno',$idno)->where('schoolyear',$sy)->whereIn('quarter',$quarter)->where('attendancetype','DAYT')->get();
         $getdaya = \App\Attendance::where('idno',$idno)->where('schoolyear',$sy)->whereIn('quarter',$quarter)->where('attendancetype','DAYA')->get();

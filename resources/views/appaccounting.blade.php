@@ -17,14 +17,23 @@
         
 	<link href="{{ asset('/css/app_1.css') }}" rel="stylesheet">
         <link href="{{ asset('/css/fileinput.css') }}" rel="stylesheet">
-	<link href="{{ asset('/css/datepicker.css') }}" rel="stylesheet">
+        
+        <link href="{{ asset('/css/jquery-ui.css') }}" rel="stylesheet">
+        
         <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet">
         <link href="{{ asset('font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">        
         
+        <link href="{{ asset('jquery.ui.combify/jquery.ui.combify.css') }}" rel="stylesheet">        
+        <link href="{{ asset('/css/datepicker.css') }}" rel="stylesheet">
+        
+        <!--Script-->
         <script src="{{asset('/js/jquery.js')}}"></script>
+        <script src="{{asset('/js/jquery.min.js')}}"></script>
         <script src="{{asset('/js/bootstrap.min.js')}}"></script>
+        <script src="{{asset('/js/jquery-ui.js')}}"></script>
         <script src="{{asset('/js/fileinput.js')}}"></script>
-        <script src="{{asset('/js/bootstrap-datepicker.js')}}"></script>
+        <script src="{{asset('jquery.ui.combify/jquery.ui.combify.js')}}"></script>
+        
         
         </head>
 <body> 
@@ -172,18 +181,22 @@
                                         <span class="caret"></span></a>
                                
                                         <ul class="dropdown-menu" role="menu">
-                                       <li><a href="{{url('penalties')}}"><i class="fa fa-btn"></i>Over Due Charges </a>
+                                       <li>
+                                        <a href="{{url('penalties')}}"><i class="fa fa-btn"></i>Over Due Charges </a>
                                         <a href="{{url('searchor')}}"><i class="fa fa-btn fa-sign-out"></i>Search OR</a>
 					<a href="{{url('searchvoucher')}}"><i class="fa fa-btn fa-sign-out"></i>Search Voucher</a>
  				        <a href="{{url('searchpayee')}}"><i class="fa fa-btn fa-sign-out"></i>Search Payee</a>
 				       </li>
-
+                                        <hr>
+                                        <li>
+                                        <a href="{{route('indexbreakdown')}}"><i class="fa fa-btn"></i>Assessment Schedule Generate</a>
+                                        </li>
                                        <hr>
                                        <li>
                                            <a href="{{url('overallcollection',date('Y-m-d'))}}"><i class="fa fa-btn"></i>Collection Report</a>
                                            <a href="{{url('disbursement', date('Y-m-d'))}}"><i class="fa fa-btn"></i>Disbursement Details</a>
                                            <a href="{{url('dailydisbursementalllist',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Disbursement Summary</a>
-                                          <a href="{{url('dmsummary',date('Y-m-d'))}}"><i class="fa fa-btn"></i>Debit Memo Details</a>
+                                           <a href="{{url('dmsummary',date('Y-m-d'))}}"><i class="fa fa-btn"></i>Debit Memo Details</a>
                                            <a href="{{url('dmcmallreport',array(date('Y-m-d'),date('Y-m-d') ))}}"><i class="fa fa-btn"></i>Debit Memo Summary</a>
                                            <a href="{{url('generaljournal',date('Y-m-d'))}}"><i class="fa fa-btn"></i>Journal Entry Details</a>
                                            <a href ="{{url('individualsummary',array(date('Y-m-d'),date('Y-m-d')))}}"><i class="fa fa-btn"></i>Individual Account Summary</a>
@@ -237,6 +250,7 @@
  <a href="http://www.nephilaweb.com.ph">Powered by: Nephila Web Technology, Inc.</a></p>
 </div>
 </div>
+
 <script src="{{url('/Inputmask-4.x/dist/jquery.inputmask.bundle.js')}}"></script>
 <script>
     $('.divide').inputmask("numeric", {

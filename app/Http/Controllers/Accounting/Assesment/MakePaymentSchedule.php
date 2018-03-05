@@ -7,6 +7,12 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+/*
+ * CtrPaymentSchedule
+ * CtrAssessmentAccount
+ * CtrBreakableAccount
+ */
+
 class MakePaymentSchedule extends Controller
 {
     function index(){
@@ -58,11 +64,11 @@ class MakePaymentSchedule extends Controller
                 break;
         }
         if($discount > 0){
-            $paymentSched = \App\CtrPaymentSchedule::where('plan',$plan)->where('level',$level)->where('accountingcode',120100)->get();
+            $paymentSched = \App\CtrPaymentSchedule::where('plan',$plan)->where('course_strand',$course)->where('level',$level)->where('accountingcode',120100)->get();
             
             
             $accountsWithDisc = $paymentSched->where('duetype',0,false);
-            $total_discount = round($paymentSched->sum('amount')*$discount,2);
+            $total_discount = round($accountsWithDisc->sum('amount')*$discount,2);
             $disc_perAcct = round($total_discount/count($accountsWithDisc),2);
             foreach($accountsWithDisc as $account){
                 $account->discount = $disc_perAcct;

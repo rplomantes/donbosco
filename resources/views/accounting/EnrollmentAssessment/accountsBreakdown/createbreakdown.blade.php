@@ -34,7 +34,7 @@ $offices = \App\CtrAcctDep::pluck('sub_department')->toArray();
         @include('accounting.EnrollmentAssessment.leftmenu')
     </div>
     <div class="col-md-9"  id='content'>
-        <h4>{{$module_info['title']}}</h4>
+        <h4>{{$module_info['title']}} - {{$level}}</h4>
         <hr>
         <div class='panel-body'>
             <button class="btn btn-danger " id='addacct'>Add account</button>
@@ -108,12 +108,16 @@ $offices = \App\CtrAcctDep::pluck('sub_department')->toArray();
                    <table class='table table-responsive account' id='account"+accountsnumber+"table' style='margin-left:20%'>\n\
                    <tbody><tr><td>Subsidiary</td><td>Amount</td><td>Office</td><td></td></tr></tbody>\n\
                    <tfoot>\n\
-                        <tr><td>Total</td><td><input class='divide' id='total'>\n\
+                        <tr><td>Total</td><td><input class='divide' id='total"+accountsnumber+"'>\n\
                         </td><td></td><td></td></tr>\n\
                     </tfoot>\n\
                     </table>";
                         
         $('#form').append(add);
+        
+        $('.amount').keyup(function(){
+            updateamount()
+        })
         
         var coa = [<?php echo '"'.implode('","', $coa).'"' ?>];
         $( ".coa" ).autocomplete({
@@ -160,6 +164,7 @@ $offices = \App\CtrAcctDep::pluck('sub_department')->toArray();
                     <td><button type='button' onclick='deletesub(\"row"+account+""+rownumber+"\")' class='btn btn-danger fa fa-minus'></button>\n\
                     </td>\n\
                     </tr>";
+                        
         $("#account"+account+"table tbody").append(row);
         
         var office = [<?php echo '"'.implode('","', $offices).'"' ?>];
@@ -173,6 +178,10 @@ $offices = \App\CtrAcctDep::pluck('sub_department')->toArray();
                 event.preventDefault();
 
           });
+       
+        $('.amount').keyup(function(){
+            updateamount()
+        })
         
         $('.amount').inputmask("numeric", {
         radixPoint: ".",
@@ -189,6 +198,23 @@ $offices = \App\CtrAcctDep::pluck('sub_department')->toArray();
     function deletesub(row){
         $("#"+row).remove();
     }
+    
+    $('.amount').keyup(function(){
+        updateamount()
+    })
+
+    function updateamount(){
+        $('.account').each(function(index){
+            var count = index+1;
+            var table = $( this ).attr('id');
+            var sum = 0;
+            $('#'+table+' .amount').each(function(){
+                sum += parseFloat($( this ).val());
+            });
+            $('#'+table+' #total'+count).val(sum)
+        })
+    }
+
     
 </script>
 @stop

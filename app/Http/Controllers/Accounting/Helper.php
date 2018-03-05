@@ -78,4 +78,19 @@ class Helper extends Controller
         
         return $name;
     }
+    
+    static function get_entryType($type){
+        switch($type){
+            case 1:
+                return "Cash Receipt";
+            case 2:
+                return "Debit Memo";
+            case 3:
+                return "General Journal";
+            case 4:
+                return "Disbursement";
+            default :
+                return "System Generated";
+        }
+    }
 }

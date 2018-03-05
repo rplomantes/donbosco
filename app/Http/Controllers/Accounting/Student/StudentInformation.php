@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 
 class StudentInformation extends Controller
 {
-    static function get_level($idno,$schoolyear){
+    static function get_level($idno,$schoolyear=2016){
         $level = "";
         $info = self::get_SyInfo($idno, $schoolyear);
         if($info){
@@ -17,6 +17,16 @@ class StudentInformation extends Controller
         }
         
         return $level;
+    }
+    
+    static function get_plan($idno,$schoolyear){
+        $plan = "";
+        $info = self::get_SyInfo($idno, $schoolyear);
+        if($info){
+            $plan = $info->plan;
+        }
+        
+        return $plan;
     }
     
     static function get_department($idno,$schoolyear){
@@ -29,7 +39,7 @@ class StudentInformation extends Controller
         return $department;
     }
     
-    static function get_section($idno,$schoolyear){
+    static function get_section($idno,$schoolyear=2016){
         $section = "";
         $info = self::get_SyInfo($idno, $schoolyear);
         if($info){
@@ -37,6 +47,16 @@ class StudentInformation extends Controller
         }
         
         return $section;
+    }
+    
+    static function get_strand($idno,$schoolyear){
+        $strand = "";
+        $info = self::get_SyInfo($idno, $schoolyear);
+        if($info){
+            $section = $info->section;
+        }
+        
+        return $strand;
     }
     
     static function get_status($idno,$schoolyear){
