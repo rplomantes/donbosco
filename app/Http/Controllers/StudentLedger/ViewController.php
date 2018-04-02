@@ -10,6 +10,10 @@ use App\Http\Controllers\Controller;
 
 class ViewController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth');
+    }
+    
     function mainview($idno){
         return view('cashier.studentledger.index',compact('idno'));
     }
@@ -17,6 +21,16 @@ class ViewController extends Controller
     static function studentInfo($idno){
             $currSy = \App\CtrSchoolYear::first()->schoolyear;
             return view('cashier.studentledger.studentInfo',compact('currSy','idno'));
+    }
+    
+    static function prevBalance($idno){
+            $accounts = self::accounts($idno)->filter(function($item){
+                return $item->categoryswitch > 10;
+            })->sortBy('schoolyear');
+            if($accounts->sum('amount')-($accounts->sum('plandiscount')+$accounts->sum('otherdiscount')+$accounts->sum('debitmemo')+$accounts->sum('payment'))>0){
+                return view('cashier.studentledger.prevBal',compact('accounts'));
+            }
+            
     }
     
     static function viewledger($idno){
@@ -41,7 +55,7 @@ class ViewController extends Controller
     static function paymentSched($idno){
             $accounts = self::accounts($idno)->filter(function($item){
                 return $item->categoryswitch <=6;
-            });
+            })->sortBy('duedate');
             return view('cashier.studentledger.paymentSched',compact('accounts','idno'));
     }
     
@@ -58,5 +72,9 @@ class ViewController extends Controller
     
     static function transactions($idno){
         return \App\Dedit::where('idno',$idno)->orderBy('transactiondate','ASC')->orderBy('id','ASC')->get();
+    }
+    
+    static function accountsdue($accounts){        
+        return $accounts->sum('amount') - $accounts->sum('payment') - $accounts->sum('debitmemo') - $accounts->sum('plandiscount') - $accounts->sum('otherdiscount');
     }
 }

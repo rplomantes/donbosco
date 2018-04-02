@@ -7,14 +7,19 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
+use Excel;
 
-use App\Http\Controllers\Accounting\Disbursement\Helper as DisbHelper;
-use App\Http\Controllers\Accounting\Student\StudentInformation as Info;
+
+use App\Http\Controllers\Accounting\IndividualAccountSmmary\Helper as IASHelper;
 
 class ReportController extends Controller
 {
+    function __construct(){
+        $this->middleware(['auth','accounting']);
+    }
     function index(){
         $request = new Request();
+        $request->replace(['from'=>Carbon::now()->format('Y-m-d'),'to'=>Carbon::now()->format('Y-m-d')]);
         return $this->callView($request);
     }
     
@@ -34,9 +39,10 @@ class ReportController extends Controller
     }
     
     static function renderResult($request){
-        $grouping = $request->input('group');
+        return $request->account;
+        $grouping = $request->input('grouping');
         
-        $viewaccounts = self::accounts($request->from,$request->to,$request->account,$grouping)->sortBy('transactiondate')->sortBy('created_at');
+        $viewaccounts = IASHelper::accounts($request->from,$request->to,$request->account,$grouping)->sortBy('transactiondate')->sortBy('created_at');
         
         if($request->input('department') != ""){
             $viewaccounts = $viewaccounts->where('acctdepartment',$request->input('department'),false);
@@ -60,9 +66,13 @@ class ReportController extends Controller
         session()->put('iasAccount',$viewaccounts);
         
         if($grouping == ""){
+
             return view('accounting.IndividualAccountSummary.resultNonGroup',compact('viewaccounts'));
+        }elseif($grouping == "byDepartment"){
+            return view('accounting.IndividualAccountSummary.resultDepartmentGroup',compact('viewaccounts'));
         }else{
-            return view('accounting.IndividualAccountSummary.resultNonGroup',compact('viewaccounts'));
+            //return $viewaccounts->groupBy('subaccount');
+            return view('accounting.IndividualAccountSummary.resultSbAccountGroup',compact('viewaccounts'));
         }
         
     }
@@ -84,61 +94,118 @@ class ReportController extends Controller
         return $pdf->stream();
     }
 
-    static function accounts($from,$to,$account,$grouping){
-        if($grouping == ""){
-            $groupBy = array('refno','acct_department','sub_department');
-        }else{
-            $groupBy = array('refno','acct_department','sub_department','description');
-        }
-            
-        $debits = self::debits($from, $to, $account,$groupBy);
-        $credits = self::credits($from, $to, $account,$groupBy);
+    function printSubAccount(Request $request,$subsidiary){
+        ini_set('memory_limit', '-1');
         
-        return $debits->merge($credits);
+        $formVar = session()->get('iasVar');
+        $from = $formVar['from'];
+        $to = $formVar['to'];
+        $account = $formVar['account'];
+        $accounts = session()->get('iasAccount')->where('subaccount',$subsidiary,false);
         
+        $title = 'INDIVIDUAL ACCOUNT SUMMARY <br>'.\App\ChartOfAccount::where('acctcode',$account)->first()->accountname." - ".$subsidiary;
+        
+        $pdf= \App::make('dompdf.wrapper');
+        $pdf->setPaper('legal','landscape');
+        $pdf->loadView('accounting.IndividualAccountSummary.print.printNonGroup',compact('title','from','to','account','accounts','request'));
+        return $pdf->stream();
     }
     
-    static function debits($from,$to,$account,$groupBy){
-        $accounts = \App\Dedit::selectRaw('*,sum(amount) as totalamount,sum(checkamount) as totalcheck')->whereBetween('transactiondate',[$from,$to])->where('accountingcode',$account)->where('isreverse',0)->groupBy($groupBy)->get();
-        $debits = array();
+    function printDepartment(Request $request,$department){
+        ini_set('memory_limit', '-1');
         
-        foreach($accounts as $acct){
-            $level = Info::get_level($acct->idno, $acct->schoolyear);
-            $section = Info::get_section($acct->idno, $acct->schoolyear);
-            if($acct->entry_type == 4){
-                $payee = DisbHelper::get_payee($acct->refno);
-                $remarks = DisbHelper::get_remarks($acct->refno);
-            }else{
-                $payee = $acct->receivefrom;
-                $remarks = $acct->remarks;
-            }
-            
-            $debits[] = (object)['schoolyear'=>$acct->schoolyear,'refno'=>$acct->refno,'idno'=>$acct->idno,'entry_type'=>$acct->entry_type,'created_at'=>$acct->created_at,'transactiondate'=>$acct->transactiondate,'receiptno'=>$acct->receiptno,
-                'payee'=>$payee,'debit'=>$acct->totalamount+$acct->totalcheck,'credit'=>0,'acctdepartment'=>$acct->acct_department,'subdepartment'=>$acct->sub_department,'particular'=>$remarks,'subaccount'=>$acct->descripiton,'level'=>$level,'section'=>$section];
-        }
+        $formVar = session()->get('iasVar');
+        $from = $formVar['from'];
+        $to = $formVar['to'];
+        $account = $formVar['account'];
+        $accounts = session()->get('iasAccount')->where('acctdepartment',$department,false);
         
-        return collect((object)$debits);
+        $title = 'INDIVIDUAL ACCOUNT SUMMARY <br>'.\App\ChartOfAccount::where('acctcode',$account)->first()->accountname." - ".$department;
+        
+        $pdf= \App::make('dompdf.wrapper');
+        $pdf->setPaper('legal','landscape');
+        $pdf->loadView('accounting.IndividualAccountSummary.print.printNonGroup',compact('title','from','to','account','accounts','request'));
+        return $pdf->stream();
     }
     
-    static function credits($from,$to,$account,$groupBy){
-        $accounts =  \App\Credit::selectRaw('*,sum(amount) as totalamount')->with('Dedit')->whereBetween('transactiondate',[$from,$to])->where('accountingcode',$account)->where('isreverse',0)->groupBy($groupBy)->get();
-        $credits = array();
+    function downloadAccount(Request $request){
+        ini_set('memory_limit', '-1');
         
-        foreach($accounts as $acct){
-            $level = Info::get_level($acct->idno, $acct->schoolyear);
-            $section = Info::get_section($acct->idno, $acct->schoolyear);
-            if($acct->entry_type == 4){
-                $payee = DisbHelper::get_payee($acct->refno);
-                $remarks = DisbHelper::get_remarks($acct->refno);
-            }else{
-                $payee = $acct->dedit->pluck('receivefrom')->last();
-                $remarks = $acct->dedit->pluck('remarks')->last();
-            }
+        $formVar = session()->get('iasVar');
+        $from = $formVar['from'];
+        $to = $formVar['to'];
+        $account = $formVar['account'];
+        $accounts = session()->get('iasAccount');
+        $name = "Accounts Summary for ".$account." from".$from." to ".$to;
+        //return $request->input('date');
+        Excel::create($name,function($excel)use($accounts,$request){
+            $excel->sheet('Sheet1', function($sheet) use($accounts,$request){
+                $sheet->loadView('accounting.IndividualAccountSummary.download.dlNonGroup')
+                        ->with('accounts',$accounts)
+                        ->with('request',$request)
+                        ->setFontSize(10)
+                        ->setAutoSize(true);
+                
+                $sheet->setColumnFormat(array(
+                            'F'=> '#,##0.00',
+                            'G'=> '#,##0.00'
+                        ));
+            });
             
-            $credits[] = (object)['schoolyear'=>$acct->schoolyear,'refno'=>$acct->refno,'idno'=>$acct->idno,'entry_type'=>$acct->entry_type,'created_at'=>$acct->created_at,'transactiondate'=>$acct->transactiondate,'receiptno'=>$acct->receiptno,
-                'payee'=>$payee,'debit'=>0,'credit'=>$acct->totalamount,'acctdepartment'=>$acct->acct_department,'subdepartment'=>$acct->sub_department,'particular'=>$remarks,'subaccount'=>$acct->descripiton,'level'=>$level,'section'=>$section];
-        }
+        })->export('xlsx');
+    }
+    
+    function downloadSubAccount(Request $request,$subsidiary){
+        ini_set('memory_limit', '-1');
         
-        return collect((object)$credits);
+        $formVar = session()->get('iasVar');
+        $from = $formVar['from'];
+        $to = $formVar['to'];
+        $account = $formVar['account'];
+        $accounts = session()->get('iasAccount')->where('subaccount',$subsidiary,false);;
+        $name = "Accounts Summary for ".$subsidiary." from".$from." to ".$to;
+        //return $request->input('date');
+        Excel::create($name,function($excel)use($accounts,$request){
+            $excel->sheet('Sheet1', function($sheet) use($accounts,$request){
+                $sheet->loadView('accounting.IndividualAccountSummary.download.dlNonGroup')
+                        ->with('accounts',$accounts)
+                        ->with('request',$request)
+                        ->setFontSize(10)
+                        ->setAutoSize(true);
+                
+                $sheet->setColumnFormat(array(
+                            'F'=> '#,##0.00',
+                            'G'=> '#,##0.00'
+                        ));
+            });
+            
+        })->export('xlsx');
+    }
+    
+    function downloadDepartment(Request $request,$department){
+        ini_set('memory_limit', '-1');
+        
+        $formVar = session()->get('iasVar');
+        $from = $formVar['from'];
+        $to = $formVar['to'];
+        $account = $formVar['account'];
+        $accounts = session()->get('iasAccount')->where('acctdepartment',$department,false);
+        $name = "Accounts Summary of ".$department." from".$from." to ".$to;
+        //return $request->input('date');
+        Excel::create($name,function($excel)use($accounts,$request){
+            $excel->sheet('Sheet1', function($sheet) use($accounts,$request){
+                $sheet->loadView('accounting.IndividualAccountSummary.download.dlNonGroup')
+                        ->with('accounts',$accounts)
+                        ->with('request',$request)
+                        ->setFontSize(10)
+                        ->setAutoSize(true);
+                
+                $sheet->setColumnFormat(array(
+                            'F'=> '#,##0.00',
+                            'G'=> '#,##0.00'
+                        ));
+            });
+            
+        })->export('xlsx');
     }
 }

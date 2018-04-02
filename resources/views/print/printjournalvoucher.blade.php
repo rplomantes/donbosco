@@ -23,6 +23,9 @@ $totalcredit=0;
          <td align="right">       
         <span class="voucherno">JV No : <b>{{$remarks->referenceid}}</b> </span>
          </td></tr>
+            <tr>
+                <td colspan='2'>Date Applied : {{date('M d, Y',strtotime($entries->pluck('transactiondate')->last()))}}</td>
+            </tr>
             <tr><td colspan="2">
         <span class = "postedby"> Posted By : {{strtoupper($user->firstname)}} {{strtoupper($user->lastname)}}</span>
         </td></tr></table>

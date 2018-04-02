@@ -72,7 +72,7 @@ $tech = 0;
         @endforeach
         
             @if($acad > 0)
-            <td>{{GradeComputation::computeQuarterAverage($sy,$level,array(0,5,6),$semester,$quarter,$grades)}}</td>
+            <td>{{GradeComputation::computeQuarterAverage($sy,$level,array(0,5,6),$semester,$gradeQuarter,$grades)}}</td>
             <td>{{SectionRanking::getStudentRank($student->idno,$sy,$acad_field)}}</td>
             @endif
             
@@ -91,11 +91,11 @@ $tech = 0;
         @endforeach
         
             @if($tech > 0)
-            <td>{{GradeComputation::computeQuarterAverage($sy,$level,array(1),$semester,$quarter,$grades)}}</td>
+            <td>{{GradeComputation::computeQuarterAverage($sy,$level,array(1),$semester,$gradeQuarter,$grades)}}</td>
             <td>{{SectionRanking::getStudentRank($student->idno,$sy,$tech_field)}}</td>
             @endif
             
-            <td>{{GradeComputation::computeQuarterAverage($sy,$level,array(3),$semester,$quarter,$grades)}}</td>
+            <td>{{GradeComputation::computeQuarterAverage($sy,$level,array(3),$semester,$gradeQuarter,$grades)}}</td>
             <td style="text-align: center">{{$attendance[0]}}</td>
             <td style="text-align: center">{{$attendance[2]}}</td>
             <td style="text-align: center">{{$attendance[1]}}</td>

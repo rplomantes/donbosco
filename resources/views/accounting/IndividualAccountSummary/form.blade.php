@@ -73,7 +73,10 @@
                 <label><input type="radio" name="grouping" value="">None</label>
             </div>
             <div class="radio">
-              <label><input type="radio" name="grouping" value="subAccount">By subsidiary</label>
+              <label><input type="radio" name="grouping" value="subAccount">By Particular</label>
+            </div>
+            <div class="radio">
+              <label><input type="radio" name="grouping" value="byDepartment">By Department</label>
             </div>
         </div>
     </div>

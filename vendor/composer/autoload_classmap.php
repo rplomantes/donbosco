@@ -68,6 +68,7 @@ return array(
     'CreateEncashmentsTable' => $baseDir . '/database/migratin_backup/2016_03_30_070624_create_encashments_table.php',
     'CreateEntranceApplicantsTable' => $baseDir . '/database/migratin_backup/2017_10_11_152049_create_entrance_applicants_table.php',
     'CreateEntranceSchedulesTable' => $baseDir . '/database/migratin_backup/2017_10_11_152035_create_entrance_schedules_table.php',
+    'CreateEscAwardeesTable' => $baseDir . '/database/migrations/2018_03_28_131850_create_esc_awardees_table.php',
     'CreateGradeOverRidesTable' => $baseDir . '/database/migratin_backup/2017_04_06_114159_create_grade_over_rides_table.php',
     'CreateGradesSettingsTable' => $baseDir . '/database/migratin_backup/2017_08_04_145412_create_grades_settings_table.php',
     'CreateGradesTable' => $baseDir . '/database/migratin_backup/2016_03_06_071325_create_grades_table.php',

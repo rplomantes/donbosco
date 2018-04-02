@@ -108,6 +108,11 @@
 		?>
 	@else
 		@if($fourth_grading != 0)
+		<?php
+	            $final_grade = \App\Grade::find($id);
+        	    $final_grade->final_grade = round($running_ave/$count,$grade_setting->decimal);
+	            $final_grade->save();
+		?>
 		@endif
 	@endif
         </td>

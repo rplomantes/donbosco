@@ -1,7 +1,7 @@
 <?php
 use App\Http\Controllers\Accounting\Helper as AcctHelper;
 ?>
-<form method='POST' target='_blank' action='{{route("printiassummary")}}'>
+<form method='POST' target='_blank' id="accountForm">
     {!!csrf_field()!!}
     <div class='col-md-12' style='font-size:13pt'>
         Show:
@@ -63,7 +63,8 @@ use App\Http\Controllers\Accounting\Helper as AcctHelper;
             <td class='remarks'></td>
         </tr>
     </table>
-    <button type="submit" class="col-md-12 btn btn-danger">Print</button>
+    <button class="col-md-6 btn btn-danger" onclick="printaccount()">Print</button>
+    <button class="col-md-6 btn btn-success" onclick="downloadaccount()">Download</button>
 </form>
 <script>
     $(".col").prop('checked','checked');
@@ -75,5 +76,19 @@ use App\Http\Controllers\Accounting\Helper as AcctHelper;
             $('.'+column).css('display','none');
         }
     });
+    
+    function printaccount(){
+        forms = document.getElementById('accountForm');
+        forms.action = '{{route("printiassummary")}}';
+        
+        forms.submit();
+    }
+    
+    function downloadaccount(){
+        forms = document.getElementById('accountForm');
+        forms.action = '{{route("dliassummary")}}';
+        
+        forms.submit();
+    }
 </script>
     

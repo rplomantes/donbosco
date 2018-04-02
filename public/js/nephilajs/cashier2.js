@@ -1,4 +1,4 @@
-    $("table input:not([readonly])").keydown(function(e){
+    $("input").keydown(function(e){
         var key = e.which || e.keyCode;
 
         if(key == 13){
@@ -156,6 +156,11 @@
             }
 
         }else{
-            alert('Payment is smaller than the amount to be payed. Please check!');
+            if($('#fape').val() > credit){
+                $('#assess').submit();
+            }else{
+                alert('Payment is smaller than the amount to be payed. Please check!');
+            }
+            
         }
     }

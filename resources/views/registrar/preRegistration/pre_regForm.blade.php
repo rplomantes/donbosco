@@ -674,10 +674,17 @@
     </form>
 </div>
 <div class="col-md-4">
-    <h4>Hits of Student Name</h4>
-    <div  id="hits">
-        
+    <div class="form-group">
+        <label class="control-label col-md-3">Temporary ID</label>
+        <input value="">
     </div>
+    <div class="row">
+        <h4>Hits of Student Name</h4>
+        <div  id="hits">
+
+        </div>
+    </div>
+
 </div>
 <script>
     $("#firstname,#lastname").keyup(function(){

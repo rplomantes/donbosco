@@ -17,4 +17,8 @@ class Status extends Model
     public function grade(){
         return Grade::where('idno',$this->idno)->where('schoolyear',  $this->schoolyear)->get();
     }
+    
+    public function CtrLevel(){
+        return $this->hasOne('\App\CtrLevel','level','level');
+    }
 }

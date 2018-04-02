@@ -175,7 +175,7 @@
     //Update grades of students
     //Route::get('updategrades','Registrar\AssessmentController@updategrades');
     //Route::get('updatemapeh','Registrar\AssessmentController@updatemapeh');
-    //Route::get('updatehsconduct','Update\UpdateController@updatehsconduct');
+    Route::get('updatehsconduct','Update\UpdateController@updatehsconduct');
     //Route::get('updatehsgrade','Update\UpdateController@updatehsgrade');
     //Route::get('checkno','Update\UpdateController@checkno');
     //Route::get('updatehsattendance','Update\UpdateController@updatehsattendance');
@@ -458,11 +458,6 @@ Route::group(['middleware' => ['web','registrar']], function () {
     Route::get('/reportcards','Registrar\ReportCards\ReportCardController@sectionCards');
     Route::get('/printcards/{lvl}/{strnd}/{sec}/{quarter}/{sem}','Registrar\ReportCards\ReportCardController@printSectionCards');
     
-    Route::get('/promotion/{sy}','Registrar\PromotionController@index');
-    Route::get('/editpromotion/{sy}/{level}','Registrar\PromotionController@editpromotion');
-    Route::get('/printpromotion/{sy}/{level}','Registrar\PromotionController@printpromotion');
-    Route::post('/savepromotion/{sy}/{level}','Registrar\PromotionController@savepromotion');
-    
     Route::get('/changegrade/{idno}/{sy}','Registrar\Grade\ChangeGrade@index');
     
     
@@ -486,7 +481,7 @@ Route::group(['middleware' => ['web','registrar']], function () {
    Route::get('setoverallrank/{section?}','Registrar\Ranking\RankController@setRank');
    
    
-   Route::get('/viewpromotion/{sy}/{level}','Registrar\PromotionController@viewreport');
+
     
    Route::get('/gradeSheetAList','Registrar\SheetA\Helper@gradeSheetAList');
    Route::get('/updatesubjectteacher','Registrar\SheetA\Helper@updatesubjectteacher');
@@ -576,8 +571,8 @@ Route::group(['middleware' => ['web','registrar']], function () {
    
    //General Ledger
    Route::group(['middleware' => 'web'], function () {
-        //Route::get('generalledger/{basic}/{title}/{fromdate}/{todate}','Accounting\GenLedgerController@index');
-       Route::get('generalledger/{account}/{from}/{to}','Accounting\GenLedgerController@view');
+        Route::get('generalledger/{basic}/{title}/{fromdate}/{todate}','Accounting\GenLedgerController@index');
+       //Route::get('generalledger/{account}/{from}/{to}','Accounting\GenLedgerController@view');
         Route::get('generalledger/print/{basic}/{title}/{fromdate}/{todate}','Accounting\GenLedgerController@printledger');
    });
    //END General Ledger
@@ -586,6 +581,8 @@ Route::group(['middleware' => ['web','registrar']], function () {
    Route::group(['middleware' => 'web'], function () {
        Route::get('accountsummary/{schoolyear}','Accounting\MainAccountSummary@view');
        Route::get('v','ReportGenerator@randomStudentLedger');
+       Route::get('vc/{beforedate}/{schoolyear}','ReportGenerator@preFiscalEnrollee');
+       Route::get('disc/{account}/{schoolyear}','ReportGenerator@discountapplication');
    });
    //END Summary of Main Account
    
@@ -635,13 +632,44 @@ Route::group(['middleware' => ['web','registrar']], function () {
    //Student Transcript
    Route::group(['middleware' => 'web'], function () {
        Route::get('newcashier/{idno}','StudentLedger\ViewController@mainview')->name('cashierledger');
+       Route::post('processmainpayment/{idno}','Cashier\Payment\ProcessPayment@mainpayment')->name('processmainpayment');
    });
    //END Student Transcript
    
    //Account Summary
    Route::group(['middleware' => 'web'], function () {
-       Route::get('/summary/individualaccount','Accounting\IndividualAccountSmmary\ReportController@index');
+       Route::get('/summary/individualaccount','Accounting\IndividualAccountSmmary\ReportController@index')->name('ias');
        Route::post('/summary/individualaccount','Accounting\IndividualAccountSmmary\ReportController@submitRequest')->name('postsummary');
+       
        Route::post('/summary/individualaccount/print','Accounting\IndividualAccountSmmary\ReportController@printAccount')->name('printiassummary');
+       Route::post('/summary/individualaccount/download','Accounting\IndividualAccountSmmary\ReportController@downloadAccount')->name('dliassummary');
+       
+       Route::post('/summary/individualsubaccount/print/{subsidiary?}','Accounting\IndividualAccountSmmary\ReportController@printSubAccount')->name('printiasSubsummary');
+       Route::post('/summary/individualsubaccount/download/{subsidiary?}','Accounting\IndividualAccountSmmary\ReportController@downloadSubAccount')->name('dliasSubsummary');
+       
+       Route::post('/summary/individualsubaccount/printdepartment/{department?}','Accounting\IndividualAccountSmmary\ReportController@printDepartment')->name('printiasDepartment');
+       Route::post('/summary/individualsubaccount/downloaddepartment/{department?}','Accounting\IndividualAccountSmmary\ReportController@downloadDepartment')->name('dliasDepartment');
    });
    //End Account Summary
+   
+   //Promotion
+   Route::group(['middleware' => 'web'], function () {
+       Route::get('/promotion/{sy}','Registrar\PromotionController@index');
+       Route::get('/editpromotion/{sy}/{level}','Registrar\PromotionController@editpromotion');
+       Route::get('/printpromotion/{sy}/{level}','Registrar\PromotionController@printpromotion');
+       Route::post('/savepromotion/{sy}/{level}','Registrar\PromotionController@savepromotion');
+   });
+       Route::get('/viewpromotion/{sy}/{level}','Registrar\PromotionController@viewreport');
+       Route::get('/viewfinalizepromotion/{sy}/{level}','Registrar\PromotionController@viewfinalize');
+       Route::get('/finalizepromotion/{sy}/{level}','Registrar\PromotionController@editStatfinalize');
+        
+   //END Promotion
+       
+   //Promotion
+   Route::group(['middleware' => 'web'], function () {
+       Route::get('/TOR/elementarty/{idno}','Registrar\TOR\Elementary@index');
+       Route::get('/shhhh/{sy?}/{level?}/{section?}','customFinalReport@index');
+       
+   });
+
+   //END Promotion

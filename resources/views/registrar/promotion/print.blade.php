@@ -16,10 +16,11 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
             margin:20px;
         }
         body{
-            margin-top: 150px;
+            margin-top: 120px;
+            margin-bottom: 30px
         }
         #header { position: fixed; left: 0px; top: -10px; right: 0px; height: 100px; text-align: center;font-size: 15px; }
-        #footer { position: fixed; bottom:0px;border-bottom:1px solid gray;} .pagenum:before {content: counter(page); }
+        #footer { position: fixed; bottom:5px;border-bottom:1px solid gray;} .pagenum:before {content: counter(page); }
     </style>
 </head>
 <body>
@@ -35,7 +36,7 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
         <hr>
     </div>
    
-    <table width="100%" style="font-size: 9px;" border="1" cellspacing="0">
+    <table width="100%" style="font-size: 8pt;" border="1" cellspacing="0">
         <thead>
             <tr style='text-align: center'>
                 <th></th>

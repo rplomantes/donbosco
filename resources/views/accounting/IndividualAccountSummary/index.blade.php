@@ -9,7 +9,7 @@ use App\Http\Controllers\Accounting\IndividualAccountSmmary\ReportController as 
     </div>
     <div class='col-md-9' id="report">
 
-        @if(count($request->all())>0)
+        @if($request->input('account') != "")
         {!!IAS::renderResult($request)!!}
         @endif
     </div>
@@ -21,3 +21,4 @@ use App\Http\Controllers\Accounting\IndividualAccountSmmary\ReportController as 
     });
 </script>
 @stop
+

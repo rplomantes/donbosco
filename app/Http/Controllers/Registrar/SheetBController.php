@@ -43,9 +43,9 @@ class SheetBController extends Controller
         $strand = Input::get('course');
         
         $gradeQuarter = RegistrarHelper::setQuarter($semester, $quarter);
-        $acad_field = RankHelper::rankingField($semester,$quarter,'acad_');
-        $tech_field = RankHelper::rankingField($semester,$quarter,'tech_');
-        $attendanceQtr = RegistrarHelper::setAttendanceQuarter($semester, $quarter);
+        $acad_field = RankHelper::rankingField($semester,$gradeQuarter,'acad_');
+        $tech_field = RankHelper::rankingField($semester,$gradeQuarter,'tech_');
+        $attendanceQtr = RegistrarHelper::setAttendanceQuarter($semester, $gradeQuarter);
         $gradeField = RegistrarHelper::getGradeQuarter($gradeQuarter);
         
         $students = RegistrarHelper::getSectionList($sy,$level,$strand,$section);

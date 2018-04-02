@@ -87,27 +87,25 @@ class UpdateController extends Controller
     
     function updatehsconduct(){
         $quarters = \App\CtrQuarter::first();
-
-        $hsgrades = DB::Select("select * from JHSconduct2017_2nd where SY_EFFECTIVE = '2017' and QTR = $quarters->qtrperiod");
-        foreach($hsgrades as $hsgrade){
-            $newconduct = new \App\ConductRepo;
-            $newconduct->OSR = $hsgrade->obedience;
-            $newconduct->DPT = $hsgrade->deportment;
-            $newconduct->PTY =$hsgrade->piety;
-            $newconduct->DI = $hsgrade->diligence;
-            $newconduct->PG = $hsgrade->positive;
-            $newconduct->SIS = $hsgrade->sociability;
-            $newconduct->qtrperiod = $quarters->qtrperiod;
-            $newconduct->schoolyear = $hsgrade->SY_EFFECTIVE;
-            $newconduct->idno=$hsgrade->SCODE;
-            $newconduct->save();
-            $this->updateconduct($hsgrade->SCODE, 'OSR', $hsgrade->obedience, $hsgrade->QTR, '2017');
-            $this->updateconduct($hsgrade->SCODE, 'DPT', $hsgrade->deportment, $hsgrade->QTR, '2017');
-            $this->updateconduct($hsgrade->SCODE, 'PTY', $hsgrade->piety, $hsgrade->QTR, '2017');
-            $this->updateconduct($hsgrade->SCODE, 'DI' , $hsgrade->diligence, $hsgrade->QTR, '2017');
-            $this->updateconduct($hsgrade->SCODE, 'PG' , $hsgrade->positive, $hsgrade->QTR, '2017');
-            $this->updateconduct($hsgrade->SCODE, 'SIS', $hsgrade->sociability, $hsgrade->QTR, '2017');
+        $students = \App\Status::where('level','Grade 10')->whereIn('status',array(2,3))->where('schoolyear',2017)->get();
+        foreach($students as $student){
+            $hsgrades = DB::Select("select * from grade1 where SCODE ='$student->idno' AND SY_EFFECTIVE = '2017' and QTR = 4");
+            foreach($hsgrades as $hsgrade){
+                $newconduct = new \App\ConductRepo;
+                $newconduct->OSR = $hsgrade->obedience;
+                $newconduct->DPT = $hsgrade->deportment;
+                $newconduct->PTY =$hsgrade->piety;
+                $newconduct->DI = $hsgrade->diligence;
+                $newconduct->PG = $hsgrade->positive;
+                $newconduct->SIS = $hsgrade->sociability;
+                $newconduct->qtrperiod = $quarters->qtrperiod;
+                $newconduct->schoolyear = $hsgrade->SY_EFFECTIVE;
+                $newconduct->idno=$hsgrade->SCODE;
+                $newconduct->save();
+            }
         }
+        
+
 
     }
    

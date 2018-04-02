@@ -1,4 +1,5 @@
 <?php
+//Replacement for the current ledger
 use App\Http\Controllers\StudentLedger\ViewController as Ledg;
 use App\Http\Controllers\Cashier\Payment\MainPayment as Payment;
 
@@ -20,6 +21,7 @@ use App\Http\Controllers\Cashier\Payment\MainPayment as Payment;
     
     <div class='col-md-3'>
             {!!Ledg::paymentSched($idno)!!}
+            {!!Ledg::prevBalance($idno)!!}
             {!!Ledg::otherAccts($idno)!!}
     </div>
     <div class="col-md-3">

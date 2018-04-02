@@ -14,28 +14,40 @@ class MainPayment extends Controller
     static function viewPayment($idno){
         $accounts = Ledg::accounts($idno);
         
+        
+        //Total Account Due
         $accountsdue = $accounts->filter(function($items){
-            return $items->duedate <= Carbon::now() && ($items->payment + $items->debitmemo + $items->plandiscount +$items->otherdiscount) < $items->amount;
+            return $items->duedate <= Carbon::now() && self::singleaccountdue($items) > 0;
         });
         
-        $accountdue = self::accountsdue($accounts);
+        $accountdue = self::accountsdue($accountsdue);
+        //END Total Account Due
         
+        //main accounts
         $mainaccounts = $accountsdue->filter(function($items){
             return $items->categoryswitch < 7;
         });
         
         $maindue = self::accountsdue($mainaccounts);
+        //END main accounts
         
-        $prevBalance = $accounts->filter(function($items){
+        //Previous Balances
+        $prevBalances = $accountsdue->filter(function($items){
             return $items->categoryswitch > 10;
         });
+        $prevBalance = self::accountsdue($prevBalances);
+        //END Previous Balances
         
-        $otheraccounts = $accounts->where('categorytype',7,false);
+        $otheraccounts = $accountsdue->where('categoryswitch',7,false);
         
-        return view('cashier.payment.mainpayment',compact('accountdue','maindue','prevBalance','otheraccounts'));
+        return view('cashier.payment.mainpayment',compact('idno','accountdue','maindue','prevBalance','otheraccounts'));
     }
     
     static function accountsdue($accounts){        
         return $accounts->sum('amount') - $accounts->sum('payment') - $accounts->sum('debitmemo') - $accounts->sum('plandiscount') - $accounts->sum('otherdiscount');
+    }
+    
+    static function singleaccountdue($account){
+        return $account->amount - ($account->payment - $account->debitmemo - $account->otherdiscount);
     }
 }

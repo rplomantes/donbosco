@@ -42,6 +42,8 @@ class OverallRankController extends Controller
             break;
             case 4;
                 $qrt = "fourth_grading";
+            default;
+                $qrt = "final_grade";
            break; 
         }
         $schoolyear = \App\RegistrarSchoolyear::first()->schoolyear;
@@ -55,7 +57,7 @@ class OverallRankController extends Controller
         
         if($level == "Grade 7" || $level == "Grade 8" || $level == "Grade 9" || $level == "Grade 10" || $level == "Grade 11" || $level == "Grade 12"){
             if($course == "All"){
-                $whatcourse = "AND grades.strand IN('ABM',STEM)";
+                $whatcourse = "AND grades.strand IN('ABM','STEM')";
             }else{
                 $whatcourse = "AND grades.strand = '$course' ";
             }

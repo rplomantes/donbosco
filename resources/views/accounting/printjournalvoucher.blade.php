@@ -14,6 +14,7 @@ $cancel = "Restore";
     <div class="col-md-4">    
     <h5>JOURNAL VOUCHER</h5>
     Date :{{$remark->trandate}} <br>
+    Applied Date :{{$entries->pluck('transactiondate')->last()}} <br>
     Voucher No : {{$remark->referenceid}}</br>
     Prepared by : {{\Auth::user()->lastname}}, {{\Auth::user()->firstname}}
     </div>

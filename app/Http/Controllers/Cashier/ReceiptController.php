@@ -51,11 +51,14 @@ class ReceiptController extends Controller
        $timeis=date('h:i:s A',strtotime($timeissued->created_at));
        $tdate = \App\Dedit::where('refno',$refno)->first();
        $posted = \App\User::where('idno',$tdate->postedby)->first();
+       
        $pdf = \App::make('dompdf.wrapper');
        $pdf->setPaper([0, 0, 336, 440], 'portrait');
        $pdf->loadView("cashier.printreceipt",compact('posted','timeis','tdate','student','debits','credits','status','debit_discount','debit_reservation','debit_cash','debit_dm','idno','refno','debit_fape','debit_deposit'));
        return $pdf->stream();
-        
+    }
     
-}
+    function changeParticular(Request $request){
+        
+    }
 }

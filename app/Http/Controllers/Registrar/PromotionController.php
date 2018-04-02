@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Input;
 class PromotionController extends Controller
 {
     function index($sy){
-        $currSY = \App\ctrSchoolYear::first()->schoolyear;
+        $currSY = \App\CtrYear::where('type','enrollment_year')->first()->year;
         $levels = \App\CtrLevel::get();
         return view('registrar.promotion.index',compact('sy','currSY','levels'));
     }
@@ -32,7 +32,7 @@ class PromotionController extends Controller
         $students = $this->students($sy,$level);
         
         $pdf = \App::make('dompdf.wrapper');
-        $pdf->setPaper("Legal", "portrait");
+        $pdf->setPaper("folio", "portrait");
         $pdf->loadView('registrar.promotion.print',compact('students','sy','level','admissions','probations'));
         return $pdf->stream();
         //return view('registrar.promotion.print',compact('students','sy','level','admissions','probations'));
@@ -124,6 +124,37 @@ class PromotionController extends Controller
             }else{
                 return false;
             }
+        }
+    }
+    
+    
+    function viewfinalize($sy,$level){
+        $status = \App\PromotionStatus::where('schoolyear',$sy)->where('level',$level)->first();
+        
+        if($status && $status->status == 1){
+            return "<button class='col-md-12 btn btn-default' onclick='changeStatus()'>Set Unavailable</button>";
+        }else{
+            return "<button class='col-md-12 btn btn-default' onclick='changeStatus()'>Finalize</button>";
+        }
+    }
+    
+    function editStatfinalize($sy,$level){
+        $status = \App\PromotionStatus::where('schoolyear',$sy)->where('level',$level)->first();
+        
+        if($status){
+            if($status->status == 1){
+                $status->update(['status'=>0]);
+            }else{
+                $status->update(['status'=>1]);
+            }
+            
+        }else{
+            $newStat = new \App\PromotionStatus();
+            $newStat->level = $level;
+            $newStat->schoolyear = $sy;
+            $newStat->status = 1;
+            $newStat->save();
+            
         }
     }
 }

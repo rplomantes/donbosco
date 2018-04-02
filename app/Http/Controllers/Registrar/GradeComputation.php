@@ -36,15 +36,15 @@ class GradeComputation extends Controller
         $gradeCondition = \App\GradesSetting::where('schoolyear',$sy)->where('level',$level)->whereIn('subjecttype',$subjecttype)->first();
         $field = RegistrarHelper::getGradeQuarter($quarter);
         if($gradeCondition){
-        if($gradeCondition->calculation == "A"){
-            return self::averageGrade($subjecttype,$sem,$grades,$field,$gradeCondition);
-        }elseif($gradeCondition->calculation == "W"){
-            return self::weightedGrade($subjecttype,$sem,$grades,$field,$gradeCondition);
-        }elseif($gradeCondition->calculation == "P"){
-            return self::pointedGrade($subjecttype,$quarter,$sem,$grades,$field,$gradeCondition);
-        }else{
-            return "";
-        }
+            if($gradeCondition->calculation == "A"){
+                return self::averageGrade($subjecttype,$sem,$grades,$field,$gradeCondition);
+            }elseif($gradeCondition->calculation == "W"){
+                return self::weightedGrade($subjecttype,$sem,$grades,$field,$gradeCondition);
+            }elseif($gradeCondition->calculation == "P"){
+                return self::pointedGrade($subjecttype,$quarter,$sem,$grades,$field,$gradeCondition);
+            }else{
+                return "";
+            }
         }else{
             return "";
     }
@@ -53,12 +53,22 @@ class GradeComputation extends Controller
     static function averageGrade($subjecttype,$sem,$grades,$field,$gradeCondition){
         $total = 0;
         $average = 0;
+        $schoolyear = $grades->pluck('schoolyear')->first();
+        $student = $grades->pluck('idno')->first();
+        $gradeOverride = \App\GradeOverRide::where('idno',$student,false)->where('schoolyear',$schoolyear,false)->where('subjecttype',$subjecttype)->first();
+        
+        if($gradeOverride && $gradeOverride->$field > 0){
+            return number_format(round($gradeOverride->$field),$gradeCondition->decimal);
+        }
+        
         foreach($grades as $grade){
             if(in_array($grade->subjecttype,$subjecttype) && $grade->semester == $sem && $grade->$field != 0){
                 $total = $total + 1;
                 $average = $average + $grade->$field;
             }
         }
+        
+
         if($total == 0 || $average == 0){
             return "";
         }
@@ -67,6 +77,8 @@ class GradeComputation extends Controller
         }else{
             $average = round($average/$total,0);
         }
+        
+
         
         return $average;
     }

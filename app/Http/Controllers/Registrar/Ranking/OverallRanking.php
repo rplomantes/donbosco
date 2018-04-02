@@ -29,8 +29,8 @@ class OverallRanking extends Controller
         $sort = Input::get('sort');
         
         $gradeQuarter = RegistrarHelper::setQuarter($semester, $quarter);
-        $acad_field = RankHelper::rankingField($semester,$quarter,'acad_level_');
-        $tech_field = RankHelper::rankingField($semester,$quarter,'tech_level_');
+        $acad_field = RankHelper::rankingField($semester,$gradeQuarter,'acad_level_');
+        $tech_field = RankHelper::rankingField($semester,$gradeQuarter,'tech_level_');
         $attendanceQtr = RegistrarHelper::setAttendanceQuarter($semester, $quarter);
         $gradeField = RegistrarHelper::getGradeQuarter($gradeQuarter);
         
@@ -38,7 +38,7 @@ class OverallRanking extends Controller
         $students = $this->getStudents($sy,$level,$strand);
         $subjects = RegistrarHelper::getLevelSubjects($level,$strand,$sy,$semester);
         
-        return view('ajax.overallRank',compact('students','level','section','semester','subjects','sy','quarter','strand','attendanceQtr','gradeField','acad_field','tech_field','sort'))->render();
+        return view('ajax.overallRank',compact('gradeQuarter','students','level','section','semester','subjects','sy','quarter','strand','attendanceQtr','gradeField','acad_field','tech_field','sort'))->render();
         
     }
     

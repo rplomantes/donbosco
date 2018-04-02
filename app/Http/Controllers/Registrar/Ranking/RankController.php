@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Registrar\Ranking\Helper as RankHelper;
 use Illuminate\Support\Facades\Input;
+use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
 
 class RankController extends Controller
 {
@@ -16,14 +17,17 @@ class RankController extends Controller
         $sy = Input::get('sy');
         $course = Input::get('course');
         $quarter = Input::get('quarter');
+        
+        
         $semester = Input::get('semester');
         
+        $gradeQuarter = RegistrarHelper::setQuarter($semester, $quarter);
         if($section !== null){
             $section = "AND s.section LIKE '".$section."'" ;
         } else{
             $section = "";
         }
-        
+        $getcourse = "";
         if($course == "NULL" || $course == "null"){
             $getcourse = "";
         } else{
@@ -35,13 +39,13 @@ class RankController extends Controller
             
         }
         
-        $this->setRankingAcad($level,$section,$getcourse,$sy,$quarter,$semester,$course);
-        $this->setRankingTech($level,$section,$getcourse,$sy,$quarter,$semester,$course);
+        $this->setRankingAcad($level,$section,$getcourse,$sy,$gradeQuarter,$semester,$course);
+        $this->setRankingTech($level,$section,$getcourse,$sy,$gradeQuarter,$semester,$course);
         
         return 'me';
     }
     
-    function setRankingAcad($level,$section,$course,$sy,$quarter,$semester,$strand){
+    function setRankingAcad($level,$section="",$course,$sy,$quarter,$semester,$strand){
         if(in_array($level,array('Grade 11','Grade 12'))){
             $subjecttype = array(5,6);
         }else{
@@ -62,10 +66,10 @@ class RankController extends Controller
                 $rankfield = RankHelper::rankingField($semester,$quarter,'acad_oa_');
             }else{
                 //This includes course
-                $rankfield = RankHelper::rankingField($semester,$quarter,'acad_level_');
+                $rankfield = RankHelper::rankngField($semester,$quarter,'acad_level_');
             }
         }else{
-            $rankfield = RankHelper::rankingField($semester,$quarter,'acad_');
+            $rankfield = RankHelper::rakingField($semester,$quarter,'acad_');
         }
         
         RankHelper::setRanking($studentAverages, $sy, $rankfield);
@@ -87,7 +91,7 @@ class RankController extends Controller
 
         if($section == ""){
             if($strand == "All"){
-                $rankfield = RankHelper::rankingField($semester,$quarter,'tech_oa_');
+                $rankfield = RankHelper::raningField($semester,$quarter,'tech_oa_');
             }else{
                 //This includes course
                 $rankfield = RankHelper::rankingField($semester,$quarter,'tech_level_');

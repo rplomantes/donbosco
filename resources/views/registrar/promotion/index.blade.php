@@ -33,12 +33,10 @@
             </select>
         </div>
         <div id='control'>
-        @if($currSY == $sy || Auth::user()->idno == 'rplomantes')
             <button class="col-md-6 btn btn-success" onclick="editPromo()">EDIT</button>
             <button class="col-md-6 btn btn-danger" onclick="printPromo()">PRINT</button>
-        @else
-            <button class="col-md-12 btn btn-danger" onclick="printPromo()">PRINT</button>
-        @endif
+            <div id='finalize'>
+            </div>
         </div>
     </div>
     <div class='col-md-8' style='max-height:1000px;overflow-y: scroll' id='report'>
@@ -52,14 +50,42 @@
         window.location.href = "/promotion/"+schoolyear;
     }
     
+    function changeStatus(){
+        var level = $('#level').val();
+        
+        $.ajax({
+            type:"GET",
+            url: "/finalizepromotion/{{$sy}}/"+level, 
+            success:function(){
+                viewfinalize(level);
+            }
+        });
+        
+        
+    }
+    
     function viewreport(level){
         document.getElementById("control").style.visibility = "visible";
         levels = level;
+        
+        viewfinalize(level);
         $.ajax({
             type:"GET",
             url: "/viewpromotion/{{$sy}}/"+level, 
             success:function(data){
                 $('#report').html(data);
+            }
+        });
+        
+
+    }
+    
+    function viewfinalize(level){
+        $.ajax({
+            type:"GET",
+            url: "/viewfinalizepromotion/{{$sy}}/"+level, 
+            success:function(data){
+                $('#finalize').html(data);
             }
         });
     }

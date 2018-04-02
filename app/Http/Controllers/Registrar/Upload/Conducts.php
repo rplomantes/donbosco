@@ -37,8 +37,7 @@ class Conducts extends Controller
     function getStartCell(){
             $path = $this->getFile();
             $sheet = $this->getSheet();
-            
-            
+
             Excel::selectSheets($sheet)->load($path, function($reader) {
                         $range = 20;
                         $start = 1;

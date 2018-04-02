@@ -56,7 +56,6 @@ class Helper extends Controller
                 . "AND g.semester = $semester "
                 . "$course "
                 . "GROUP BY idno ORDER BY `average` DESC");
-        
         return $averages;
     }
     
