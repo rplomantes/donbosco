@@ -673,3 +673,10 @@ Route::group(['middleware' => ['web','registrar']], function () {
    });
 
    //END Promotion
+   
+   //Portal Control
+   Route::group(['middleware' => 'web'], function () {
+       Route::get('/portalaccount/{idno}','PortalControl\AccountActivation@index');
+   });
+      Route::get('/updateportalmail','PortalControl\AccountActivation@updatemail')->name('updateportalmail');
+   //END Portal Control
