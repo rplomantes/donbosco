@@ -32,13 +32,27 @@
     <div class="col-lg-12">
   <div id="searchbody">   
             <table class="table table-striped"><thead>
-            <tr><th>Student Number</th><th>Student Name</th><th>Gender</th><th>Assessment</th><th>Student Info</th><th>Student Grade</th></tr>        
+            <tr>
+                <th>Student Number</th>
+                <th>Student Name</th>
+                <th>Gender</th>
+                <th>Assessment</th>
+                <th>Student Info</th>
+                <th>Student Grade</th>
+                <th>Portal Account</th>
+            </tr>        
             </thead>
             <tbody>
                
             @foreach($students as $student)
-            <tr><td>{{$student->idno}}</td><td>{{$student->lastname}}, {{$student->firstname}} {{$student->middlename}}
-                    {{$student->extensionname}}</td><td>{{$student->gender}}</td><td><a href = "{{url('/registrar/evaluate',$student->idno)}}">Assess</a></td><td><a href = "{{url('/studentinfokto12',$student->idno)}}" target="_blank">View Info</a></td><td><a href="{{url('seegrade',$student->idno)}}">View Grade</a></td></tr>
+            <tr>
+                <td>{{$student->idno}}</td>
+                <td>{{$student->lastname}}, {{$student->firstname}} {{$student->middlename}} {{$student->extensionname}}</td>
+                <td>{{$student->gender}}</td>
+                <td><a href = "{{url('/registrar/evaluate',$student->idno)}}">Assess</a></td>
+                <td><a href = "{{url('/studentinfokto12',$student->idno)}}" target="_blank">View Info</a></td>
+                <td><a href="{{url('portalaccount',$student->idno)}}">View</a></td>
+            </tr>
             @endforeach
             </tbody>
             </table>

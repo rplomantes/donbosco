@@ -257,12 +257,12 @@ class AjaxController extends Controller
                     $searches = DB::Select("Select * From users where accesslevel = '0' AND (lastname like '%$varsearch%' OR lcase(lastname) like '%$find%' OR "
                             . "firstname like '%$varsearch%' OR idno = '$varsearch') Order by lastname, firstname");
                     $value = "<table class=\"table table-striped\"><thead>
-            <tr><th>Student Number</th><th>Student Name</th><th>Gender</th><th>Assessment</th><th>Student Info</th><th>Student Grade</th></tr>        
+            <tr><th>Student Number</th><th>Student Name</th><th>Gender</th><th>Assessment</th><th>Student Info</th><th>Student Grade</th><th>Portal Account</th></tr>        
             </thead><tbody>";
                     foreach($searches as $search){
                         $value = $value . "<tr><td>" .$search->idno . "</td><td>". $search->lastname . ", " .
                                 $search->firstname . " " . $search->middlename . " " . $search->extensionname .
-                                "</td><td>" . $search->gender . "</td><td><a href = '/registrar/evaluate/".$search->idno."'>Assess</a></td><td><a href = '/studentinfokto12/".$search->idno."'>Viewn Info</a></td><td><a href = '/seegrade/".$search->idno."'>View Grades</a></td>";
+                                "</td><td>" . $search->gender . "</td><td><a href = '/registrar/evaluate/".$search->idno."'>Assess</a></td><td><a href = '/studentinfokto12/".$search->idno."'>Viewn Info</a></td><td><a href = '/seegrade/".$search->idno."'>View Grades</a><td><a href = '/portalaccount/".$search->idno."'>View</a></td>";
                     }
                       
                     $value = $value . "</tbody>
@@ -304,7 +304,7 @@ class AjaxController extends Controller
                     foreach($searches as $search){
                         $value = $value . "<tr><td>" .$search->idno . "</td><td>". $search->lastname . ", " .
                                 $search->firstname . " " . $search->middlename . " " . $search->extensionname .
-                        "</td><td>" . $search->gender . "</td><td><a href = '/studentinfo/".$search->idno."'>view</a><td></td><td><a href = '/ledger/".$search->idno."'>view</a><td>";
+                        "</td><td>" . $search->gender . "</td><td><a href = '/studentinfo/".$search->idno."'>view</a><td></td><td><a href = '/accounting/".$search->idno."'>view</a><td>";
             }
 
             $value = $value . "</tbody>
