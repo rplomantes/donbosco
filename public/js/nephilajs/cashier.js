@@ -80,6 +80,38 @@ function computetotal(){
     var penalty = document.getElementById('penalty').value;
     var reservation = document.getElementById('reservation').value;
     var total = parseFloat(totaldue) + parseFloat(totalprevious) + parseFloat(totalother) + parseFloat(penalty) - parseFloat(reservation);
+    
+    if(document.getElementById("remainingVoucher") !== null){
+        
+        var usevoucher = 0;
+        var vouchers = parseFloat(document.getElementById('remainingVoucher').value);
+        
+        if(total > vouchers){
+            usevoucher = vouchers;
+            document.getElementById('Voucher').value = vouchers.toFixed(2);
+            total = total - usevoucher;
+        }else if(total < vouchers){
+            usevoucher = total
+            document.getElementById('Voucher').value = total.toFixed(2);
+            total = total - usevoucher;
+        }
+    }
+    
+    if(document.getElementById("remainingESC") !== null){
+        var useesc = 0;
+        var esc = parseFloat(document.getElementById('remainingESC').value);
+        
+        if(total > esc){
+            useesc = esc;
+            document.getElementById('ESC').value = esc.toFixed(2);
+            total = total - useesc;
+        }else if(total < esc){
+            useesc = total
+            document.getElementById('ESC').value = total.toFixed(2);
+            total = total - useesc;
+        }
+    }
+    
     var usedeposit = 0;
     var deposits = parseFloat(document.getElementById('remainingdeposit').value);
     
@@ -95,6 +127,7 @@ function computetotal(){
         $('#displaydeposit').html(total.toFixed(2));
         total = total - usedeposit;
     }
+    
     document.getElementById('totalamount').value = total.toFixed(2);
     
     //alert(total);
@@ -158,7 +191,6 @@ function dosubmit(){
 
     var totaldebit =  0;
     var totalcredit =  0;
-    var fape =  0;
     if(document.getElementById("receivecash") !== null){
         
         if(document.getElementById("receivecash").value !== ""){
@@ -177,7 +209,6 @@ function dosubmit(){
     if(document.getElementById("fape") !== null){
         if(document.getElementById("fape").value !== ""){
             totaldebit = totaldebit+eval(document.getElementById("fape").value);
-            fape =  eval(document.getElementById("fape").value);
         }
         
     }
@@ -188,17 +219,15 @@ function dosubmit(){
         }
         
     }
-    
-    if(document.getElementById("check") !== null){
-        if(document.getElementById("check").value !== ""){
-            totaldebit = totaldebit+eval(document.getElementById("check").value);
-        }
-        
-    }
-    
     if(document.getElementById("use_deposit") !== null){
         if(document.getElementById("use_deposit").value !== ""){
             totaldebit = totaldebit+eval(document.getElementById("use_deposit").value);
+        }
+        
+    }    
+    if(document.getElementById("check") !== null){
+        if(document.getElementById("check").value !== ""){
+            totaldebit = totaldebit+eval(document.getElementById("check").value);
         }
         
     }
@@ -220,15 +249,11 @@ function dosubmit(){
     
     if(confirm("Continue to process payment now?")){
         if(eval(totaldebit) >= totalcredit){
-
-//        if(eval(totaldebit) > totalcredit && (totalcredit != 0 || fape > 0)){
             if(allowsubmit == 0){
                 return false;
-            }else{
-                allowsubmit = 0;
-                return true;
             }
-
+            allowsubmit = 0;
+            return true;
 
         }else{
             alert("Cannot continue transaction.");
@@ -344,11 +369,13 @@ function submitcash(event,amount){
 }
 
 function submitcheck(event, amount){
-    document.getElementById('cashdiff').innerHTML =""
+    document.getElementById('cashdiff').innerHTML ="";
+    
     if(document.getElementById('submit').style.visibility == "visible"){
-       document.getElementById('submit').style.visibility = "hidden" 
-       document.getElementById('change').value=""
+       document.getElementById('submit').style.visibility = "hidden" ;
+       document.getElementById('change').value="";
     }
+    
     if(event.keyCode == 13) {
         checkreceive = 0
        
@@ -382,8 +409,9 @@ function submitcheck(event, amount){
             document.getElementById('submit').style.visibility="hidden";
             document.getElementById('cashdiff').innerHTML = "DIFFERENCE : " + diff.toFixed(2);
             document.getElementById('receivecash').focus();
+            
         }
-
+        
         if($('#receivecheck').val() != ""){
             $('#check_number').prop('required', true);
             $('#bank_branch').prop('required', true);
@@ -393,8 +421,9 @@ function submitcheck(event, amount){
             $('#check_number').removeAttr('required');
             $('#bank_branch').removeAttr('required');            
         }
-     event.preventDefault();
-     return false;
+        
+        event.preventDefault();
+        return false;
         
     }
     

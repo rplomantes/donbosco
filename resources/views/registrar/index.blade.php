@@ -51,6 +51,8 @@
                 <td>{{$student->gender}}</td>
                 <td><a href = "{{url('/registrar/evaluate',$student->idno)}}">Assess</a></td>
                 <td><a href = "{{url('/studentinfokto12',$student->idno)}}" target="_blank">View Info</a></td>
+                <td><a href="{{url('seegrade',$student->idno)}}">View</a></td>
+                
                 <td><a href="{{url('portalaccount',$student->idno)}}">View</a></td>
             </tr>
             @endforeach

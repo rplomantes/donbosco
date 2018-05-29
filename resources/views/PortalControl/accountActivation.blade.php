@@ -6,6 +6,16 @@ use App\Http\Controllers\Accounting\Student\StudentInformation as Info;
 @section('content')
 <div class='container'>
     <div class='col-md-6'>
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
         <div class='panel panel-default'>
             <div class='panel-heading'>
                 {{Info::get_name($idno)}}
@@ -34,6 +44,12 @@ use App\Http\Controllers\Accounting\Student\StudentInformation as Info;
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="col-md-12">
+            <form method="POST" action="{{route('resetPortalPassword',$idno)}}" onsubmit="return confirm('Do you really want to reset this account\'s password to default?');">
+                {!!csrf_field()!!}
+                <button type='submit' class='btn btn-danger'>Reset Password to Default</button>    
+            </form>
         </div>
     </div>
 </div>

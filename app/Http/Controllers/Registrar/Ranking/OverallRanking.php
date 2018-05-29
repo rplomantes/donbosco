@@ -20,11 +20,11 @@ class OverallRanking extends Controller
     }
     
     function getOARanking(){
+        
         $level = Input::get('level');
         $sy = Input::get('sy');
         $semester = Input::get('semester');
         $quarter = Input::get('quarter');
-        $section = Input::get('section');
         $strand = Input::get('course');
         $sort = Input::get('sort');
         
@@ -34,58 +34,51 @@ class OverallRanking extends Controller
         $attendanceQtr = RegistrarHelper::setAttendanceQuarter($semester, $quarter);
         $gradeField = RegistrarHelper::getGradeQuarter($gradeQuarter);
         
-        //$students = RegistrarHelper::getSectionList($sy,$level,$strand,$section);
-        $students = $this->getStudents($sy,$level,$strand);
+        $students = self::getStudents($sy,$level,$strand,$acad_field);
         $subjects = RegistrarHelper::getLevelSubjects($level,$strand,$sy,$semester);
         
-        return view('ajax.overallRank',compact('gradeQuarter','students','level','section','semester','subjects','sy','quarter','strand','attendanceQtr','gradeField','acad_field','tech_field','sort'))->render();
+        if($sort == 'name'){
+            $students = $students->sortBy('user.lastname');
+        }
+        if($sort == 'acad'){
+            $students = $students->sortBy('ranking.'.$acad_field);
+        }
+        if($sort == 'tech'){
+            $students = $students->sortBy('ranking.'.$tech_field);
+        }
+        
+        return view('ajax.overallRank',compact('gradeQuarter','students','level','semester','subjects','sy','quarter','strand','attendanceQtr','gradeField','acad_field','tech_field','sort','gradeQuarter'))->render();
         
     }
-    
+        
 
     
-    function getStudents($sy,$level,$course){
-        $currSY = \App\CtrSchoolYear::first()->schoolyear;
-        if($currSY == $sy){
-            $table = 'statuses';
-        }
-        else{
-            $table = 'status_histories';
-        }
-        if($course != "null"){
-            if($course == "All"){
-                $course = "and strand IN('ABM','STEM')";
-            }else{
-            $course = "and strand='".$course."'";
-            }
-        }else{
-            $course = "";
-        }
-        $students = DB::Select("Select * from  $table "
-                . "where level = '$level' $course "
-                . "AND status IN(2,3) "
-                . "AND section !=''"
-                . "ORDER BY class_no");
+    static function getStudents($sy,$level,$course){
         
-        return $students;
-    }
-    
-    function getSubjects($sy,$currSy,$level,$course,$semester){
-        if($currSy == $sy){
-            $table = 'statuses';
-        }
-        else{
-            $table = 'status_histories';
-        }
-        $subjects = DB::Select("Select * from $table s "
-                . "left join grades g on s.idno = g.idno and s.schoolyear = g.schoolyear "
-                . "where s.schoolyear = '$sy' "
-                . "and s.level  = '$level' "
-                . "AND g.isdisplaycard = 1 "
-                . "AND g.semester =$semester "
-                . "$course "
-                . "group by subjectcode order by sortto ASC");
+        $status = \App\Status::with(['grade' =>function($query)use($sy){
+                    $query->where('schoolyear',$sy)->where('isdisplaycard',1)->whereIn('subjecttype',array(0,1,5,6))->orderBy('sortto','ASC');
+                },'ranking'=>function($query)use($sy){
+                    $query->where('schoolyear',$sy);
+                },'user'])->where('level',$level)->where('schoolyear',$sy)->whereIn('status',array(2,3))->get();
+                
+        $status_history = \App\StatusHistory::with(['grade' =>function($query)use($sy){
+                    $query->where('schoolyear',$sy)->where('isdisplaycard',1)->whereIn('subjecttype',array(0,1,5,6))->orderBy('sortto','ASC');
+                },'ranking'=>function($query)use($sy){
+                    $query->where('schoolyear',$sy);
+                }])->where('level',$level)->where('schoolyear',$sy)->whereIn('status',array(2,3))->get();
         
-        return $subjects;
+        $students = $status->union($status_history)->unique('idno')->sortBy('class_no');
+        
+        if($course == "All"){
+            $students = $students->filter(function($item){
+                return in_array($item->strand,array('STEM','ABM'));
+            });
+        }
+        
+        if($course != "null" && $course != "All"){
+            $students = $students->where('strand',$course,false);
+        }
+        
+        return $students->sortBy('ranking.acad_level_1');
     }
 }

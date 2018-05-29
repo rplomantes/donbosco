@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Cashier\ReceiptController;
+use App\Http\Controllers\StudentAwards\ProcessAwards as PAward;
 
 class CashierController extends Controller
 {
@@ -202,7 +203,7 @@ class CashierController extends Controller
                     
                     $balance = $account->amount - $account->payment - $account->plandiscount - $account->otherdiscount - $account->debitmemo;
 
-                        if($balance < $totaldue){
+                        if(round($balance,2) <= round($totaldue,2)){
                             $curr_duedates = $account->duedate;
                             $discount = $discount + $account->plandiscount + $account->otherdiscount;
                             if($account->plandiscount > 0){
@@ -220,6 +221,7 @@ class CashierController extends Controller
                             
                             $updatepay = \App\Ledger::where('id',$account->id)->first();
                             $updatepay->payment = $updatepay->payment + $balance;
+                            $updatepay->remark = $balance." = ".$totaldue;
                             $updatepay->save();
                             $totaldue = $totaldue - $balance;
                             $this->credit($request->idno, $account->id, $refno, $orno, $account->amount-$account->payment-$account->debitmemo);
@@ -227,9 +229,10 @@ class CashierController extends Controller
                             $curr_duedates = $account->duedate;
                             $updatepay = \App\Ledger::where('id',$account->id)->first();
                             $updatepay->payment = $updatepay->payment + $totaldue;
+                            $updatepay->remark = $totaldue." - ".$balance;
                             $updatepay->save();
                             
-                            if($totaldue==$balance){
+                            if($totaldue == $balance){
                                 $discount = $discount + $account->plandiscount + $account->otherdiscount;
                                 if($account->plandiscount > 0){
                                     $plandiscount = $plandiscount + $account->plandiscount;
@@ -394,6 +397,16 @@ class CashierController extends Controller
         if($request->deposit > 0){
             $this->debit_reservation_discount($refno, $orno,$request->idno,8, $request->deposit,'Student Deposit');
             $this->reduce_deposit($request->deposit,$request->idno);
+        }
+        
+        if($request->Voucher > 0){
+            PAward::processPaymentAward($refno, $orno,$request->idno,9, $request->deposit,'Voucher');
+            PAward::reduce_award($request->deposit,$request->idno,'Voucher');
+        }
+        
+        if($request->ESC > 0){
+            PAward::processPaymentAward($refno, $orno,$request->idno,9, $request->ESC,'ESC');
+            PAward::reduce_award($request->ESC,$request->idno,'ESC');
         }
 
         $bank_branch = "";
@@ -679,6 +692,15 @@ class CashierController extends Controller
                 $accountcode= '0';
                 $acctcode='Unknown';
                 $description = 'Unknown';
+                $department = "None";
+            }
+            
+            $grant = \App\DiscountGroupAccounts::where('discount_id',$discountname)->first();
+            if($grant){
+                $accountcode = $grant->discount_account;
+                $acctcode = $this->getaccountname($grant->discount_account);
+                $description = $grant->discountGroup->description;
+                $department = "None";
             }
 
         }
@@ -716,8 +738,8 @@ class CashierController extends Controller
                     $debitaccount->sub_department = "None";
             }   
         }else{
-            $debitaccount->acct_department = self::mainDepartment($discount->sub_department);
-            $debitaccount->sub_department = $discount->sub_department;
+            $debitaccount->acct_department = self::mainDepartment($department);
+            $debitaccount->sub_department = $department;
         }
         $debitaccount->postedby = \Auth::user()->idno;
         $debitaccount->save();
@@ -1157,6 +1179,14 @@ class CashierController extends Controller
                 $acctcode = 'BPICA 1881-0466-59';
                 $accountingcode = \App\ChartOfAccount::where('accountname','BPICA 1881-0466-59')->first();
                 break;
+            case 'LANDBANK 1':
+                $acctcode = 'Land Bank of the Phils. SA 1781-1111-43';
+                $accountingcode = \App\ChartOfAccount::where('accountname',$acctcode)->first();
+                break;
+            case 'LANDBANK 2':
+                $acctcode = 'Land Bank of the Phils. SA 1781-0600-00';
+                $accountingcode = \App\ChartOfAccount::where('accountname',$acctcode)->first();
+                break;
         }
         
             $debit = new \App\Dedit;
@@ -1231,6 +1261,7 @@ class CashierController extends Controller
     function cancell($refno,$idno){
         
         $credits = \App\Credit::where('refno',$refno)->get();
+        $dedits = \App\Dedit::where('refno',$refno)->get();
         foreach($credits as $credit){
             \App\Ledger::where('id',$credit->referenceid)->update(['status'=>0]);
           
@@ -1256,8 +1287,8 @@ class CashierController extends Controller
 
         $matchfield=["refno"=>$refno,"paymenttype"=>"5"];
         $debitreservation = \App\Dedit::where($matchfield)->first();
-        if(count($debitreservation)>0){
-          $res=\App\AdvancePayment::where('idno',$idno)->where('status','1')->first();
+        if(count($debitreservation)>0 && $credits->where('accountingcode',210400,false)->count() == 0){
+          $res=\App\AdvancePayment::where('idno',$idno)->where('status','1')->orderBy('id','DESC')->first();
           if(isset($res->status)){
           $res->status = '0';
           $res->save();//->update(['status'=>'0']);
@@ -1273,6 +1304,13 @@ class CashierController extends Controller
           $deposit->save();
 
         }
+        
+        $debitawards = \App\Dedit::where('paymenttype',9)->where('refno',$refno)->first();
+        if($debitawards){
+            PAward::reverse_award($debitawards->amount, $idno, $debitawards->description);
+        }
+        
+        
         \App\Credit::where('refno',$refno)->update(['isreverse'=>'1','reversedate'=>  Carbon::now(), 'reverseby'=> \Auth::user()->idno]);
         \App\Dedit::where('refno',$refno)->update(['isreverse'=>'1']);
         $user = \App\User::where('idno',$idno)->exists();

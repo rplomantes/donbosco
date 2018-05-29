@@ -56,7 +56,7 @@ class AuthController extends Controller
             'idno' => 'required|max:255',
             'lastname' => 'required',
             'firstname' => 'required',
-            'password' => 'required|min:6',
+            'password' => 'required|min:4',
         ]);
     }
 

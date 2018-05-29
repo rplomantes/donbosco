@@ -54,4 +54,36 @@ class ProcessPayment extends Controller
         $resetor->reference_number = $resetor->reference_number + 1;
         $resetor->save();
     }
+    
+    function processMainPayment(Request $request){
+        $orno = $this->getOR();
+        $refno = $this->getRefno();
+        $discount = 0;
+        $plandiscount = 0;
+        $otherdiscount = array();
+        $change = 0;
+        
+        $mainaccounts = \App\Ledger::where('idno',$request->idno)->where('categoryswitch','<=','6')->orderBy('duedate','categorySwitch')->get();
+        
+        if($request->totaldue > 0 ){
+            $this->processDiscount($mainaccounts);
+        }
+    }
+    
+    function processDiscount($accounts){
+        $discounts = $accounts->where('status',0,false)->filter(function($query){
+                        return $query->plandiscount > 0 || $query->otherdiscount > 0;
+                    });
+                    
+        $plandiscount = $discounts->sum('plandiscount');
+    }
+    
+    function ProcessDebit($accountingcode,$description){
+        
+    }
+    
+    
+    
+    
+    
 }

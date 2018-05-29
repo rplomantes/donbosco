@@ -46,7 +46,7 @@ class ChangeGrade extends Controller
                 return view('ajax.changeGrade',compact('subjects','sy','idno','type'));
                 break;
             case 'conduct';
-                $subjects = \App\Grade::where('idno',$idno)->where('schoolyear',$sy)->where('subjecttype',3)->orderBy('sem')->orderBy('sortto')->get();
+                $subjects = \App\Grade::where('idno',$idno)->where('schoolyear',$sy)->where('subjecttype',3)->get();
                 return view('ajax.changeGrade',compact('subjects','sy','idno','type'));
                 break;
             case 'attendance';

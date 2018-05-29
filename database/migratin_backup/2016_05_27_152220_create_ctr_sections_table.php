@@ -14,6 +14,14 @@ class CreateCtrSectionsTable extends Migration
     {
         Schema::create('ctr_sections', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('level');
+            $table->string('strand');
+            $table->string('section');
+            $table->string('status');
+            $table->string('sortto');
+            $table->string('adviser');
+            $table->string('adviserId');
+            $table->increments('schoolyear');
             $table->timestamps();
         });
     }

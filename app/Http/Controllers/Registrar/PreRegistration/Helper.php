@@ -17,8 +17,8 @@ class Helper extends Controller
         $filteredName = strtolower(str_replace(" ","",$lastname.$firstname));
         
         //$hits = DB::Select("SELECT * FROM users WHERE LOWER(REPLACE(CONCAT(lastname,firstname),' ','')) LIKE '%$filteredName%'");
-        $hits = DB::Select("SELECT * FROM users WHERE LOWER(REPLACE(lastname,' ','')) LIKE '%$lastname%' AND LOWER(REPLACE(firstname,' ','')) LIKE '%$firstname%'");
-        
+        $hits = DB::Select("SELECT * FROM users WHERE LOWER(REPLACE(lastname,' ','')) LIKE '$lastname%' AND LOWER(REPLACE(firstname,' ','')) LIKE '$firstname%' AND accesslevel = 0");
+        //$hits = \App\User::where('accesslevel',0)->whereRaw("LOWER(REPLACE(lastname,' ','')) LIKE '$lastname%'")->whereRaw("LOWER(REPLACE(firstname,' ','')) LIKE '$firstname%'");
         return view('registrar.preRegistration.ajax.namehits',compact('hits','filteredName'));
     }
 }

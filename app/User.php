@@ -28,4 +28,8 @@ class User extends Authenticatable
         return $this->hasMany('\App\Dedit');
     }
     
+    public function usersPosition(){
+        return $this->hasMany('\App\UsersPosition','idno','idno');
+    }
+    
 }

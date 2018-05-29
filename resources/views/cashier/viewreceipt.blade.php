@@ -47,6 +47,11 @@
             @if(count($debit_reservation)>0)
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Less Reservation</td><td align="right">({{number_format($debit_reservation->amount,2)}})</td></tr>
            @endif
+                @if(count($debit_awards)>0)
+                    @foreach($debit_awards as $debit_award)
+                <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;     {{$debit_award->description}}</td><td align="right">({{number_format($debit_award->amount,2)}})</td></tr>
+                    @endforeach
+                @endif
            @if(count($debit_deposit)>0)
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Less Student Deposit</td><td align="right">({{number_format($debit_deposit->amount,2)}})</td></tr>
            @endif

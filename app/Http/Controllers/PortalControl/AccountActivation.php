@@ -67,4 +67,14 @@ class AccountActivation extends Controller
          
          return $string;
     }
+    
+    function resetPass($idno,Request $request){
+        $record = \App\PortalVerificationRequest::where('idno',$idno)->first();
+        if($record){
+            $this->setPassword($idno,$record->password);
+            return redirect()->back()->with("success","Password reset successfully !");
+        }else{
+            return redirect()->back()->with("error","System cannot find student!");
+        }        
+    }
 }

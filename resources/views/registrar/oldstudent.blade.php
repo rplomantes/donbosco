@@ -1,6 +1,9 @@
 @extends('app')
-
 @section('content')
+<?php
+use App\Http\Controllers\StudentAwards\AwardsController as Award;
+use App\Http\Controllers\Registrar\Discount\DiscountGrant;
+?>
 <form onsubmit="return confirm('Continue to assess this student ?');" class="form-horizontal" id = "assess" role="form" method="POST" action="{{ url('/registrar/assessment') }}">
   {!! csrf_field() !!}  
 <input type="hidden" name="id" id="id" value="{{ $student->idno }}">
@@ -14,6 +17,7 @@
         </div>    
        
         <div class="col-md-12">
+            
             <table class="table table-striped">
                 <tr><td>Student ID</td><td>{{$student->idno}}</td></tr>
                 <tr><td>Student Name</td><td><strong>{{$student->lastname}},  {{$student->firstname}} {{$student->middlename}} {{$student->extensionname}}</strong></td></tr>
@@ -48,8 +52,29 @@
                         </td><td><strong style="color:red">{{ number_format($balance-$reservation,2)}}</strong></td></tr>
                 </tbody>
             </table>
-        </div>  
-         
+        </div>
+        <div class="col-md-12">
+            @if(Award::hasRemainingFund($student->idno))
+            <?php 
+            $awards = Award::getAvailableAwards($student->idno);
+            ?>
+            <ul tyle="circle">
+                @foreach($awards->groupBy('type') as $award=>$details)
+                <li>{{$award}} Receiver - {{$details->pluck('schoolyear')->last()}}</li>
+                @endforeach
+            </ul>
+            @endif
+        </div>
+        @if(DiscountGrant::confirm_isGrantee($student->idno))
+        <div class="col-md-12">
+            <ul tyle="circle">
+                <li>Financial Grantee</li>
+            </ul>
+            <div class="col-md-offset-1 col-md-11">
+                {!!DiscountGrant::view_discountGrant($student->idno)!!}
+            </div>
+        </div>
+        @endif
         <!-- if student has status-->
         @if(isset($status->status))
             <!-- if student status 0 or 1-->
@@ -142,7 +167,7 @@
                                 </div>   
                    
                             </div>
-                   
+                            
                         </div>
                         <div id="assessbuttoncontainer">    
                         </div>
@@ -177,9 +202,13 @@
                     </div>
                    
                     <div class="col-md-12">
+                        @if(!DiscountGrant::confirm_isGrantee($student->idno))
                         <div id="discountcontainer">
                    
                         </div>
+                         @else
+                         <input type="hidden" name="discount" value="none">
+                        @endif
                         <div id="assessbuttoncontainer">    
                         </div>
                     </div>
@@ -211,11 +240,15 @@
                         <div id="plancontainer">    
                         </div>
                     </div>
-                
+                    
                     <div class="col-md-12">
+                        @if(!DiscountGrant::confirm_isGrantee($student->idno))
                         <div id="discountcontainer">
                    
                         </div>
+                        @else
+                        <input type="hidden" name="discount" value="none">
+                        @endif
                         <div id="assessbuttoncontainer">    
                         </div>
                     </div>
@@ -253,9 +286,13 @@
                 </div>
                 
                  <div class="col-md-12">
-                <div id="discountcontainer">
-                   
-                </div>
+                     @if(!DiscountGrant::confirm_isGrantee($student->idno))
+                        <div id="discountcontainer">
+
+                        </div>
+                     @else
+                     <input type="hidden" name="discount" value="none">
+                     @endif
                 <div id="assessbuttoncontainer">    
                 </div>
                 </div>
@@ -270,7 +307,7 @@
             @if(isset($status->status))
             @if($status->status == '1' && $currentschoolyear->schoolyear == $status->schoolyear && $currentschoolyear->period == $status->period)
                 <table class ="table table-bordered"><tr><td>Description</td><td>Amount</td><tr>
-                <?php $totalamount = 0; $totalplandiscount=0; $totalotherdiscount=0; ?>
+                <?php $totalamount = 0; $totalplandiscount=0; $totalotherdiscount=0;$totalaward = 0; ?>
                 @foreach($ledgers as $ledger)
                 <?php $totalamount = $totalamount + $ledger->amount; 
                       $totalplandiscount = $totalplandiscount + $ledger->plandiscount;
@@ -284,13 +321,22 @@
                 <tr><td> Other Discount</td><td align="right"><span style="color:red">(<?php echo number_format($totalotherdiscount,2); ?>)</span></td><tr> 
                 <tr><td>Reservation</td><td align="right"><span style="color:red">(<?php echo number_format($reservation,2); ?>)</span></td><tr>
                 <tr><td>Student Deposit</td><td align="right"><span style="color:red">(<?php echo number_format($deposit,2); ?>)</span></td><tr>
+                    @if(Award::hasRemainingFund($student->idno))
+                    @foreach($awards->groupBy('type') as $award=>$details)
+                    <?php
+                    $total = $details->sum('amount') - $details->sum('used');
+                    $totalaward = $totalaward+$total;
+                    ?>
+                    <tr><td>{{$award}}</td><td align="right"><span style="color:red">(<?php echo number_format($total,2); ?>)</span></td><tr>
+                        @endforeach
+                    @endif
                 <tr><td>
-                        @if($deposit != 0 && ($totalamount-$totalotherdiscount-$totalplandiscount-$reservation-$deposit)<0)
+                        @if($deposit != 0 && ($totalamount-$totalotherdiscount-$totalplandiscount-$reservation-$deposit-$totalaward)<0)
                         Remaining Student Deposit
                         @else
                         Total
                         @endif
-                    </td><td align="right"><b><?php echo number_format(abs($totalamount-$totalotherdiscount-$totalplandiscount-$reservation-$deposit),2); ?></td></b><tr>
+                    </td><td align="right"><b><?php echo number_format(abs($totalamount-$totalotherdiscount-$totalplandiscount-$reservation-$totalaward-$deposit),2); ?></td></b><tr>
                 </table>
                 <div class="col-md-6">
                 <input type="submit" class="btn btn-primary form-control" value = "Reassess">
@@ -309,6 +355,17 @@
 <script src="{{url('/js/nephilajs/gettrackplan.js')}}"></script>
 <script src="{{url('/js/nephilajs/getdiscount.js')}}"></script>
 <script src="{{url('/js/nephilajs/getlevel.js')}}"></script>
+<script>
+$('#discountcontainer').on('keyup','#discount',function(){
+compute()
+})
+
+@if(DiscountGrant::confirm_isGrantee($student->idno))
+    $('#plancontainer').on('change','#plan',function(){
+    compute()
+    })
+@endif
+</script>
  
   </form>      
 @stop

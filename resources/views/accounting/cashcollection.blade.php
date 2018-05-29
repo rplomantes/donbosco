@@ -5,6 +5,9 @@
     $totalcbc=0;
     $totalbpi1=0;
     $totalbpi2=0;
+    $totallandbank1=0;
+    $totallandbank2=0;
+    
     ?>
     <h3>Don Bosco Technical Institute, Inc.</h3>
     <p>Collection report as of {{$transactiondate}}</p>
@@ -63,6 +66,47 @@
         <tr><td colspan="3">No Deposit slip Issued</td></tr>
         @endif
     </table>
+    
+    <h5> Deposit (LANDBANK 1)</h5>
+    <table class="table table-striped"><tr><td>Posted By </td><td>Deposit Type</td><td align="center">Amount</td></tr>
+        @if(count($actuallandbank1)>0)
+        
+        <?php $totallandbank1=0;?>
+        @foreach($actuallandbank1 as $acbc)
+        <?php $totallandbank1 = $totallandbank1 + $acbc->amount;?>
+         <tr><td>{{$acbc->postedby}}</td><td>@if($acbc->deposittype == "0")
+                                        Cash
+                                         @else
+                                         Check
+                                         @endif
+                                    </td><td align="right">{{number_format($acbc->amount,2)}}</td></tr>     
+        @endforeach
+        <tr><td colspan="2">Total</td><td align="right"><b>{{number_format($totallandbank1,2)}}</b></td></tr>
+        @else
+        <tr><td colspan="3">No Deposit slip Issued</td></tr>
+        @endif
+    </table>
+    
+    <h5> Deposit (LANDBANK 2)</h5>
+    <table class="table table-striped"><tr><td>Posted By </td><td>Deposit Type</td><td align="center">Amount</td></tr>
+        @if(count($actuallandbank2)>0)
+        
+        <?php $totallandbank2=0;?>
+        @foreach($actuallandbank2 as $acbc)
+        <?php $totallandbank2 = $totallandbank2 + $acbc->amount;?>
+         <tr><td>{{$acbc->postedby}}</td><td>@if($acbc->deposittype == "0")
+                                        Cash
+                                         @else
+                                         Check
+                                         @endif
+                                    </td><td align="right">{{number_format($acbc->amount,2)}}</td></tr>     
+        @endforeach
+        <tr><td colspan="2">Total</td><td align="right"><b>{{number_format($totallandbank2,2)}}</b></td></tr>
+        @else
+        <tr><td colspan="3">No Deposit slip Issued</td></tr>
+        @endif
+    </table>
+    
     <h5>Computed Receipt</h5>
     <table class="table table-striped">
         <tr><td>Posted By</td><td>Bank Account</td><td align="center">Cash Amount</td><td align="center">Check Amount</td><td align="center">Total</td></tr>
@@ -90,8 +134,8 @@
     <h5>Difference</h5>
     <table class="table table-striped">
     <tr><td>Total Computed Receipt</td><td>{{number_format($totalamount + $totalcheckamount,2)}}</td></tr>
-    <tr><td>Total Actual Deposit</td><td>{{number_format($totalcbc + $totalbpi1 + $totalbpi2,2)}}</td></tr> 
-    <tr><td>Difference</td><td>{{number_format($totalamount + $totalcheckamount - $totalcbc - $totalbpi1 - $totalbpi2,2)}}</td></tr> 
+    <tr><td>Total Actual Deposit</td><td>{{number_format($totalcbc + $totalbpi1 + $totalbpi2+$totallandbank2+$totallandbank1,2)}}</td></tr> 
+    <tr><td>Difference</td><td>{{number_format($totalamount + $totalcheckamount - $totalcbc - $totalbpi1 - $totalbpi2-$totallandbank2-$totallandbank1,2)}}</td></tr> 
     </table>
     </div>
     <div class="col-md-12">

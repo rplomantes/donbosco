@@ -2,7 +2,7 @@
 use App\Http\Controllers\Registrar\GradeComputation;
 use App\Http\Controllers\Registrar\Ranking\SectionRanking;
 use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
-
+use App\Http\Controllers\Accounting\Student\StudentInformation as Info;
 $acad = 0;
 $tech = 0;
 ?>
@@ -37,27 +37,23 @@ $tech = 0;
             @endif
             
         @if(in_array($level,array('Grade 11','Grade 12')))
-        <td>REMARKS</td>
         @endif
 	@endif            
     </tr>
     @foreach($students as $student)
-    <?php 
-            $grades = \App\Grade::where('idno',$student->idno)->where('schoolyear',$sy)->get();
-            $name = App\User::where('idno',$student->idno)->first();
-            ?>
     <tr style="text-align: center">
         <td>{{strrchr($student->section," ")}}</td>
-        <td style="text-align: left">{{$name->lastname}}, {{$name->firstname}} @if($name->middlename != ""){{substr($name->middlename,0,1)}}. @endif 
+        <td style="text-align: left">{{Info::get_name($student->idno)}}
             @if($student->status ==3)
                 <span style='float: right;color: red;font-weight: bold'>DROPPED</span>
             @endif
         </td>
         
         @foreach($subjects as $subject)
-        <td>
+        
             @if(in_array($subject->subjecttype,array(0,5,6)))
-                @foreach($grades as $grade)
+            <td>
+                @foreach($student->grade as $grade)
                     @if($grade->subjectcode == $subject->subjectcode)
                     
                         @if($grade->$gradeField > 0)
@@ -66,18 +62,19 @@ $tech = 0;
                     
                     @endif
                 @endforeach
+                </td>
             @endif
-            </td>
+        
         @endforeach
         
             @if($acad > 0)
-            <td>{{GradeComputation::computeQuarterAverage($sy,$level,array(0,5,6),$semester,$quarter,$grades)}}</td>
-            <td>{{SectionRanking::getStudentRank($student->idno,$sy,$acad_field)}}</td>
+            <td><b>{{GradeComputation::computeQuarterAverage($sy,$level,array(0,5,6),$semester,$gradeQuarter,$student->grade)}}</b></td>
+            <td><b>{{SectionRanking::getStudentRank($student->idno,$sy,$acad_field)}}</b></td>
             @endif
             
         @foreach($subjects as $subject)
             @if(in_array($subject->subjecttype,array(1)))
-                @foreach($grades as $grade)
+                @foreach($student->grade as $grade)
                     @if($grade->subjectcode == $subject->subjectcode)
                     <td>
                         @if($grade->$gradeField > 0)
@@ -90,12 +87,11 @@ $tech = 0;
         @endforeach
         
             @if($tech > 0)
-            <td>{{GradeComputation::computeQuarterAverage($sy,$level,array(1),$semester,$quarter,$grades)}}</td>
+            <td>{{GradeComputation::computeQuarterAverage($sy,$level,array(1),$semester,$gradeQuarter,$student->grade)}}</td>
             <td>{{SectionRanking::getStudentRank($student->idno,$sy,$tech_field)}}</td>
             @endif
 
             @if(in_array($level,array('Grade 11','Grade 12')))
-            <td>{{RegistrarHelper::rankQualifier($student->idno,$level,$semester,$sy,$grades)}}</td>
             @endif
     </tr>
     @endforeach
@@ -112,7 +108,6 @@ if($sort == "name"){
     $order = 1;
 }
 ?>
-{{$order}}
 <script>
     
 

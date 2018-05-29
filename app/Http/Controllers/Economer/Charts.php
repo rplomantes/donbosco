@@ -28,7 +28,5 @@ class Charts extends Controller
                 ]);
 
         return $chartjs;
-
-
     }
 }

@@ -612,8 +612,10 @@ function cashcollection($transactiondate){
     $actualcbc =  \App\DepositSlip::where('transactiondate',$transactiondate)->where('bank',"China Bank")->get();
     $actualbpi1 = \App\DepositSlip::where('transactiondate', $transactiondate)->where('bank',"BPI 1")->get();
     $actualbpi2 = \App\DepositSlip::where('transactiondate',$transactiondate)->where('bank',"BPI 2")->get();
+    $actuallandbank1 = \App\DepositSlip::where('transactiondate',$transactiondate)->where('bank',"LANDBANK 1")->get();
+    $actuallandbank2 = \App\DepositSlip::where('transactiondate',$transactiondate)->where('bank',"LANDBANK 2")->get();
     
-    return view('accounting.cashcollection', compact('computedreceipts','transactiondate','actualcbc','actualbpi1','actualbpi2', 'encashments'));
+    return view('accounting.cashcollection', compact('computedreceipts','transactiondate','actualcbc','actualbpi1','actualbpi2','actuallandbank1','actuallandbank2', 'encashments'));
 
     }
   
@@ -629,12 +631,14 @@ function cashcollection($transactiondate){
     $actualcbc =  \App\DepositSlip::where('transactiondate',$transactiondate)->where('bank',"China Bank")->get();
     $actualbpi1 = \App\DepositSlip::where('transactiondate', $transactiondate)->where('bank',"BPI 1")->get();
     $actualbpi2 = \App\DepositSlip::where('transactiondate',$transactiondate)->where('bank',"BPI 2")->get();
+    $actuallandbank1 = \App\DepositSlip::where('transactiondate',$transactiondate)->where('bank',"LANDBANK 1")->get();
+    $actuallandbank2 = \App\DepositSlip::where('transactiondate',$transactiondate)->where('bank',"LANDBANK 2")->get();
     
     
     
  $pdf = \App::make('dompdf.wrapper');
       // $pdf->setPaper([0, 0, 336, 440], 'portrait');
-       $pdf->loadView('accounting.printactualoverall', compact('computedreceipts','transactiondate','actualcbc','actualbpi1','actualbpi2', 'encashments'));
+       $pdf->loadView('accounting.printactualoverall', compact('computedreceipts','transactiondate','actualcbc','actualbpi1','actualbpi2', 'actuallandbank1','actuallandbank2','encashments'));
        return $pdf->stream();
        
  }   

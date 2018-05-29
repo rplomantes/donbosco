@@ -1,6 +1,8 @@
 <?php
 use App\Http\Controllers\Registrar\GradeController;
 use App\Http\Controllers\Registrar\GradeComputation;
+
+use App\Http\Controllers\Registrar\ReportCards\Helper as CardHelper;
 ?>
 <html>
     <head>
@@ -194,32 +196,32 @@ use App\Http\Controllers\Registrar\GradeComputation;
                             <tr style="text-align: center;font-size: 8pt;">
                                 <td style="text-align: left;padding-left:10px;">{{$grade->subjectname}}</td>
                                 <td align="center">
-                                    @if($grade->first_grading > 0)
+                                    @if($grade->first_grading > 0 && $quarter >= 1)
                                     {{round($grade->first_grading)}}
                                     @endif
                                 </td>
                                 <td align="center">
-                                    @if($grade->second_grading > 0)
+                                    @if($grade->second_grading > 0 && $quarter >= 2)
                                     {{round($grade->second_grading)}}
                                     @endif
                                 </td>
                                 <td align="center">
-                                    @if($grade->third_grading > 0)
+                                    @if($grade->third_grading > 0 && $quarter >= 3)
                                     {{round($grade->third_grading)}}
                                     @endif
                                 </td>
                                 <td align="center">
-                                    @if($grade->fourth_grading > 0)
+                                    @if($grade->fourth_grading > 0 && $quarter >= 4)
                                     {{round($grade->fourth_grading)}}
                                     @endif
                                 </td>
                                 <td align="center">
-                                    @if($grade->final_grade > 0)
+                                    @if($grade->final_grade > 0 && $quarter >= 4)
                                     {{number_format(round($grade->final_grade,2),2)}}
                                     @endif
                                 </td>
                                 <td align="center">
-                                    @if((round($grade->final_grade,2)) != 0)
+                                    @if((round($grade->final_grade,2)) != 0 && $quarter >= 4)
                                            <b> {{round($grade->final_grade,2) >= 75 ? "Passed":"Failed"}}</b>
                                     @endif
                                 </td>
@@ -230,14 +232,34 @@ use App\Http\Controllers\Registrar\GradeComputation;
                         <td style="text-align: right;">
                             <b>ACADEMIC AVERAGE&nbsp;&nbsp;&nbsp;</b>
                         </td>
-                        <td align="center"><b>{{GradeComputation::computeQuarterAverage($sy,$level,array(0),0,1,$grades)}}</b></td>
-                        <td align="center"><b>{{GradeComputation::computeQuarterAverage($sy,$level,array(0),0,2,$grades)}}</b></td>
-                        <td align="center"><b>{{GradeComputation::computeQuarterAverage($sy,$level,array(0),0,3,$grades)}}</b></td>
-                        <td align="center"><b>{{GradeComputation::computeQuarterAverage($sy,$level,array(0),0,4,$grades)}}</b></td>
-                        <td align="center"><b>{{GradeComputation::computeQuarterAverage($sy,$level,array(0),0,5,$grades)}}</b></td>
+                        <td align="center">
+                             @if($quarter >= 1)
+                            <b>{{GradeComputation::computeQuarterAverage($sy,$level,array(0),0,1,$grades)}}</b>
+                            @endif
+                        </td>
+                        <td align="center">
+                            @if($quarter >= 2)
+                            <b>{{GradeComputation::computeQuarterAverage($sy,$level,array(0),0,2,$grades)}}</b>
+                            @endif
+                        </td>
+                        <td align="center">
+                            @if($quarter >= 3)
+                            <b>{{GradeComputation::computeQuarterAverage($sy,$level,array(0),0,3,$grades)}}</b>
+                            @endif
+                        </td>
+                        <td align="center">
+                            @if($quarter >= 4)
+                            <b>{{GradeComputation::computeQuarterAverage($sy,$level,array(0),0,4,$grades)}}</b>
+                            @endif
+                        </td>
+                        <td align="center">
+                            @if($quarter >= 4)
+                            <b>{{GradeComputation::computeQuarterAverage($sy,$level,array(0),0,5,$grades)}}</b>
+                            @endif
+                        </td>
 
                         <td><b>
-                        @if(GradeComputation::computeQuarterAverage($sy,$level,array(0),0,5,$grades) != "")
+                        @if(GradeComputation::computeQuarterAverage($sy,$level,array(0),0,5,$grades) != "" && $quarter >= 4)
                             {{GradeComputation::computeQuarterAverage($sy,$level,array(0),0,5,$grades) >= 75 ? "Passed":"Failed"}}
                         @endif
                         </b></td>
@@ -356,22 +378,22 @@ use App\Http\Controllers\Registrar\GradeComputation;
                             <td style="border: 1px solid">{{$grade->subjectname}}</td>
                             <td align="center" style="border: 1px solid">{{round($grade->points)}}</td>
                             <td align="center" style="border: 1px solid">
-                                @if($grade->first_grading > 0)
+                                @if($grade->first_grading > 0 && $quarter >= 1)
                                 {{round($grade->first_grading)}}
                                 @endif
                             </td>
                             <td align="center" style="border: 1px solid">
-                                @if($grade->second_grading > 0)
+                                @if($grade->second_grading > 0 && $quarter >= 2)
                                 {{round($grade->second_grading)}}
                                 @endif
                             </td>
                             <td align="center" style="border: 1px solid">
-                                @if($grade->third_grading > 0)
+                                @if($grade->third_grading > 0  && $quarter >= 3)
                                 {{round($grade->third_grading)}}
                                 @endif
                             </td>
                             <td align="center" style="border: 1px solid">
-                                @if($grade->fourth_grading > 0)
+                                @if($grade->fourth_grading > 0  && $quarter >= 4)
                                 {{round($grade->fourth_grading)}}
                                 @endif
                             </td>
@@ -385,11 +407,31 @@ use App\Http\Controllers\Registrar\GradeComputation;
                 <tr style="font-weight: bold">
                     <td align="center" style="border: 1px solid">CONDUCT GRADE</td>
                     <td align="center" style="border: 1px solid">100</td>
-                    <td align="center" style="border: 1px solid">{{GradeComputation::computeQuarterAverage($sy,$level,array(3),0,1,$grades)}}</td>
-                    <td align="center" style="border: 1px solid">{{GradeComputation::computeQuarterAverage($sy,$level,array(3),0,2,$grades)}}</td>
-                    <td align="center" style="border: 1px solid">{{GradeComputation::computeQuarterAverage($sy,$level,array(3),0,3,$grades)}}</td>
-                    <td align="center" style="border: 1px solid">{{GradeComputation::computeQuarterAverage($sy,$level,array(3),0,4,$grades)}}</td>
-                    <td align="center" style="border: 1px solid">{{GradeComputation::computeQuarterAverage($sy,$level,array(3),0,5,$grades)}}</td>
+                    <td align="center" style="border: 1px solid">
+                         @if($quarter >= 1)
+                        {{GradeComputation::computeQuarterAverage($sy,$level,array(3),0,1,$grades)}}
+                        @endif
+                    </td>
+                    <td align="center" style="border: 1px solid">
+                        @if($quarter >= 2)
+                        {{GradeComputation::computeQuarterAverage($sy,$level,array(3),0,2,$grades)}}
+                        @endif
+                    </td>
+                    <td align="center" style="border: 1px solid">
+                        @if($quarter >= 3)
+                        {{GradeComputation::computeQuarterAverage($sy,$level,array(3),0,3,$grades)}}
+                        @endif
+                    </td>
+                    <td align="center" style="border: 1px solid">
+                        @if($quarter >= 4)
+                        {{GradeComputation::computeQuarterAverage($sy,$level,array(3),0,4,$grades)}}
+                        @endif
+                    </td>
+                    <td align="center" style="border: 1px solid">
+                        @if($quarter >= 4)
+                        {{GradeComputation::computeQuarterAverage($sy,$level,array(3),0,5,$grades)}}
+                        @endif
+                    </td>
                 </tr>
 
                 </table>
@@ -503,18 +545,30 @@ use App\Http\Controllers\Registrar\GradeComputation;
                             The student is eligible for transfer and
                         </td>
                         <td class="print-size" >
-                            Admitted in:__________________
+                            Admitted in:_____________________
                         </td>                                                    
                     </tr>
                     <tr>
                         
 
-                        <td class="print-size" >admission to:___________________</td>
+                        <td class="print-size" >admission to:
+                                    @if(CardHelper::studentPassedElem($sy,$level,$grades))
+                                        ____<u>{{CardHelper::promoted($level)}}</u>______
+                                    @else
+                                        _____________________
+                                    @endif
+                        </td>
                         <td class="print-size" >Grade:_________ Date:_________</td>
                     </tr>                       
                     <tr>
 
-                        <td class="print-size" >Date of Issue:__________________</td>
+                        <td class="print-size" >Date of Issue:
+                                @if(CardHelper::studentPassedElem($sy,$level,$grades))
+                                    ____<u>{{CardHelper::issueDate($level)}}</u>______
+                                @else
+                                    _____________________
+                                    @endif
+                        </td>
 
                         <td></td>                                                    
                     </tr>

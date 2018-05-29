@@ -10,15 +10,15 @@ use App\Http\Controllers\Registrar\Helper as RegistrarHelper;
 
 class ReportCardController extends Controller
 {
-    function sectionCards(){
+    function sectionCards($sy){
         $levels = \App\CtrLevel::get();
-        $sy= \App\ctrSchoolYear::first()->schoolyear;
+        $currSY = \App\CtrSchoolYear::first()->schoolyear;
         
-        return view('registrar.reportcard.index',compact('levels','sy'));
+        return view('registrar.reportcard.index',compact('levels','sy','currSY'));
     }
     
-    function printSectionCards($level,$course,$section,$quarter,$sem){
-        $sy = \App\CtrSchoolYear::first()->schoolyear;
+    function printSectionCards($sy,$level,$course,$section,$quarter,$sem){
+        
         $students = RegistrarHelper::getSectionList($sy, $level, $course, $section);
         
         return view('registrar.reportcard.all',compact('students','sy','quarter','sem'));

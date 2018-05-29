@@ -15,10 +15,19 @@ class Status extends Model
     }
     
     public function grade(){
-        return Grade::where('idno',$this->idno)->where('schoolyear',  $this->schoolyear)->get();
+        return $this->hasMany('\App\Grade','idno','idno');
+        
     }
     
     public function CtrLevel(){
         return $this->hasOne('\App\CtrLevel','level','level');
+    }
+    
+    public function ranking(){
+        return $this->belongsTo('\App\Ranking','idno','idno');
+    }
+    
+    public function ctrSection(){
+        return $this->belongsTo('\App\CtrSection','level','level')->where('section',$this->section)->where('schoolyear',  $this->schoolyear);
     }
 }

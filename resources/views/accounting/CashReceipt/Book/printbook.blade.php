@@ -1,5 +1,6 @@
 <?php
-ini_set('memory_limit', '256M');
+ini_set('memory_limit', -1);
+ini_set('max_execution_time', 300);
 $forwarded = $records->where('refno','forwarded',false);
 
 $grand_total = $records->where('isreverse',0,false);
@@ -199,7 +200,7 @@ $b_csundry = 0;
         @endforeach
         
         <div width="100%"><br></div>
-        <table border="1" cellspacing="0" cellpadding="2" width="100%" style="page-break-inside:never">
+        <table border="1" cellspacing="0" cellpadding="2" width="100%" style="page-break-inside:avoid">
             <tr>
                 <th>Receipt No.</th>
                 <th>Name</th>
@@ -221,6 +222,7 @@ $b_csundry = 0;
                 <td colspan="2" style='text-align: left'>Forwarding Balance ({{date("M",strtotime($transactiondate))}})</td>
                 <td>{{number_format($forwarded->sum('cash'),2)}}</td>
                 <td>{{number_format($forwarded->sum('discount'),2)}}</td>
+                <td>{{number_format($forwarded->sum('dsundry'),2)}}</td>
                 
                 <td>{{number_format($forwarded->sum('elearning'),2)}}</td>
                 <td>{{number_format($forwarded->sum('misc'),2)}}</td>
@@ -229,7 +231,6 @@ $b_csundry = 0;
                 <td>{{number_format($forwarded->sum('registration'),2)}}</td>
                 <td>{{number_format($forwarded->sum('tuition'),2)}}</td>
                 <td>{{number_format($forwarded->sum('creservation'),2)}}</td>
-                <td>{{number_format($forwarded->sum('dsundry'),2)}}</td>
                 <td>{{number_format($forwarded->sum('csundry'),2)}}</td>
                 <td></td>
             </tr>
@@ -237,6 +238,7 @@ $b_csundry = 0;
                 <td colspan="2" style='text-align: left'>Grand Total</td>
                 <td>{{number_format($grand_total->sum('cash'),2)}}</td>
                 <td>{{number_format($grand_total->sum('discount'),2)}}</td>
+                <td>{{number_format($grand_total->sum('dsundry'),2)}}</td>
                 
                 <td>{{number_format($grand_total->sum('elearning'),2)}}</td>
                 <td>{{number_format($grand_total->sum('misc'),2)}}</td>
@@ -245,8 +247,6 @@ $b_csundry = 0;
                 <td>{{number_format($grand_total->sum('registration'),2)}}</td>
                 <td>{{number_format($grand_total->sum('tuition'),2)}}</td>
                 <td>{{number_format($grand_total->sum('creservation'),2)}}</td>
-                
-                <td>{{number_format($grand_total->sum('dsundry'),2)}}</td>
                 <td>{{number_format($grand_total->sum('csundry'),2)}}</td>
                 <td></td>
             </tr>

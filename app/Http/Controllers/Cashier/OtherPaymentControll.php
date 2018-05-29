@@ -246,6 +246,14 @@ class OtherPaymentControll extends Controller
                 $acctcode = 'BPICA 1881-0466-59';
                 $accountingcode = \App\ChartOfAccount::where('accountname','BPICA 1881-0466-59')->first();
                 break;
+            case 'LANDBANK 1':
+                $acctcode = 'Land Bank of the Phils. SA 1781-1111-43';
+                $accountingcode = \App\ChartOfAccount::where('accountname',$acctcode)->first();
+                break;
+            case 'LANDBANK 2':
+                $acctcode = 'Land Bank of the Phils. SA 1781-0600-00';
+                $accountingcode = \App\ChartOfAccount::where('accountname',$acctcode)->first();
+                break;
         }
         
         $debit = new \App\Dedit;

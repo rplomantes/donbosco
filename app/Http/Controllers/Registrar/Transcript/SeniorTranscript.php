@@ -31,7 +31,7 @@ class SeniorTranscript extends Controller
         }else{
             $prevRec = \App\Grade::where('level','Grade 10')->where('idno',$idno)->whereIn('subjecttype',array(0,1))->get();
             $school = "DON BOSCO TECHNICAL INSTITUTE";
-            $schoolyear = $prevRec->schoolyear;
+            $schoolyear = $prevRec->pluck('schoolyear')->last();
             $grade = GradeController::gradeQuarterAve(array(0),array(0),5,$prevRec,'Grade 10');
         }
         

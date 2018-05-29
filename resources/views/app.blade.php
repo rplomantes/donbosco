@@ -26,6 +26,9 @@
         <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet">
         <link href="{{ asset('font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
         <link href="{{ asset('/tablesorter/themes/blue/style.css')}}">
+        <link href="{{ asset('/css/jquery-ui.css') }}" rel="stylesheet">
+        <link href="{{ asset('jquery.ui.combify/jquery.ui.combify.css') }}" rel="stylesheet">
+        
         
 
         
@@ -134,7 +137,11 @@
         <script src="{{asset('/js/fileinput.js')}}"></script>
         <script src="{{asset('/js/bootstrap-datepicker.js')}}"></script>
         <script src="{{asset('/tablesorter/jquery.tablesorter.js')}}"></script>
+        <script src="{{asset('/js/jquery-ui.js')}}"></script>
+        <script src="{{asset('jquery.ui.combify/jquery.ui.combify.js')}}"></script>
         
+        <script src="{{asset('/js/DataTables-1.10.16/datatables.js')}}"></script>
+        <link href="{{asset('/js/DataTables-1.10.16/datatables.css')}}" rel="stylesheet">
         </head>
 <body> 
 <div class= "container-fluid no-print" >
@@ -192,13 +199,13 @@
                                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"> Reports
                                         <span class="caret"></span></a>   
                                         <ul class="dropdown-menu">
-                                            <li><a href="{{url('enrollmentstat')}}"><i class="fa fa-btn"></i>Enrollment Statistics</a></li>
+                                            <li><a href="{{route('stat_enrollment',$sy)}}"><i class="fa fa-btn"></i>Enrollment Statistics</a></li>
                                             <li><a href="{{url('studentlist')}}"><i class="fa fa-btn"></i>Student Contact</a></li>
                                             <li><a href="{{url('importGrade')}}"><i class="fa fa-btn"></i>Import Grades</a></li>
                                             <li class="dropdown-submenu">
                                                 <a href="#"><i class="fa fa-btn"></i>Report Card</a>
                                                 <ul class="dropdown-menu">
-                                                    <li><a  href="{{url('reportcards')}}">Grade Level</a></li>
+                                                    <li><a  href="{{url('reportcards',$sy)}}">Grade Level</a></li>
                                                     <li><a  href="{{route('tvetcards')}}">TVET</a></li>
                                                 </ul>
                                             </li>
@@ -235,6 +242,7 @@
                                     <ul class="dropdown-menu">
                                         <li><a href="{{url('promotion',$sy)}}"><i class="fa fa-btn"></i>Promotion</a></li>
                                         <li><a href="{{url('transcript/list',$sy)}}"><i class="fa fa-btn"></i>Transcript</a></li>
+                                        <li><a href="{{url('addAwardee')}}"><i class="fa fa-btn"></i>Add DepEd Awardee</a></li>
                                      </ul>   
                                 
                                 </li>
@@ -255,6 +263,7 @@
 
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
+                                <li><a href="{{ url('/changePassword') }}"><i class="fa fa-btn fa-key"></i>Chnage Password</a></li>
                             </ul>
                         </li>
                     @endif

@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<?php
+use App\Http\Controllers\StudentAwards\AwardsController as Award;
+?>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
@@ -84,7 +87,7 @@ th {
         <tr><th width = "60%">Description</th><th>Amount</th></tr>
     </thead>    
     <tbody>
-        <?php $totalamount=0; $totalplandiscount=0; $totalotherdiscount=0; ?>
+        <?php $totalamount=0; $totalplandiscount=0; $totalotherdiscount=0;$totalaward = 0; ?>
         @foreach($breakdownfees as $breakdownfee)
         <tr><td>{{$breakdownfee->receipt_details}}</td><td align="right">{{number_format($breakdownfee->amount,2)}}</td></tr>
         <?php $totalamount = $totalamount + $breakdownfee->amount;
@@ -100,13 +103,23 @@ th {
         <tr><td>&nbsp;&nbsp;&nbsp;Other Discount</td><td align="right">({{number_format( $totalotherdiscount,2)}})</td></tr>
         <tr><td>&nbsp;&nbsp;&nbsp;Reservation</td><td align="right">({{number_format( $reserve,2)}})</td></tr>
         <tr><td>&nbsp;&nbsp;&nbsp;Student Deposit</td><td align="right">({{number_format( $deposit,2)}})</td></tr>
+        @if(Award::hasRemainingFund($user->idno,true))
+        <?php $awards = Award::getAvailableAwards($user->idno,true); ?>
+        @foreach($awards->groupBy('type') as $award=>$details)
+        <?php
+        $total = $details->sum('amount') - $details->sum('used');
+        $totalaward = $totalaward+$total;
+        ?>
+        <tr><td>&nbsp;&nbsp;&nbsp;{{$award}}</td><td align="right">({{number_format( $total,2)}})</td></tr>
+            @endforeach
+        @endif
         
         </tbody>
         <tfoot>
-            @if($deposit != 0 && ($totalamount-$totalplandiscount-$totalotherdiscount-$reserve-$deposit)<0)
-        <tr ><td class='footer' style="font-weight:bold">Remaining Student Deposit</td><td class='footer' align="right" ><strong>({{number_format(abs($totalamount-$totalplandiscount-$totalotherdiscount-$reserve-$deposit),2)}})</strong></td></tr>  
+            @if($deposit != 0 && ($totalamount-$totalplandiscount-$totalotherdiscount-$reserve-$deposit-$totalaward)<0)
+        <tr ><td class='footer' style="font-weight:bold">Remaining Student Deposit</td><td class='footer' align="right" ><strong>({{number_format(abs($totalamount-$totalplandiscount-$totalotherdiscount-$reserve-$deposit-$totalaward),2)}})</strong></td></tr>
             @else
-        <tr ><td class='footer' style="font-weight:bold">Total</td><td class='footer' align="right" ><strong>{{number_format($totalamount-$totalplandiscount-$totalotherdiscount-$reserve-$deposit,2)}}</strong></td></tr>
+        <tr ><td class='footer' style="font-weight:bold">Total</td><td class='footer' align="right" ><strong>{{number_format($totalamount-$totalplandiscount-$totalotherdiscount-$reserve-$deposit-$totalaward,2)}}</strong></td></tr>
             @endif
         </tfoot>
     </table>
@@ -120,10 +133,10 @@ th {
          @if($due->duetype == '0')
                 <td style="background-color:#ccc">
                 <strong style="font-size: 12pt;">Upon Enrollment</strong>
-                @if(($due->amount - $due->plandiscount - $reserve - $due->otherdiscount-$deposit) < 0)
+                @if(($due->amount - $due->plandiscount - $reserve - $due->otherdiscount-$deposit-$totalaward) < 0)
                 </td><td align="right" style="background-color:#ccc"><strong style="font-size: 12pt;">0</strong></td></tr>
                 @else
-                </td><td align="right" style="background-color:#ccc"><strong style="font-size: 12pt;">{{number_format($due->amount - $due->plandiscount - $reserve - $due->otherdiscount-$deposit,2)}}</strong></td></tr>
+                </td><td align="right" style="background-color:#ccc"><strong style="font-size: 12pt;">{{number_format($due->amount - $due->plandiscount - $reserve - $due->otherdiscount-$deposit-$totalaward,2)}}</strong></td></tr>
                 @endif
          @else
          

@@ -14,7 +14,7 @@ class Helper extends Controller
 {
     static function accounts($from,$to,$account,$grouping){
         if($grouping == ""){
-            $groupBy = array('refno','acct_department','sub_department');
+            $groupBy = array('id');
         }elseif($grouping == "byDepartment"){
             $groupBy = array('refno','acct_department','sub_department');
         }else{
@@ -29,7 +29,7 @@ class Helper extends Controller
     }
     
     static function debits($from,$to,$account,$groupBy){
-        $accounts = \App\Dedit::selectRaw('*,sum(amount) as totalamount,sum(checkamount) as totalcheck')->whereBetween('transactiondate',[$from,$to])->where('accountingcode',$account)->where('isreverse',0)->groupBy($groupBy)->get();
+        $accounts = \App\Dedit::selectRaw('*,amount as totalamount,sum(checkamount) as totalcheck')->whereBetween('transactiondate',[$from,$to])->where('accountingcode',$account)->where('isreverse',0)->groupBy($groupBy)->get();
         $debits = array();
         
         foreach($accounts as $acct){
@@ -51,7 +51,7 @@ class Helper extends Controller
     }
     
     static function credits($from,$to,$account,$groupBy){
-        $accounts =  \App\Credit::selectRaw('*,sum(amount) as totalamount')->with('Dedit')->whereBetween('transactiondate',[$from,$to])->where('accountingcode',$account)->where('isreverse',0)->groupBy($groupBy)->get();
+        $accounts =  \App\Credit::selectRaw('*,amount as totalamount')->with('Dedit')->whereBetween('transactiondate',[$from,$to])->where('accountingcode',$account)->where('isreverse',0)->groupBy($groupBy)->get();
         $credits = array();
         
         foreach($accounts as $acct){

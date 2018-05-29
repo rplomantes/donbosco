@@ -86,6 +86,13 @@ class GradeComputation extends Controller
     static function weightedGrade($subjecttype,$sem,$grades,$field,$gradeCondition){
         $average = 0;
         
+        $schoolyear = $grades->pluck('schoolyear')->first();
+        $student = $grades->pluck('idno')->first();
+        $gradeOverride = \App\GradeOverRide::where('idno',$student,false)->where('schoolyear',$schoolyear,false)->where('subjecttype',$subjecttype)->first();
+        if($gradeOverride && $gradeOverride->$field > 0){
+            return number_format(round($gradeOverride->$field,$gradeCondition->decimal),$gradeCondition->decimal);
+        }
+        
         foreach($grades as $grade){
             if(in_array($grade->subjecttype,$subjecttype) && $grade->semester == $sem && $grade->$field != 0){
                 $average = $average + round($grade->$field * ($grade->weighted/100),$gradeCondition->decimal);
@@ -107,6 +114,14 @@ class GradeComputation extends Controller
     
     static function pointedGrade($subjecttype,$quarter,$sem,$grades,$field,$gradeCondition){
         $average = 0;
+        
+        $schoolyear = $grades->pluck('schoolyear')->first();
+        $student = $grades->pluck('idno')->first();
+        $gradeOverride = \App\GradeOverRide::where('idno',$student)->where('schoolyear',$schoolyear)->where('subjecttype',$subjecttype)->first();
+        
+        if($gradeOverride && $gradeOverride->$field > 0){
+            return number_format(round($gradeOverride->$field,$gradeCondition->decimal),$gradeCondition->decimal);
+        }
         
         if($quarter != 5){
             foreach($grades as $grade){

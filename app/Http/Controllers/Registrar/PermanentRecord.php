@@ -143,7 +143,7 @@ class PermanentRecord extends Controller
         }
 
         if(in_array($level,array("Grade 11","Grade 12"))){
-            return $this->seniorHighRec($idno,$section,$level,$class_no,$sy,$strand);
+            //return $this->seniorHighRec($idno,$section,$level,$class_no,$sy,$strand);
         }elseif(in_array($level,array("Grade 11","Grade 12"))){
             
         }else{
@@ -152,7 +152,6 @@ class PermanentRecord extends Controller
     }
     
     function seniorHighRec($idno,$section,$level,$class_no,$sy,$strand){
-        //Grade and Conduct
         $grades = \App\Grade::where('schoolyear',$sy)->where('idno',$idno)->where('isdisplaycard',1)->orderBy('sortto','ASC')->get();
         $info = $this->info($idno,$sy);
         $jhschool = "";
@@ -213,10 +212,11 @@ class PermanentRecord extends Controller
         $strand = "";
         $currSy = \App\CtrSchoolYear::first()->schoolyear;
         
-        if($currSy == $sy){
-            $status = \App\Status::where('idno',$idno)->where('schoolyear',$sy)->orderBy('id','DESC')->first();
-        }else{
-            $status = \App\StatusHistory::where('idno',$idno)->where('schoolyear',$sy)->orderBy('id','DESC')->first();
+        
+        $status = \App\Status::where('idno',$idno)->where('schoolyear',$sy)->whereIn('status',array(2,3))->orderBy('id','DESC')->first();
+            
+        if(!$status){
+            $status = \App\StatusHistory::where('idno',$idno)->where('schoolyear',$sy)->whereIn('status',array(2,3))->orderBy('id','DESC')->first();
         }
         
         if($status){
@@ -227,37 +227,40 @@ class PermanentRecord extends Controller
         }
 
         if(in_array($level,array("Grade 11","Grade 12"))){
-            return $this->seniorHighRecInt($idno,$section,$level,$class_no,$sy,$strand);
+            //return $this->seniorHighRecInt($idno,$section,$level,$class_no,$sy,$strand);
+            return $this->shsRecord($idno);
         }else{
             return null;
         }
     }
+    //Changed SHS Record
+    function shsRecord($idno){
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->setPaper('folio', 'portrait');
+        $pdf->loadView('registrar.permanentRecord.SHS.body',compact('idno'));
+        return $pdf->stream();
+    }
     
-    function seniorHighRecInt($idno,$section,$level,$class_no,$sy,$strand){
-        //Grade and Conduct
-        $grades = \App\Grade::where('schoolyear',$sy)->where('idno',$idno)->where('isdisplaycard',1)->orderBy('sortto','ASC')->get();
-        $info = $this->info($idno,$sy);
-        $jhschool = "";
-        $jhsSy = "";
-        $jhsaverage = "";
-        
-        $prevschoolrec = \App\PrevSchoolRec::where('level','Grade 10')->where('idno',$idno)->first();
-        if(count($prevschoolrec)>0){
-            $jhschool = $prevschoolrec->school;
-            $jhsSy = $prevschoolrec->schoolyear;
-            $jhsaverage = $prevschoolrec->finalrate;
-        }else{
-            $oldrec = \App\Grade::where('level','Grade 10')->where('idno',$idno)->whereIn('subjecttype',array(0,1))->get();
-            
-            if(count($oldrec)>0){
-                $jhschool = "DON BOSCO TECHNICAL INSTITUTE";
-                $jhsaverage = GradeController::gradeQuarterAve(array(0),array(0),5,$oldrec,'Grade 10');
-                
-                foreach($oldrec as $oldrec){
-                    $jhsSy = $oldrec->schoolyear;
-                }
-            }
+    static function levelRecord($idno,$level){
+        $status = \App\Status::where('idno',$idno)->where('level',$level)->whereIn('status',array(2,3))->orderBy('schoolyear','DESC')->orderBy('status','ASC')->first();
+        if(!$status){
+            $status = \App\StatusHistory::where('idno',$idno)->where('level',$level)->whereIn('status',array(2,3))->orderBy('schoolyear','DESC')->orderBy('status','ASC')->first();
         }
+        if($status){
+            return self::viewRecord($status);
+        }else{
+            return null;
+        }
+        
+    }
+    
+    static function viewRecord($status){
+
+        
+        $grades = \App\Grade::where('schoolyear',$status->schoolyear)
+                ->where('idno',$status->idno)
+                ->where('isdisplaycard',1)
+                ->orderBy('sortto','ASC')->get();
         
         //Attendance
         $q1dayp = array();
@@ -265,27 +268,79 @@ class PermanentRecord extends Controller
         $q1dayt = array();
         $q2dayp = array();
         $q2daya = array();
-        $q2dayt = array();
+        $q2dayt = array();        
         
         for($i=1; $i < 3 ;$i++){
-            $attendance  = AttendanceController::studentQuarterAttendance($idno,$sy,$i,$level);
+            $attendance  = AttendanceController::studentQuarterAttendance($status->idno,$status->schoolyear,$i,$status->level);
             $q1dayp[] = $attendance[0];
             $q1daya[] = $attendance[1];
             $q1dayt[] = $attendance[2];
         }
         
         for($i=3; $i < 5 ;$i++){
-            $attendance  = AttendanceController::studentQuarterAttendance($idno,$sy,$i,$level);
+            $attendance  = AttendanceController::studentQuarterAttendance($status->idno,$status->schoolyear,$i,$status->level);
             $q2dayp[] = $attendance[0];
             $q2daya[] = $attendance[1];
             $q2dayt[] = $attendance[2];
         }
+        return view('registrar.permanentRecord.SHS.grades',compact('status','grades','q1dayp','q1daya','q1dayt','q2dayp','q2daya','q2dayt'))->render();
         
-        $pdf = \App::make('dompdf.wrapper');
-        $pdf->setPaper([0,0,612.00,1008.00], 'portrait');
-        $pdf->loadView("print.seniorPermanentRecInt",compact('idno','sy','grades','info','class_no','section','level','strand','q2dayp','q2daya','q2dayt','q1dayp','q1daya','q1dayt','jhschool','jhsSy','jhsaverage'));
-        return $pdf->stream();
     }
+    //END Change SHS Record
+    
+//    function seniorHighRecInt($idno,$section,$level,$class_no,$sy,$strand){
+//        //Grade and Conduct
+//        $grades = \App\Grade::where('schoolyear',$sy)->where('idno',$idno)->where('isdisplaycard',1)->orderBy('sortto','ASC')->get();
+//        $info = $this->info($idno,$sy);
+//        $jhschool = "";
+//        $jhsSy = "";
+//        $jhsaverage = "";
+//        
+//        $prevschoolrec = \App\PrevSchoolRec::where('level','Grade 10')->where('idno',$idno)->first();
+//        if(count($prevschoolrec)>0){
+//            $jhschool = $prevschoolrec->school;
+//            $jhsSy = $prevschoolrec->schoolyear;
+//            $jhsaverage = $prevschoolrec->finalrate;
+//        }else{
+//            $oldrec = \App\Grade::where('level','Grade 10')->where('idno',$idno)->whereIn('subjecttype',array(0,1))->get();
+//            
+//            if(count($oldrec)>0){
+//                $jhschool = "DON BOSCO TECHNICAL INSTITUTE";
+//                $jhsaverage = GradeController::gradeQuarterAve(array(0),array(0),5,$oldrec,'Grade 10');
+//                
+//                foreach($oldrec as $oldrec){
+//                    $jhsSy = $oldrec->schoolyear;
+//                }
+//            }
+//        }
+//        
+//        //Attendance
+//        $q1dayp = array();
+//        $q1daya = array();
+//        $q1dayt = array();
+//        $q2dayp = array();
+//        $q2daya = array();
+//        $q2dayt = array();
+//        
+//        for($i=1; $i < 3 ;$i++){
+//            $attendance  = AttendanceController::studentQuarterAttendance($idno,$sy,$i,$level);
+//            $q1dayp[] = $attendance[0];
+//            $q1daya[] = $attendance[1];
+//            $q1dayt[] = $attendance[2];
+//        }
+//        
+//        for($i=3; $i < 5 ;$i++){
+//            $attendance  = AttendanceController::studentQuarterAttendance($idno,$sy,$i,$level);
+//            $q2dayp[] = $attendance[0];
+//            $q2daya[] = $attendance[1];
+//            $q2dayt[] = $attendance[2];
+//        }
+//        
+//        $pdf = \App::make('dompdf.wrapper');
+//        $pdf->setPaper([0,0,612.00,1008.00], 'portrait');
+//        $pdf->loadView("print.seniorPermanentRecInt",compact('idno','sy','grades','info','class_no','section','level','strand','q2dayp','q2daya','q2dayt','q1dayp','q1daya','q1dayt','jhschool','jhsSy','jhsaverage'));
+//        return $pdf->stream();
+//    }
     
     function info($idno,$sy){
         $name = "";

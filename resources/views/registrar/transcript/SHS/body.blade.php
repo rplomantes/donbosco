@@ -25,7 +25,9 @@ use App\Http\Controllers\Registrar\Transcript\SeniorTranscript;
         <br>
         {!!SeniorTranscript::levelRecord($idno,'Grade 11')!!}
 	<br>
+        if(strlen(SeniorTranscript::levelRecord($idno,'Grade 12'))>0)
         {!!SeniorTranscript::levelRecord($idno,'Grade 12')!!}
+        @endif
 	@include('registrar.transcript.SHS.footer')
     </body>
 </html>

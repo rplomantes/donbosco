@@ -12,6 +12,18 @@
 <div class='container'>
     <div class='col-md-4'>
         <div class="form-group">
+            <label>Schoolyear</label>
+            <select class="form-control" id="schoolyear" name="schoolyear" onchange="changeSy(this.value)">
+                @for ($i = 2016; $i <= $currSY; $i++)
+                    <option value="{{$i}}"
+                            @if($i==$sy)
+                            selected
+                            @endif
+                            >{{$i}}</option>
+                @endfor            
+            </select>
+        </div>
+        <div class="form-group">
             <label>Level</label>
             <select class="form-control" id="level" name="level" onchange="updatelevel(this.value)">
                 <option selected="selected" hidden="hidden">--Select--</option>
@@ -53,7 +65,9 @@
     var sem = 0;
     var quarter = 0;
     
-    
+    function changeSy(schoolyear){
+        window.location.href = "/reportcards/"+schoolyear;
+    }
     function printsheetA(){
         window.location.href = "/printcards/"+lvl+"/"+strand+"/"+sec+"/"+quarter+"/"+sem;
     }

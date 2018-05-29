@@ -8,10 +8,12 @@
         border-radius: 0px;
     }
 </style>
+
 <div class='container'>
+    <h3>Promotion Deliberation</h3>
     <div class='col-md-4'>
-        <div class="form-group">
-            <label>Schoolyear</label>
+        <div class="form-group" id="sy_group">
+            <label>For Schoolyear</label>
             <select class="form-control" id="schoolyear" name="schoolyear" onchange="changeSy(this.value)">
                 @for ($i = 2016; $i <= $currSY; $i++)
                     <option value="{{$i}}"
@@ -23,14 +25,17 @@
                 @endfor            
             </select>
         </div>
-        <div class="form-group">
+        <div class="form-group" id="level_group">
             <label>Level</label>
-            <select class="form-control" id="level" name="level" onchange="viewreport(this.value)">
+            <select class="form-control" id="level" name="level" onchange="getSections()">
                 <option selected="selected" hidden="hidden">--Select--</option>
                 @foreach($levels as $level)
                 <option value="{{$level->level}}">{{$level->level}}</option>
                 @endforeach
             </select>
+        </div>
+        <div class="form-group" id="section_group">
+            
         </div>
         <div id='control'>
             <button class="col-md-6 btn btn-success" onclick="editPromo()">EDIT</button>
@@ -50,6 +55,47 @@
         window.location.href = "/promotion/"+schoolyear;
     }
     
+    function getSections(){
+        var arrays = {};
+        
+        arrays['level']= $('#level').val();
+        arrays['sy']= '{{$sy-1}}';
+        arrays['course']= 'null';
+        $.ajax({
+            type:"GET",
+            url: "/getlevelsections/1/viewreport",
+            data: arrays,
+            success:function(data){
+                $('#section_group').html(data);
+                viewreport()
+            }
+        });
+        
+        
+    }
+    
+    function viewreport(){
+        
+        var arrays = {};
+        
+        arrays['level']= $('#level').val();
+        arrays['sy']= '{{$sy-1}}';
+        arrays['section']= $('#section').val();
+        
+        $.ajax({
+            type:"GET",
+            url: "/viewpromotion", 
+            data:arrays,
+            success:function(data){
+                $('#report').html(data);
+                document.getElementById("control").style.visibility = "visible";
+                viewfinalize(level);                
+            }
+        });
+        
+
+    }
+    
     function changeStatus(){
         var level = $('#level').val();
         
@@ -60,24 +106,6 @@
                 viewfinalize(level);
             }
         });
-        
-        
-    }
-    
-    function viewreport(level){
-        document.getElementById("control").style.visibility = "visible";
-        levels = level;
-        
-        viewfinalize(level);
-        $.ajax({
-            type:"GET",
-            url: "/viewpromotion/{{$sy}}/"+level, 
-            success:function(data){
-                $('#report').html(data);
-            }
-        });
-        
-
     }
     
     function viewfinalize(level){
@@ -95,7 +123,7 @@
     }
     
     function editPromo(){
-        window.open("{{url('/editpromotion')}}/{{$sy}}/"+levels, '_blank');
+        window.open("{{url('/editpromotion')}}/{{$sy}}/"+$('#level').val()+"/"+$('#section').val(), '_blank');
     }
 </script>
 @stop

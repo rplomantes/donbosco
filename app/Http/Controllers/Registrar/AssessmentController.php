@@ -7,6 +7,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Http\Controllers\StudentAwards\ProcessAwards;
+use App\Http\Controllers\Registrar\Discount\DiscountGrant;
 
 class AssessmentController extends Controller
 {
@@ -84,6 +86,7 @@ class AssessmentController extends Controller
 function assess(Request $request){
     $contribution="0";
     $batch="0";
+    
     if($request->department=="TVET"){
     $schoolperiod = \App\ctrSchoolYear::where('period', $request->batch)->first();
     }else{
@@ -151,11 +154,13 @@ function assess(Request $request){
     
     $action = $request->action;
     
+    
+    
     switch($action){
     
     case "add":
         
-              if($this->addLedger($request->id,$level,$request->plan,$request->discount,$request->department,$strand,$course,$contribution,$batch)){  
+        if($this->addLedger($request->id,$level,$request->plan,$request->discount,$request->department,$strand,$course,$contribution,$batch)){  
                 
                   if(isset($request->books)){
         $books = $request->books;
@@ -215,9 +220,10 @@ function assess(Request $request){
                 $status->period=$schoolperiod->period;
                 $status->save();
               }   
-                 
-        //return redirect('registrar/evaluate/'. $request->id);
-              return $this->evaluate($request->id);
+        ProcessAwards::changeAwardStatus($request->id, 1);         
+        return redirect('registrar/evaluate/'. $request->id);
+        
+        //return $this->evaluate($request->id);
         break;
         
     case "addnew":
@@ -296,7 +302,7 @@ function assess(Request $request){
         break;
     
     case "reassessed";
-       
+       ProcessAwards::changeAwardStatus($request->id, 0);
         $deletesubsidy= \App\TvetSubsidy::where('idno',$request->id)->first();
         if(count($deletesubsidy)>0){
             $deletesubsidy->delete();
@@ -346,8 +352,8 @@ function assess(Request $request){
             }
         }
         
-        //return redirect('registrar/evaluate/'. $request->id);
-        return $this->evaluate($request->id);
+        return redirect('registrar/evaluate/'. $request->id);
+        //return $this->evaluate($request->id);
         
         
         //return $request->department;
@@ -355,6 +361,7 @@ function assess(Request $request){
         
     case "update";
         $this->archiveStatus($request->id);
+        ProcessAwards::changeAwardStatus($request->id, 1);         
             if($request->department == "Kindergarten" || $request->department =="Elementary" || $request->department == "Junior High School" || $request->department == "Senior High School" ||$request->department == "TVET" ){
               if($this->addLedger($request->id,$request->level,$request->plan,$request->discount,$request->department,$strand,$course,$contribution,$batch)){  
                 if(isset($request->books)){
@@ -413,8 +420,8 @@ function assess(Request $request){
                 $status->update();
               }   
             }
-            //return redirect('registrar/evaluate/'. $request->id);
-            return $this->evaluate($request->id);
+            return redirect('registrar/evaluate/'. $request->id);
+            //return $this->evaluate($request->id);
         break;    
     
     }
@@ -502,6 +509,7 @@ function assess(Request $request){
                 $newledger->sub_department = $ledger->sub_department;
                 $newledger->receipt_details = $ledger->receipt_details;
                 $newledger->amount = $ledger->amount;
+                
                     if($ledger->categoryswitch == env('TUITION_FEE')){
                         if(isset($discounts->discountcode)){    
         //if(count($discounts)> 0){
@@ -563,6 +571,10 @@ function assess(Request $request){
 
                 }
             }
+            if(DiscountGrant::confirm_isGrantee($id)){
+                DiscountGrant::set_applyDiscount($id);
+            }
+            
         }  
                 if($department == "Kindergarten" || $department == "Elementary" || $department == "Junior High School"){ 
                 $newsubjects = \App\CtrSubjects::where('level',$level)->get();
@@ -600,7 +612,8 @@ function assess(Request $request){
                     $newgrade->save();
                 }
                 
-                    } elseif($department == "TVET"){
+                    }
+                  elseif($department == "TVET"){
                       
                     $newsubjects = \App\CtrSubjects::where('course',$course)->get();
                     foreach($newsubjects as $newsubject){
@@ -619,6 +632,7 @@ function assess(Request $request){
                     $newgrade->save();
                 }
                 }   
+                
                 $ress = \App\AdvancePayment::where('idno',$id)->where('status','2')->get();
                 if(count($ress)>0){
                     foreach($ress as $res){

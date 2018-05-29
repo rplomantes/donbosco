@@ -39,7 +39,6 @@ class ReportController extends Controller
     }
     
     static function renderResult($request){
-        return $request->account;
         $grouping = $request->input('grouping');
         
         $viewaccounts = IASHelper::accounts($request->from,$request->to,$request->account,$grouping)->sortBy('transactiondate')->sortBy('created_at');

@@ -30,15 +30,16 @@ class UpdateController2 extends Controller
     }
     
     function studentConduct($status){
-        $conducts  = DB::connection('conduct')->select("Select * from conduct where SCODE='$status->idno' and SY_EFFECTIVE='2017' and QTR=3");
+        $conducts  = DB::connection('conduct')->select("Select * from conduct where SCODE='$status->idno' and SY_EFFECTIVE='2017' and QTR=4");
         
         foreach($conducts as $conduct){
-            $this->writeConduct($conduct->SCODE, 'OSR', $conduct->COM1B, 2017, 'third_grading');
-            $this->writeConduct($conduct->SCODE, 'DPT', $conduct->COM2B, 2017, 'third_grading');
-            $this->writeConduct($conduct->SCODE, 'PTY', $conduct->COM3B, 2017, 'third_grading');
-            $this->writeConduct($conduct->SCODE, 'DI', $conduct->COM4B, 2017, 'third_grading');
-            $this->writeConduct($conduct->SCODE, 'PG', $conduct->COM5B, 2017, 'third_grading');
-            $this->writeConduct($conduct->SCODE, 'SIS', $conduct->COM6B, 2017, 'third_grading');
+            echo $conduct;
+            //$this->writeConduct($conduct->SCODE, 'OSR', $conduct->COM1B, 2017, 'third_grading');
+            //$this->writeConduct($conduct->SCODE, 'DPT', $conduct->COM2B, 2017, 'third_grading');
+            //$this->writeConduct($conduct->SCODE, 'PTY', $conduct->COM3B, 2017, 'third_grading');
+            //$this->writeConduct($conduct->SCODE, 'DI', $conduct->COM4B, 2017, 'third_grading');
+            //$this->writeConduct($conduct->SCODE, 'PG', $conduct->COM5B, 2017, 'third_grading');
+            //$this->writeConduct($conduct->SCODE, 'SIS', $conduct->COM6B, 2017, 'third_grading');
         }
     }
     

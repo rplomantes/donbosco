@@ -481,6 +481,9 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
                         <input type="radio" name="depositto" value="BPI 1" > BPI 1
                         <input type="radio" name="depositto" value="BPI 2"> BPI 2
                         
+                        <input type="radio" name="depositto" value="LANDBANK 1" > LANDBANK 1
+                        <input type="radio" name="depositto" value="LANDBANK 2"> LANDBANK 2
+                        
                     </div>   
                     <div class="form-group">
                         <label>Particular</label>

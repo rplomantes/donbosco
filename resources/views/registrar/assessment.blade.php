@@ -1,3 +1,7 @@
+<?php
+use App\Http\Controllers\Registrar\Discount\DiscountGrant;
+
+?>
 @extends('app')
 @section('content')
 <form onsubmit="return confirm('Continue to assess this student ?');" class="form-horizontal" role="form" method="POST" action="{{ url('/registrar/assessment') }}">
@@ -97,10 +101,11 @@
                  <div id="plancontainer">
                  </div> 
              </div>
-        <div class="col-md-12">
+            <div class="col-md-12">
+                
                  <div id="discountcontainer">
                  </div> 
-             </div>
+            </div>
              </div>  
          
              </div>  

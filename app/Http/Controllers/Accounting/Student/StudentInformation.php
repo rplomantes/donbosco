@@ -53,7 +53,7 @@ class StudentInformation extends Controller
         $strand = "";
         $info = self::get_SyInfo($idno, $schoolyear);
         if($info){
-            $section = $info->section;
+            $strand = $info->section;
         }
         
         return $strand;
@@ -108,7 +108,12 @@ class StudentInformation extends Controller
         $name = "";
         $student = \App\User::where('idno',$idno)->first();
         if($student){
-            $name = $student->firstname." ".$student->middlename." ".$student->lastname;
+            $name = $student->firstname." ".substr($student->middlename,0,1);
+            if(strlen($student->middlename) > 0){
+                $name = $name.". ";
+            }
+            $name = $name.$student->lastname;
+            
         }
         
         return $name;
@@ -141,12 +146,33 @@ class StudentInformation extends Controller
     }
     
     static function get_SyInfo($idno,$schoolyear){
-        $currentschoolyear = \App\CtrSchoolYear::first()->schoolyear;
-        if($schoolyear == $currentschoolyear){
-            return \App\Status::where('schoolyear',$schoolyear)->where('idno',$idno)->first();
-        }else{
-            return \App\StatusHistory::where('schoolyear',$schoolyear)->where('idno',$idno)->first();
+        
+        $status =  \App\Status::where('schoolyear',$schoolyear)->where('idno',$idno)->first();
+        if(!$status){
+            $status = \App\StatusHistory::where('schoolyear',$schoolyear)->where('idno',$idno)->first();
         }
+        
+        return $status;
+    }
+    
+    static function get_LevelInfo($idno,$level){
+        
+        $status =  \App\Status::where('level',$level)->where('idno',$idno)->whereIn('status',array(2,3))->first();
+        if(!$status){
+            $status = \App\StatusHistory::where('level',$level)->whereIn('status',array(2,3))->where('idno',$idno)->first();
+        }
+        
+        return $status;
+    }
+    
+    static function get_LevelSy($idno,$level){
+        $sy = 2016;
+        $status =  self::get_LevelInfo($idno, $level);
+        if($status){
+            $sy = $status->schoolyear;
+        }
+        
+        return $sy;
     }
     
     static function get_studentLedger($idno,$schoolyear){

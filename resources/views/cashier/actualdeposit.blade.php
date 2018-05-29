@@ -9,6 +9,10 @@
     $bpi1check=0;
     $bpi2cash=0;
     $bpi2check=0;
+    $landbank1cash=0;
+    $landbank1check=0;
+    $landbank2cash=0;
+    $landbank2check=0;
     $totalactual=0;
     ?>
 <div class="container_fluid">
@@ -23,6 +27,8 @@
                         <option value = "China Bank 2">China Bank 2</option>
                         <option value = "BPI 1">BPI 1</option>
                         <option value = "BPI 2">BPI 2</option>
+                        <option value = "LANDBANK 1">LANDBANK 1</option>
+                        <option value = "LANDBANK 2">LANDBANK 2</option>
                 </select>
             </div>   
             <div class="col-md-3"><label for='deposittype'>Select Type <br>of Deposit</label>
@@ -52,26 +58,36 @@
                                 } else {
                                     $cbcheck = $cbcheck + $deposit_slip->amount;
                                 }
+                                
                             }if($deposit_slip->bank == "China Bank 2"){
                                 if($deposit_slip->deposittype == '0'){
                                     $cbcash2 = $cbcash2 + $deposit_slip->amount;
                                 } else {
                                     $cbcheck2 = $cbcheck2 + $deposit_slip->amount;
                                 }
-                            } elseif ($deposit_slip->bank=="BPI 1") {
+                            } if ($deposit_slip->bank=="BPI 1") {
                                 if($deposit_slip->deposittype == '0'){
                                     $bpi1cash = $bpi1cash + $deposit_slip->amount;
                                 } else {
                                     $bpi1check=$bpi1check + $deposit_slip->amount;
                                 }
-                        } elseif ($deposit_slip->bank == "BPI 2") {
-                            if($deposit_slip->deposittype == '0'){
-                                $bpi2cash = $bpi2cash + $deposit_slip->amount;
-                            } else {
-                                $bpi2check = $bpi2check = $deposit_slip->amount;
-                            }
+                            } 
+                            if ($deposit_slip->bank == "LANDBANK 1") {
+                                if($deposit_slip->deposittype == '0'){
+                                    $landbank1cash = $landbank1cash + $deposit_slip->amount;
+                                } else {
+                                    $landbank1check = $landbank1check + $deposit_slip->amount;
+                                }
                         
-                    }
+                            }
+                            if ($deposit_slip->bank == "LANDBANK 2") {
+                                if($deposit_slip->deposittype == '0'){
+                                    $landbank2cash = $landbank2cash + $deposit_slip->amount;
+                                } else {
+                                    $landbank2check = $landbank2check = $deposit_slip->amount;
+                                }
+                        
+                            }
                             ?>
                                 <tr><td>{{$deposit_slip->bank}}</td><td>
                                     @if($deposit_slip->deposittype=="0")
@@ -93,6 +109,8 @@
                     <tr><td>China Bank 2</td><td align="right">{{number_format($cbcash2,2)}}</td><td align="right">{{number_format($cbcheck2,2)}}</td><td align="right">{{number_format($cbcash2+$cbcheck2,2)}}</td></tr>
                     <tr><td>BPI 1</td><td align="right">{{number_format($bpi1cash,2)}}</td><td align="right">{{number_format($bpi1check,2)}}</td><td align="right">{{number_format($bpi1cash+$bpi1check,2)}}</td></tr>
                     <tr><td>BPI 2</td><td align="right">{{number_format($bpi2cash,2)}}</td><td align="right">{{number_format($bpi2check,2)}}</td><td align="right">{{number_format($bpi1cash+$bpi2check,2)}}</td></tr>
+                    <tr><td>LANDBANK 1</td><td align="right">{{number_format($landbank1cash,2)}}</td><td align="right">{{number_format($landbank1check,2)}}</td><td align="right">{{number_format($landbank1cash+$landbank1check,2)}}</td></tr>
+                    <tr><td>LANDBANK 2</td><td align="right">{{number_format($landbank2cash,2)}}</td><td align="right">{{number_format($landbank2check,2)}}</td><td align="right">{{number_format($landbank2cash+$landbank2check,2)}}</td></tr>
                     
                     </table>
                         

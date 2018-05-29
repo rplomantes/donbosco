@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\Accounting\Student\StudentInformation as Info;
 use App\Http\Controllers\Accounting\Helper;
+use App\Http\Controllers\Accounting\Reservation\Helper as ResHelper;
 
 ?>
 @extends('appaccounting')
@@ -38,7 +39,12 @@ use App\Http\Controllers\Accounting\Helper;
             $note = "Processed using a non student module. Please Check";
         }
         
+        $levels = Info::get_level($reservation->idno,$sy);
         
+        if($levels == ""){
+            $prev_level = Info::get_level($reservation->idno,$sy-1);
+            $levels = ResHelper::level_up($reservation->idno, $prev_level);
+        }
         ?>
         
         @if(!$hasDebit)
@@ -47,7 +53,7 @@ use App\Http\Controllers\Accounting\Helper;
             <td>{{$lastname}}</td>
             <td>{{$firstname}}</td>
             <td>{{$middleInit}}</td>
-            <td>{{Info::get_level($reservation->idno,$sy)}}</td>
+            <td>{{}}</td>
             <td>{{Info::get_section($reservation->idno,$sy)}}</td>
             <td>{{$note}}</td>
         </tr>

@@ -1912,6 +1912,10 @@ class AjaxController extends Controller
         $allavailable = 1;
         $sections = DB::Select("Select distinct section from  ctr_sections where level = '$batch' and course = '$course'");
         
+        if(count($sections) <= 0){
+            $sections = DB::Select("Select distinct section from  ctr_sections_temp where level = '$batch' and course = '$course'");
+        }
+        
         return view('ajax.selectsection',compact('sections','action','allavailable'));
     }
     
@@ -1949,11 +1953,15 @@ class AjaxController extends Controller
         return view('ajax.selectsubjects',compact('subjects','action','allavailable'));
     }
     
-    function getlevelstrands($action=null){
+    function getlevelstrands($action=null,$showall=1){
         $level = Input::get('level');
         $sy = Input::get('sy');
         $strands = DB::Select("select distinct strand from ctr_sections where level = '$level' ");
-        return view('ajax.selectstrand',compact('strands','action'));
+        
+        if(count($strands) <= 0){
+            $strands = DB::Select("select distinct strand from ctr_sections_temp where level = '$level' ");
+        }
+        return view('ajax.selectstrand',compact('strands','action','showall'));
     }
     
     function getsubsidiary(){

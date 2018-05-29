@@ -10,6 +10,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Accounting\Helper as AcctHelper;
+use App\Http\Controllers\Registrar\Discount\DiscountGrant;
 
 class AjaxController extends Controller
 {
@@ -397,6 +398,21 @@ class AjaxController extends Controller
                     
                     //$request = $request ."<tr><td>". $schedule->receipt_details."</td><td align=\"right\">" . number_format($schedule->amount,2)."</td></tr>";    
                     }
+                    
+                    if(DiscountGrant::confirm_isGrantee($id)){
+                        $schooyear = \App\CtrYear::getYear('schoolyear');
+                        $grant = \App\DiscountGrant::where('schoolyear',$schooyear)->where('idno',$id)->first();
+                        $tuition = $grant->tuitionfee;
+                        $registration = $grant->registrationfee;
+                        $misc = $grant->miscfee;
+                        $elearning = $grant->elearningfee;
+                        $department = $grant->departmentfee;
+                        $book = $grant->bookfee;
+
+                        $otherdiscount =$tuition+$registration+$misc+$elearning+$department+$book;
+                        $otherdiscountname = $grant->discountGroup->description;
+                    }
+                    
                     $request = $request . "<tr><td>Total Fee</td><td align=\"right\"><strong style=\"color:black\">". number_format($total,2)."</strong></td></tr>";
                     $request = $request . "<tr><td> Less: Plan Discount</td><td align=\"right\"><strong style=\"color:red\">(". number_format($discount,2).")</strong></td></tr>";
                     $request = $request . "<tr><td>Other Discount: $otherdiscountname</td><td align=\"right\"><strong style=\"color:red\">(". number_format($otherdiscount,2).")</strong></td></tr>";
@@ -892,15 +908,15 @@ class AjaxController extends Controller
             $data = "";
             $currSy = \App\CtrSchoolYear::first()->schoolyear;
             $sy = Input::get('sy');
-            if($currSy == $sy){
-                $status = \App\Status::where('idno',Input::get('idno'))->where('schoolyear',$sy)->orderBy('id','DESC')->first();
-            }else{
-                $status = \App\StatusHistory::where('idno',Input::get('idno'))->where('schoolyear',$sy)->orderBy('id','DESC')->first();
+            
+                $status = \App\Status::where('idno',Input::get('idno'))->where('schoolyear',$sy)->whereIn('status',array(2,3))->orderBy('id','DESC')->first();
+            if(!$status){
+                $status = \App\StatusHistory::where('idno',Input::get('idno'))->where('schoolyear',$sy)->whereIn('status',array(2,3))->orderBy('id','DESC')->first();
             }
             
             $academics = \App\Grade::where('idno',Input::get('idno'))->where('schoolyear',Input::get('sy'))->where('subjecttype','0')->orderBy('sortto')->get();
+           $data = $data . "<h4>".$status->level." - ".$status->section."</h4>";
            if(count($academics)>0){
-           
             $data = $data . "<table class=\"table table-stripped\"><tr><td><span class=\"subjecttitle\">Academic Subject</span></td><td>1</td><td>2</td><td>3</td><td>4</td><td>Final</td><td>Remarks</td></tr>";
             foreach($academics as $grade){
             $data = $data . "<tr><td width=\"50%\">".$grade->subjectname."</td><td>".round($grade->first_grading)."</td><td>" . round($grade->second_grading) . ""
@@ -959,7 +975,7 @@ class AjaxController extends Controller
             }
             $attendance = \App\Grade::where('idno',Input::get('idno'))->where('schoolyear',Input::get('sy'))->where('subjecttype','2')->orderBy('sortto')->get();
             if(count($attendance)>0){
-            
+                
             $data = $data . "<table class=\"table table-stripped\"><tr><td width=\"50%\"><span class=\"subjecttitle\">Attendance</span></td><td>1</td><td>2</td><td>3</td><td>4</td><td>Final</td><td>Remarks</td></tr>";
             foreach($attendance as $grade){
             $data = $data . "<tr><td>".$grade->subjectname." (".$grade->weighted.")</td><td>".round($grade->first_grading)."</td><td>" . round($grade->second_grading) . ""

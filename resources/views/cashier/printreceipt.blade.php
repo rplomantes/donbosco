@@ -15,7 +15,7 @@ body { margin: 0px; }
  <table width="311" cellpadding = "0" cellspacing = "0" border = "0">
    <tr><td colspan="2" height="78"  valign="top"></td></tr>
    @if(count($student)> 0)
-   <tr><td><div style="margin-left: 110px">{{$student->idno}} - {{$student->lastname}}, {{$student->firstname}} {{$student->extensionname}} {{$student->midddlename}}</div></td><td height="20" valign="top"></td></tr>
+   <tr><td><div style="margin-left: 95px">{{$student->idno}} - {{$student->lastname}}, {{$student->firstname}} {{$student->extensionname}} {{$student->midddlename}}</div></td><td height="20" valign="top"></td></tr>
    @else
    <?php
    if($idno ==0){
@@ -57,8 +57,13 @@ body { margin: 0px; }
                 @if(count($debit_reservation)>0)
                 <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Less Reservation</td><td align="right">({{number_format($debit_reservation->amount,2)}})</td></tr>
                 @endif
+                @if(count($debit_awards)>0)
+                    @foreach($debit_awards as $debit_award)
+                <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;     {{$debit_award->description}}</td><td align="right">({{number_format($debit_award->description,2)}})</td></tr>
+                    @endforeach
+                @endif
                 @if(count($debit_deposit)>0)
-                 <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Less Student Deposit</td><td align="right">({{number_format($debit_deposit->amount,2)}})</td></tr>
+                 <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;    Student Deposit</td><td align="right">({{number_format($debit_deposit->amount,2)}})</td></tr>
                 @endif
                 
                 <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total</td><td align="right"><b>{{number_format($debit_cash->amount + $debit_cash->checkamount,2)}}</b></td></tr>

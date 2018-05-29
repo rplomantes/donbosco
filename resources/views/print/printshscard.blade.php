@@ -1,5 +1,6 @@
 <?php use App\Http\Controllers\Registrar\GradeController; 
 use App\Http\Controllers\Registrar\GradeComputation;
+use App\Http\Controllers\Registrar\ReportCards\Helper as CardHelper;
 ?>
 <html>
     <head>
@@ -273,7 +274,7 @@ use App\Http\Controllers\Registrar\GradeComputation;
                             <b>GENERAL AVERAGE for the Semester</b>
                         </td>
                         <td>
-                            {{GradeComputation::computeQuarterAverage($sy,$level,array(5,6),1,5,$grades)}}
+                            {{GradeComputation::computeQuarterAverage($sy,$level,array(5,6),$sem,5,$grades)}}
                         </td>
                     </tr>
                 </table>
@@ -351,22 +352,22 @@ use App\Http\Controllers\Registrar\GradeComputation;
                         <td style="border:1px solid">{{$grade->points}}</td>
                         <td style="border:1px solid">
                             @if($sem ==1)
-                                @if($grade->first_grading > 0)
+                                @if($grade->first_grading > 0 && GradeComputation::computeQuarterAverage($sy,$level,array(3),0,1,$grades) > 75)
                                     {{round($grade->first_grading,0)}}
                                 @endif
                             @else
-                                @if($grade->third_grading > 0)
+                                @if($grade->third_grading > 0 && GradeComputation::computeQuarterAverage($sy,$level,array(3),0,3,$grades) > 75)
                                     {{round($grade->third_grading,0)}}
                                 @endif
                             @endif
                         </td>
                         <td style="border:1px solid">
                             @if($sem ==1)
-                                @if($grade->second_grading > 0)
+                                @if($grade->second_grading > 0 && GradeComputation::computeQuarterAverage($sy,$level,array(3),0,2,$grades) > 75)
                                     {{round($grade->second_grading,0)}}
                                 @endif
                             @else
-                                @if($grade->fourth_grading > 0)
+                                @if($grade->fourth_grading > 0 && GradeComputation::computeQuarterAverage($sy,$level,array(3),0,4,$grades) > 75)
                                     {{round($grade->fourth_grading,0)}}
                                 @endif
                             @endif
@@ -518,11 +519,18 @@ use App\Http\Controllers\Registrar\GradeComputation;
                             The student is eligible for transfer and
                         </td>
                         <td class="print-size" >
+                            
                             Admitted in:_____________________
                         </td>                                                    
                     </tr>
                     <tr>
-                        <td class="print-size" >admission to:___________________</td>
+                        <td class="print-size" >admission to:
+                            @if(CardHelper::studentPassedHS($grades))
+                                ____<u>{{CardHelper::promoted($level)}}</u>______
+                            @else
+                                _____________________
+                            @endif
+                        </td>
 
                         <td class="print-size" >Grade:__________________________</td>
                     </tr>
@@ -531,7 +539,14 @@ use App\Http\Controllers\Registrar\GradeComputation;
                         <td class="print-size" >Date ___________________________</td>
                     </tr>
                     <tr>
-                        <td class="print-size" >Date of Issue:__________________</td>
+                        <td class="print-size" >
+                            Date of Issue:
+                                @if(CardHelper::studentPassedHS($grades))
+                                    ____<u>{{CardHelper::issueDate($level)}}</u>______
+                                @else
+                                    _____________________
+                                    @endif
+                        </td>
 
                         <td></td>
                     </tr>

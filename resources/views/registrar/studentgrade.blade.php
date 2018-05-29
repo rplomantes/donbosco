@@ -1,3 +1,7 @@
+<?php
+use App\Http\Controllers\Accounting\Student\StudentInformation as Info;
+
+?>
 @extends('app')
 @section('content')
 <style>
@@ -156,8 +160,8 @@ function displaygrade(idno,sy){
 }
 
 function permanentRec(){
-    window.open("{{url('permanentrec',array($idno,2016))}}");
-    window.open("{{url('permanentrecint',array($idno,2016))}}");
+    window.open("{{url('permanentrec',array($idno,Info::get_LevelSy($studentname->idno, 'Grade 11')))}}");
+    window.open("{{url('permanentrecint',array($idno,Info::get_LevelSy($studentname->idno, 'Grade 11')))}}");
 }
 </script>
 @stop

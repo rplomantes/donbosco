@@ -1,3 +1,7 @@
+<?php
+use App\Http\Controllers\Accounting\Student\StudentInformation as Info;
+
+?>
 <table class='table table-bordered'>
     <tr style='text-align: center' id='fixed'>
         <td></td>
@@ -11,15 +15,19 @@
     </tr>
     <?php $row = 1;?>
     @foreach($students as $student)
+    <?php
+    $promotionStat = App\StudentPromotion::where('schoolyear',$sy)->where('idno',$student->idno)->first();
+    ?>
     <tr>
         <td style='text-align: center'>{{$row}}</td>
-        <td>{{$student->studno}}</td>
-        <td>{{$student->lastname}}, {{$student->firstname}} {{substr($student->middlename,0,1)}}.</td>
+        <td>{{$student->idno}}</td>
+        <td>{{Info::get_name($student->idno)}}</td>
         <td>{{$student->section}}</td>
-        <td style='text-align: center'>{{$student->admission}}</td>
-        <td style='text-align: center'>{{$student->conduct}}</td>
-        <td style='text-align: center'>{{$student->academic}}</td>
-        <td style='text-align: center'>{{$student->technical}}</td>
+        
+        <td style='text-align: center'>{{$promotionStat ? $promotionStat->admission:""}}</td>
+        <td style='text-align: center'>{{$promotionStat ? $promotionStat->conduct:""}}</td>
+        <td style='text-align: center'>{{$promotionStat ? $promotionStat->academic:""}}</td>
+        <td style='text-align: center'>{{$promotionStat ? $promotionStat->technical:""}}</td>
     </tr>
     <?php $row++;?>
     @endforeach

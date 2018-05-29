@@ -173,13 +173,13 @@
                url: "/setoverallrank",
                data : arrays,
                success:function(data){
-                   
+        
                    getlist(quarter)
                    
                    },
                    error:function(){
                        getlist(quarter)
-                   }
+    }
                });
     }
     

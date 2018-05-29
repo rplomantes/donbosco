@@ -406,22 +406,22 @@ use App\Http\Controllers\Registrar\GradeComputation;
                             <td style="border: 1px solid">{{$grade->subjectname}}</td>
                             <td align="center" style="border: 1px solid">{{round($grade->points)}}</td>
                             <td align="center" style="border: 1px solid">
-                                    @if($grade->first_grading > 0)
+                                    @if($grade->first_grading > 0 && GradeComputation::computeQuarterAverage($sy,$level,array(3),0,1,$grades) > 75)
                                     {{round($grade->first_grading)}}
                                     @endif
                             </td>
                             <td align="center" style="border: 1px solid">
-                                    @if($grade->second_grading > 0)
+                                    @if($grade->second_grading > 0 && GradeComputation::computeQuarterAverage($sy,$level,array(3),0,2,$grades) > 75)
                                     {{round($grade->second_grading)}}
                                     @endif
                             </td>
                             <td align="center" style="border: 1px solid">
-                                    @if($grade->third_grading > 0)
+                                    @if($grade->third_grading > 0 && GradeComputation::computeQuarterAverage($sy,$level,array(3),0,3,$grades) > 75)
                                     {{round($grade->third_grading)}}
                                     @endif
                             </td>
                             <td align="center" style="border: 1px solid">
-                                    @if($grade->fourth_grading > 0)
+                                    @if($grade->fourth_grading > 0 && GradeComputation::computeQuarterAverage($sy,$level,array(3),0,4,$grades) > 75)
                                     {{round($grade->fourth_grading)}}
                                     @endif
                             </td>

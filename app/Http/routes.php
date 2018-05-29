@@ -1,8 +1,10 @@
 <?php
+//Modals for quick access control on other modules
+
     Route::group(['middleware' => 'web'], function () {
     // Commit 2018-01_24 1
    
-        Route::get('/test123/{date}','Accounting\IncomeStatement@index');
+        Route::get('/incomestatement/{date}','Accounting\IncomeStatement@index');
         Route::get('/printincomestatement/{date}','Accounting\IncomeStatement@printview');
         
         Route::get('/createSched','EntranceExam\ExamSchedule@create');
@@ -21,6 +23,7 @@
     Route::get('/chart/{fromdate}/{todate}','Economer\OperationIncome@index');
     Route::get('/bankfunds/{fromdate}/{todate}','Admin\BankFunds@index');
     //END 2 Commit 2018-01_24
+    
     Route::get('/gradeMigration2','Update\UpdateController@gradeMigration2');
     
     Route::get('/studentinfo/{idno}','Miscellaneous\StudentInfoController@index');
@@ -306,7 +309,7 @@
 //Ajax route
     Route::get('/getsections/{action?}','Vincent\AjaxController@getsections');
     Route::get('/getlevelsections/{all}/{action?}','Vincent\AjaxController@getlevelsections');
-    Route::get('/getlevelstrands/{action?}','Vincent\AjaxController@getlevelstrands');
+    Route::get('/getlevelstrands/{action?}/{showall?}','Vincent\AjaxController@getlevelstrands');
     Route::get('/getlevelsubjects/{action?}','Registrar\SheetA\Helper@getSubjects');
     Route::get('/getlevelquarter/{action?}','Registrar\SheetA\Helper@getQuarter');
 
@@ -432,7 +435,7 @@ Route::group(['middleware' => ['web','registrar']], function () {
     Route::get('/overallranking/{sy}', 'Registrar\OverallRankController@index');
     Route::get('/autosection/{level}/{strand?}', 'Registrar\AjaxController@autoSectioning');
     Route::get('/classno', 'Registrar\SectionController@assignClassNo');
-    Route::get('/card/{idno}/{sy}/{sem?}', 'Registrar\ReportCardController@studentReport');
+    Route::get('/card/{idno}/{sy}/{sem?}', 'Registrar\ReportCards\StudentCard@studentReport');
     Route::get('/seegrade/{idno}','Registrar\GradeController@seegrade');
 
     Route::get('/createrec/{idno}','Registrar\MakeRecord@createRecord');
@@ -455,8 +458,8 @@ Route::group(['middleware' => ['web','registrar']], function () {
     Route::get('/electivesheeta/{selectedSY}','Registrar\Elective\SheetAController@index');
     Route::get('/printelectivesheeta/{section}','Registrar\Elective\SheetAController@printElective');
     
-    Route::get('/reportcards','Registrar\ReportCards\ReportCardController@sectionCards');
-    Route::get('/printcards/{lvl}/{strnd}/{sec}/{quarter}/{sem}','Registrar\ReportCards\ReportCardController@printSectionCards');
+    Route::get('/reportcards/{sy}','Registrar\ReportCards\ReportCardController@sectionCards');
+    Route::get('/printcards/{sy}/{lvl}/{strnd}/{sec}/{quarter}/{sem}','Registrar\ReportCards\ReportCardController@printSectionCards');
     
     Route::get('/changegrade/{idno}/{sy}','Registrar\Grade\ChangeGrade@index');
     
@@ -548,7 +551,7 @@ Route::group(['middleware' => ['web','registrar']], function () {
    
    //Cash Receipt Books
     Route::group(['middleware' => 'web'], function () {
-        Route::get('cashreceipt/{transactiondate}','Accounting\CashReceiptController@cashreceiptbook');
+        Route::get('cashreceipt/{transactiondate}','Accounting\CashReceipt\Book@cashreceiptbook');
         Route::get('printcashreceipt/{transactiondate}','Accounting\CashReceiptController@cashreceiptpdf');
     //    Route::get('printcashbreakdown/{fromtran}/{totran}','Accounting\CashReceiptController@breakdownpdf');
         
@@ -654,14 +657,16 @@ Route::group(['middleware' => ['web','registrar']], function () {
    
    //Promotion
    Route::group(['middleware' => 'web'], function () {
-       Route::get('/promotion/{sy}','Registrar\PromotionController@index');
-       Route::get('/editpromotion/{sy}/{level}','Registrar\PromotionController@editpromotion');
+       Route::get('/promotion/{sy}','StudentPromotion\PromotionController@index');
+       Route::get('/editpromotion/{sy}/{level}/{section}','StudentPromotion\PromotionController@editpromotion');
        Route::get('/printpromotion/{sy}/{level}','Registrar\PromotionController@printpromotion');
        Route::post('/savepromotion/{sy}/{level}','Registrar\PromotionController@savepromotion');
    });
-       Route::get('/viewpromotion/{sy}/{level}','Registrar\PromotionController@viewreport');
+       Route::get('/viewpromotion','StudentPromotion\PromotionController@viewreport');
        Route::get('/viewfinalizepromotion/{sy}/{level}','Registrar\PromotionController@viewfinalize');
        Route::get('/finalizepromotion/{sy}/{level}','Registrar\PromotionController@editStatfinalize');
+       Route::get('/updatestudentpromotion','StudentPromotion\PromotionController@updatestudentProm');
+       
         
    //END Promotion
        
@@ -677,6 +682,111 @@ Route::group(['middleware' => ['web','registrar']], function () {
    //Portal Control
    Route::group(['middleware' => 'web'], function () {
        Route::get('/portalaccount/{idno}','PortalControl\AccountActivation@index');
+       Route::get('/gradecontrol/{level}/{section}','PortalControl\GradeView@sectionGradeViewControl');
+       
+       Route::post('/portalaccount/{idno}','PortalControl\AccountActivation@resetPass')->name('resetPortalPassword');
    });
       Route::get('/updateportalmail','PortalControl\AccountActivation@updatemail')->name('updateportalmail');
    //END Portal Control
+      
+   //Student Assessment
+   Route::group(['middleware' => 'web'], function () {
+       Route::get('/newassessment/{idno}','Assessement\AssessmentController@view')->name('assessment');
+       Route::post('/newassessment/{idno}','Assessement\ProcessAssessment@save')->name('processAssessment');
+       Route::post('/reassess/{idno}', 'Assessement\ProcessAssessment@reassess')->name('reassess');
+       
+       Route::get('/assessement/printassessment', 'Assessement\AssessmentController@printAssessement')->name('printassessment');
+   });
+   Route::get('/planassessement/{idno}/{plan}/{strand?}', 'Assessement\AjaxController@getPlanView');
+   Route::get('/newassessmentstrands', 'Assessement\AjaxController@getStrandView')->name('newassessmentStrand');
+   
+   //END Student Assessment
+   
+   //Submitted Grade
+   Route::group(['middleware' => 'web'], function () {
+       Route::get('/submittedgrade','Registrar\Grade\SubmittedGradeReport@view');
+   });
+    Route::get('/subjectgradestat/{level}/{section}','Registrar\Grade\SubmittedGradeReport@view')->name('subjectgradestat');
+   //END Submitted Grade
+    
+   //Student Aawardee
+   Route::group(['middleware' => 'web'], function () {
+       Route::get('/addAwardee','StudentAwards\AwardsController@addStudent');
+       Route::post('/addAwardee','StudentAwards\AwardsController@saveStudent')->name('savestudent');
+   });
+   //END Student Aawardee
+   
+//New Sectioning
+Route::group(['middleware' => 'web'], function () {
+   Route::get('/section/kto12/sectioning/{level?}/{strand?}','Registrar\Section\SectionStudents@sectioning_index')->name('assignSection');
+   Route::get('/section/kto12/autosectioning/{level}/{strand?}','Registrar\Section\SectionStudents@auto_section')->name('autoSection');
+   
+   Route::get('/section/kto12/create','Registrar\Section\SectionController@viewCreateSection');
+   Route::post('/section/kto12/create','Registrar\Section\SectionController@saveSection')->name('saveSection');
+   
+   Route::post('/section/kto12/upload','Registrar\Section\SectionController@uploadSections')->name('uploadSection');
+   
+   Route::post('/section/kto12/delete','Registrar\Section\SectionController@deleteSection')->name('deleteSection');
+   Route::post('/section/kto12/update','Registrar\Section\SectionController@updateSection')->name('updateSection');
+   
+   //Modals
+   Route::get('/section/kto12/modal/delete/{id}','Registrar\Section\SectionAjax@modal_deleteSection')->name('modal_deleteSection');
+   Route::get('/section/kto12/modal/update/{id}','Registrar\Section\SectionAjax@modal_updateSection')->name('modal_updateSection');
+   
+});
+Route::get('/section/status/{id}','Registrar\Section\SectionController@change_sectionStatus');
+Route::get('/section/getSectionList','Registrar\Section\SectionAjax@get_sectionList')->name('ajax_getSectionList');
+Route::get('/section/getLevelList','Registrar\Section\SectionAjax@get_levelList')->name('ajax_getLevelList');
+Route::get('/section/setSectionList','Registrar\Section\SectionAjax@set_studentSection')->name('ajax_setStudentSection');
+//END Sectioning
+
+//Adviser Control
+Route::group(['middleware' => 'web'], function () {
+   Route::get('/sectioning','Registrar\Section\SectionCreator@viewSectioning');
+   Route::get('/kto12/section/create','Registrar\Section\SectionCreator@viewCreateSection');
+   Route::post('adviser/create','Registrar\Adviser\CreateAdvisor@saveAdviser')->name('saveAdviser');
+   Route::get('adviser/modal/create','Registrar\Adviser\AdvisorAjax@modal_createAdviser')->name('modal_createAdviser');
+});
+
+
+//END Adviser Control
+   
+//Change Pass only for Registrar
+Route::group(['middleware' => 'web','prefix' => 'adviser'], function () {
+    Route::get('/changePassword', 'Auth\ChangePassword@index')->name('changePass');
+    Route::post('/changePassword', 'Auth\ChangePassword@changePassword')->name('saveChangePass');
+});
+//END Change Pass
+   
+//Budgeting
+Route::group(['middleware' => 'web','prefix' => 'budget'], function () {
+    //Create Budget
+    Route::get('create/{department}', 'Accounting\Budgeting\CreateBudget@index')->name('createBudget');
+    Route::get('report/{from}/{to}', 'Accounting\Budgeting\BudgetReport@index')->name('budgetreport');
+});
+Route::get('/updatebudget', 'Accounting\Budgeting\BudgetingAjax@updateRecord')->name('updateBudget');
+//END Budgeting
+
+//Closing Fiscal Year
+Route::group(['middleware' => 'web'], function () {
+    //Create Budget
+    Route::get('control/closing', 'Accounting\Closing\ClosingController@index')->name('closeView');
+    Route::post('control/closing', 'Accounting\Closing\ClosingController@close_fisacalyear')->name('closeFiscal');
+});
+//END Budgeting
+
+//Statistics
+Route::group(['middleware' => 'web','prefix' => 'statistics'], function () {
+    //Create Budget
+    Route::get('enrollment/{schoolyear}', 'Registrar\Statistics\Enrollment@index')->name('stat_enrollment');
+});
+//END Statistics
+
+//Statistics
+Route::group(['middleware' => 'web'], function () {
+    //Cash Receipt
+    Route::get('administrator/cashreceipt/search', 'Administrator\Receipt\UpdateReceipt@searchRef')->name('admin.searchreceiptrefno');
+    Route::post('administrator/cashreceipt/search', 'Administrator\Receipt\UpdateReceipt@searchResult')->name('admin.searchreceiptrefno');
+    Route::get('administrator/cashreceipt/{refno}', 'Administrator\Receipt\UpdateReceipt@showReceipt')->name('admin.viewreceipt');
+});
+//END Statistics

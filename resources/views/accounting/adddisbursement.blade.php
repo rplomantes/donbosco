@@ -79,10 +79,11 @@ $bankaccounts = \App\ChartOfAccount::where('acctcode','>','110010')->where('acct
       <div class="form-group col-md-6">
           <label>Payee</label>
           <input type="text" class="form form-control" name="payee" id="payee">
-      </div>    
-      <div class="form-group col-md-6">
+      </div>
+
+      <div class="form-group col-md-offset-2 col-md-2">
           <label>Transaction Date</label>
-          <input type="text" class="form form-control" name="transactiondate" id="transactiondate">
+          <input type="text" class="form form-control" name="transactiondate" id="transactiondate" value="{{date('Y-m-d',strtotime(\Carbon\Carbon::now()))}}">
       </div>
     </div>
     <div style="padding-top: 10px; padding-bottom: auto;background: #fff5cc;height: 100px" class="col-md-12 panel panel-default">
@@ -360,8 +361,8 @@ $(document).ready(function(){
         url:"/getsubsidiary",
         data:arrays,
             success:function(data){
-                $("#subsidiary").html(data);              
-            }
+                $("#subsidiary").html(data);
+            },
     });
  }
  

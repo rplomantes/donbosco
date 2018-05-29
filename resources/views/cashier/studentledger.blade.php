@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\StudentAwards\AwardsController as Award;
 $banks = \App\Dedit::distinct('bank_branch')->pluck('bank_branch')->toArray();
 $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')->toArray();
 ?>
@@ -15,12 +16,15 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
     });
     });
 
+
    $( function() {
     var checkno = [<?php echo '"'.implode('","', $checkno).'"' ?>];
     $( "#check_number" ).autocomplete({
       source: checkno
     });
     });
+
+
 </script>
   <div class="container_fluid">  
       <div class="col-md-12">
@@ -273,7 +277,7 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
             </div>    
             <div class="col-md-12" style=" margin-top: 10px;background-color: ">
              <h5>Amount Due</h5>
-             <form class="form-horizontal" id ="assess" name="assess" role="form" method="POST" action="{{ url('/payment') }}">
+             <form onsubmit="return dosubmit();" class="form-horizontal" id = "assess" name="assess" role="form" method="POST" action="{{ url('/payment') }}">
              {!! csrf_field() !!} 
              <input type="hidden" name="idno" value="{{$student->idno}}">
              <input type="hidden" id="reservation" id = "reservation" name="reservation" value="{{$reservation}}">
@@ -283,94 +287,105 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
              <input type="hidden" id="penalty" name="penalty" value="{{$penalty}}">
             
              <table class="table table-responsive table-bordered">
-                 <!--Main Account for payment-->
-                <tr>
-                    <td>Main Account</td>
-                    <td align="right">
-                        <input class='form-control divide credit' type="text" name="totaldue" id="totaldue" style="text-align:right" value="<?php echo number_format($totaldue,2,'.','');?>">
-                    </td>
-                </tr>
+                <tr><td>Main Account</td><td align="right"><input class='divide' onkeypress = "validate(event)"  onkeydown = "duenosubmit(event)"   type="text" name="totaldue" id="totaldue" style="text-align:right" class="form-control" value="<?php echo number_format($totaldue,2,'.','');?>"></td></tr>
                 @if(count($previousbalances)> 0 )
                 
-                        <tr><td>Previous Balance</td><td><input type="text"  name="previous" id="previous" style="text-align:right" class="form-control divide credit" value="{{$totalprevious}}"></td></tr>
+                    
+                        <tr><td>Previous Balance</td><td><input type="text" onkeypress = "validate(event)" onkeydown = "submitprevious(event,this.value)" name="previous" id="previous" style="text-align:right" class="form-control divide" value="{{$totalprevious}}"></td></tr>
                 @else   
                 <input type="hidden" name="previous" id="previous" value="0">
                 @endif
                 @if(count($othercollections)>0)
                 @foreach($othercollections as $coll)
                     @if(round($coll->amount - $coll->payment - $coll->debitmemo,5) > 0)
-                         <tr>
-                             <td>{{$coll->description}}</td>
-                             <td>
-                                 <input type="text" name="other[{{$coll->id}}]" style="text-align:right" class="form-control divide other credit"  value="{{$coll->amount-($coll->payment+$coll->debitmemo)}}">
-                             </td>
-                         </tr>
+                         <tr><td>{{$coll->description}}</td><td><input type="text" name="other[{{$coll->id}}]"  class="other" style="text-align:right" class="form-control divide" onkeypress = "validate(event)" onkeydown = "submitother(event,this.value,'{{$coll->amount-$coll->payment-$coll->debitmemo}}','{{$coll->id}}')" value="{{$coll->amount-($coll->payment+$coll->debitmemo)}}"></td></tr>
                     @endif
                @endforeach
                 @endif
                 
                 @if($penalty > 0)
-                <tr><td>Add: Penalty</td><td align="right"><span class="form-control divide credit">{{number_format($penalty,2)}}</span></td></tr>
+                <tr><td>Add: Penalty</td><td align="right"><span class="form-control divide">{{number_format($penalty,2)}}</span></td></tr>
                 @endif
                 @if($reservation > 0)
-                <tr><td>Less: Reservation</td><td align="right"><span class="form-control divide less">{{number_format($reservation,2)}}</span></td></tr>
+                <tr><td>Less: Reservation</td><td align="right"><span class="form-control divide">{{number_format($reservation,2)}}</span></td></tr>
                 @endif
+                
+                {{--Awardee Part--}}
+                <?php $totalaward = 0; ?>
+                @if(Award::hasRemainingFund($student->idno,true))
+                <?php $awards = Award::getAvailableAwards($student->idno,true); ?>
+                @foreach($awards->groupBy('type') as $award=>$details)
+                <?php
+                $awardsum = $details->sum('amount') - $details->sum('used');
+                if($awardsum > $totaldue-$reservation-$totalaward+$totalprevious+$totalother+$penalty){
+                    $awardsum = $totaldue-$reservation-$totalaward+$totalprevious+$totalother+$penalty;
+                }
+                $totalaward = $totalaward+$awardsum;
+                ?>
+                <tr>
+                    <td style="text-align: right">Less: {{$award}}</td>
+                    <td align="right">
+                        <input id="remaining{{$award}}" readonly="readonly" style="display:none" class="form-control" value="{{$details->sum('amount') - $details->sum('used')}}">
+                        
+                        <input id="{{$award}}" name="{{$award}}"  readonly="readonly" class="form-control divide" style="text-align: right" value="{{number_format($awardsum,2)}}">
+                        <span>Remaining: {{number_format($details->sum('amount') - $details->sum('used'),2,'.',',')}}</span>
+                    </td>
+                </tr>
+                    @endforeach
+                @endif       
+                
+                {{--END Awardee Part--}}
+                
+                
                 <?php 
                 $deposits = $deposit;
-                if($deposit > $totaldue-$reservation+$totalprevious+$totalother+$penalty){
-                    $deposits = $totaldue-$reservation+$totalprevious+$totalother+$penalty;
+                if($deposit > $totaldue-$reservation-$totalaward+$totalprevious+$totalother+$penalty){
+                    $deposits = $totaldue-$reservation-$totalaward+$totalprevious+$totalother+$penalty;
                 }
                 ?>
                 <input id="deposit" name="deposit" readonly="readonly" style="display:none" class="form-control divide" value="{{$deposits}}">
-                <input id="remainingdeposit" readonly="readonly" style="display:none" class="form-control" value="{{$deposit}}">                
+                <input id="remainingdeposit" readonly="readonly" style="display:none" class="form-control" value="{{$deposit}}">
                 @if($deposit > 0)
 
-                <tr><td style="text-align: right">Less: Student Deposit</td><td align="right"><span id="displaydeposit" class="form-control less">{{number_format($deposits,2)}}</span><span>Remaining: {{number_format($deposit,2,'.',',')}}</span></td></tr>
+                <tr><td style="text-align: right">Less: Student Deposit</td><td align="right"><span id="displaydeposit" class="form-control">{{number_format($deposits,2)}}</span><span>Remaining: {{number_format($deposit,2,'.',',')}}</span></td></tr>
 
                @endif
-                <tr><td>Amount To Be Paid</td><td align="right"><input type="text" name="totalamount" id ="totalamount" style="color: red; font-weight: bold; text-align: right" class="form-control divide" value="{{ number_format($totaldue-$reservation+$totalprevious+$totalother+$penalty-$deposits,2,'.','')}}" readonly></td></tr>
+                <tr><td>Amount To Be Paid</td><td align="right"><input type="text" name="totalamount" id ="totalamount" style="color: red; font-weight: bold; text-align: right" class="form-control divide" value="{{ number_format($totaldue-$reservation+$totalprevious+$totalother+$penalty-$deposits-$totalaward,2,'.','')}}" readonly></td></tr>
                 <!--<tr><td><input type="radio" value="1" name="paymenttype" checked onclick="getpaymenttype(this.value)"> Cash</td><td><input onclick="getpaymenttype(this.value)" type="radio" value="2" name="paymenttype" > ChecK</td></tr> -->
                 
-                <tr>
-                    <td colspan="2">
-                        <table class="table table-responsive"  style="background-color: #ccc">
-                            <tr>
-                                <td>
-                                    <p>Check</p>
-                                    <label>Bank/Branch</label>
-                                    <input class='form-control text' type="text" name="bank_branch"  id="bank_branch">
-                                    
-                                </td>
-                                <td>
-                                    <input type="checkbox" name="iscbc" id="iscbc" value="cbc"> China Bank Check<label>Check Number</label>
-                                    <input class='form-control text' type="text" name="check_number"  id="check_number">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2"><label>Check Amount</label>
-                                    <input class='form-control divide debit' type="text" name="receivecheck"  id="receivecheck"  placeholder="0.00" style="text-align: right">
-                                </td>
-                            </tr>
+                <tr><td colspan="2">
+              
+                    
+                        <table class="table table-responsive"  style="background-color: #ccc"><tr>
+                           
+                        <tr><td><p>Check</p><label>Bank/Branch</label>
+                        <input type="text" name="bank_branch"  id="bank_branch"  onkeydown = "nosubmit(event,'check_number')"  class="form form-control">
+                        </td>
+                        <td><input type="checkbox" name="iscbc" id="iscbc" value="cbc" onkeydown="submitiscbc(event,this.checked)"> China Bank Check<label>Check Number</label>
+                        <input  type="text" name="check_number" id="check_number" onkeydown = "nosubmit(event,'receivecheck')" class="form form-control">
+                        </td></tr>
+                        <tr><td colspan="2"><label>Check Amount</label><input style ="text-align: right" type="text" name="receivecheck" id="receivecheck" onkeypress="validate(event)" onkeydown="submitcheck(event,this.value)"  placeholder="0.00" class="form form-control divide">
+                        </td></tr>
                                        
                         </table>
                         <div style="color:red;font-weight: bold" id="cashdiff"></div>
                 </td> </tr>
-                <tr><td colspan="2"><label>FAPE:</label><input style ="text-align: right" type="text" placeholder="0.00" name="fape" id="fape"  class="form form-control divide debit">
-                <tr><td colspan="2"><label>Cash Amount Rendered:</label><input style ="text-align: right" type="text" placeholder="0.00" name="receivecash" id="receivecash" class="form form-control divide debit">
+                <tr><td colspan="2"><label>FAPE:</label><input style ="text-align: right" type="text" placeholder="0.00" name="fape" id="fape" onkeypress="validate(event)" onkeydown="submitfape(event,this.value)" class="form form-control divide">
+                <tr><td colspan="2"><label>Cash Amount Rendered:</label><input style ="text-align: right" type="text" placeholder="0.00" name="receivecash" id="receivecash" onkeypress="validate(event)" onkeydown="submitcash(event,this.value)" class="form form-control divide">
                         </td></tr>
-                <tr><td colspan="2"><label>Change:</label><input style ="text-align: right" type="text" value="0" name="change" id="change" readonly class="form form-control divide">
+                <tr><td colspan="2"><label>Change:</label><input style ="text-align: right" type="text" value="0" name="change" id="change" onkeypress="validate(event)" readonly class="form form-control divide">
                         </td></tr>
-                <tr>
-                    <td colspan="2">
-                        <div class="col-md-6"><input type="radio" name="depositto" value="China Bank" checked="checked"> China Bank</div>
-                        <div class="col-md-6"><input type="radio" name="depositto" value="China Bank 2"> China Bank 2</div>
-                        
-                        <div class="col-md-6"><input type="radio" name="depositto" value="BPI 1"> BPI 1</div>
-                        <div class="col-md-6"><input type="radio" name="depositto" value="BPI 2"> BPI 2</div>
+                <tr><td colspan="2">
+                        <input type="radio" name="depositto" value="China Bank" checked="checked"> China Bank
+                        <input type="radio" name="depositto" value="China Bank 2"> China Bank 2
+                        <br>
+                                            <input type="radio" name="depositto" value="BPI 1"> BPI 1
+                                            <input type="radio" name="depositto" value="BPI 2"> BPI 2
                                             
-                    </td>
-                </tr> 
-                <tr><td colspan="2"><label>Particular :</label><input type="text" name="remarks" id="remarks" class="form-control" ></td></tr>
+                        </td></tr> 
+                <tr><td colspan="2"><label>Particular :</label><input type="text" name="remarks" id="remarks" class="form-control" onkeypres = "validateParticular(event)"></td></tr>
+                <tr><td colspan="2"><input  style="visibility: hidden; font-weight: bold" type="submit" name="submit" id="submit" value ="Process Payment" class="btn btn-danger form form-control"> </td></tr>
+               
              </table>    
    
         </div>
@@ -378,8 +393,25 @@ $checkno = \App\Dedit::distinct('check_number')->take(5)->pluck('check_number')-
     </div>
 </div>
    
-
-
-<script src="{{asset('/js/nephilajs/cashier2.js')}}"></script>
+<script src="{{url('/js/nephilajs/cashier.js')}}"></script>    
+<script src="{{url('/js/nephilajs/getpaymenttype.js')}}"></script>
+<script>
+//    $('.divide').keyup(function(e){        
+//        
+//        if(e.keyCode >= 48 || e.keyCode <= 57){
+//            var value= $('.divide').val();
+//            var string = value.replace(',','')
+//            $(this).val(formatNumber(string));
+//        }
+//    });
+//    
+//    function formatNumber (num) {
+//        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+//    }
+@if (session('mistransact'))
+    alert("You tried to process an invalid transaction please make sure the amount given is sufficient.");
+@endif            
+</script>
 
 @stop
+

@@ -12,5 +12,5 @@ class accounts_group extends Model
     
     public function chartofaccount(){
         return $this->belongsTo(ChartOfAccount::class,'accountingcode','acctcode');
-    }   
+    }
 }

@@ -34,7 +34,8 @@
         <script src="{{asset('/js/fileinput.js')}}"></script>
         <script src="{{asset('jquery.ui.combify/jquery.ui.combify.js')}}"></script>
         
-        
+        <link href="{{ asset('js/TableMultiFreezer/multifreezer.css') }}" rel="stylesheet">
+        <script src="{{asset('js/TableMultiFreezer/multifreezer.js')}}"></script>
         </head>
 <body> 
     

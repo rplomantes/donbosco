@@ -55,11 +55,11 @@ use App\Http\Controllers\Accounting\Student\StudentInformation as Info;
                 <div class="card-header" id="headingTwo">
                   <h5 class="mb-0">
                     <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#{{$section->pluck('id')->last()}}" aria-expanded="false" aria-controls="collapseTwo">
-                      {{$section->pluck('id')->last()}}
+                      {{$section->pluck('section')->last()}}
                     </button>
                   </h5>
                 </div>
-                <div id="{{$section->pluck('section')->last()}}" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                <div id="{{$section->pluck('id')->last()}}" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                   <div class="card-body">
                       <table class='table table-bordered'>
                             <tr>
